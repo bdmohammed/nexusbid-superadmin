@@ -1,43 +1,49 @@
 import { cn } from "@/lib/utils";
 
 export default function Button({
-    children,
-    variant = "primary",
-    className,
-    ...props
+  children,
+  variant = "primary",
+  size = "md",
+  className,
+  leftIcon: LeftIcon,
+  rightIcon: RightIcon,
+  ...props
 }) {
+  const variants = {
+    primary:
+      "bg-primary text-white hover:opacity-90 border border-primary",
 
-    const variants = {
+    secondary:
+      "bg-surface border border-border text-text hover:bg-sidebar-hover",
 
-        primary:
-            "bg-indigo-600 hover:bg-indigo-700 text-white",
+    danger:
+      "bg-red-600 text-white hover:bg-red-700 border border-red-600",
 
-        secondary:
-            "bg-white border border-gray-200 hover:bg-gray-50",
+    ghost:
+      "bg-transparent hover:bg-sidebar-hover text-text",
+  };
 
-        ghost:
-            "hover:bg-indigo-50 text-gray-700"
+  const sizes = {
+    sm: "h-9 px-3 text-sm",
+    md: "h-10 px-4 text-sm",
+    lg: "h-11 px-5 text-base",
+  };
 
-    };
+  return (
+    <button
+      className={cn(
+        "inline-flex items-center justify-center gap-2 rounded-xl font-medium transition-all duration-200 active:scale-95 disabled:opacity-50",
+        variants[variant],
+        sizes[size],
+        className
+      )}
+      {...props}
+    >
+      {LeftIcon && <LeftIcon size={18} />}
 
-    return (
+      {children}
 
-        <button
-
-            className={cn(
-                "h-11 px-5 rounded-xl font-medium transition-all duration-200 active:scale-95",
-                variants[variant],
-                className
-            )}
-
-            {...props}
-
-        >
-
-            {children}
-
-        </button>
-
-    );
-
+      {RightIcon && <RightIcon size={18} />}
+    </button>
+  );
 }
