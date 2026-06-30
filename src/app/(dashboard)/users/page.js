@@ -30,7 +30,6 @@ export default function UsersPage() {
           <h1 className="text-3xl font-bold">Users</h1>
           <p className="mt-1 text-text-light">Manage all system users.</p>
         </div>
-        <Button leftIcon={Plus}>Create User</Button>
       </div>
 
       <UserStats />

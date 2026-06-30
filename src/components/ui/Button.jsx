@@ -1,6 +1,7 @@
 import { cn } from "@/lib/utils";
 
 export default function Button({
+    fullWidth = false,
   children,
   variant = "primary",
   size = "md",

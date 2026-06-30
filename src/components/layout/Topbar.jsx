@@ -2,12 +2,12 @@
 
 import { Bell, Menu, Moon, Sun } from "lucide-react";
 import { usePathname } from "next/navigation";
-import navigation from "@/constants/navigation";
+import { navigation } from "@/constants/navigation";
 import useTheme from "@/hooks/useTheme";
 import Avatar from "../common/Avatar";
 
 const pageTitles = Object.fromEntries(
-  navigation.map((item) => [item.href, item.title]),
+  navigation?.map((item) => [item.href, item.title]),
 );
 
 export default function Topbar({ toggleSidebar }) {
@@ -29,15 +29,6 @@ export default function Topbar({ toggleSidebar }) {
           >
             <Menu size={18} />
           </button>
-
-          <div className="min-w-0 px-1 py-1">
-            <p className="hidden text-xs font-medium uppercase tracking-wider text-text-light sm:block">
-              TenderPro
-            </p>
-            <h1 className="truncate text-base font-semibold text-text sm:text-lg">
-              {pageTitle}
-            </h1>
-          </div>
         </div>
         <div className="ml-auto flex shrink-0 items-center gap-2">
 

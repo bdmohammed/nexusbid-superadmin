@@ -1,12 +1,20 @@
-import { LayoutDashboard, Shapes } from "lucide-react";
+import {
+  LayoutDashboard,
+  Shapes,
+  Users,
+  CreditCard,
+  BarChart3,
+  Settings,
+  ShieldCogCorner,
+  ShieldCheck,
+} from "lucide-react";
 
-const navigation = [
+export const navigation = [
   {
     title: "Dashboard",
     href: "/dashboard",
     icon: LayoutDashboard,
   },
-
   {
     title: "Categories",
     href: "/categories",
@@ -15,8 +23,29 @@ const navigation = [
   {
     title: "Users",
     href: "/users",
-    icon: Shapes,
+    icon: Users,
+  },
+  {
+    title: "Subscriptions",
+    href: "/subscriptions",
+    icon: CreditCard,
+  },
+  {
+    title: "Role Assignments",
+    href: "/roleassignments",
+    icon: ShieldCheck,
   },
 ];
 
-export default navigation;
+export const systemNavigation = [
+  {
+    title: "Analytics",
+    href: "/analytics",
+    icon: BarChart3,
+  },
+  {
+    title: "Settings",
+    href: "/settings",
+    icon: Settings,
+  },
+];
