@@ -1,5 +1,4 @@
 "use client";
-
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
@@ -7,7 +6,11 @@ import { cn } from "@/lib/utils";
 export default function SidebarItem({ item, onClick }) {
   const pathname = usePathname();
   const Icon = item.icon;
-  const active = pathname === item.href;
+
+  const active =
+    item.href === "/dashboard"
+      ? pathname === "/dashboard"
+      : pathname.startsWith(item.href);
 
   return (
     <Link

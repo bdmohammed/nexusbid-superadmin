@@ -12,7 +12,7 @@ export default function CategoriesPage() {
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
 
-  const pageSize = 10;
+  const pageSize = 5;
 
   const filteredData = categoryData.filter((item) =>
     item.name.toLowerCase().includes(search.toLowerCase()),
@@ -42,6 +42,8 @@ export default function CategoriesPage() {
       {/* Toolbar (search, filters, actions) */}
       <TableToolbar
         search={search}
+        name="category"
+        placeholder="Search Category..."
         total={filteredData.length}
         handleSearch={handleSearch}
       />
