@@ -1,42 +1,57 @@
 import { cn } from "@/lib/utils";
 
 export default function Button({
-    fullWidth = false,
+  fullWidth = false,
   children,
   variant = "primary",
   size = "md",
+
+  type = "button",
+
+  disabled = false,
+
   className,
+
   leftIcon: LeftIcon,
   rightIcon: RightIcon,
+
   ...props
 }) {
   const variants = {
-    primary:
-      "bg-primary text-white hover:opacity-90 border border-primary",
+    primary: "bg-primary text-white border border-primary hover:opacity-90",
 
     secondary:
-      "bg-surface border border-border text-text hover:bg-sidebar-hover",
+      "border border-border bg-surface text-text hover:bg-sidebar-hover",
 
-    danger:
-      "bg-red-600 text-white hover:bg-red-700 border border-red-600",
+    outline: "border border-border bg-surface text-text hover:bg-sidebar-hover",
 
-    ghost:
-      "bg-transparent hover:bg-sidebar-hover text-text",
+    danger: "border border-red-600 bg-red-600 text-white hover:bg-red-700",
+
+    ghost: "bg-transparent text-text hover:bg-sidebar-hover",
   };
 
   const sizes = {
     sm: "h-9 px-3 text-sm",
+
     md: "h-10 px-4 text-sm",
+
     lg: "h-11 px-5 text-base",
   };
 
   return (
     <button
+      type={type}
+      disabled={disabled}
       className={cn(
-        "inline-flex items-center justify-center gap-2 rounded-xl font-medium transition-all duration-200 active:scale-95 disabled:opacity-50",
+        "inline-flex items-center justify-center gap-2 rounded-xl font-medium transition-all duration-200 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50",
+
+        fullWidth && "w-full",
+
         variants[variant],
+
         sizes[size],
-        className
+
+        className,
       )}
       {...props}
     >

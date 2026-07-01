@@ -7,6 +7,7 @@ import {
   Settings,
   ShieldCogCorner,
   ShieldCheck,
+  TableProperties,
 } from "lucide-react";
 
 export const navigation = [
@@ -14,6 +15,11 @@ export const navigation = [
     title: "Dashboard",
     href: "/dashboard",
     icon: LayoutDashboard,
+  },
+  {
+    title: "Tenders",
+    href: "/tenders",
+    icon: TableProperties,
   },
   {
     title: "Categories",
