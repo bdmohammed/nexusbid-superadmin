@@ -1,0 +1,15 @@
+// src/lib/errors/constants.ts
+
+export const ERROR_CODES = {
+  VALIDATION: 'VALIDATION_001',
+  UNAUTHENTICATED: 'AUTH_001',
+  UNAUTHORIZED: 'AUTH_002',
+  NOT_FOUND: 'NOT_FOUND_001',
+  API_FAILURE: 'API_001',
+  NETWORK_OFFLINE: 'NETWORK_001',
+  FORBIDDEN: 'FORBIDDEN',
+  SERVER: 'SERVER_001',
+  UNKNOWN: 'UNKNOWN_001',
+} as const;
+
+export type ErrorCode = typeof ERROR_CODES[keyof typeof ERROR_CODES];
