@@ -2,12 +2,12 @@
 
 import React, { useState, useEffect } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { 
-  Bell, CheckCircle, Archive, Trash2, Search, Filter, RefreshCw, AlertCircle, Info, ChevronLeft, ChevronRight 
+import {
+  Bell, CheckCircle, Archive, Trash2, Search, Filter, RefreshCw, AlertCircle, Info, ChevronLeft, ChevronRight
 } from "lucide-react";
-import { 
-  useNotifications, useMarkAllRead, useMarkRead, useArchiveNotification, useDismissNotification, 
-  useNotificationCategories, useNotificationStats, notificationQueryKeys 
+import {
+  useNotifications, useMarkAllRead, useMarkRead, useArchiveNotification, useDismissNotification,
+  useNotificationCategories, useNotificationStats, notificationQueryKeys
 } from "@/features/notifications";
 import type { Notification } from "@/types";
 import NotificationDrawer from "./components/NotificationDrawer";
@@ -65,8 +65,8 @@ export default function NotificationsPage() {
     info: "border-green-500/30 bg-green-500/5 text-green-500",
   };
 
-  const notificationList: Notification[] = data?.notifications || [];
-  const total = data?.total || 0;
+  const notificationList: Notification[] = data?.success ? data.data.notifications : [];
+  const total = data?.success ? data.data.total : 0;
   const totalPages = Math.ceil(total / 10);
 
   // Filter local search queries
@@ -139,11 +139,10 @@ export default function NotificationsPage() {
                   setActiveTab(tab);
                   setPage(1);
                 }}
-                className={`rounded-xl px-4 py-2 text-sm font-semibold transition-all whitespace-nowrap ${
-                  activeTab === tab
-                    ? "bg-sidebar-hover text-primary"
-                    : "text-text-light hover:text-text"
-                }`}
+                className={`rounded-xl px-4 py-2 text-sm font-semibold transition-all whitespace-nowrap ${activeTab === tab
+                  ? "bg-sidebar-hover text-primary"
+                  : "text-text-light hover:text-text"
+                  }`}
               >
                 {tab === "UNREAD" ? "Unread" : tab === "READ" ? "Read" : "Archived"}
               </button>

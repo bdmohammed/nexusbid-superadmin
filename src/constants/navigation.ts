@@ -64,7 +64,7 @@ export const navigation: NavigationItem[] = [
   },
   {
     title: "Role Assignments",
-    href: "/roleassignments",
+    href: "/role-assignments",
     icon: ShieldCheck,
     requiredPermission: "rbac.manage",
   },

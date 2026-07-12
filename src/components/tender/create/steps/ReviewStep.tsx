@@ -1,10 +1,19 @@
 "use client";
 
 import { useFormContext } from "react-hook-form";
+import { useCategories } from "@/features/categories/api/queries";
+import { useStates } from "@/features/state/api/queries";
 
 export default function ReviewStep() {
   const { getValues } = useFormContext();
   const data = getValues();
+
+  const { data: categoryData } = useCategories();
+  const categories = categoryData?.categories || [];
+  const { data: states = [] } = useStates(data.country ? { country: data.country } : undefined);
+
+  const categoryName = categories.find((c: any) => c.id === data.category)?.name || data.category;
+  const stateName = states.find((s: any) => s.id === data.state)?.name || data.state;
 
   return (
     <div className="space-y-8">
@@ -21,8 +30,7 @@ export default function ReviewStep() {
         <div className="grid md:grid-cols-2 gap-6">
           <Item title="Tender Title" value={data.title} />
           <Item title="Reference" value={data.referenceNumber} />
-          <Item title="Category" value={data.category} />
-          <Item title="Sub Category" value={data.subCategory} />
+          <Item title="Category" value={categoryName} />
           <Item
             title="Budget"
             value={`${data.currency} ${data.budgetMin} - ${data.budgetMax}`}
@@ -35,7 +43,8 @@ export default function ReviewStep() {
 
         <div className="grid md:grid-cols-2 gap-6">
           <Item title="Country" value={data.country} />
-          <Item title="State" value={data.state} />
+          <Item title="State" value={stateName} />
+          <Item title="County" value={data.county} />
           <Item title="City" value={data.city} />
           <Item title="Address" value={data.address} />
           <Item title="Contact Person" value={data.contactPerson} />

@@ -5,97 +5,42 @@ import { LayoutGrid, Table, Search, SlidersHorizontal, Plus, Edit, Copy, Eye, Ey
 import Link from "next/link";
 import Button from "@/components/ui/Button";
 
-interface MockPlan {
-  id: string;
-  name: string;
-  subtitle: string;
-  price: string;
-  duration: string;
-  isRecurring: boolean;
-  featured: boolean;
-  badge: string | null;
-  countries: string;
-  categories: string;
-  users: number;
-  status: "ACTIVE" | "ARCHIVED" | "DISABLED";
-  version: number;
-  planType: string;
+import type { SubscriptionPlan } from "@/types";
+
+interface PricingPlansProps {
+  plans: SubscriptionPlan[];
+  loading: boolean;
 }
 
-const mockPlans: MockPlan[] = [
-  {
-    id: "plan-1",
-    name: "Professional",
-    subtitle: "Ideal for growing medium-sized bid teams.",
-    price: "$49",
-    duration: "month",
-    isRecurring: true,
-    featured: true,
-    badge: "Most Popular",
-    countries: "Global",
-    categories: "All",
-    users: 432,
-    status: "ACTIVE",
-    version: 3,
-    planType: "All-Access",
-  },
-  {
-    id: "plan-2",
-    name: "Starter Lite",
-    subtitle: "Basic monitoring for single contractors.",
-    price: "$19",
-    duration: "month",
-    isRecurring: true,
-    featured: false,
-    badge: null,
-    countries: "United States",
-    categories: "IT & Software",
-    users: 128,
-    status: "ACTIVE",
-    version: 1,
-    planType: "CategorySpecific",
-  },
-  {
-    id: "plan-3",
-    name: "Enterprise Core",
-    subtitle: "Custom compliance and automated API push.",
-    price: "$199",
-    duration: "year",
-    isRecurring: true,
-    featured: false,
-    badge: "Enterprise",
-    countries: "Global",
-    categories: "All",
-    users: 84,
-    status: "ACTIVE",
-    version: 2,
-    planType: "All-Access",
-  },
-  {
-    id: "plan-4",
-    name: "Texas State Builder",
-    subtitle: "Statewide public work alerts for construction.",
-    price: "$29",
-    duration: "month",
-    isRecurring: true,
-    featured: false,
-    badge: null,
-    countries: "United States (Texas)",
-    categories: "Construction & Engineering",
-    users: 215,
-    status: "ACTIVE",
-    version: 1,
-    planType: "StateSpecific",
-  }
-];
-
-export default function PricingPlans() {
+export default function PricingPlans({ plans, loading }: PricingPlansProps) {
   const [viewMode, setViewMode] = useState<"cards" | "table">("cards");
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<"ALL" | "ACTIVE" | "ARCHIVED">("ALL");
 
+  const mappedPlans = useMemo(() => {
+    return plans.map((plan) => {
+      const version = plan.activeVersion;
+      return {
+        id: plan.id,
+        name: version?.name || "Unnamed Plan",
+        subtitle: version?.subtitle || "",
+        price: `$${((version?.priceCents || 0) / 100).toFixed(0)}`,
+        duration: version?.durationDays === 30 ? "month" : version?.durationDays === 365 ? "year" : `${version?.durationDays} days`,
+        isRecurring: version?.isRecurring || false,
+        featured: version?.isFeatured || false,
+        badge: version?.badge || null,
+        countries: version?.targetCountry || "Global",
+        categories: version?.targetCategoryId ? "Category-Specific" : "All",
+        users: 0,
+        status: plan.status,
+        version: version?.version || 1,
+        planType: version?.planType || "all-access",
+      };
+    });
+  }, [plans]);
+
   const filteredPlans = useMemo(() => {
-    return mockPlans.filter((plan) => {
+    return mappedPlans.filter((plan) => {
       const matchesSearch = plan.name.toLowerCase().includes(search.toLowerCase()) ||
         plan.countries.toLowerCase().includes(search.toLowerCase()) ||
         plan.categories.toLowerCase().includes(search.toLowerCase());
@@ -104,7 +49,31 @@ export default function PricingPlans() {
       
       return matchesSearch && matchesStatus;
     });
-  }, [search, statusFilter]);
+  }, [mappedPlans, search, statusFilter]);
+
+  if (loading) {
+    return (
+      <section className="space-y-6">
+        <div className="flex items-center justify-between border-b border-border pb-4">
+          <div className="h-6 w-32 bg-border animate-pulse rounded" />
+          <div className="h-9 w-40 bg-border animate-pulse rounded" />
+        </div>
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <div key={i} className="animate-pulse rounded-2xl border border-border bg-surface p-6 shadow-sm h-64 flex flex-col justify-between">
+              <div className="space-y-3">
+                <div className="h-6 w-2/3 bg-border rounded" />
+                <div className="h-4 w-full bg-border rounded" />
+                <div className="h-4 w-5/6 bg-border rounded" />
+              </div>
+              <div className="h-8 w-1/2 bg-border rounded" />
+              <div className="h-8 w-full bg-border rounded mt-4" />
+            </div>
+          ))}
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="space-y-6">

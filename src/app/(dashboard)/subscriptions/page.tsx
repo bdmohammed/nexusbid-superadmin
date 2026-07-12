@@ -7,30 +7,48 @@ import PaymentHistoryTable from "@/components/subscription/PaymentHistoryTable";
 import PricingPlans from "@/components/subscription/PricingPlans";
 import SubscriptionStats from "@/components/subscription/SubscriptionStats";
 import Button from "@/components/ui/Button";
-import paymentHistory from "@/data/paymentHistory";
 import { usePermissions } from "@/hooks/usePermissions";
 import PremiumFeatureUpsell from "@/components/common/PremiumFeatureUpsell";
 import { useRouter } from "next/navigation";
+import {
+  useAdminPlans,
+  useAdminSubscriptions,
+  useAdminUserStats,
+  useAdminRevenueStats,
+} from "@/features/subscriptions/api/queries";
 
 export default function SubscriptionPage() {
   const router = useRouter();
   const { hasPermission } = usePermissions();
   const [search, setSearch] = useState("");
+  const [page, setPage] = useState(1);
+  const limit = 10;
 
   const canView = hasPermission("subscription.view") || hasPermission("billing.view");
 
+  const { data: plansData, isLoading: plansLoading } = useAdminPlans();
+  const { data: subscriptionsData, isLoading: subscriptionsLoading } = useAdminSubscriptions(page, limit);
+  const { data: userStats, isLoading: userStatsLoading } = useAdminUserStats();
+  const { data: revenueStats, isLoading: revenueStatsLoading } = useAdminRevenueStats();
+
   const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
+    setPage(1);
   };
 
-  const filteredPayments = useMemo(() => {
-    return paymentHistory.filter((item) =>
-      [item.invoice, item.company, item.plan, item.status]
+  const filteredSubscriptions = useMemo(() => {
+    const list = subscriptionsData?.data || [];
+    if (!search) return list;
+    return list.filter((sub) => {
+      const company = sub.user?.companyName || sub.user?.name || "Personal";
+      const planName = sub.planVersion?.name || sub.plan?.activeVersion?.name || "Standard Plan";
+      const invoice = `SUB-${sub.id.slice(0, 8).toUpperCase()}`;
+      return [invoice, company, planName, sub.status]
         .join(" ")
         .toLowerCase()
-        .includes(search.toLowerCase()),
-    );
-  }, [search]);
+        .includes(search.toLowerCase());
+    });
+  }, [subscriptionsData, search]);
 
   if (!canView) {
     return (
@@ -58,21 +76,35 @@ export default function SubscriptionPage() {
       </div>
 
       {/* KPI */}
-      <SubscriptionStats />
+      <SubscriptionStats 
+        userStats={userStats}
+        revenueStats={revenueStats}
+        loading={userStatsLoading || revenueStatsLoading}
+      />
 
       {/* Pricing */}
-      <PricingPlans />
+      <PricingPlans 
+        plans={plansData || []}
+        loading={plansLoading}
+      />
 
       {/* Payment History */}
       <TableToolbar
         search={search}
-        total={filteredPayments.length}
+        total={filteredSubscriptions.length}
         name="payment"
         placeholder="Search invoice, company..."
         handleSearch={handleSearch}
       />
 
-      <PaymentHistoryTable data={filteredPayments} />
+      <PaymentHistoryTable 
+        data={filteredSubscriptions}
+        totalCount={subscriptionsData?.meta?.total || 0}
+        page={page}
+        pageSize={limit}
+        onPageChange={setPage}
+        loading={subscriptionsLoading}
+      />
     </div>
   );
 }

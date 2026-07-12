@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 import { AlertCircle, RefreshCw } from 'lucide-react';
-import { AppError } from '@/lib/error/AppError';
+import { AppError } from '@/lib/errors';
 
 interface ErrorStateProps {
   title?: string;

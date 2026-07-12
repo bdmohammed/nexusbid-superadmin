@@ -1,7 +1,11 @@
 import { apiClient } from '@/lib/http';
 
 import type {
-    ApiResponse
+    ApiResponse,
+    SubscriptionPlan,
+    BackendSubscription,
+    AdminUserStats,
+    PaginatedMeta
 } from '@/types';
 
 import type {
@@ -34,6 +38,31 @@ export const subscriptionApi = {
     cancel() {
         return apiClient.delete<ApiResponse<null>>(
             '/subscriptions/me',
+        );
+    },
+
+    getAdminPlans() {
+        return apiClient.get<ApiResponse<SubscriptionPlan[]>>(
+            '/admin/plans',
+        );
+    },
+
+    getAdminSubscriptions(page: number, limit: number) {
+        return apiClient.get<ApiResponse<BackendSubscription[], PaginatedMeta>>(
+            '/admin/subscriptions',
+            { params: { page, limit } }
+        );
+    },
+
+    getAdminUserStats() {
+        return apiClient.get<ApiResponse<AdminUserStats>>(
+            '/admin/users/stats',
+        );
+    },
+
+    getAdminRevenueStats() {
+        return apiClient.get<ApiResponse<any[]>>(
+            '/admin/analytics/revenue',
         );
     },
 };

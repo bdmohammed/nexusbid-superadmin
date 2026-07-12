@@ -109,3 +109,38 @@ export interface SubscriptionMigration {
   createdById: string;
   createdAt: string;
 }
+
+export interface BackendSubscription {
+  id: string;
+  userId: string;
+  planId: string;
+  planVersionId: string;
+  startDate: string;
+  endDate: string;
+  status: 'active' | 'cancelled' | 'expired' | 'past_due' | 'pending';
+  createdAt: string;
+  user: {
+    id: string;
+    name: string;
+    email: string;
+    companyName: string | null;
+  };
+  plan: SubscriptionPlan;
+  planVersion: PlanVersion;
+}
+
+export interface AdminUserStats {
+  total: number;
+  active: number;
+  inactive: number;
+  suspended: number;
+  admins: number;
+  customers: number;
+  pendingVerification: number;
+  pendingApprovalAdmins: number;
+  subscribed: number;
+  blocked: number;
+  onlineNow: number;
+  newToday: number;
+  newThisMonth: number;
+}

@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
 import { UseQueryResult } from '@tanstack/react-query';
-import { AppError } from '@/lib/error/AppError';
 import ErrorState from './ErrorState';
+import { AppError } from '@/lib/errors';
 
 interface QueryBoundaryProps<TData, TError = AppError> {
   query: UseQueryResult<TData, TError>;

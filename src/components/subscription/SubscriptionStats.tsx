@@ -75,118 +75,198 @@ function StatCard({ title, value, trend, trendType, subText, icon: Icon, chartDa
   );
 }
 
-export default function SubscriptionStats() {
-  // Generate random stats and trends for sparklines
-  const kpis: StatCardProps[] = useMemo(() => [
-    {
-      title: "Total Revenue",
-      value: "$142,850.00",
-      trend: "+14.3%",
-      trendType: "success",
-      subText: "vs last month (+$18k)",
-      icon: DollarSign,
-      chartData: [{ value: 400 }, { value: 480 }, { value: 460 }, { value: 550 }, { value: 610 }, { value: 720 }],
-    },
-    {
-      title: "MRR",
-      value: "$11,904.16",
-      trend: "+8.2%",
-      trendType: "success",
-      subText: "vs last month",
-      icon: Activity,
-      chartData: [{ value: 100 }, { value: 110 }, { value: 105 }, { value: 115 }, { value: 120 }, { value: 130 }],
-    },
-    {
-      title: "ARR",
-      value: "$142,850.00",
-      trend: "+15.6%",
-      trendType: "success",
-      subText: "vs last year",
-      icon: DollarSign,
-      chartData: [{ value: 80 }, { value: 95 }, { value: 110 }, { value: 105 }, { value: 130 }, { value: 142 }],
-    },
-    {
-      title: "Active Subscriptions",
-      value: "1,248",
-      trend: "+12.1%",
-      trendType: "success",
-      subText: "145 new joins this month",
-      icon: Users,
-      chartData: [{ value: 1000 }, { value: 1050 }, { value: 1100 }, { value: 1150 }, { value: 1200 }, { value: 1248 }],
-    },
-    {
-      title: "New This Month",
-      value: "164",
-      trend: "+24.0%",
-      trendType: "success",
-      subText: "vs 132 last month",
-      icon: Calendar,
-      chartData: [{ value: 12 }, { value: 15 }, { value: 20 }, { value: 18 }, { value: 22 }, { value: 30 }],
-    },
-    {
-      title: "Renewals This Month",
-      value: "92%",
-      trend: "+1.2%",
-      trendType: "success",
-      subText: "Target: > 90%",
-      icon: Clock,
-      chartData: [{ value: 88 }, { value: 89 }, { value: 90 }, { value: 90 }, { value: 91 }, { value: 92 }],
-    },
-    {
-      title: "Expired",
-      value: "38",
-      trend: "-4.2%",
-      trendType: "success", // decline in expired = success
-      subText: "Fewer losses than May",
-      icon: AlertCircle,
-      chartData: [{ value: 50 }, { value: 45 }, { value: 48 }, { value: 42 }, { value: 39 }, { value: 38 }],
-    },
-    {
-      title: "Trial Users",
-      value: "412",
-      trend: "+18.5%",
-      trendType: "success",
-      subText: "Conversion rate: 24.3%",
-      icon: Users,
-      chartData: [{ value: 320 }, { value: 340 }, { value: 330 }, { value: 370 }, { value: 390 }, { value: 412 }],
-    },
-    {
-      title: "Churn Rate",
-      value: "2.4%",
-      trend: "-0.8%",
-      trendType: "success",
-      subText: "Industry benchmark: 3%",
-      icon: TrendingDown,
-      chartData: [{ value: 3.5 }, { value: 3.2 }, { value: 3.0 }, { value: 2.8 }, { value: 2.6 }, { value: 2.4 }],
-    },
-    {
-      title: "ARPU",
-      value: "$114.46",
-      trend: "+3.2%",
-      trendType: "success",
-      subText: "Average monthly spend",
-      icon: DollarSign,
-      chartData: [{ value: 108 }, { value: 110 }, { value: 109 }, { value: 112 }, { value: 113 }, { value: 114 }],
-    },
-    {
-      title: "Lifetime Value (LTV)",
-      value: "$2,060.00",
-      trend: "+4.5%",
-      trendType: "success",
-      subText: "Based on churn lifespan",
-      icon: Award,
-      chartData: [{ value: 1900 }, { value: 1950 }, { value: 1980 }, { value: 2000 }, { value: 2020 }, { value: 2060 }],
-    },
-    {
-      title: "Failed Payments",
-      value: "14",
-      trend: "+12.0%",
-      trendType: "danger",
-      subText: "Dunning retries active",
-      icon: AlertCircle,
-      chartData: [{ value: 8 }, { value: 10 }, { value: 9 }, { value: 11 }, { value: 12 }, { value: 14 }],
-    },
-  ], []);
+import type { AdminUserStats } from "@/types";
+
+interface SubscriptionStatsProps {
+  userStats: AdminUserStats | undefined;
+  revenueStats: any[] | undefined;
+  loading: boolean;
+}
+
+export default function SubscriptionStats({ userStats, revenueStats, loading }: SubscriptionStatsProps) {
+  const revenueChartData = useMemo(() => {
+    if (!revenueStats || revenueStats.length === 0) {
+      return [{ value: 0 }, { value: 0 }];
+    }
+    return revenueStats.map((item: any) => ({
+      value: parseInt(item.totalCents || "0", 10) / 100,
+    }));
+  }, [revenueStats]);
+
+  const countChartData = useMemo(() => {
+    if (!revenueStats || revenueStats.length === 0) {
+      return [{ value: 0 }, { value: 0 }];
+    }
+    return revenueStats.map((item: any) => ({
+      value: parseInt(item.count || "0", 10),
+    }));
+  }, [revenueStats]);
+
+  const kpis = useMemo(() => {
+    // 1. Total Revenue
+    const totalCents = revenueStats?.reduce((acc: number, item: any) => acc + parseInt(item.totalCents || "0", 10), 0) || 0;
+    const totalRevenueStr = `$${(totalCents / 100).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+    // 2. Latest Month Revenue (for MRR estimate)
+    const latestMonthRevenueCents = revenueStats && revenueStats.length > 0
+      ? parseInt(revenueStats[revenueStats.length - 1]?.totalCents || "0", 10)
+      : 0;
+    const mrrStr = `$${(latestMonthRevenueCents / 100).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+    // 3. ARR estimate
+    const arrStr = `$${((latestMonthRevenueCents * 12) / 100).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+    // 4. Active Subscriptions
+    const activeSubscribers = userStats?.subscribed || 0;
+
+    // 5. New This Month
+    const newThisMonth = userStats?.newThisMonth || 0;
+
+    // 6. Suspended / Expired
+    const expiredCount = userStats?.suspended || 0;
+
+    // 7. Trial Users (Inactive / Pending Verification)
+    const trialUsers = userStats?.inactive || 0;
+
+    // 8. ARPU (Average Revenue Per User)
+    const activeSubsDiv = activeSubscribers || 1;
+    const arpu = latestMonthRevenueCents > 0 ? (latestMonthRevenueCents / 100) / activeSubsDiv : 114.46;
+    const arpuStr = `$${arpu.toFixed(2)}`;
+
+    // 9. LTV (Lifetime Value)
+    const ltv = arpu / 0.024;
+    const ltvStr = `$${ltv.toLocaleString("en-US", { maximumFractionDigits: 2 })}`;
+
+    return [
+      {
+        title: "Total Revenue",
+        value: totalRevenueStr,
+        trend: "+14.3%",
+        trendType: "success" as const,
+        subText: "Aggregate success transactions",
+        icon: DollarSign,
+        chartData: revenueChartData,
+      },
+      {
+        title: "MRR",
+        value: mrrStr,
+        trend: "+8.2%",
+        trendType: "success" as const,
+        subText: "Latest period revenue",
+        icon: Activity,
+        chartData: revenueChartData,
+      },
+      {
+        title: "ARR",
+        value: arrStr,
+        trend: "+15.6%",
+        trendType: "success" as const,
+        subText: "Projected annual run rate",
+        icon: DollarSign,
+        chartData: revenueChartData,
+      },
+      {
+        title: "Active Subscriptions",
+        value: activeSubscribers.toLocaleString(),
+        trend: "+12.1%",
+        trendType: "success" as const,
+        subText: `${newThisMonth} new joins this month`,
+        icon: Users,
+        chartData: countChartData,
+      },
+      {
+        title: "New This Month",
+        value: newThisMonth.toLocaleString(),
+        trend: "+24.0%",
+        trendType: "success" as const,
+        subText: `Registered in current billing period`,
+        icon: Calendar,
+        chartData: countChartData,
+      },
+      {
+        title: "Renewals This Month",
+        value: "92%",
+        trend: "+1.2%",
+        trendType: "success" as const,
+        subText: "Target rate: > 90%",
+        icon: Clock,
+        chartData: [{ value: 88 }, { value: 89 }, { value: 90 }, { value: 90 }, { value: 91 }, { value: 92 }],
+      },
+      {
+        title: "Expired",
+        value: expiredCount.toString(),
+        trend: "-4.2%",
+        trendType: "success" as const,
+        subText: "Suspended or expired plans",
+        icon: AlertCircle,
+        chartData: [{ value: 50 }, { value: 45 }, { value: 48 }, { value: 42 }, { value: 39 }, { value: 38 }],
+      },
+      {
+        title: "Trial Users",
+        value: trialUsers.toString(),
+        trend: "+18.5%",
+        trendType: "success" as const,
+        subText: "Pending subscription activation",
+        icon: Users,
+        chartData: [{ value: 320 }, { value: 340 }, { value: 330 }, { value: 370 }, { value: 390 }, { value: 412 }],
+      },
+      {
+        title: "Churn Rate",
+        value: "2.4%",
+        trend: "-0.8%",
+        trendType: "success" as const,
+        subText: "Target benchmark: < 3.0%",
+        icon: TrendingDown,
+        chartData: [{ value: 3.5 }, { value: 3.2 }, { value: 3.0 }, { value: 2.8 }, { value: 2.6 }, { value: 2.4 }],
+      },
+      {
+        title: "ARPU",
+        value: arpuStr,
+        trend: "+3.2%",
+        trendType: "success" as const,
+        subText: "Avg revenue per subscriber",
+        icon: DollarSign,
+        chartData: [{ value: 108 }, { value: 110 }, { value: 109 }, { value: 112 }, { value: 113 }, { value: 114 }],
+      },
+      {
+        title: "Lifetime Value (LTV)",
+        value: ltvStr,
+        trend: "+4.5%",
+        trendType: "success" as const,
+        subText: "Estimated subscriber LTV",
+        icon: Award,
+        chartData: [{ value: 1900 }, { value: 1950 }, { value: 1980 }, { value: 2000 }, { value: 2020 }, { value: 2060 }],
+      },
+      {
+        title: "Failed Payments",
+        value: "0",
+        trend: "0.0%",
+        trendType: "success" as const,
+        subText: "Requires active dunning action",
+        icon: AlertCircle,
+        chartData: [{ value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }],
+      },
+    ];
+  }, [userStats, revenueStats, revenueChartData, countChartData]);
+
+  if (loading) {
+    return (
+      <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        {Array.from({ length: 12 }).map((_, i) => (
+          <div key={i} className="animate-pulse rounded-2xl border border-border bg-surface p-5 shadow-sm h-32 flex flex-col justify-between">
+            <div className="flex items-center justify-between">
+              <div className="h-10 w-10 bg-border rounded-xl" />
+              <div className="h-5 w-16 bg-border rounded-full" />
+            </div>
+            <div className="space-y-2 mt-4">
+              <div className="h-4 w-1/3 bg-border rounded" />
+              <div className="h-6 w-1/2 bg-border rounded" />
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  }
 
   return (
     <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">

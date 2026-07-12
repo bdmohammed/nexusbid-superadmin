@@ -4,8 +4,8 @@ import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useQueryClient } from "@tanstack/react-query";
 import { Bell, ShieldAlert, Check, Settings, Eye, Info, AlertTriangle } from "lucide-react";
-import { 
-  useNotifications, useMarkAllRead, useNotificationStats, notificationQueryKeys 
+import {
+  useNotifications, useMarkAllRead, useNotificationStats, notificationQueryKeys
 } from "@/features/notifications";
 import type { Notification } from "@/types";
 import { clientEnv } from "@/env/client";
@@ -23,7 +23,7 @@ export default function NotificationDropdown() {
   });
 
   const markAllReadMut = useMarkAllRead();
-  const unreadNotifications: Notification[] = data?.notifications || [];
+  const unreadNotifications: Notification[] = data?.success && data.data.notifications || [];
 
   // Live SSE listener for real-time unread updates
   useEffect(() => {
@@ -82,7 +82,7 @@ export default function NotificationDropdown() {
       {/* Dropdown Menu */}
       {isOpen && (
         <div className="absolute right-0 mt-2 z-50 w-80 sm:w-96 rounded-2xl border border-border bg-surface shadow-2xl p-4 transition-all duration-200">
-          
+
           {/* Header */}
           <div className="flex items-center justify-between border-b border-border pb-3">
             <h4 className="text-sm font-bold text-text flex items-center gap-1.5">

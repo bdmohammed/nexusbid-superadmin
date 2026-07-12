@@ -2,175 +2,18 @@
 
 import { Plus, Filter, RotateCcw, X, Search, Briefcase, FileText, CheckCircle, Clock, Users, ShieldAlert, Layers } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { type ChangeEvent, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Button from "@/components/ui/Button";
 import StatusBadge from "@/components/common/StatusBadge";
-import type { Tender, TenderPublicationStatus, TenderVersionStatus } from "@/types";
-
-// Premium curated mock data as fallback
-const fallbacks: Tender[] = [
-  {
-    id: "tender-1",
-    referenceNo: "TDR-2026-000101",
-    activeVersionId: "ver-1",
-    status: "ACTIVE",
-    publicationStatus: "PUBLISHED",
-    createdAt: "2026-01-10T08:00:00Z",
-    updatedAt: "2026-01-12T10:00:00Z",
-    activeVersion: {
-      id: "ver-1",
-      tenderId: "tender-1",
-      version: 1,
-      status: "APPROVED",
-      title: "Design & Construction of New City Administrative Complex",
-      description: "Comprehensive tender invitation for the architectural design, structural layouts, and civil construction of the upcoming modern administrative complex.",
-      procurementType: "Works",
-      priority: "High",
-      estimatedBudget: 4500000,
-      currency: "USD",
-      department: "Public Infrastructure Board",
-      placeId: "chicago_id_101",
-      formattedAddress: "Loop District, Chicago, IL, USA",
-      siteVisitRequired: true,
-      siteVisitDate: "2026-02-15T10:00:00Z",
-      siteVisitInstructions: "Report to Main Gate with security clearances.",
-      contactPerson: "Sarah Jenkins",
-      contactDesignation: "Chief Infrastructure Evaluator",
-      contactEmail: "sjenkins@cityinfra.gov",
-      contactPhone: "+1-312-555-0199",
-      contactAlternative: null,
-      openingDate: "2026-02-01T09:00:00Z",
-      closingDate: "2026-03-31T17:00:00Z",
-      bidValidity: 90,
-      projectDuration: "24 Months",
-      emdAmount: 50000,
-      securityDeposit: 150000,
-      paymentTerms: "Milestone-based progress payments",
-      visibility: "public",
-      evaluationMethod: "Quality & Cost Based Selection (QCBS)",
-      submissionMethod: "Online portal submission only",
-      contractType: "Lump Sum",
-      procurementMethod: "Open Competitive Bidding",
-      eligibilityCriteria: "Min 10 years experience in tier-1 commercial developments.",
-      specialConditions: "Performance guarantees required prior to award.",
-      categoryId: "cat-1",
-      stateId: "state-1",
-      category: { id: "cat-1", name: "Construction & Works", slug: "construction" },
-      state: { id: "state-1", name: "Illinois", code: "IL", slug: "illinois" },
-      createdAt: "2026-01-10T08:00:00Z"
-    }
-  },
-  {
-    id: "tender-2",
-    referenceNo: "TDR-2026-000102",
-    activeVersionId: "ver-2",
-    status: "ACTIVE",
-    publicationStatus: "OPEN",
-    createdAt: "2026-02-05T09:30:00Z",
-    updatedAt: "2026-02-06T14:15:00Z",
-    activeVersion: {
-      id: "ver-2",
-      tenderId: "tender-2",
-      version: 2,
-      status: "APPROVED",
-      title: "Supply and Commissioning of Enterprise Data Centers",
-      description: "Procuring high-density servers, cooling systems, and uninterrupted power supply modules for the primary server farms.",
-      procurementType: "Supplies",
-      priority: "Medium",
-      estimatedBudget: 1250000,
-      currency: "USD",
-      department: "Information Security Division",
-      placeId: "austin_id_202",
-      formattedAddress: "Tech Corridor, Austin, TX, USA",
-      siteVisitRequired: false,
-      siteVisitDate: null,
-      siteVisitInstructions: null,
-      contactPerson: "David Miller",
-      contactDesignation: "Director of IT Operations",
-      contactEmail: "dmiller@itops.org",
-      contactPhone: "+1-512-555-0311",
-      contactAlternative: null,
-      openingDate: "2026-02-10T08:00:00Z",
-      closingDate: "2026-04-15T18:00:00Z",
-      bidValidity: 60,
-      projectDuration: "6 Months",
-      emdAmount: 15000,
-      securityDeposit: 60000,
-      paymentTerms: "30% advance, 70% post commissioning",
-      visibility: "public",
-      evaluationMethod: "Lowest Price Technically Compliant",
-      submissionMethod: "Hybrid (Digital upload + physical backup BOQ)",
-      contractType: "Supply & Commissioning",
-      procurementMethod: "Global Invitation",
-      eligibilityCriteria: "Certified platinum partner of tier-1 server OEMs.",
-      specialConditions: "Extended warranty of 5 years is mandatory.",
-      categoryId: "cat-2",
-      stateId: "state-2",
-      category: { id: "cat-2", name: "IT & Telecommunications", slug: "it-telecom" },
-      state: { id: "state-2", name: "Texas", code: "TX", slug: "texas" },
-      createdAt: "2026-02-05T09:30:00Z"
-    }
-  },
-  {
-    id: "tender-3",
-    referenceNo: "TDR-2026-000103",
-    activeVersionId: "ver-3",
-    status: "ACTIVE",
-    publicationStatus: "SCHEDULED",
-    createdAt: "2026-03-01T11:00:00Z",
-    updatedAt: "2026-03-02T09:00:00Z",
-    activeVersion: {
-      id: "ver-3",
-      tenderId: "tender-3",
-      version: 1,
-      status: "DRAFT",
-      title: "Statewide Renewable Wind Energy Grid Feasibility Assessment",
-      description: "Seeking consultations for wind speeds modeling, onshore grid connectivity, and regulatory environmental impact studies.",
-      procurementType: "Services",
-      priority: "Low",
-      estimatedBudget: 320000,
-      currency: "USD",
-      department: "Energy Conservation Authority",
-      placeId: "sac_id_303",
-      formattedAddress: "Capital Drive, Sacramento, CA, USA",
-      siteVisitRequired: false,
-      siteVisitDate: null,
-      siteVisitInstructions: null,
-      contactPerson: "Dr. Elena Rostova",
-      contactDesignation: "Grid Strategy Lead",
-      contactEmail: "erostova@cleanenergy.state.gov",
-      contactPhone: "+1-916-555-0812",
-      contactAlternative: null,
-      openingDate: "2026-04-01T09:00:00Z",
-      closingDate: "2026-05-15T17:00:00Z",
-      bidValidity: 120,
-      projectDuration: "12 Months",
-      emdAmount: 5000,
-      securityDeposit: 20000,
-      paymentTerms: "Quarterly payments on deliverable approvals",
-      visibility: "public",
-      evaluationMethod: "Quality Cost Ratio 80:20",
-      submissionMethod: "Digital only",
-      contractType: "Consultancy Services",
-      procurementMethod: "National Competitive Bid",
-      eligibilityCriteria: "Consultants must have completed at least 3 grid-scale wind energy studies.",
-      specialConditions: "All survey raw assets must be hosted in secure state server repositories.",
-      categoryId: "cat-3",
-      stateId: "state-3",
-      category: { id: "cat-3", name: "Consulting & Services", slug: "consulting" },
-      state: { id: "state-3", name: "California", code: "CA", slug: "california" },
-      createdAt: "2026-03-01T11:00:00Z"
-    }
-  }
-];
+import type { Tender } from "@/types";
 
 export default function TendersPage() {
-  const [tenders, setTenders] = useState<Tender[]>(fallbacks);
+  const [tenders, setTenders] = useState<Tender[]>([]);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("ALL");
   const [priorityFilter, setPriorityFilter] = useState<string>("ALL");
   const [typeFilter, setTypeFilter] = useState<string>("ALL");
-  
+
   // Drawer & Advanced Filter State
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [minBudget, setMinBudget] = useState("");
@@ -462,9 +305,9 @@ export default function TendersPage() {
 
                 const daysRemaining = version.closingDate
                   ? Math.max(
-                      0,
-                      Math.ceil((new Date(version.closingDate).getTime() - new Date().getTime()) / (1000 * 3600 * 24))
-                    )
+                    0,
+                    Math.ceil((new Date(version.closingDate).getTime() - new Date().getTime()) / (1000 * 3600 * 24))
+                  )
                   : 0;
 
                 return (

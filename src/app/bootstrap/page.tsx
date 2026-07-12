@@ -1,11 +1,11 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { authApi } from '@/features/auth/api/api';
 
-export default function BootstrapPage() {
+function BootstrapContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const token = searchParams.get('token') || '';
@@ -77,7 +77,7 @@ export default function BootstrapPage() {
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-xs font-semibold text-blue-400 mb-6 uppercase tracking-wider">
             System Initialization
           </div>
-          
+
           <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-white mb-3">
             Admin Bootstrap Setup
           </h1>
@@ -225,5 +225,17 @@ export default function BootstrapPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function BootstrapPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-[80vh] flex items-center justify-center bg-linear-to-b from-[var(--background)] to-[var(--surface-secondary)]">
+        <div className="text-[var(--muted)]">Loading...</div>
+      </div>
+    }>
+      <BootstrapContent />
+    </Suspense>
   );
 }

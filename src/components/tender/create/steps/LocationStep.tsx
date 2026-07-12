@@ -3,12 +3,25 @@
 import { useFormContext } from "react-hook-form";
 import Select from "@/components/common/Select";
 import Input from "@/components/ui/Input";
+import { useCountries, useStates } from "@/features/state/api/queries";
 
 export default function LocationStep() {
   const {
     register,
+    watch,
     formState: { errors },
   } = useFormContext();
+
+  const selectedCountry = watch("country");
+
+  const { data: countries = [], isLoading: isLoadingCountries } = useCountries();
+  const { data: states = [], isLoading: isLoadingStates } = useStates(
+    selectedCountry ? { country: selectedCountry } : undefined
+  );
+
+  // Fallback lists in case API returns empty or pending
+  const fallbackCountries = ["United States", "India", "United Kingdom", "UAE", "Singapore"];
+  const displayCountries = countries.length > 0 ? countries : fallbackCountries;
 
   return (
     <div className="space-y-8">
@@ -28,16 +41,20 @@ export default function LocationStep() {
           </label>
 
           <Select
+            className="w-full"
+            disabled={isLoadingCountries}
             {...register("country", {
               required: "Country is required.",
             })}
           >
-            <option value="">Select Country</option>
-            <option value="United States">United States</option>
-            <option value="India">India</option>
-            <option value="United Kingdom">United Kingdom</option>
-            <option value="UAE">UAE</option>
-            <option value="Singapore">Singapore</option>
+            <option value="">
+              {isLoadingCountries ? "Loading Countries..." : "Select Country"}
+            </option>
+            {displayCountries.map((country: string) => (
+              <option key={country} value={country}>
+                {country}
+              </option>
+            ))}
           </Select>
 
           {errors.country && (
@@ -52,12 +69,26 @@ export default function LocationStep() {
             State <span className="text-red-500">*</span>
           </label>
 
-          <Input
-            placeholder="e.g. California"
+          <Select
+            className="w-full"
+            disabled={!selectedCountry || isLoadingStates}
             {...register("state", {
               required: "State is required.",
             })}
-          />
+          >
+            <option value="">
+              {!selectedCountry
+                ? "Select Country First"
+                : isLoadingStates
+                ? "Loading States..."
+                : "Select State"}
+            </option>
+            {states?.map((st: any) => (
+              <option key={st.id} value={st.id}>
+                {st.name} ({st.code})
+              </option>
+            ))}
+          </Select>
 
           {errors.state && (
             <p className="mt-1 text-sm text-red-500">
@@ -67,8 +98,23 @@ export default function LocationStep() {
         </div>
       </div>
 
-      {/* City & Pin Code */}
-      <div className="grid gap-6 md:grid-cols-2">
+      {/* County, City, & Pin Code */}
+      <div className="grid gap-6 md:grid-cols-3">
+        <div>
+          <label className="mb-2 block text-sm font-medium">County</label>
+
+          <Input
+            placeholder="e.g. Orange County"
+            {...register("county", {
+              minLength: { value: 2, message: "Min 2 characters required." },
+              pattern: {
+                value: /^[a-zA-Z\s.-]+$/,
+                message: "Only letters, spaces, hyphens, and periods allowed.",
+              },
+            })}
+          />
+        </div>
+
         <div>
           <label className="mb-2 block text-sm font-medium">
             City <span className="text-red-500">*</span>
@@ -78,6 +124,11 @@ export default function LocationStep() {
             placeholder="e.g. Los Angeles"
             {...register("city", {
               required: "City is required.",
+              minLength: { value: 2, message: "Min 2 characters required." },
+              pattern: {
+                value: /^[a-zA-Z\s.-]+$/,
+                message: "Only letters, spaces, hyphens, and periods allowed.",
+              },
             })}
           />
 
@@ -89,8 +140,37 @@ export default function LocationStep() {
         </div>
 
         <div>
-          <label className="mb-2 block text-sm font-medium">Pin Code / Zip Code</label>
-          <Input placeholder="90001" {...register("pinCode")} />
+          <label className="mb-2 block text-sm font-medium">
+            Pin Code / Zip Code <span className="text-red-500">*</span>
+          </label>
+          <Input
+            placeholder="e.g. 90001"
+            {...register("pinCode", {
+              required: "Pin/Zip code is required.",
+              validate: (val) => {
+                if (!val) return "Pin/Zip code is required.";
+                if (selectedCountry === "United States") {
+                  return (
+                    /^\d{5}(-\d{4})?$/.test(val) ||
+                    "Must be a valid US ZIP code (e.g. 90001 or 90001-1234)."
+                  );
+                }
+                if (selectedCountry === "India") {
+                  return /^\d{6}$/.test(val) || "Must be a valid 6-digit PIN code.";
+                }
+                return (
+                  /^[a-zA-Z0-9\s-]{3,10}$/.test(val) ||
+                  "Must be between 3 and 10 alphanumeric characters."
+                );
+              },
+            })}
+          />
+
+          {errors.pinCode && (
+            <p className="mt-1 text-sm text-red-500">
+              {errors.pinCode.message as string}
+            </p>
+          )}
         </div>
       </div>
 

@@ -35,8 +35,8 @@ export default function RoleCreateDrawer({
           rbacApi.getRoles(),
           rbacApi.getAssignableUsers(),
         ]);
-        const rolesData = rolesRes.data.data || [];
-        const usersData = usersRes.data.data || [];
+        const rolesData = rolesRes.data.success && rolesRes.data.data || [];
+        const usersData = usersRes.data.success && usersRes.data.data || [];
         setRoles(rolesData);
         setAssignableUsers(usersData);
         if (rolesData.length > 0) {

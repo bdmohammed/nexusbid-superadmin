@@ -5,7 +5,7 @@ import { CategoryQuery } from '../types';
 
 export const categoryApi = {
     async getCategories(query?: CategoryQuery) {
-        return apiClient.get<ApiResponse<Category[]>>('/categories', {
+        return apiClient.get<ApiResponse<{ categories: Category[]; total: number }>>('/categories', {
             params: query,
         });
     },

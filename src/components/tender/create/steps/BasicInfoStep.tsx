@@ -3,12 +3,16 @@
 import { useFormContext } from "react-hook-form";
 import Select from "@/components/common/Select";
 import Input from "@/components/ui/Input";
+import { useCategories } from "@/features/categories/api/queries";
 
 export default function BasicInfoStep() {
   const {
     register,
     formState: { errors },
   } = useFormContext();
+
+  const { data: categoryData, isLoading: isLoadingCategories } = useCategories();
+  const categoriesList = categoryData?.categories || [];
 
   return (
     <div className="space-y-8">
@@ -84,7 +88,7 @@ export default function BasicInfoStep() {
         </div>
       </div>
 
-      {/* Tender Type */}
+      {/* Tender Type + Currency */}
       <div className="grid gap-6 md:grid-cols-2">
         <div>
           <label className="mb-2 block text-sm font-medium">
@@ -92,6 +96,7 @@ export default function BasicInfoStep() {
           </label>
 
           <Select
+            className="w-full"
             {...register("tenderType", {
               required: "Tender type is required.",
             })}
@@ -113,7 +118,7 @@ export default function BasicInfoStep() {
         <div>
           <label className="mb-2 block text-sm font-medium">Currency</label>
 
-          <Select {...register("currency")}>
+          <Select className="w-full" {...register("currency")}>
             <option value="INR">INR (₹)</option>
             <option value="USD">USD ($)</option>
             <option value="EUR">EUR (€)</option>
@@ -122,50 +127,33 @@ export default function BasicInfoStep() {
       </div>
 
       {/* Category */}
-      <div className="grid gap-6 md:grid-cols-2">
-        <div>
-          <label className="mb-2 block text-sm font-medium">
-            Category <span className="text-red-500">*</span>
-          </label>
+      <div>
+        <label className="mb-2 block text-sm font-medium">
+          Category <span className="text-red-500">*</span>
+        </label>
 
-          <Select
-            {...register("category", {
-              required: "Category is required.",
-            })}
-          >
-            <option value="">Select Category</option>
-            <option value="Civil Works">Civil Works</option>
-            <option value="Electrical">Electrical</option>
-            <option value="HVAC">HVAC</option>
-            <option value="Plumbing">Plumbing</option>
-            <option value="Fire Fighting">Fire Fighting</option>
-          </Select>
+        <Select
+          className="w-full"
+          disabled={isLoadingCategories}
+          {...register("category", {
+            required: "Category is required.",
+          })}
+        >
+          <option value="">
+            {isLoadingCategories ? "Loading Categories..." : "Select Category"}
+          </option>
+          {categoriesList.map((cat: any) => (
+            <option key={cat.id} value={cat.id}>
+              {cat.name}
+            </option>
+          ))}
+        </Select>
 
-          {errors.category && (
-            <p className="mt-1 text-sm text-red-500">
-              {errors.category.message as string}
-            </p>
-          )}
-        </div>
-
-        <div>
-          <label className="mb-2 block text-sm font-medium">
-            Sub Category <span className="text-red-500">*</span>
-          </label>
-
-          <Input
-            placeholder="Sub Category"
-            {...register("subCategory", {
-              required: "Sub category is required.",
-            })}
-          />
-
-          {errors.subCategory && (
-            <p className="mt-1 text-sm text-red-500">
-              {errors.subCategory.message as string}
-            </p>
-          )}
-        </div>
+        {errors.category && (
+          <p className="mt-1 text-sm text-red-500">
+            {errors.category.message as string}
+          </p>
+        )}
       </div>
 
       {/* Description */}

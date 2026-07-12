@@ -41,7 +41,7 @@ export default function TenderDetailsPage() {
   const [amendVal, setAmendVal] = useState("");
   const [commUser, setCommUser] = useState("");
   const [commRole, setCommRole] = useState<"Chairperson" | "Evaluator" | "Observer">("Evaluator");
-  
+
   // Evaluation inputs
   const [evalPartId, setEvalPartId] = useState("");
   const [evalCriteria, setEvalCriteria] = useState("");
@@ -337,11 +337,10 @@ export default function TenderDetailsPage() {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-3 w-full px-4 py-3 text-sm font-semibold rounded-xl transition ${
-                  activeTab === tab.id
+                className={`flex items-center gap-3 w-full px-4 py-3 text-sm font-semibold rounded-xl transition ${activeTab === tab.id
                     ? "bg-primary text-white"
                     : "text-text-light hover:bg-background hover:text-text"
-                }`}
+                  }`}
               >
                 <Icon size={18} />
                 {tab.label}
@@ -352,7 +351,7 @@ export default function TenderDetailsPage() {
 
         {/* Right Side Tab Workspace Panel */}
         <div className="lg:col-span-3 rounded-2xl border border-border bg-surface p-6 shadow-sm min-h-[500px]">
-          
+
           {/* TAB 1: OVERVIEW */}
           {activeTab === "overview" && (
             <div className="space-y-6">
@@ -367,7 +366,7 @@ export default function TenderDetailsPage() {
                 <div className="bg-background p-4 rounded-xl">
                   <span className="text-xs text-text-light font-medium">Procurement Category</span>
                   <p className="text-lg font-extrabold text-text mt-1">
-                    {version?.category?.name || "Works"}
+                    {/* {version?.category?.name || "Works"} */}
                   </p>
                 </div>
                 <div className="bg-background p-4 rounded-xl">
@@ -650,7 +649,7 @@ export default function TenderDetailsPage() {
           {activeTab === "qa" && (
             <div className="space-y-6">
               <h3 className="text-lg font-bold border-b pb-2">Interactive Q&A Board</h3>
-              
+
               <div className="space-y-4">
                 {questions.map((q) => (
                   <div key={q.id} className="bg-background p-4 rounded-xl space-y-2 border">
@@ -743,7 +742,7 @@ export default function TenderDetailsPage() {
                   <div key={a.id} className="bg-background p-4 rounded-xl border border-dashed">
                     <h4 className="font-bold text-sm text-primary">Amendment #{a.amendmentNumber}</h4>
                     <p className="text-xs text-text-light mt-1">Logged: {new Date(a.createdAt).toLocaleString()}</p>
-                    
+
                     <div className="mt-3 bg-surface p-3 rounded-lg text-xs space-y-1">
                       <span className="font-bold text-text">Changed Parameters Diff:</span>
                       {Object.keys(a.changedFields).map((field) => (

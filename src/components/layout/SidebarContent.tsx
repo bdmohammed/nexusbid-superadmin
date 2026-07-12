@@ -4,6 +4,9 @@ import { navigation, systemNavigation } from "@/constants/navigation";
 import Logo from "../common/Logo";
 import SidebarItem from "./SidebarItem";
 import { usePermissions } from "@/hooks/usePermissions";
+import { LogOut, Loader2 } from "lucide-react";
+import { useAuth } from "@/features/auth/hooks/useAuth";
+import { useRouter } from "next/navigation";
 
 export interface SidebarContentProps {
   onNavigate?: () => void;
@@ -11,6 +14,19 @@ export interface SidebarContentProps {
 
 export default function SidebarContent({ onNavigate }: SidebarContentProps) {
   const { isInitializing, hasPermission } = usePermissions();
+  const { logout, isLoggingOut } = useAuth();
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      router.push("/login");
+      router.refresh();
+      if (onNavigate) onNavigate();
+    } catch (error) {
+      console.error("Failed to logout:", error);
+    }
+  };
 
   if (isInitializing) {
     return (
@@ -72,6 +88,26 @@ export default function SidebarContent({ onNavigate }: SidebarContentProps) {
             </nav>
           </>
         )}
+      </div>
+
+      <div className="border-t border-border p-4 bg-sidebar">
+        <button
+          type="button"
+          onClick={handleLogout}
+          disabled={isLoggingOut}
+          className="group relative flex w-full items-center gap-3 rounded-xl px-4 py-2 text-sm font-medium transition-all duration-200 text-red-500 hover:bg-red-500/10 hover:text-red-600 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+        >
+          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-background text-red-500 transition-colors group-hover:bg-white group-hover:text-red-600">
+            {isLoggingOut ? (
+              <Loader2 className="animate-spin" size={18} />
+            ) : (
+              <LogOut size={18} />
+            )}
+          </span>
+          <span className="px-1 font-semibold">
+            {isLoggingOut ? "Logging out..." : "Logout"}
+          </span>
+        </button>
       </div>
     </div>
   );

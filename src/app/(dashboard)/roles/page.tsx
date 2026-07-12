@@ -101,7 +101,7 @@ export default function RolesPage() {
   function getPermissionMetadata(key: string, desc: string): FormattedPermission {
     const normKey = key.toUpperCase().replace(/\./g, "_");
     const lowerKey = normKey.toLowerCase();
-    
+
     let label = key;
     if (normKey === "USER_VIEW") label = "View Users";
     else if (normKey === "USER_CREATE") label = "Create Users";
@@ -224,13 +224,13 @@ export default function RolesPage() {
     setLoading(true);
     try {
       const [rolesRes, statsRes, modulesRes] = await Promise.all([
-        rbacApi.getRoles(true),
+        rbacApi.getRoles(),
         rbacApi.getStats(),
         rbacApi.getPermissions()
       ]);
-      setRoles(rolesRes.data.data || []);
-      setStats(statsRes.data.data || null);
-      setModules(modulesRes.data.data || []);
+      setRoles(rolesRes.data.success && rolesRes.data.data || []);
+      setStats(statsRes.data.success && statsRes.data.data || null);
+      setModules(modulesRes.data.success && modulesRes.data.data || []);
     } catch (err) {
       console.error(err);
     } finally {
@@ -248,7 +248,7 @@ export default function RolesPage() {
     setHistoryOpen(true);
     try {
       const res = await rbacApi.getRoleVersions(role.id);
-      setVersions(res.data.data || []);
+      setVersions(res.data.success && res.data.data || []);
     } catch (err) {
       console.error(err);
     }
@@ -260,7 +260,7 @@ export default function RolesPage() {
     setAssignOpen(true);
     try {
       const res = await rbacApi.getAssignableUsers();
-      setAssignableUsers(res.data.data || []);
+      setAssignableUsers(res.data.success && res.data.data || []);
     } catch (err) {
       console.error(err);
     }
@@ -301,7 +301,7 @@ export default function RolesPage() {
     const cleanDesc = (role.description || "").replace(/\[ReplacesRole:\s*([0-9a-fA-F-]+)\]/, "").trim();
     setDescription(cleanDesc);
     if (role.slug === "super-admin") {
-      const allKeys = modules.flatMap((m) => (m.permissions || []).map((p) => p.key));
+      const allKeys = modules.flatMap((m) => (m.permissions || []).map((p: any) => p.key));
       setSelectedPermissions(allKeys);
     } else {
       setSelectedPermissions(role.permissions || []);
@@ -316,7 +316,7 @@ export default function RolesPage() {
     const cleanDesc = (role.description || "").replace(/\[ReplacesRole:\s*([0-9a-fA-F-]+)\]/, "").trim();
     setDescription(cleanDesc);
     if (role.slug === "super-admin") {
-      const allKeys = modules.flatMap((m) => (m.permissions || []).map((p) => p.key));
+      const allKeys = modules.flatMap((m) => (m.permissions || []).map((p: any) => p.key));
       setSelectedPermissions(allKeys);
     } else {
       setSelectedPermissions(role.permissions || []);
@@ -399,7 +399,7 @@ export default function RolesPage() {
     setSelectedReviewers([]);
     try {
       const res = await rbacApi.getAssignableUsers();
-      setAssignableUsers(res.data.data || []);
+      setAssignableUsers(res.data.success && res.data.data || []);
     } catch (err) {
       console.error(err);
     }
@@ -426,9 +426,9 @@ export default function RolesPage() {
 
     try {
       const res = await rbacApi.getReviewDetails(version.reviews?.[0]?.id || version.reviews?.[0] || "");
-      if (res.data.data) {
-        setReviewDetails(res.data.data);
-        setActiveReviewId(res.data.data.id);
+      if (res.data.success && res.data.data) {
+        setReviewDetails(res.data.success && res.data.data);
+        setActiveReviewId(res.data.success && res.data.data.id);
         setReviewActionOpen(true);
       }
     } catch (err: any) {
@@ -458,7 +458,7 @@ export default function RolesPage() {
     setCompareOpen(true);
     try {
       const res = await rbacApi.getRoleVersions(role.id);
-      setVersions(res.data.data || []);
+      setVersions(res.data.success && res.data.data || []);
     } catch (err) {
       console.error(err);
     }
@@ -468,7 +468,7 @@ export default function RolesPage() {
     if (!compareRole || !compareV1 || !compareV2) return;
     try {
       const res = await rbacApi.compareVersions(compareRole.id, Number(compareV1), Number(compareV2));
-      setCompareResult(res.data.data);
+      setCompareResult(res.data.success && res.data.data);
     } catch (err: any) {
       alert(err.response?.data?.message || "Comparison failed");
     }
@@ -529,7 +529,7 @@ export default function RolesPage() {
   async function triggerExport() {
     try {
       const res = await rbacApi.exportData();
-      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(res.data.data, null, 2));
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(res.data.success && res.data.data, null, 2));
       const downloadAnchor = document.createElement("a");
       downloadAnchor.setAttribute("href", dataStr);
       downloadAnchor.setAttribute("download", `rbac_export_${Date.now()}.json`);
@@ -855,11 +855,11 @@ export default function RolesPage() {
   // Filter roles list
   const filteredRoles = roles.filter((role) => {
     const matchesSearch = role.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                          role.description.toLowerCase().includes(searchQuery.toLowerCase());
+      role.description.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesStatus = statusFilter === "ALL" || role.status === statusFilter;
     const matchesType = typeFilter === "ALL" ||
-                        (typeFilter === "SYSTEM" && role.isSystemRole) ||
-                        (typeFilter === "CUSTOM" && !role.isSystemRole);
+      (typeFilter === "SYSTEM" && role.isSystemRole) ||
+      (typeFilter === "CUSTOM" && !role.isSystemRole);
     return matchesSearch && matchesStatus && matchesType;
   });
 
@@ -974,9 +974,8 @@ export default function RolesPage() {
           {filteredRoles.map((role) => (
             <div
               key={role.id}
-              className={`relative rounded-2xl border bg-surface p-6 shadow-sm transition hover:shadow-md flex flex-col justify-between ${
-                role.slug === "super-admin" ? "border-primary/40 ring-1 ring-primary/10" : "border-border"
-              }`}
+              className={`relative rounded-2xl border bg-surface p-6 shadow-sm transition hover:shadow-md flex flex-col justify-between ${role.slug === "super-admin" ? "border-primary/40 ring-1 ring-primary/10" : "border-border"
+                }`}
             >
               <div>
                 <div className="flex items-start justify-between mb-2">
@@ -1002,8 +1001,8 @@ export default function RolesPage() {
                       role.status === "ACTIVE"
                         ? "green"
                         : role.status === "DISABLED"
-                        ? "yellow"
-                        : "red"
+                          ? "yellow"
+                          : "red"
                     }
                   >
                     {role.status}
@@ -1095,9 +1094,8 @@ export default function RolesPage() {
                     leftIcon={Trash2}
                     variant="outline"
                     size="sm"
-                    className={`hover:bg-red-50 hover:text-red-600 hover:border-red-200 ${
-                      role.isSystemRole ? "opacity-50 cursor-not-allowed hover:bg-transparent hover:text-text hover:border-border active:scale-100" : ""
-                    }`}
+                    className={`hover:bg-red-50 hover:text-red-600 hover:border-red-200 ${role.isSystemRole ? "opacity-50 cursor-not-allowed hover:bg-transparent hover:text-text hover:border-border active:scale-100" : ""
+                      }`}
                     onClick={() => {
                       if (role.isSystemRole) {
                         showToast("Archive is disabled: System roles are read-only and cannot be deleted or archived.", "error");
@@ -1134,8 +1132,8 @@ export default function RolesPage() {
                   {viewOnly
                     ? "Inspect active permission configuration and details."
                     : editingRole
-                    ? "Modifications will save as a new DRAFT version requiring review before deployment."
-                    : "Creates version 1 of a new role configuration."}
+                      ? "Modifications will save as a new DRAFT version requiring review before deployment."
+                      : "Creates version 1 of a new role configuration."}
                 </p>
               </div>
               <button
@@ -1262,7 +1260,7 @@ export default function RolesPage() {
                                 100,
                                 (selectedPermissions.length /
                                   (modules.flatMap((m) => m.permissions || []).length || 1)) *
-                                  100
+                                100
                               )}%`,
                             }}
                             className="h-full bg-primary rounded-full transition-all duration-300"
@@ -1335,13 +1333,12 @@ export default function RolesPage() {
                     </button>
                     <div className="flex items-center gap-1.5">
                       <span
-                        className={`text-[9px] font-extrabold px-1.5 py-0.5 rounded uppercase tracking-wider ${
-                          activePermissionDetail.category === "dangerous"
-                            ? "bg-red-100 text-red-700"
-                            : activePermissionDetail.category === "basic"
+                        className={`text-[9px] font-extrabold px-1.5 py-0.5 rounded uppercase tracking-wider ${activePermissionDetail.category === "dangerous"
+                          ? "bg-red-100 text-red-700"
+                          : activePermissionDetail.category === "basic"
                             ? "bg-green-100 text-green-700"
                             : "bg-amber-100 text-amber-700"
-                        }`}
+                          }`}
                       >
                         {activePermissionDetail.category}
                       </span>
@@ -1430,10 +1427,10 @@ export default function RolesPage() {
                           ver.status === "APPROVED"
                             ? "green"
                             : ver.status === "PENDING_REVIEW"
-                            ? "yellow"
-                            : ver.status === "REJECTED"
-                            ? "red"
-                            : "indigo"
+                              ? "yellow"
+                              : ver.status === "REJECTED"
+                                ? "red"
+                                : "indigo"
                         }
                       >
                         {ver.status}
@@ -1667,7 +1664,7 @@ export default function RolesPage() {
               <label className="text-xs font-semibold text-text-light block mb-1">Source Version (V1)</label>
               <select
                 value={compareV1}
-                onChange={(e) => setCompareV1(e.target.value)}
+                onChange={(e) => setCompareV1(Number.parseInt(e.target.value || "0"))}
                 className="w-full rounded-xl border border-border bg-surface px-3 py-2 outline-none text-sm text-text"
               >
                 <option value="">Select V1</option>
@@ -1681,7 +1678,7 @@ export default function RolesPage() {
               <label className="text-xs font-semibold text-text-light block mb-1">Target Version (V2)</label>
               <select
                 value={compareV2}
-                onChange={(e) => setCompareV2(e.target.value)}
+                onChange={(e) => setCompareV2(Number.parseInt(e.target.value || "0"))}
                 className="w-full rounded-xl border border-border bg-surface px-3 py-2 outline-none text-sm text-text"
               >
                 <option value="">Select V2</option>

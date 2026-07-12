@@ -10,6 +10,8 @@ import ReviewStep from "./steps/ReviewStep";
 import TenderNavigation from "./TenderNavigation";
 import TenderStepper from "./TenderStepper";
 import { useRouter } from "next/navigation";
+import { useCategories } from "@/features/categories/api/queries";
+import { useStates } from "@/features/state/api/queries";
 
 const steps = ["Basic Info", "Location", "Details", "Documents", "Review"];
 
@@ -18,13 +20,13 @@ interface TenderFormInput {
   referenceNumber: string;
   tenderType: string;
   category: string;
-  subCategory: string;
   currency: string;
   budgetMin: string;
   budgetMax: string;
   description: string;
   country: string;
   state: string;
+  county: string;
   city: string;
   pinCode: string;
   address: string;
@@ -68,13 +70,13 @@ export default function TenderForm() {
       referenceNumber: "TDR-2026-001",
       tenderType: "",
       category: "",
-      subCategory: "",
       currency: "USD",
       budgetMin: "",
       budgetMax: "",
       description: "",
       country: "United States",
       state: "",
+      county: "",
       city: "",
       pinCode: "",
       address: "",
@@ -110,6 +112,13 @@ export default function TenderForm() {
 
   const [step, setStep] = useState(0);
 
+  const { data: categoryData } = useCategories();
+  const categories = categoryData?.categories || [];
+  const selectedCountry = methods.watch("country");
+  const { data: states = [] } = useStates(
+    selectedCountry ? { country: selectedCountry } : undefined
+  );
+
   const StepComponents = [
     BasicInfoStep,
     LocationStep,
@@ -127,15 +136,19 @@ export default function TenderForm() {
       case 0:
         fields = [
           "title",
-          "subCategory",
+          "category",
           "description",
+          "tenderType",
         ];
         break;
 
       case 1:
         fields = [
+          "country",
           "state",
+          "county",
           "city",
+          "pinCode",
           "address",
         ];
         break;
@@ -161,6 +174,12 @@ export default function TenderForm() {
   const submitForm = async (data: TenderFormInput) => {
     setSubmitting(true);
     try {
+      const selectedCategoryObj = categories.find((c: any) => c.id === data.category);
+      const selectedStateObj = states.find((s: any) => s.id === data.state);
+
+      const categoryName = selectedCategoryObj ? selectedCategoryObj.name : "";
+      const stateName = selectedStateObj ? selectedStateObj.name : "";
+
       const payload = {
         title: data.title,
         description: data.description,
@@ -168,9 +187,13 @@ export default function TenderForm() {
         priority: data.priority,
         estimatedBudget: data.budgetMax ? parseInt(data.budgetMax, 10) : 0,
         currency: data.currency,
-        department: data.subCategory,
+        department: categoryName || null,
         placeId: data.placeId || null,
-        formattedAddress: data.formattedAddress || null,
+        formattedAddress:
+          data.formattedAddress ||
+          `${data.address}, ${data.city}, ${stateName || data.state}, ${
+            data.county ? data.county + ", " : ""
+          }${data.pinCode}, ${data.country}`,
         siteVisitRequired: data.siteVisit === "Yes",
         siteVisitDate: data.openingDate ? new Date(data.openingDate).toISOString() : null,
         contactPerson: data.contactPerson || null,
@@ -186,6 +209,8 @@ export default function TenderForm() {
         evaluationMethod: data.evaluationMethod || null,
         eligibilityCriteria: data.eligibility || null,
         specialConditions: data.specialConditions || null,
+        categoryId: data.category || null,
+        stateId: data.state || null,
       };
 
       const res = await fetch("/api/v1/tenders/admin", {

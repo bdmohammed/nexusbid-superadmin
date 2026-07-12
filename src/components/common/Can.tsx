@@ -12,9 +12,9 @@ interface CanProps {
 }
 
 export function Can({ permission, any, all, fallback = null, children }: CanProps) {
-  const { hasPermission, hasAnyPermission, hasAllPermissions, loading } = usePermissions();
+  const { hasPermission, hasAnyPermission, hasAllPermissions, isInitializing } = usePermissions();
 
-  if (loading) {
+  if (isInitializing) {
     return null;
   }
 

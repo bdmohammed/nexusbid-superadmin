@@ -24,7 +24,7 @@ export default function RoleAssignmentsPage() {
     setLoading(true);
     try {
       const res = await rbacApi.getAssignments();
-      setAssignments(res.data.data || []);
+      setAssignments(res.data.success ? res.data.data : []);
     } catch (err) {
       console.error(err);
     } finally {

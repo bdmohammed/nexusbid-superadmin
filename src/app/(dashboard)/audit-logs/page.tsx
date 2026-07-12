@@ -2,8 +2,8 @@
 
 import { useEffect, useState, useCallback } from "react";
 import {
-  History, Search, RefreshCw, Terminal, Globe, User, Shield, ShieldAlert,
-  Eye, Download, Settings, BarChart2, Filter, CheckCircle, XCircle,
+  Search, Terminal, Globe, Shield, ShieldAlert,
+  Eye, Download, Settings, Filter, CheckCircle, XCircle,
   AlertTriangle, Cpu, Layers, GitBranch, ArrowUpRight, FileText
 } from "lucide-react";
 import { rbacApi } from "@/features/rbac/api/api";
@@ -21,13 +21,13 @@ export default function AuditLogsForensicPage() {
   const [selectedStatus, setSelectedStatus] = useState("ALL");
   const [selectedLog, setSelectedLog] = useState<any>(null);
   const [correlationTimeline, setCorrelationTimeline] = useState<any[]>([]);
-  
+
   // Advanced filters drawer states
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [filterCountry, setFilterCountry] = useState("");
   const [filterIp, setFilterIp] = useState("");
   const [filterCorrelationId, setFilterCorrelationId] = useState("");
-  
+
   // Pagination
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 15;
@@ -62,7 +62,7 @@ export default function AuditLogsForensicPage() {
   const loadStats = async () => {
     try {
       const res = await rbacApi.getAuditStats();
-      if (res.data?.data) {
+      if (res.data.success && res.data.data) {
         setStats(res.data.data);
       }
     } catch (err) {
@@ -73,16 +73,16 @@ export default function AuditLogsForensicPage() {
   const loadRetention = async () => {
     try {
       const res = await rbacApi.getRetentionPolicies();
-      if (res.data?.data && res.data.data.length > 0) {
+      if (res.data.success && res.data.data && res.data.data.length > 0) {
         setRetentionPolicies(res.data.data.map((p: any) => ({
           category: p.category,
           label: p.category === "AUDIT" ? "Audit Logs" : p.category === "SECURITY" ? "Security Events" : "API Requests",
           days: p.retentionDays,
-          description: p.category === "AUDIT" 
-            ? "Compliance records and administrative activities (7 Years)." 
-            : p.category === "SECURITY" 
-            ? "Logins, brute force alerts, password resets (10 Years)." 
-            : "Raw incoming middleware request payloads (90 Days).",
+          description: p.category === "AUDIT"
+            ? "Compliance records and administrative activities (7 Years)."
+            : p.category === "SECURITY"
+              ? "Logins, brute force alerts, password resets (10 Years)."
+              : "Raw incoming middleware request payloads (90 Days).",
         })));
       }
     } catch (err) {
@@ -106,7 +106,7 @@ export default function AuditLogsForensicPage() {
       if (filterCorrelationId) params.correlationId = filterCorrelationId;
 
       const res = await rbacApi.getForensicLogs(params);
-      if (res.data?.data) {
+      if (res.data.success && res.data.data) {
         setLogs(res.data.data.logs || []);
         setTotalLogs(res.data.data.total || 0);
       }
@@ -132,7 +132,7 @@ export default function AuditLogsForensicPage() {
     if (log.correlationId) {
       try {
         const res = await rbacApi.getCorrelationTimeline(log.correlationId);
-        if (res.data?.data) {
+        if (res.data.success && res.data.data) {
           setCorrelationTimeline(res.data.data);
         }
       } catch (err) {
@@ -166,12 +166,12 @@ export default function AuditLogsForensicPage() {
         }
       });
 
-      if (res.data?.data) {
+      if (res.data.success && res.data.data) {
         setExportProgress(50);
         setExportStatus("Export job queued. Generating file...");
         setTimeout(() => {
           setExportProgress(100);
-          setExportStatus(`Export file successfully queued. Job ID: ${res.data.data.id}`);
+          setExportStatus(`Export file successfully queued. Job ID: ${res.data.success ? res.data.data.id : ""}`);
         }, 1500);
       }
     } catch (err) {
@@ -234,25 +234,22 @@ export default function AuditLogsForensicPage() {
       <div className="flex items-center border-b border-border gap-2">
         <button
           onClick={() => setActiveTab("logs")}
-          className={`px-4 py-2.5 text-sm font-semibold border-b-2 transition ${
-            activeTab === "logs" ? "border-primary text-primary" : "border-transparent text-text-light hover:text-text"
-          }`}
+          className={`px-4 py-2.5 text-sm font-semibold border-b-2 transition ${activeTab === "logs" ? "border-primary text-primary" : "border-transparent text-text-light hover:text-text"
+            }`}
         >
           Audit Logs Stream
         </button>
         <button
           onClick={() => setActiveTab("security")}
-          className={`px-4 py-2.5 text-sm font-semibold border-b-2 transition ${
-            activeTab === "security" ? "border-primary text-primary" : "border-transparent text-text-light hover:text-text"
-          }`}
+          className={`px-4 py-2.5 text-sm font-semibold border-b-2 transition ${activeTab === "security" ? "border-primary text-primary" : "border-transparent text-text-light hover:text-text"
+            }`}
         >
           Security Operations
         </button>
         <button
           onClick={() => setActiveTab("retention")}
-          className={`px-4 py-2.5 text-sm font-semibold border-b-2 transition ${
-            activeTab === "retention" ? "border-primary text-primary" : "border-transparent text-text-light hover:text-text"
-          }`}
+          className={`px-4 py-2.5 text-sm font-semibold border-b-2 transition ${activeTab === "retention" ? "border-primary text-primary" : "border-transparent text-text-light hover:text-text"
+            }`}
         >
           Retention & Archival
         </button>
@@ -405,12 +402,11 @@ export default function AuditLogsForensicPage() {
                       <td className="p-4 font-mono text-xs">{new Date(log.createdAt).toLocaleString()}</td>
                       <td className="p-4 text-xs font-semibold text-primary">{log.eventId || "N/A"}</td>
                       <td className="p-4">
-                        <span className={`px-2 py-0.5 rounded-full text-xs font-bold ${
-                          log.severity === "CRITICAL" ? "bg-red-500/10 text-red-500" :
+                        <span className={`px-2 py-0.5 rounded-full text-xs font-bold ${log.severity === "CRITICAL" ? "bg-red-500/10 text-red-500" :
                           log.severity === "HIGH" ? "bg-orange-500/10 text-orange-500" :
-                          log.severity === "MEDIUM" ? "bg-yellow-500/10 text-yellow-500" :
-                          "bg-blue-500/10 text-blue-500"
-                        }`}>
+                            log.severity === "MEDIUM" ? "bg-yellow-500/10 text-yellow-500" :
+                              "bg-blue-500/10 text-blue-500"
+                          }`}>
                           {log.severity || "INFO"}
                         </span>
                       </td>
@@ -516,9 +512,8 @@ export default function AuditLogsForensicPage() {
                         ) : (
                           correlationTimeline.map((item, idx) => (
                             <div key={item.id} className="flex items-center gap-3 shrink-0">
-                              <div className={`px-3 py-2 rounded-lg text-xs text-center border ${
-                                item.id === selectedLog.id ? "bg-primary/20 border-primary" : "bg-background border-border"
-                              }`}>
+                              <div className={`px-3 py-2 rounded-lg text-xs text-center border ${item.id === selectedLog.id ? "bg-primary/20 border-primary" : "bg-background border-border"
+                                }`}>
                                 <div className="font-bold">{item.action}</div>
                                 <div className="text-[9px] text-text-light font-mono">{item.module} ({new Date(item.createdAt).toLocaleTimeString()})</div>
                               </div>
@@ -666,7 +661,7 @@ export default function AuditLogsForensicPage() {
                 <Settings className="h-5 w-5 text-primary" />
               </div>
               <p className="text-xs text-text-light leading-relaxed">{policy.description}</p>
-              
+
               <div className="space-y-2">
                 <label className="block text-xs font-semibold text-text-light">Retention Days limit</label>
                 <input
