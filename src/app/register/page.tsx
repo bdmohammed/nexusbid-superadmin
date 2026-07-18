@@ -10,6 +10,7 @@ import { useAuth } from '@/features/auth/hooks/useAuth';
 import { PasswordChecklist } from '@/components/auth/PasswordChecklist';
 import CountryDropdown from '@/components/auth/CountryDropdown';
 import { AlertCircle } from 'lucide-react';
+import { getErrorMessage, getValidationErrors } from '@/lib/errors';
 
 const registerSchema = z
   .object({
@@ -128,13 +129,13 @@ export default function SetupPage() {
 
       setSuccessMsg('Registration successful! Please check your email for a verification link.');
     } catch (err: any) {
-      if (err.response?.data?.errors) {
-        const backendErrors = err.response.data.errors;
+      const backendErrors = getValidationErrors(err);
+      if (backendErrors) {
         backendErrors.forEach((e: { field: string; message: string }) => {
           setError(e.field as any, { type: 'manual', message: e.message });
         });
       } else {
-        const msg = err.response?.data?.message || 'Failed to register account.';
+        const msg = getErrorMessage(err) || 'Failed to register account.';
         setError('root', { type: 'manual', message: msg });
       }
     }

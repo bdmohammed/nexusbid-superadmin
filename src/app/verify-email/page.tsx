@@ -4,6 +4,7 @@ import React, { Suspense, useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '@/features/auth/hooks/useAuth';
+import { getErrorMessage } from '@/lib/errors';
 
 function VerifyEmailContent() {
   const router = useRouter();
@@ -27,7 +28,7 @@ function VerifyEmailContent() {
       setResendSuccess(true);
       setEmail('');
     } catch (err: any) {
-      setResendError(err.response?.data?.message || 'Failed to resend. Please try again.');
+      setResendError(getErrorMessage(err) || 'Failed to resend. Please try again.');
     }
   };
 
@@ -43,7 +44,7 @@ function VerifyEmailContent() {
         })
         .catch((err: any) => {
           setStatus('error');
-          setErrorMsg(err.response?.data?.message || 'Verification failed. The token may be invalid or expired.');
+          setErrorMsg(getErrorMessage(err) || 'Verification failed. The token may be invalid or expired.');
         });
     } else {
       setStatus('error');

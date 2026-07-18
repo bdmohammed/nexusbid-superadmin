@@ -3,6 +3,7 @@
 import {
   AlertCircle,
 } from "lucide-react";
+import { getErrorMessage, getValidationErrors } from "@/lib/errors";
 import Link from "next/link";
 import { Suspense, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -70,13 +71,13 @@ function LoginContent() {
       router.push(redirect);
       router.refresh();
     } catch (err: any) {
-      if (err.response?.data?.errors) {
-        const backendErrors = err.response.data.errors;
+      const backendErrors = getValidationErrors(err);
+      if (backendErrors) {
         backendErrors.forEach((e: { field: string; message: string }) => {
           setError(e.field as any, { type: 'manual', message: e.message });
         });
       } else {
-        const msg = err.response?.data?.message || 'Invalid email or password.';
+        const msg = getErrorMessage(err) || 'Invalid email or password.';
         setError('root', { type: 'manual', message: msg });
       }
     }

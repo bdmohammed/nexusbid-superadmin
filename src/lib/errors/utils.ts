@@ -65,3 +65,30 @@ export async function handleActionError<T>(
     return { success: false, error: serialized };
   }
 }
+
+/**
+ * Helper to safely extract user-friendly error messages from either
+ * normalized AppError instances or raw Axios error responses.
+ */
+export function getErrorMessage(err: any): string {
+  if (!err) return "";
+  return (
+    err.response?.data?.message ||
+    err.metadata?.responseData?.message ||
+    err.message ||
+    "An unexpected error occurred"
+  );
+}
+
+/**
+ * Helper to safely extract field-level validation errors from either
+ * normalized AppError instances or raw Axios error responses.
+ */
+export function getValidationErrors(err: any): Array<{ field: string; message: string }> | undefined {
+  if (!err) return undefined;
+  return (
+    err.response?.data?.errors ||
+    err.metadata?.responseData?.errors
+  );
+}
+

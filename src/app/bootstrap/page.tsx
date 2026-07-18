@@ -4,6 +4,7 @@ import React, { Suspense, useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { authApi } from '@/features/auth/api/api';
+import { getErrorMessage } from '@/lib/errors';
 
 function BootstrapContent() {
   const router = useRouter();
@@ -37,7 +38,7 @@ function BootstrapContent() {
       })
       .catch((err: any) => {
         setVerifyStatus('error');
-        setErrorMsg(err.response?.data?.message || 'The bootstrap link is invalid, expired, or bootstrap setup has already been completed.');
+        setErrorMsg(getErrorMessage(err) || 'The bootstrap link is invalid, expired, or bootstrap setup has already been completed.');
       });
   }, [token]);
 
@@ -59,7 +60,7 @@ function BootstrapContent() {
       }, 5000);
     } catch (err: any) {
       setActionStatus('error');
-      setErrorMsg(err.response?.data?.message || `Bootstrap ${action} action failed. Please try again.`);
+      setErrorMsg(getErrorMessage(err) || `Bootstrap ${action} action failed. Please try again.`);
     }
   };
 

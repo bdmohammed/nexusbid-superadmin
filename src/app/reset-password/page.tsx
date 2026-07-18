@@ -4,6 +4,7 @@ import React, { Suspense, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '@/features/auth/hooks/useAuth';
+import { getErrorMessage } from '@/lib/errors';
 
 function ResetPasswordContent() {
   const router = useRouter();
@@ -43,7 +44,7 @@ function ResetPasswordContent() {
         router.push('/login');
       }, 3000);
     } catch (err: any) {
-      const msg = err.response?.data?.message || 'Failed to reset password.';
+      const msg = getErrorMessage(err) || 'Failed to reset password.';
       setErrorMsg(msg);
     }
   };
