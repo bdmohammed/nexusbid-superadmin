@@ -45,8 +45,8 @@ function LoginContent() {
     resolver: zodResolver(loginSchema),
     mode: "onTouched",
     defaultValues: {
-      email: "superadmin@gmail.com",
-      password: "1234@Admin#",
+      email: "",
+      password: "",
       fax_number: "",
     },
   });
