@@ -1,6 +1,7 @@
 'use client';
 
 import { ReactNode } from 'react';
+import { Toaster } from 'sonner';
 
 import QueryProvider from './QueryProvider';
 import AuthProvider from './AuthProvider';
@@ -18,6 +19,12 @@ export default function Providers({
             <ThemeProvider>
                 <AuthProvider>
                     {children}
+                    <Toaster
+                        position="top-right"
+                        richColors
+                        closeButton
+                        duration={4000}
+                    />
                 </AuthProvider>
             </ThemeProvider>
         </QueryProvider>

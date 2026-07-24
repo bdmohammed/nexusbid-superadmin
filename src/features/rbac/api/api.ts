@@ -1,132 +1,177 @@
 import { apiClient } from "@/lib/http";
-import { AuditLog, CreateAssignmentDto, CreateRoleDto, PermissionModule, Role, UpdateRoleDto, UserRoleAssignment } from "../types";
+import {
+  AuditLog,
+  CreateAssignmentDto,
+  CreateRoleDto,
+  PermissionModule,
+  Role,
+  UpdateRoleDto,
+  UserRoleAssignment,
+} from "../types";
 import { ApiResponse } from "@/types";
 
 export const rbacApi = {
-    getRoles() {
-        return apiClient.get<ApiResponse<Role[]>>('/rbac/roles');
-    },
+  getRoles() {
+    return apiClient.get<ApiResponse<Role[]>>("/rbac/roles");
+  },
 
-    getRoleById(id: string) {
-        return apiClient.get<ApiResponse<Role>>(`/rbac/roles/${id}`);
-    },
+  getCategorizedRoles() {
+    return apiClient.get<ApiResponse<Role[]>>("/rbac/roles/categorized");
+  },
 
-    createRole(data: CreateRoleDto) {
-        return apiClient.post<ApiResponse<Role>>('/rbac/roles', {
-            name: data.name,
-            description: data.description || null,
-            permissionKeys: data.permissions,
-        });
-    },
+  getRoleById(id: string) {
+    return apiClient.get<ApiResponse<Role>>(`/rbac/roles/${id}`);
+  },
 
-    updateRole(id: string, data: UpdateRoleDto) {
-        return apiClient.put<ApiResponse<Role>>(`/rbac/roles/${id}`, {
-            name: data.name,
-            description: data.description || null,
-            permissionKeys: data.permissions,
-            isActive: true,
-        });
-    },
+  createRole(data: CreateRoleDto) {
+    return apiClient.post<ApiResponse<Role>>("/rbac/roles", {
+      name: data.name,
+      description: data.description || null,
+      permissionKeys: data.permissions,
+    });
+  },
 
-    deleteRole(id: string) {
-        return apiClient.delete<ApiResponse<any>>(`/rbac/roles/${id}`);
-    },
+  updateRole(id: string, data: UpdateRoleDto) {
+    return apiClient.put<ApiResponse<Role>>(`/rbac/roles/${id}`, {
+      name: data.name,
+      description: data.description || null,
+      permissionKeys: data.permissions,
+      isActive: true,
+    });
+  },
 
-    getAssignments() {
-        return apiClient.get<ApiResponse<UserRoleAssignment[]>>('/rbac/assignments');
-    },
+  deleteRole(id: string) {
+    return apiClient.delete<ApiResponse<any>>(`/rbac/roles/${id}`);
+  },
 
-    createAssignment(data: CreateAssignmentDto) {
-        return apiClient.post<ApiResponse<any>>('/rbac/assignments', data);
-    },
+  getAssignments() {
+    return apiClient.get<ApiResponse<UserRoleAssignment[]>>(
+      "/rbac/assignments",
+    );
+  },
 
-    deleteAssignment(id: string) {
-        return apiClient.delete<ApiResponse<any>>(`/rbac/assignments/${id}`);
-    },
+  createAssignment(data: CreateAssignmentDto) {
+    return apiClient.post<ApiResponse<any>>("/rbac/assignments", data);
+  },
 
-    getAuditLogs() {
-        return apiClient.get<ApiResponse<AuditLog[]>>('/rbac/audit-logs');
-    },
+  deleteAssignment(id: string) {
+    return apiClient.delete<ApiResponse<any>>(`/rbac/assignments/${id}`);
+  },
 
-    getForensicLogs(params?: any) {
-        return apiClient.get<ApiResponse<{ logs: any[]; total: number }>>('/audit-logs', { params });
-    },
+  updateAssignmentStatus(id: string, status: string, comment?: string) {
+    return apiClient.patch<ApiResponse<any>>(`/rbac/assignments/${id}/status`, {
+      status,
+      comment,
+    });
+  },
 
-    getAuditStats() {
-        return apiClient.get<ApiResponse<any>>('/audit-logs/statistics');
-    },
+  getAuditLogs() {
+    return apiClient.get<ApiResponse<AuditLog[]>>("/rbac/audit-logs");
+  },
 
-    getSecurityEvents(params?: any) {
-        return apiClient.get<ApiResponse<{ logs: any[]; total: number }>>('/audit-logs/security', { params });
-    },
+  getForensicLogs(params?: any) {
+    return apiClient.get<ApiResponse<{ logs: any[]; total: number }>>(
+      "/audit-logs",
+      { params },
+    );
+  },
 
-    getRetentionPolicies() {
-        return apiClient.get<ApiResponse<any[]>>('/audit-logs/retention');
-    },
+  getAuditStats() {
+    return apiClient.get<ApiResponse<any>>("/audit-logs/statistics");
+  },
 
-    updateRetentionPolicy(data: any) {
-        return apiClient.patch<ApiResponse<any>>('/audit-logs/retention', data);
-    },
+  getSecurityEvents(params?: any) {
+    return apiClient.get<ApiResponse<{ logs: any[]; total: number }>>(
+      "/audit-logs/security",
+      { params },
+    );
+  },
 
-    exportAuditLogs(data: any) {
-        return apiClient.post<ApiResponse<any>>('/audit-logs/export', data);
-    },
+  getRetentionPolicies() {
+    return apiClient.get<ApiResponse<any[]>>("/audit-logs/retention");
+  },
 
-    getCorrelationTimeline(correlationId: string) {
-        return apiClient.get<ApiResponse<any[]>>(`/audit-logs/correlation/${correlationId}`);
-    },
+  updateRetentionPolicy(data: any) {
+    return apiClient.patch<ApiResponse<any>>("/audit-logs/retention", data);
+  },
 
-    getRequestTimeline(requestId: string) {
-        return apiClient.get<ApiResponse<any[]>>(`/audit-logs/request/${requestId}`);
-    },
+  exportAuditLogs(data: any) {
+    return apiClient.post<ApiResponse<any>>("/audit-logs/export", data);
+  },
 
-    getPermissions() {
-        return apiClient.get<ApiResponse<any[]>>('/rbac/permissions');
-    },
+  getCorrelationTimeline(correlationId: string) {
+    return apiClient.get<ApiResponse<any[]>>(
+      `/audit-logs/correlation/${correlationId}`,
+    );
+  },
 
-    getModules() {
-        return apiClient.get<ApiResponse<PermissionModule[]>>('/rbac/modules');
-    },
+  getRequestTimeline(requestId: string) {
+    return apiClient.get<ApiResponse<any[]>>(
+      `/audit-logs/request/${requestId}`,
+    );
+  },
 
-    getAssignableUsers() {
-        return apiClient.get<ApiResponse<any[]>>('/admin/users', {
-            params: { role: 'ADMIN', limit: 100 },
-        });
-    },
+  getPermissions() {
+    return apiClient.get<ApiResponse<any[]>>("/rbac/permissions");
+  },
 
-    getRoleVersions(roleId: string) {
-        return apiClient.get<ApiResponse<any[]>>(`/rbac/roles/${roleId}/versions`);
-    },
+  getModules() {
+    return apiClient.get<ApiResponse<PermissionModule[]>>("/rbac/modules");
+  },
 
-    lockVersion(versionId: string) {
-        return apiClient.post<ApiResponse<any>>(`/rbac/versions/${versionId}/lock`);
-    },
+  getAssignableUsers(params?: Record<string, any>) {
+    return apiClient.get<ApiResponse<any[]>>("/admin/users", {
+      params,
+    });
+  },
 
-    unlockVersion(versionId: string) {
-        return apiClient.post<ApiResponse<any>>(`/rbac/versions/${versionId}/unlock`);
-    },
+  getRoleVersions(roleId: string) {
+    return apiClient.get<ApiResponse<any[]>>(`/rbac/roles/${roleId}/versions`);
+  },
 
-    compareVersions(roleId: string, v1: number, v2: number) {
-        return apiClient.get<ApiResponse<any>>(`/rbac/roles/${roleId}/versions/${v1}/compare/${v2}`);
-    },
+  lockVersion(versionId: string) {
+    return apiClient.post<ApiResponse<any>>(`/rbac/versions/${versionId}/lock`);
+  },
 
-    submitVersion(versionId: string, reviewerIds: string[]) {
-        return apiClient.post<ApiResponse<any>>(`/rbac/versions/${versionId}/submit`, { reviewerIds });
-    },
+  unlockVersion(versionId: string) {
+    return apiClient.post<ApiResponse<any>>(
+      `/rbac/versions/${versionId}/unlock`,
+    );
+  },
 
-    submitReview(reviewId: string, status: 'APPROVED' | 'REJECTED' | 'CHANGES_REQUESTED', comment = '') {
-        return apiClient.post<ApiResponse<any>>(`/rbac/reviews/${reviewId}/action`, { status, comment });
-    },
+  compareVersions(roleId: string, v1: number, v2: number) {
+    return apiClient.get<ApiResponse<any>>(
+      `/rbac/roles/${roleId}/versions/${v1}/compare/${v2}`,
+    );
+  },
 
-    getReviewDetails(reviewId: string) {
-        return apiClient.get<ApiResponse<any>>(`/rbac/reviews/${reviewId}`);
-    },
+  submitVersion(versionId: string, reviewerIds: string[]) {
+    return apiClient.post<ApiResponse<any>>(
+      `/rbac/versions/${versionId}/submit`,
+      { reviewerIds },
+    );
+  },
 
-    getStats() {
-        return apiClient.get<ApiResponse<any>>('/rbac/statistics');
-    },
+  submitReview(
+    reviewId: string,
+    status: "APPROVED" | "REJECTED" | "CHANGES_REQUESTED",
+    comment = "",
+  ) {
+    return apiClient.post<ApiResponse<any>>(
+      `/rbac/reviews/${reviewId}/action`,
+      { status, comment },
+    );
+  },
 
-    exportData() {
-        return apiClient.get<ApiResponse<any>>('/rbac/exports');
-    }
+  getReviewDetails(reviewId: string) {
+    return apiClient.get<ApiResponse<any>>(`/rbac/reviews/${reviewId}`);
+  },
+
+  getStats() {
+    return apiClient.get<ApiResponse<any>>("/rbac/statistics");
+  },
+
+  exportData() {
+    return apiClient.get<ApiResponse<any>>("/rbac/exports");
+  },
 };

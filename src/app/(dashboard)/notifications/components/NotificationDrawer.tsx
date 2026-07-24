@@ -18,7 +18,9 @@ export default function NotificationDrawer({ notification, onClose }: Notificati
 
   if (!notification) return null;
 
-  const severityColors = {
+  const sevKey = (notification.severity || "info").toLowerCase();
+
+  const severityColors: Record<string, string> = {
     critical: "bg-red-500/10 text-red-500 border-red-500/20",
     high: "bg-orange-500/10 text-orange-500 border-orange-500/20",
     medium: "bg-yellow-500/10 text-yellow-500 border-yellow-500/20",
@@ -26,7 +28,7 @@ export default function NotificationDrawer({ notification, onClose }: Notificati
     info: "bg-green-500/10 text-green-500 border-green-500/20",
   };
 
-  const severityIcons = {
+  const severityIcons: Record<string, React.ReactNode> = {
     critical: <AlertCircle size={16} className="text-red-500" />,
     high: <AlertTriangle size={16} className="text-orange-500" />,
     medium: <AlertTriangle size={16} className="text-yellow-500" />,
@@ -47,7 +49,7 @@ export default function NotificationDrawer({ notification, onClose }: Notificati
     <>
       {/* Backdrop */}
       <div 
-        className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm transition-opacity duration-300"
+        className="fixed inset-0 z-40 bg-black/40 backdrop-blur-xs transition-opacity duration-300"
         onClick={onClose}
       />
 
@@ -58,7 +60,7 @@ export default function NotificationDrawer({ notification, onClose }: Notificati
         <div>
           <div className="flex items-center justify-between border-b border-border pb-4">
             <div className="flex items-center gap-2">
-              <span className={`rounded-full border px-2 py-0.5 text-xs font-semibold uppercase ${severityColors[notification.severity]}`}>
+              <span className={`rounded-full border px-2 py-0.5 text-xs font-semibold uppercase ${severityColors[sevKey] || severityColors.info}`}>
                 {notification.severity}
               </span>
               <span className="text-xs text-text-light capitalize">
@@ -67,7 +69,7 @@ export default function NotificationDrawer({ notification, onClose }: Notificati
             </div>
             <button 
               onClick={onClose}
-              className="rounded-lg p-1 text-text-light hover:bg-sidebar-hover hover:text-text transition-colors"
+              className="rounded-lg p-1 text-text-light hover:bg-sidebar-hover hover:text-text transition-colors cursor-pointer"
             >
               <X size={18} />
             </button>
@@ -76,7 +78,7 @@ export default function NotificationDrawer({ notification, onClose }: Notificati
           {/* Main Title & Detail Section */}
           <div className="mt-6">
             <h3 className="text-lg font-semibold text-text leading-snug flex items-center gap-2">
-              {severityIcons[notification.severity]}
+              {severityIcons[sevKey] || severityIcons.info}
               {notification.title}
             </h3>
             
@@ -84,7 +86,7 @@ export default function NotificationDrawer({ notification, onClose }: Notificati
               {notification.message}
             </p>
 
-            {notification.metadata && (
+            {notification.metadata && typeof notification.metadata === "object" && (
               <div className="mt-6 rounded-xl border border-border bg-sidebar-hover/40 p-4">
                 <h4 className="text-xs font-semibold uppercase tracking-wider text-text-light">
                   Contextual Info & Metadata
@@ -111,14 +113,14 @@ export default function NotificationDrawer({ notification, onClose }: Notificati
                 Resolve Task (Smart Actions)
               </h4>
               <div className="flex flex-wrap gap-2">
-                {notification.actions
-                  .sort((a, b) => a.btnOrder - b.btnOrder)
+                {[...notification.actions]
+                  .sort((a, b) => (a.btnOrder ?? 0) - (b.btnOrder ?? 0))
                   .map((act) => (
                     <button
                       key={act.id}
                       onClick={() => handleAction(act.id)}
                       disabled={executeMut.isPending}
-                      className="flex-1 min-w-[120px] rounded-xl bg-primary px-4 py-2.5 text-center text-sm font-semibold text-white shadow-md transition-all hover:bg-primary-hover hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50"
+                      className="flex-1 min-w-[120px] rounded-xl bg-primary px-4 py-2.5 text-center text-sm font-semibold text-white shadow-md transition-all hover:bg-primary-hover hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 cursor-pointer"
                     >
                       {act.label}
                     </button>
@@ -135,7 +137,7 @@ export default function NotificationDrawer({ notification, onClose }: Notificati
                 onClose();
               }}
               disabled={markReadMut.isPending}
-              className="flex flex-col items-center justify-center rounded-xl border border-border bg-surface p-2.5 text-xs font-medium text-text hover:bg-sidebar-hover transition-colors disabled:opacity-50"
+              className="flex flex-col items-center justify-center rounded-xl border border-border bg-surface p-2.5 text-xs font-medium text-text hover:bg-sidebar-hover transition-colors disabled:opacity-50 cursor-pointer"
             >
               <Check size={16} className="mb-1 text-green-500" />
               Mark Read
@@ -146,7 +148,7 @@ export default function NotificationDrawer({ notification, onClose }: Notificati
                 onClose();
               }}
               disabled={archiveMut.isPending}
-              className="flex flex-col items-center justify-center rounded-xl border border-border bg-surface p-2.5 text-xs font-medium text-text hover:bg-sidebar-hover transition-colors disabled:opacity-50"
+              className="flex flex-col items-center justify-center rounded-xl border border-border bg-surface p-2.5 text-xs font-medium text-text hover:bg-sidebar-hover transition-colors disabled:opacity-50 cursor-pointer"
             >
               <Archive size={16} className="mb-1 text-yellow-500" />
               Archive
@@ -157,7 +159,7 @@ export default function NotificationDrawer({ notification, onClose }: Notificati
                 onClose();
               }}
               disabled={dismissMut.isPending}
-              className="flex flex-col items-center justify-center rounded-xl border border-border bg-surface p-2.5 text-xs font-medium text-text hover:bg-sidebar-hover transition-colors disabled:opacity-50"
+              className="flex flex-col items-center justify-center rounded-xl border border-border bg-surface p-2.5 text-xs font-medium text-text hover:bg-sidebar-hover transition-colors disabled:opacity-50 cursor-pointer"
             >
               <Trash2 size={16} className="mb-1 text-red-500" />
               Dismiss

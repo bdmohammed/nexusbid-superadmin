@@ -11,8 +11,14 @@ export default function BasicInfoStep() {
     formState: { errors },
   } = useFormContext();
 
-  const { data: categoryData, isLoading: isLoadingCategories } = useCategories();
-  const categoriesList = categoryData?.categories || [];
+  const { data: categoryData, isLoading: isLoadingCategories } = useCategories({
+    status: "PUBLISHED",
+    limit: 100,
+  });
+  const rawCategories = categoryData?.categories || [];
+  const categoriesList = rawCategories.filter(
+    (c: any) => c.status === "PUBLISHED",
+  );
 
   return (
     <div className="space-y-8">

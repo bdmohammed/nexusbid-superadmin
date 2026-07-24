@@ -1,32 +1,18 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { Layers, ArrowRight } from "lucide-react";
 import Link from "next/link";
-import { apiClient } from "@/lib/http";
+import { useDashboardReviewQueue } from "@/features/dashboard/api/queries";
 
 interface ReviewQueueProps {
   liveData?: any;
 }
 
 export default function ReviewQueueWidget({ liveData }: ReviewQueueProps) {
-  const [data, setData] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
+  const { data: queryData, isLoading } = useDashboardReviewQueue();
 
-  useEffect(() => {
-    if (liveData) {
-      setData(liveData);
-      setLoading(false);
-      return;
-    }
-
-    apiClient.get("/dashboard/review-queue")
-      .then((res) => {
-        setData(res.data?.data);
-      })
-      .catch((err) => console.error("Failed to load review queue data", err))
-      .finally(() => setLoading(false));
-  }, [liveData]);
+  const data = liveData ?? queryData;
+  const loading = !liveData && isLoading;
 
   if (loading) {
     return (

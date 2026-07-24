@@ -1,27 +1,41 @@
 "use client";
 
+import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 import Select from "@/components/common/Select";
 import Input from "@/components/ui/Input";
-import { useCountries, useStates } from "@/features/state/api/queries";
+import { useCountries, useStates } from "@/features/country/api/queries";
 
 export default function LocationStep() {
   const {
     register,
     watch,
+    setValue,
+    getValues,
     formState: { errors },
   } = useFormContext();
 
   const selectedCountry = watch("country");
 
-  const { data: countries = [], isLoading: isLoadingCountries } = useCountries();
+  const { data: countries = [], isLoading: isLoadingCountries } =
+    useCountries();
   const { data: states = [], isLoading: isLoadingStates } = useStates(
-    selectedCountry ? { country: selectedCountry } : undefined
+    selectedCountry ? { country: selectedCountry } : undefined,
   );
 
-  // Fallback lists in case API returns empty or pending
-  const fallbackCountries = ["United States", "India", "United Kingdom", "UAE", "Singapore"];
-  const displayCountries = countries.length > 0 ? countries : fallbackCountries;
+  // Default select first country when countries load
+  useEffect(() => {
+    if (countries.length > 0 && !getValues("country")) {
+      setValue("country", countries[0].countryName, { shouldValidate: true });
+    }
+  }, [countries, getValues, setValue]);
+
+  // Default select first state when states load
+  useEffect(() => {
+    if (states.length > 0 && !getValues("state")) {
+      setValue("state", states[0].id, { shouldValidate: true });
+    }
+  }, [states, getValues, setValue]);
 
   return (
     <div className="space-y-8">
@@ -29,7 +43,8 @@ export default function LocationStep() {
       <div>
         <h2 className="text-xl font-semibold">Project Location</h2>
         <p className="mt-1 text-sm text-text-light">
-          Enter the Google place metadata and address where this tender project will be executed.
+          Enter the Google place metadata and address where this tender project
+          will be executed.
         </p>
       </div>
 
@@ -50,9 +65,9 @@ export default function LocationStep() {
             <option value="">
               {isLoadingCountries ? "Loading Countries..." : "Select Country"}
             </option>
-            {displayCountries.map((country: string) => (
-              <option key={country} value={country}>
-                {country}
+            {countries.map((c) => (
+              <option key={c.countryId} value={c.countryName}>
+                {c.countryName}
               </option>
             ))}
           </Select>
@@ -80,8 +95,8 @@ export default function LocationStep() {
               {!selectedCountry
                 ? "Select Country First"
                 : isLoadingStates
-                ? "Loading States..."
-                : "Select State"}
+                  ? "Loading States..."
+                  : "Select State"}
             </option>
             {states?.map((st: any) => (
               <option key={st.id} value={st.id}>
@@ -93,82 +108,6 @@ export default function LocationStep() {
           {errors.state && (
             <p className="mt-1 text-sm text-red-500">
               {errors.state.message as string}
-            </p>
-          )}
-        </div>
-      </div>
-
-      {/* County, City, & Pin Code */}
-      <div className="grid gap-6 md:grid-cols-3">
-        <div>
-          <label className="mb-2 block text-sm font-medium">County</label>
-
-          <Input
-            placeholder="e.g. Orange County"
-            {...register("county", {
-              minLength: { value: 2, message: "Min 2 characters required." },
-              pattern: {
-                value: /^[a-zA-Z\s.-]+$/,
-                message: "Only letters, spaces, hyphens, and periods allowed.",
-              },
-            })}
-          />
-        </div>
-
-        <div>
-          <label className="mb-2 block text-sm font-medium">
-            City <span className="text-red-500">*</span>
-          </label>
-
-          <Input
-            placeholder="e.g. Los Angeles"
-            {...register("city", {
-              required: "City is required.",
-              minLength: { value: 2, message: "Min 2 characters required." },
-              pattern: {
-                value: /^[a-zA-Z\s.-]+$/,
-                message: "Only letters, spaces, hyphens, and periods allowed.",
-              },
-            })}
-          />
-
-          {errors.city && (
-            <p className="mt-1 text-sm text-red-500">
-              {errors.city.message as string}
-            </p>
-          )}
-        </div>
-
-        <div>
-          <label className="mb-2 block text-sm font-medium">
-            Pin Code / Zip Code <span className="text-red-500">*</span>
-          </label>
-          <Input
-            placeholder="e.g. 90001"
-            {...register("pinCode", {
-              required: "Pin/Zip code is required.",
-              validate: (val) => {
-                if (!val) return "Pin/Zip code is required.";
-                if (selectedCountry === "United States") {
-                  return (
-                    /^\d{5}(-\d{4})?$/.test(val) ||
-                    "Must be a valid US ZIP code (e.g. 90001 or 90001-1234)."
-                  );
-                }
-                if (selectedCountry === "India") {
-                  return /^\d{6}$/.test(val) || "Must be a valid 6-digit PIN code.";
-                }
-                return (
-                  /^[a-zA-Z0-9\s-]{3,10}$/.test(val) ||
-                  "Must be between 3 and 10 alphanumeric characters."
-                );
-              },
-            })}
-          />
-
-          {errors.pinCode && (
-            <p className="mt-1 text-sm text-red-500">
-              {errors.pinCode.message as string}
             </p>
           )}
         </div>
@@ -199,7 +138,9 @@ export default function LocationStep() {
       {/* Google placeId and formattedAddress */}
       <div className="grid gap-6 md:grid-cols-2">
         <div>
-          <label className="mb-2 block text-sm font-medium">Google Maps Place ID</label>
+          <label className="mb-2 block text-sm font-medium">
+            Google Maps Place ID
+          </label>
           <Input
             placeholder="e.g. ChIJzTg1CwG2j4ARHM5mRz6gL-g"
             {...register("placeId")}
@@ -207,7 +148,9 @@ export default function LocationStep() {
         </div>
 
         <div>
-          <label className="mb-2 block text-sm font-medium">Google Maps Formatted Address</label>
+          <label className="mb-2 block text-sm font-medium">
+            Google Maps Formatted Address
+          </label>
           <Input
             placeholder="e.g. 1600 Amphitheatre Pkwy, Mountain View, CA 94043, USA"
             {...register("formattedAddress")}

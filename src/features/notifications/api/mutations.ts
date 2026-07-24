@@ -1,11 +1,15 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { notificationsApi } from './api';
 import { notificationQueryKeys } from './keys';
+import type { NotificationPreferences } from '../types';
 
 export function useMarkRead() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (id: string) => notificationsApi.markRead(id),
+    mutationFn: async (id: string) => {
+      const { data } = await notificationsApi.markRead(id);
+      return data;
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: notificationQueryKeys.all });
     },
@@ -15,7 +19,10 @@ export function useMarkRead() {
 export function useMarkAllRead() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: () => notificationsApi.markAllRead(),
+    mutationFn: async () => {
+      const { data } = await notificationsApi.markAllRead();
+      return data;
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: notificationQueryKeys.all });
     },
@@ -25,7 +32,10 @@ export function useMarkAllRead() {
 export function useArchiveNotification() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (id: string) => notificationsApi.archive(id),
+    mutationFn: async (id: string) => {
+      const { data } = await notificationsApi.archive(id);
+      return data;
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: notificationQueryKeys.all });
     },
@@ -35,7 +45,10 @@ export function useArchiveNotification() {
 export function useDismissNotification() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (id: string) => notificationsApi.dismiss(id),
+    mutationFn: async (id: string) => {
+      const { data } = await notificationsApi.dismiss(id);
+      return data;
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: notificationQueryKeys.all });
     },
@@ -45,8 +58,10 @@ export function useDismissNotification() {
 export function useExecuteAction() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ id, actionId }: { id: string; actionId: string }) =>
-      notificationsApi.executeAction(id, actionId),
+    mutationFn: async ({ id, actionId }: { id: string; actionId: string }) => {
+      const { data } = await notificationsApi.executeAction(id, actionId);
+      return data;
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: notificationQueryKeys.all });
     },
@@ -56,7 +71,10 @@ export function useExecuteAction() {
 export function useUpdatePreferences() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (data: any) => notificationsApi.updatePreferences(data),
+    mutationFn: async (payload: Partial<NotificationPreferences>) => {
+      const { data } = await notificationsApi.updatePreferences(payload);
+      return data;
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: notificationQueryKeys.preferences() });
     },

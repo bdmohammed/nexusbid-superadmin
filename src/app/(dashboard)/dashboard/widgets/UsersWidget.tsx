@@ -1,23 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { Users, ShieldAlert, CheckCircle, Shield } from "lucide-react";
-import { apiClient } from "@/lib/http";
+import { useDashboardUsers } from "@/features/dashboard/api/queries";
 
 export default function UsersWidget() {
-  const [data, setData] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
+  const { data, isLoading } = useDashboardUsers();
 
-  useEffect(() => {
-    apiClient.get("/dashboard/users")
-      .then((res) => {
-        setData(res.data?.data);
-      })
-      .catch((err) => console.error("Failed to load users statistics", err))
-      .finally(() => setLoading(false));
-  }, []);
-
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="flex h-full items-center justify-center text-sm text-text-light italic animate-pulse">
         Compiling active users...

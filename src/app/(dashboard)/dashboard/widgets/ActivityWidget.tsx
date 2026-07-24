@@ -1,23 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { History, Clock } from "lucide-react";
-import { apiClient } from "@/lib/http";
+import { useDashboardRecentActivity } from "@/features/dashboard/api/queries";
 
 export default function ActivityWidget() {
-  const [activities, setActivities] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { data: activities = [], isLoading } = useDashboardRecentActivity();
 
-  useEffect(() => {
-    apiClient.get("/dashboard/recent-activity")
-      .then((res) => {
-        setActivities(res.data?.data || []);
-      })
-      .catch((err) => console.error("Failed to load activities", err))
-      .finally(() => setLoading(false));
-  }, []);
-
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="flex h-full items-center justify-center text-sm text-text-light italic animate-pulse">
         Assembling activity stream...

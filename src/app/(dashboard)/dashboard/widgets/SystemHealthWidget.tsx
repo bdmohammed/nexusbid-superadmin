@@ -1,31 +1,17 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { Cpu, Server, Activity, ShieldCheck } from "lucide-react";
-import { apiClient } from "@/lib/http";
+import { useDashboardSystemHealth } from "@/features/dashboard/api/queries";
 
 interface SystemHealthWidgetProps {
   liveData?: any;
 }
 
 export default function SystemHealthWidget({ liveData }: SystemHealthWidgetProps) {
-  const [data, setData] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
+  const { data: queryData, isLoading } = useDashboardSystemHealth();
 
-  useEffect(() => {
-    if (liveData) {
-      setData(liveData);
-      setLoading(false);
-      return;
-    }
-
-    apiClient.get("/dashboard/system-health")
-      .then((res) => {
-        setData(res.data?.data);
-      })
-      .catch((err) => console.error("Failed to load system health stats", err))
-      .finally(() => setLoading(false));
-  }, [liveData]);
+  const data = liveData ?? queryData;
+  const loading = !liveData && isLoading;
 
   if (loading) {
     return (

@@ -6,6 +6,21 @@ export const rbacKeys = {
     role: (id: string) =>
         [...rbacKeys.roles(), id] as const,
 
+    categorizedRoles: () =>
+        [...rbacKeys.roles(), "categorized"] as const,
+
+    stats: () =>
+        [...rbacKeys.all, "stats"] as const,
+
+    roleVersions: (roleId: string) =>
+        [...rbacKeys.role(roleId), "versions"] as const,
+
+    reviewDetails: (reviewId: string) =>
+        [...rbacKeys.all, "review-details", reviewId] as const,
+
+    forensicLogs: (params?: any) =>
+        [...rbacKeys.all, "forensic-logs", params] as const,
+
     assignments: () =>
         [...rbacKeys.all, "assignments"] as const,
 

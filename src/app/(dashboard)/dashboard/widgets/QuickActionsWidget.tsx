@@ -1,24 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { Zap, Plus, ArrowUpRight } from "lucide-react";
 import Link from "next/link";
-import { apiClient } from "@/lib/http";
+import { useDashboardQuickActions } from "@/features/dashboard/api/queries";
 
 export default function QuickActionsWidget() {
-  const [actions, setActions] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { data: actions = [], isLoading } = useDashboardQuickActions();
 
-  useEffect(() => {
-    apiClient.get("/dashboard/quick-actions")
-      .then((res) => {
-        setActions(res.data?.data || []);
-      })
-      .catch((err) => console.error("Failed to load quick actions", err))
-      .finally(() => setLoading(false));
-  }, []);
-
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="flex h-full items-center justify-center text-sm text-text-light italic animate-pulse">
         Checking capabilities...

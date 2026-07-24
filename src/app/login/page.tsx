@@ -1,36 +1,31 @@
 "use client";
 
-import {
-  AlertCircle,
-} from "lucide-react";
 import { getErrorMessage, getValidationErrors } from "@/lib/errors";
 import Link from "next/link";
-import { Suspense, useEffect } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useAuth } from "@/features/auth/hooks/useAuth";
+import { toast } from "sonner";
+import { Eye, EyeOff } from "lucide-react";
 
 const loginSchema = z.object({
   email: z
-    .email({ error: 'Please enter a valid email address' })
+    .email({ error: "Please enter a valid email address" })
     .transform((value) => value.toLowerCase()),
-  password: z
-    .string()
-    .trim()
-    .min(1, { error: 'Password is required' }),
-  fax_number: z
-    .string()
-    .optional(), // Honeypot field
+  password: z.string().trim().min(1, { error: "Password is required" }),
+  fax_number: z.string().optional(), // Honeypot field
 });
 
 type LoginFormValues = z.infer<typeof loginSchema>;
 
 function LoginContent() {
   const router = useRouter();
+  const [showPassword, setShowPassword] = useState(false);
   const searchParams = useSearchParams();
-  const redirect = searchParams.get('redirect') || '/dashboard';
+  const redirect = searchParams.get("redirect") || "/dashboard";
   // const isExpired = searchParams.get('expired') === 'true';
 
   const { login, isLoggingIn, user, isAuthenticated } = useAuth();
@@ -45,21 +40,21 @@ function LoginContent() {
     register,
     handleSubmit,
     setError,
-    formState: { errors },
+    formState: { errors, isValid },
   } = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
-    mode: 'onTouched',
+    mode: "onTouched",
     defaultValues: {
-      email: '',
-      password: '',
-      fax_number: '',
+      email: "superadmin@gmail.com",
+      password: "1234@Admin#",
+      fax_number: "",
     },
   });
 
   const onSubmit = async (data: LoginFormValues) => {
     // Honeypot check
     if (data.fax_number) {
-      console.warn('Spam detected via honeypot');
+      console.warn("Spam detected via honeypot");
       return;
     }
 
@@ -68,17 +63,18 @@ function LoginContent() {
         email: data.email,
         password: data.password,
       });
+      toast.success("Logged in successfully!");
       router.push(redirect);
       router.refresh();
     } catch (err: any) {
       const backendErrors = getValidationErrors(err);
       if (backendErrors) {
         backendErrors.forEach((e: { field: string; message: string }) => {
-          setError(e.field as any, { type: 'manual', message: e.message });
+          setError(e.field as any, { type: "manual", message: e.message });
         });
       } else {
-        const msg = getErrorMessage(err) || 'Invalid email or password.';
-        setError('root', { type: 'manual', message: msg });
+        const msg = getErrorMessage(err) || "Invalid email or password.";
+        toast.error(msg);
       }
     }
   };
@@ -86,7 +82,6 @@ function LoginContent() {
   return (
     <div className="min-h-[80vh] flex items-center justify-center px-4 py-12 bg-linear-to-b from-[var(--background)] to-[var(--surface-secondary)]">
       <div className="w-full max-w-md p-8 bg-[var(--background)] rounded-2xl border border-[var(--border)] shadow-xl relative overflow-hidden">
-
         {/* Glow effects */}
         <div className="absolute -top-10 -right-10 w-40 h-40 bg-[#003EC7] opacity-10 blur-3xl rounded-full"></div>
         <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-[#003EC7] opacity-10 blur-3xl rounded-full"></div>
@@ -106,23 +101,23 @@ function LoginContent() {
           </div>
         )} */}
 
-        {errors.root && (
-          <div className="mb-6 p-3 bg-red-500/10 border border-red-500/30 text-red-500 rounded-lg text-xs font-medium flex items-center gap-2 justify-center">
-            <AlertCircle className="w-4 h-4 shrink-0" />
-            <span>{errors.root.message}</span>
-          </div>
-        )}
-
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 relative z-10" noValidate>
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="space-y-6 relative z-10"
+          noValidate
+        >
           {/* Honeypot field (hidden from sight, kept in DOM for screen readers and spam bots) */}
-          <div className="absolute opacity-0 h-0 w-0 overflow-hidden" aria-hidden="true">
+          <div
+            className="absolute opacity-0 h-0 w-0 overflow-hidden"
+            aria-hidden="true"
+          >
             <label htmlFor="fax_number">Fax Number</label>
             <input
               id="fax_number"
               type="text"
               tabIndex={-1}
               autoComplete="off"
-              {...register('fax_number')}
+              {...register("fax_number")}
             />
           </div>
 
@@ -132,10 +127,11 @@ function LoginContent() {
             </label>
             <input
               type="email"
-              className={`w-full px-4 py-3 rounded-lg bg-[var(--surface-secondary)] border text-[var(--foreground)] placeholder-[var(--muted)] focus:outline-hidden focus:ring-2 focus:ring-[#003EC7] focus:border-transparent transition-all ${errors.email ? 'border-red-500' : 'border-[var(--border)]'
-                }`}
+              className={`w-full px-4 py-3 rounded-lg bg-[var(--surface-secondary)] border text-[var(--foreground)] placeholder-[var(--muted)] focus:outline-hidden focus:ring-2 focus:ring-[#003EC7] focus:border-transparent transition-all ${
+                errors.email ? "border-red-500" : "border-[var(--border)]"
+              }`}
               placeholder="name@company.com"
-              {...register('email')}
+              {...register("email")}
             />
             {errors.email && (
               <span className="text-xs text-red-500 mt-1 block">
@@ -145,16 +141,30 @@ function LoginContent() {
           </div>
 
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider text-[var(--muted)]">
+            <label className="block text-xs font-semibold uppercase tracking-wider text-[var(--muted)] mb-2">
               Password
             </label>
-            <input
-              type="password"
-              className={`w-full px-4 py-3 rounded-lg bg-[var(--surface-secondary)] border text-[var(--foreground)] placeholder-[var(--muted)] focus:outline-hidden focus:ring-2 focus:ring-[#003EC7] focus:border-transparent transition-all ${errors.password ? 'border-red-500' : 'border-[var(--border)]'
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                className={`w-full pl-4 pr-11 py-3 rounded-lg bg-[var(--surface-secondary)] border text-[var(--foreground)] placeholder-[var(--muted)] focus:outline-hidden focus:ring-2 focus:ring-[#003EC7] focus:border-transparent transition-all ${
+                  errors.password ? "border-red-500" : "border-[var(--border)]"
                 }`}
-              placeholder="••••••••"
-              {...register('password')}
-            />
+                placeholder="Enter Password"
+                {...register("password")}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[var(--muted)] hover:text-[var(--foreground)] transition-colors focus:outline-hidden"
+              >
+                {showPassword ? (
+                  <EyeOff className="w-4 h-4" />
+                ) : (
+                  <Eye className="w-4 h-4" />
+                )}
+              </button>
+            </div>
             {errors.password && (
               <span className="text-xs text-red-500 mt-1 block">
                 {errors.password.message}
@@ -172,25 +182,44 @@ function LoginContent() {
 
           <button
             type="submit"
+            disabled={!isValid || isLoggingIn}
             className="w-full py-3.5 px-4 bg-[#003EC7] hover:bg-[#002fad] text-white font-semibold rounded-lg shadow-md transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer"
           >
             {isLoggingIn ? (
               <>
-                <svg className="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                <svg
+                  className="animate-spin h-5 w-5 text-white"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
                 </svg>
                 Logging in...
               </>
             ) : (
-              'Log In'
+              "Log In"
             )}
           </button>
         </form>
 
         <div className="mt-8 text-center text-sm text-[var(--muted)] relative z-10">
-          Don't have an account?{' '}
-          <Link href="/register" className="font-semibold text-[#003EC7] hover:underline">
+          Don't have an account?{" "}
+          <Link
+            href="/register"
+            className="font-semibold text-[#003EC7] hover:underline"
+          >
             Register for free
           </Link>
         </div>
@@ -201,11 +230,13 @@ function LoginContent() {
 
 export default function LoginPage() {
   return (
-    <Suspense fallback={
-      <div className="min-h-[80vh] flex items-center justify-center bg-linear-to-b from-[var(--background)] to-[var(--surface-secondary)]">
-        <div className="text-[var(--muted)]">Loading...</div>
-      </div>
-    }>
+    <Suspense
+      fallback={
+        <div className="min-h-[80vh] flex items-center justify-center bg-linear-to-b from-[var(--background)] to-[var(--surface-secondary)]">
+          <div className="text-[var(--muted)]">Loading...</div>
+        </div>
+      }
+    >
       <LoginContent />
     </Suspense>
   );

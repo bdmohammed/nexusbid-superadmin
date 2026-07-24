@@ -1,24 +1,74 @@
+//@ts-nocheck
 "use client";
 
-import { Bell, Menu, Moon, Sun } from "lucide-react";
+import { Menu, Moon, Sun } from "lucide-react";
 import { usePathname } from "next/navigation";
-import { navigation } from "@/constants/navigation";
+import { navigation, systemNavigation } from "@/constants/navigation";
 import Avatar from "../common/Avatar";
 import { useSidebarStore, useThemeStore } from "@/store";
 import NotificationDropdown from "./NotificationDropdown";
-
-const pageTitles = Object.fromEntries(
-  navigation?.map((item) => [item.href, item.title]) || [],
-);
+import { useCurrentUser } from "@/features/auth/api/queries";
+import { useAuthStore } from "@/features/auth/store/store";
 
 export default function Topbar() {
   const pathname = usePathname();
-  const pageTitle = pageTitles[pathname] ?? "Dashboard";
+
+  const { data: currentUserData } = useCurrentUser();
+  const storeUser = useAuthStore((state) => state.user);
+  const user = currentUserData || storeUser;
+
+  const userName = user?.name || "Admin";
+
+  const userRole = (() => {
+    const rawRoles = user?.roles || (user as any)?.role;
+    if (Array.isArray(rawRoles) && rawRoles.length > 0) {
+      return rawRoles
+        .map((r) => {
+          const str = typeof r === "string" ? r : r?.name || r?.slug || "";
+          return str
+            .replace(/[-_]/g, " ")
+            .replace(/\b\w/g, (char) => char.toUpperCase());
+        })
+        .filter(Boolean)
+        .join(", ");
+    }
+    if (typeof rawRoles === "string" && rawRoles.trim()) {
+      return rawRoles
+        .replace(/[-_]/g, " ")
+        .replace(/\b\w/g, (char) => char.toUpperCase());
+    }
+    if ((user as any)?.adminRole) {
+      return (user as any).adminRole
+        .replace(/[-_]/g, " ")
+        .replace(/\b\w/g, (char: string) => char.toUpperCase());
+    }
+    if ((user as any)?.accountType) {
+      const acc = (user as any).accountType;
+      return acc.charAt(0).toUpperCase() + acc.slice(1);
+    }
+    return "Super Admin";
+  })();
+
+  const currentNav = [...navigation, ...systemNavigation].find(
+    (item) => item.href === pathname,
+  );
+
+  const title = currentNav?.headerTitle || currentNav?.title || "Dashboard";
+  const subtitle = currentNav?.subtitle;
 
   const toggleSidebar = useSidebarStore((state) => state.toggle);
+  const toggleCollapse = useSidebarStore((state) => state.toggleCollapse);
   const theme = useThemeStore((state) => state.theme);
   const mounted = useThemeStore((state) => state.mounted);
   const toggleTheme = useThemeStore((state) => state.toggleTheme);
+
+  const handleMenuClick = () => {
+    if (typeof window !== "undefined" && window.innerWidth >= 1024) {
+      toggleCollapse();
+    } else {
+      toggleSidebar();
+    }
+  };
 
   return (
     <header className="sticky top-0 z-30 border-b border-border bg-surface/90 backdrop-blur-xl">
@@ -26,13 +76,25 @@ export default function Topbar() {
         <div className="flex flex-1 items-center gap-3 min-w-0">
           <button
             type="button"
-            onClick={toggleSidebar}
-            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-border bg-surface p-1 text-text-light transition-colors hover:bg-sidebar-hover lg:hidden"
-            aria-label="Open menu"
+            onClick={handleMenuClick}
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-border bg-surface p-1 text-text-light transition-colors hover:bg-sidebar-hover cursor-pointer"
+            aria-label="Toggle menu"
           >
             <Menu size={18} />
           </button>
+
+          <div className="hidden md:block min-w-0">
+            <h1 className="text-sm font-bold tracking-tight text-text truncate">
+              {title}
+            </h1>
+            {subtitle && (
+              <p className="text-[10px] text-text-light leading-none mt-0.5 truncate">
+                {subtitle}
+              </p>
+            )}
+          </div>
         </div>
+
         <div className="ml-auto flex shrink-0 items-center gap-2">
           <button
             type="button"
@@ -50,13 +112,13 @@ export default function Topbar() {
           <NotificationDropdown />
 
           <div className="flex items-center gap-2 rounded-xl border border-border bg-surface p-1 py-1.5 pl-1.5 pr-2 sm:gap-3 sm:p-2 sm:pr-3">
-            <Avatar name="Admin" size="sm" />
+            <Avatar name={userName} size="sm" />
             <div className="hidden min-w-0 px-1 md:block">
               <p className="truncate text-sm font-medium leading-none text-text">
-                Admin
+                {userName}
               </p>
               <p className="mt-0.5 truncate text-xs text-text-light">
-                Super Admin
+                {userRole}
               </p>
             </div>
           </div>

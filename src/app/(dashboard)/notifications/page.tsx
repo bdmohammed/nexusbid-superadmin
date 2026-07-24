@@ -25,7 +25,7 @@ export default function NotificationsPage() {
   const { data: categories = [] } = useNotificationCategories();
   const { data: stats } = useNotificationStats();
 
-  const { data, isLoading, refetch } = useNotifications({
+  const { data: listData, isLoading, refetch } = useNotifications({
     status: activeTab,
     category: selectedCategory || undefined,
     severity: selectedSeverity || undefined,
@@ -57,7 +57,7 @@ export default function NotificationsPage() {
     };
   }, [queryClient]);
 
-  const severityStyles = {
+  const severityStyles: Record<string, string> = {
     critical: "border-red-500/30 bg-red-500/5 text-red-500",
     high: "border-orange-500/30 bg-orange-500/5 text-orange-500",
     medium: "border-yellow-500/30 bg-yellow-500/5 text-yellow-500",
@@ -65,9 +65,9 @@ export default function NotificationsPage() {
     info: "border-green-500/30 bg-green-500/5 text-green-500",
   };
 
-  const notificationList: Notification[] = data?.success ? data.data.notifications : [];
-  const total = data?.success ? data.data.total : 0;
-  const totalPages = Math.ceil(total / 10);
+  const notificationList = (listData?.notifications ?? []) as unknown as Notification[];
+  const total = listData?.total ?? 0;
+  const totalPages = Math.ceil(total / 10) || 1;
 
   // Filter local search queries
   const filteredNotifications = notificationList.filter(
@@ -91,7 +91,7 @@ export default function NotificationsPage() {
             <button
               onClick={() => markAllReadMut.mutate()}
               disabled={markAllReadMut.isPending}
-              className="flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-md hover:bg-primary-hover transition-colors disabled:opacity-50"
+              className="flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-md hover:bg-primary-hover transition-colors disabled:opacity-50 cursor-pointer"
             >
               <CheckCircle size={16} />
               Mark All Read
@@ -99,7 +99,7 @@ export default function NotificationsPage() {
           )}
           <button
             onClick={() => refetch()}
-            className="flex items-center gap-2 rounded-xl border border-border bg-surface px-4 py-2.5 text-sm font-semibold text-text hover:bg-sidebar-hover transition-colors"
+            className="flex items-center gap-2 rounded-xl border border-border bg-surface px-4 py-2.5 text-sm font-semibold text-text hover:bg-sidebar-hover transition-colors cursor-pointer"
           >
             <RefreshCw size={16} />
             Refresh
@@ -139,7 +139,7 @@ export default function NotificationsPage() {
                   setActiveTab(tab);
                   setPage(1);
                 }}
-                className={`rounded-xl px-4 py-2 text-sm font-semibold transition-all whitespace-nowrap ${activeTab === tab
+                className={`rounded-xl px-4 py-2 text-sm font-semibold transition-all whitespace-nowrap cursor-pointer ${activeTab === tab
                   ? "bg-sidebar-hover text-primary"
                   : "text-text-light hover:text-text"
                   }`}
@@ -174,7 +174,7 @@ export default function NotificationsPage() {
               setSelectedCategory(e.target.value);
               setPage(1);
             }}
-            className="rounded-xl border border-border bg-surface px-3 py-1.5 text-xs font-semibold text-text focus:outline-none"
+            className="rounded-xl border border-border bg-surface px-3 py-1.5 text-xs font-semibold text-text focus:outline-none cursor-pointer"
           >
             <option value="">All Categories</option>
             {categories.map((cat) => (
@@ -193,14 +193,13 @@ export default function NotificationsPage() {
               setSelectedSeverity(e.target.value);
               setPage(1);
             }}
-            className="rounded-xl border border-border bg-surface px-3 py-1.5 text-xs font-semibold text-text focus:outline-none"
+            className="rounded-xl border border-border bg-surface px-3 py-1.5 text-xs font-semibold text-text focus:outline-none cursor-pointer"
           >
             <option value="">All Severities</option>
-            <option value="critical">Critical</option>
-            <option value="high">High</option>
-            <option value="medium">Medium</option>
-            <option value="low">Low</option>
-            <option value="info">Info</option>
+            <option value="CRITICAL">Critical</option>
+            <option value="HIGH">High</option>
+            <option value="MEDIUM">Medium</option>
+            <option value="LOW">Low</option>
           </select>
         </div>
       </div>
@@ -221,78 +220,81 @@ export default function NotificationsPage() {
           </div>
         ) : (
           <div className="divide-y divide-border">
-            {filteredNotifications.map((notif) => (
-              <div
-                key={notif.id}
-                onClick={() => setSelectedNotification(notif)}
-                className="group flex flex-col gap-4 p-5 transition-colors hover:bg-sidebar-hover cursor-pointer md:flex-row md:items-center md:justify-between"
-              >
-                <div className="flex gap-4 min-w-0">
-                  <div className="mt-1 shrink-0">
-                    <span className={`inline-flex items-center justify-center rounded-xl border p-2 ${severityStyles[notif.severity]}`}>
-                      {notif.severity === "critical" || notif.severity === "high" ? (
-                        <AlertCircle size={16} />
-                      ) : (
-                        <Info size={16} />
-                      )}
-                    </span>
-                  </div>
-                  <div className="min-w-0">
-                    <div className="flex items-center gap-2">
-                      <h4 className="font-semibold text-text group-hover:text-primary transition-colors truncate">
-                        {notif.title}
-                      </h4>
-                      <span className="shrink-0 rounded-lg bg-border px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-text-light">
-                        {notif.category}
+            {filteredNotifications.map((notif) => {
+              const sevKey = (notif.severity || "info").toLowerCase();
+              return (
+                <div
+                  key={notif.id}
+                  onClick={() => setSelectedNotification(notif)}
+                  className="group flex flex-col gap-4 p-5 transition-colors hover:bg-sidebar-hover cursor-pointer md:flex-row md:items-center md:justify-between"
+                >
+                  <div className="flex gap-4 min-w-0">
+                    <div className="mt-1 shrink-0">
+                      <span className={`inline-flex items-center justify-center rounded-xl border p-2 ${severityStyles[sevKey] || severityStyles.info}`}>
+                        {sevKey === "critical" || sevKey === "high" ? (
+                          <AlertCircle size={16} />
+                        ) : (
+                          <Info size={16} />
+                        )}
                       </span>
                     </div>
-                    <p className="mt-1 text-sm text-text-light line-clamp-2 md:line-clamp-1">
-                      {notif.message}
-                    </p>
-                    <p className="mt-1.5 text-[10px] text-text-light">
-                      {new Date(notif.createdAt).toLocaleString()}
-                    </p>
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2">
+                        <h4 className="font-semibold text-text group-hover:text-primary transition-colors truncate">
+                          {notif.title}
+                        </h4>
+                        <span className="shrink-0 rounded-lg bg-border px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-text-light">
+                          {notif.category}
+                        </span>
+                      </div>
+                      <p className="mt-1 text-sm text-text-light line-clamp-2 md:line-clamp-1">
+                        {notif.message}
+                      </p>
+                      <p className="mt-1.5 text-[10px] text-text-light">
+                        {new Date(notif.createdAt).toLocaleString()}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Inline Action Triggers */}
+                  <div className="flex items-center justify-end gap-2 shrink-0 border-t border-border/40 pt-3 md:border-0 md:pt-0">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        markReadMut.mutate(notif.id);
+                      }}
+                      disabled={markReadMut.isPending}
+                      className="rounded-lg p-1.5 text-text-light hover:bg-surface hover:text-green-500 transition-colors cursor-pointer"
+                      title="Mark as Read"
+                    >
+                      <CheckCircle size={16} />
+                    </button>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        archiveMut.mutate(notif.id);
+                      }}
+                      disabled={archiveMut.isPending}
+                      className="rounded-lg p-1.5 text-text-light hover:bg-surface hover:text-yellow-500 transition-colors cursor-pointer"
+                      title="Archive"
+                    >
+                      <Archive size={16} />
+                    </button>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        dismissMut.mutate(notif.id);
+                      }}
+                      disabled={dismissMut.isPending}
+                      className="rounded-lg p-1.5 text-text-light hover:bg-surface hover:text-red-500 transition-colors cursor-pointer"
+                      title="Dismiss"
+                    >
+                      <Trash2 size={16} />
+                    </button>
                   </div>
                 </div>
-
-                {/* Inline Action Triggers */}
-                <div className="flex items-center justify-end gap-2 shrink-0 border-t border-border/40 pt-3 md:border-0 md:pt-0">
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      markReadMut.mutate(notif.id);
-                    }}
-                    disabled={markReadMut.isPending}
-                    className="rounded-lg p-1.5 text-text-light hover:bg-surface hover:text-green-500 transition-colors"
-                    title="Mark as Read"
-                  >
-                    <CheckCircle size={16} />
-                  </button>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      archiveMut.mutate(notif.id);
-                    }}
-                    disabled={archiveMut.isPending}
-                    className="rounded-lg p-1.5 text-text-light hover:bg-surface hover:text-yellow-500 transition-colors"
-                    title="Archive"
-                  >
-                    <Archive size={16} />
-                  </button>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      dismissMut.mutate(notif.id);
-                    }}
-                    disabled={dismissMut.isPending}
-                    className="rounded-lg p-1.5 text-text-light hover:bg-surface hover:text-red-500 transition-colors"
-                    title="Dismiss"
-                  >
-                    <Trash2 size={16} />
-                  </button>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
 
@@ -306,14 +308,14 @@ export default function NotificationsPage() {
               <button
                 onClick={() => setPage((p) => Math.max(p - 1, 1))}
                 disabled={page === 1}
-                className="rounded-lg border border-border bg-surface p-1.5 text-text hover:bg-sidebar-hover disabled:opacity-40 transition-colors"
+                className="rounded-lg border border-border bg-surface p-1.5 text-text hover:bg-sidebar-hover disabled:opacity-40 transition-colors cursor-pointer"
               >
                 <ChevronLeft size={16} />
               </button>
               <button
                 onClick={() => setPage((p) => Math.min(p + 1, totalPages))}
                 disabled={page === totalPages}
-                className="rounded-lg border border-border bg-surface p-1.5 text-text hover:bg-sidebar-hover disabled:opacity-40 transition-colors"
+                className="rounded-lg border border-border bg-surface p-1.5 text-text hover:bg-sidebar-hover disabled:opacity-40 transition-colors cursor-pointer"
               >
                 <ChevronRight size={16} />
               </button>

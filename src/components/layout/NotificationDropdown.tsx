@@ -16,14 +16,14 @@ export default function NotificationDropdown() {
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const { data: stats } = useNotificationStats();
-  const { data } = useNotifications({
+  const { data: listData } = useNotifications({
     status: "UNREAD",
     page: 1,
     limit: 5,
   });
 
   const markAllReadMut = useMarkAllRead();
-  const unreadNotifications: Notification[] = data?.success && data.data.notifications || [];
+  const unreadNotifications = (listData?.notifications ?? []) as unknown as Notification[];
 
   // Live SSE listener for real-time unread updates
   useEffect(() => {
@@ -54,7 +54,7 @@ export default function NotificationDropdown() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const severityIcons = {
+  const severityIcons: Record<string, React.ReactNode> = {
     critical: <ShieldAlert size={14} className="text-red-500" />,
     high: <AlertTriangle size={14} className="text-orange-500" />,
     medium: <AlertTriangle size={14} className="text-yellow-500" />,
@@ -68,7 +68,7 @@ export default function NotificationDropdown() {
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-border bg-surface p-1 text-text-light transition-colors hover:bg-sidebar-hover"
+        className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-border bg-surface p-1 text-text-light transition-colors hover:bg-sidebar-hover cursor-pointer"
         aria-label="Notifications"
       >
         <Bell size={18} />
@@ -93,7 +93,7 @@ export default function NotificationDropdown() {
               <button
                 onClick={() => markAllReadMut.mutate()}
                 disabled={markAllReadMut.isPending}
-                className="text-xs font-semibold text-primary hover:text-primary-hover flex items-center gap-1 transition-colors"
+                className="text-xs font-semibold text-primary hover:text-primary-hover flex items-center gap-1 transition-colors cursor-pointer"
               >
                 <Check size={12} />
                 Mark all read
@@ -124,29 +124,32 @@ export default function NotificationDropdown() {
                 No unread notifications
               </div>
             ) : (
-              unreadNotifications.map((notif) => (
-                <Link
-                  key={notif.id}
-                  href="/notifications"
-                  onClick={() => setIsOpen(false)}
-                  className="flex items-start gap-3 py-3 hover:bg-sidebar-hover/30 px-1 rounded-lg transition-colors group"
-                >
-                  <span className="mt-0.5 shrink-0">
-                    {severityIcons[notif.severity]}
-                  </span>
-                  <div className="min-w-0">
-                    <p className="text-xs font-semibold text-text group-hover:text-primary transition-colors truncate">
-                      {notif.title}
-                    </p>
-                    <p className="text-[11px] text-text-light line-clamp-2 mt-0.5 leading-snug">
-                      {notif.message}
-                    </p>
-                    <p className="text-[9px] text-text-light/80 mt-1">
-                      {new Date(notif.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                    </p>
-                  </div>
-                </Link>
-              ))
+              unreadNotifications.map((notif) => {
+                const sevKey = (notif.severity || "info").toLowerCase();
+                return (
+                  <Link
+                    key={notif.id}
+                    href="/notifications"
+                    onClick={() => setIsOpen(false)}
+                    className="flex items-start gap-3 py-3 hover:bg-sidebar-hover/30 px-1 rounded-lg transition-colors group"
+                  >
+                    <span className="mt-0.5 shrink-0">
+                      {severityIcons[sevKey] || severityIcons.info}
+                    </span>
+                    <div className="min-w-0">
+                      <p className="text-xs font-semibold text-text group-hover:text-primary transition-colors truncate">
+                        {notif.title}
+                      </p>
+                      <p className="text-[11px] text-text-light line-clamp-2 mt-0.5 leading-snug">
+                        {notif.message}
+                      </p>
+                      <p className="text-[9px] text-text-light/80 mt-1">
+                        {new Date(notif.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                      </p>
+                    </div>
+                  </Link>
+                );
+              })
             )}
           </div>
 

@@ -18,4 +18,16 @@ export const subscriptionQueryKeys = {
 
     adminRevenueStats: () =>
         [...subscriptionQueryKeys.all, 'admin', 'revenue-stats'] as const,
+
+    dashboardStats: () =>
+        [...subscriptionQueryKeys.all, 'admin', 'dashboard-stats'] as const,
+
+    features: () =>
+        [...subscriptionQueryKeys.all, 'admin', 'features-catalog'] as const,
+
+    coupons: () =>
+        [...subscriptionQueryKeys.all, 'admin', 'coupons-list'] as const,
+
+    planDetails: (id: string) =>
+        [...subscriptionQueryKeys.all, 'admin', 'plan-details', id] as const,
 };

@@ -15,11 +15,14 @@ import {
   Shield,
   FileText,
 } from "lucide-react";
+import { toast } from "sonner";
+import { useCreatePlan } from "@/features/subscriptions";
 import Button from "@/components/ui/Button";
 
 export default function CreatePlanWizardPage() {
   const router = useRouter();
   const [step, setStep] = useState(1);
+  const createPlanMutation = useCreatePlan();
 
   // Form State
   const [formData, setFormData] = useState({
@@ -35,7 +38,11 @@ export default function CreatePlanWizardPage() {
     setupFeeCents: 0,
     isRecurring: true,
     isFeatured: false,
-    countryPricing: [] as { country: string; currency: string; priceCents: number }[],
+    countryPricing: [] as {
+      country: string;
+      currency: string;
+      priceCents: number;
+    }[],
     categoryPricing: [] as { categoryId: string; priceCents: number }[],
     features: [] as { featureKey: string; limitValue: string }[],
     targetCountry: "",
@@ -45,7 +52,11 @@ export default function CreatePlanWizardPage() {
   });
 
   // Country Pricing row inputs
-  const [newCountry, setNewCountry] = useState({ country: "", currency: "USD", priceCents: 0 });
+  const [newCountry, setNewCountry] = useState({
+    country: "",
+    currency: "USD",
+    priceCents: 0,
+  });
   // Features catalog key choices
   const featureCatalog = [
     { key: "max_tenders", label: "Max Bid Submissions" },
@@ -96,8 +107,42 @@ export default function CreatePlanWizardPage() {
   ];
 
   async function handleFinalSubmit() {
-    alert("Plan and draft version created successfully! Sent to review board.");
-    router.push("/subscriptions");
+    try {
+      await createPlanMutation.mutateAsync({
+        name: formData.name,
+        subtitle: formData.subtitle || undefined,
+        description: formData.description || undefined,
+        priceCents: Math.round(Number(formData.priceCents) * 100),
+        currency: formData.currency,
+        durationDays: Number(formData.durationDays),
+        trialDays: Number(formData.trialDays),
+        setupFeeCents: Math.round(Number(formData.setupFeeCents) * 100),
+        isRecurring: formData.isRecurring,
+        isFeatured: formData.isFeatured,
+        badge: formData.badge || undefined,
+        planType: formData.planType as any,
+        targetStateId: formData.targetStateId || undefined,
+        targetCountry: formData.targetCountry || undefined,
+        targetCategoryId: formData.targetCategoryId || undefined,
+        bundleSize: formData.bundleSize
+          ? Number(formData.bundleSize)
+          : undefined,
+        features: formData.features,
+        countryPricing: formData.countryPricing.map((cp) => ({
+          ...cp,
+          priceCents: Math.round(Number(cp.priceCents) * 100),
+        })),
+        categoryPricing: formData.categoryPricing.map((cp) => ({
+          ...cp,
+          priceCents: Math.round(Number(cp.priceCents) * 100),
+        })),
+      });
+
+      toast.success("Plan created successfully!");
+      router.push("/subscriptions?view=plan-list");
+    } catch (err: any) {
+      toast.error(err?.message || "Failed to create plan.");
+    }
   }
 
   return (
@@ -111,8 +156,12 @@ export default function CreatePlanWizardPage() {
           <ArrowLeft size={18} />
         </Link>
         <div>
-          <h1 className="text-2xl font-bold text-text">Create Subscription Plan</h1>
-          <p className="text-sm text-text-light mt-0.5">Setup new versioned pricing tiers for vendors.</p>
+          <h1 className="text-2xl font-bold text-text">
+            Create Subscription Plan
+          </h1>
+          <p className="text-sm text-text-light mt-0.5">
+            Setup new versioned pricing tiers for vendors.
+          </p>
         </div>
       </div>
 
@@ -126,19 +175,24 @@ export default function CreatePlanWizardPage() {
             const isActive = step === s.id;
 
             return (
-              <div key={s.id} className="flex flex-col items-center gap-1.5 bg-surface px-4 z-10">
+              <div
+                key={s.id}
+                className="flex flex-col items-center gap-1.5 bg-surface px-4 z-10"
+              >
                 <div
                   className={`flex h-10 w-10 items-center justify-center rounded-full border-2 transition ${
                     isCompleted
                       ? "border-primary bg-primary text-white"
                       : isActive
-                      ? "border-primary text-primary bg-primary/5"
-                      : "border-border text-text-light bg-surface"
+                        ? "border-primary text-primary bg-primary/5"
+                        : "border-border text-text-light bg-surface"
                   }`}
                 >
                   {isCompleted ? <Check size={16} /> : <Icon size={16} />}
                 </div>
-                <span className={`text-xs font-semibold ${isActive ? "text-primary" : "text-text-light"}`}>
+                <span
+                  className={`text-xs font-semibold ${isActive ? "text-primary" : "text-text-light"}`}
+                >
                   {s.name}
                 </span>
               </div>
@@ -151,54 +205,76 @@ export default function CreatePlanWizardPage() {
       <div className="rounded-2xl border border-border bg-surface p-6 shadow-sm min-h-[350px]">
         {step === 1 && (
           <div className="space-y-4">
-            <h2 className="text-lg font-bold text-text">Step 1: Plan Information</h2>
+            <h2 className="text-lg font-bold text-text">
+              Step 1: Plan Information
+            </h2>
             <div className="grid gap-4 md:grid-cols-2">
               <div>
-                <label className="text-xs font-bold text-text-light uppercase">Plan Name *</label>
+                <label className="text-xs font-bold text-text-light uppercase">
+                  Plan Name *
+                </label>
                 <input
                   type="text"
                   placeholder="e.g. Professional Plan"
                   value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, name: e.target.value })
+                  }
                   className="mt-1 w-full rounded-lg border border-border bg-background p-3 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/10"
                 />
               </div>
               <div>
-                <label className="text-xs font-bold text-text-light uppercase">Featured Badge</label>
+                <label className="text-xs font-bold text-text-light uppercase">
+                  Featured Badge
+                </label>
                 <input
                   type="text"
                   placeholder="e.g. Most Popular"
                   value={formData.badge}
-                  onChange={(e) => setFormData({ ...formData, badge: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, badge: e.target.value })
+                  }
                   className="mt-1 w-full rounded-lg border border-border bg-background p-3 text-sm outline-none focus:border-primary"
                 />
               </div>
             </div>
             <div>
-              <label className="text-xs font-bold text-text-light uppercase">Subtitle / Caption</label>
+              <label className="text-xs font-bold text-text-light uppercase">
+                Subtitle / Caption
+              </label>
               <input
                 type="text"
                 placeholder="Brief summary sentence"
                 value={formData.subtitle}
-                onChange={(e) => setFormData({ ...formData, subtitle: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, subtitle: e.target.value })
+                }
                 className="mt-1 w-full rounded-lg border border-border bg-background p-3 text-sm outline-none focus:border-primary"
               />
             </div>
             <div>
-              <label className="text-xs font-bold text-text-light uppercase">Description</label>
+              <label className="text-xs font-bold text-text-light uppercase">
+                Description
+              </label>
               <textarea
                 placeholder="Full details of what is included..."
                 rows={4}
                 value={formData.description}
-                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, description: e.target.value })
+                }
                 className="mt-1 w-full rounded-lg border border-border bg-background p-3 text-sm outline-none focus:border-primary"
               />
             </div>
             <div>
-              <label className="text-xs font-bold text-text-light uppercase">Plan Target Type</label>
+              <label className="text-xs font-bold text-text-light uppercase">
+                Plan Target Type
+              </label>
               <select
                 value={formData.planType}
-                onChange={(e) => setFormData({ ...formData, planType: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, planType: e.target.value })
+                }
                 className="mt-1 w-full rounded-lg border border-border bg-background p-3 text-sm outline-none focus:border-primary"
               >
                 <option value="all-access">All-Access (Unrestricted)</option>
@@ -213,42 +289,69 @@ export default function CreatePlanWizardPage() {
 
         {step === 2 && (
           <div className="space-y-4">
-            <h2 className="text-lg font-bold text-text">Step 2: Pricing Configuration</h2>
+            <h2 className="text-lg font-bold text-text">
+              Step 2: Pricing Configuration
+            </h2>
             <div className="grid gap-4 md:grid-cols-2">
               <div>
-                <label className="text-xs font-bold text-text-light uppercase">Price (in Cents) *</label>
+                <label className="text-xs font-bold text-text-light uppercase">
+                  Price (in Cents) *
+                </label>
                 <input
                   type="number"
                   placeholder="e.g. 4900 for $49.00"
                   value={formData.priceCents || ""}
-                  onChange={(e) => setFormData({ ...formData, priceCents: parseInt(e.target.value, 10) || 0 })}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      priceCents: parseInt(e.target.value, 10) || 0,
+                    })
+                  }
                   className="mt-1 w-full rounded-lg border border-border bg-background p-3 text-sm outline-none focus:border-primary"
                 />
               </div>
               <div>
-                <label className="text-xs font-bold text-text-light uppercase">Currency</label>
+                <label className="text-xs font-bold text-text-light uppercase">
+                  Currency
+                </label>
                 <input
                   type="text"
                   value={formData.currency}
-                  onChange={(e) => setFormData({ ...formData, currency: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, currency: e.target.value })
+                  }
                   className="mt-1 w-full rounded-lg border border-border bg-background p-3 text-sm outline-none focus:border-primary"
                 />
               </div>
               <div>
-                <label className="text-xs font-bold text-text-light uppercase">Duration Cycles (Days) *</label>
+                <label className="text-xs font-bold text-text-light uppercase">
+                  Duration Cycles (Days) *
+                </label>
                 <input
                   type="number"
                   value={formData.durationDays}
-                  onChange={(e) => setFormData({ ...formData, durationDays: parseInt(e.target.value, 10) || 30 })}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      durationDays: parseInt(e.target.value, 10) || 30,
+                    })
+                  }
                   className="mt-1 w-full rounded-lg border border-border bg-background p-3 text-sm outline-none focus:border-primary"
                 />
               </div>
               <div>
-                <label className="text-xs font-bold text-text-light uppercase">Trial Period (Days)</label>
+                <label className="text-xs font-bold text-text-light uppercase">
+                  Trial Period (Days)
+                </label>
                 <input
                   type="number"
                   value={formData.trialDays}
-                  onChange={(e) => setFormData({ ...formData, trialDays: parseInt(e.target.value, 10) || 0 })}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      trialDays: parseInt(e.target.value, 10) || 0,
+                    })
+                  }
                   className="mt-1 w-full rounded-lg border border-border bg-background p-3 text-sm outline-none focus:border-primary"
                 />
               </div>
@@ -258,7 +361,9 @@ export default function CreatePlanWizardPage() {
                 <input
                   type="checkbox"
                   checked={formData.isRecurring}
-                  onChange={(e) => setFormData({ ...formData, isRecurring: e.target.checked })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, isRecurring: e.target.checked })
+                  }
                   className="h-4 w-4 rounded border-border text-primary focus:ring-primary"
                 />
                 Is Recurring Subscription
@@ -267,7 +372,9 @@ export default function CreatePlanWizardPage() {
                 <input
                   type="checkbox"
                   checked={formData.isFeatured}
-                  onChange={(e) => setFormData({ ...formData, isFeatured: e.target.checked })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, isFeatured: e.target.checked })
+                  }
                   className="h-4 w-4 rounded border-border text-primary focus:ring-primary"
                 />
                 Feature this Plan
@@ -278,36 +385,55 @@ export default function CreatePlanWizardPage() {
 
         {step === 3 && (
           <div className="space-y-4">
-            <h2 className="text-lg font-bold text-text">Step 3: Geographic Price Overrides</h2>
-            <p className="text-xs text-text-light">Define regional pricing rules based on customer location.</p>
+            <h2 className="text-lg font-bold text-text">
+              Step 3: Geographic Price Overrides
+            </h2>
+            <p className="text-xs text-text-light">
+              Define regional pricing rules based on customer location.
+            </p>
 
             <div className="flex flex-wrap gap-2.5 items-end bg-background p-4 rounded-xl border border-border">
               <div className="flex-1 min-w-[150px]">
-                <label className="text-[10px] font-bold uppercase text-text-light">Country</label>
+                <label className="text-[10px] font-bold uppercase text-text-light">
+                  Country
+                </label>
                 <input
                   type="text"
                   placeholder="e.g. Canada"
                   value={newCountry.country}
-                  onChange={(e) => setNewCountry({ ...newCountry, country: e.target.value })}
+                  onChange={(e) =>
+                    setNewCountry({ ...newCountry, country: e.target.value })
+                  }
                   className="mt-1 w-full rounded border border-border bg-surface p-2 text-xs outline-none"
                 />
               </div>
               <div className="w-24">
-                <label className="text-[10px] font-bold uppercase text-text-light">Currency</label>
+                <label className="text-[10px] font-bold uppercase text-text-light">
+                  Currency
+                </label>
                 <input
                   type="text"
                   value={newCountry.currency}
-                  onChange={(e) => setNewCountry({ ...newCountry, currency: e.target.value })}
+                  onChange={(e) =>
+                    setNewCountry({ ...newCountry, currency: e.target.value })
+                  }
                   className="mt-1 w-full rounded border border-border bg-surface p-2 text-xs outline-none"
                 />
               </div>
               <div className="w-32">
-                <label className="text-[10px] font-bold uppercase text-text-light">Price (Cents)</label>
+                <label className="text-[10px] font-bold uppercase text-text-light">
+                  Price (Cents)
+                </label>
                 <input
                   type="number"
                   placeholder="6500"
                   value={newCountry.priceCents || ""}
-                  onChange={(e) => setNewCountry({ ...newCountry, priceCents: parseInt(e.target.value, 10) || 0 })}
+                  onChange={(e) =>
+                    setNewCountry({
+                      ...newCountry,
+                      priceCents: parseInt(e.target.value, 10) || 0,
+                    })
+                  }
                   className="mt-1 w-full rounded border border-border bg-surface p-2 text-xs outline-none"
                 />
               </div>
@@ -332,7 +458,9 @@ export default function CreatePlanWizardPage() {
                       <tr key={idx}>
                         <td className="px-4 py-2 font-bold">{cp.country}</td>
                         <td className="px-4 py-2">{cp.currency}</td>
-                        <td className="px-4 py-2">${(cp.priceCents / 100).toFixed(2)}</td>
+                        <td className="px-4 py-2">
+                          ${(cp.priceCents / 100).toFixed(2)}
+                        </td>
                         <td className="px-4 py-2 text-right">
                           <button
                             type="button"
@@ -353,22 +481,35 @@ export default function CreatePlanWizardPage() {
 
         {step === 4 && (
           <div className="space-y-4">
-            <h2 className="text-lg font-bold text-text">Step 4: Features & Capabilities</h2>
+            <h2 className="text-lg font-bold text-text">
+              Step 4: Features & Capabilities
+            </h2>
             <div className="grid gap-4 md:grid-cols-2">
               {featureCatalog.map((feat) => {
-                const currentVal = formData.features.find((f) => f.featureKey === feat.key)?.limitValue || "";
+                const currentVal =
+                  formData.features.find((f) => f.featureKey === feat.key)
+                    ?.limitValue || "";
 
                 return (
-                  <div key={feat.key} className="border border-border p-4 rounded-xl bg-background flex flex-col justify-between">
+                  <div
+                    key={feat.key}
+                    className="border border-border p-4 rounded-xl bg-background flex flex-col justify-between"
+                  >
                     <div>
-                      <span className="text-sm font-semibold text-text">{feat.label}</span>
-                      <p className="text-[10px] text-text-light mt-0.5">Key: {feat.key}</p>
+                      <span className="text-sm font-semibold text-text">
+                        {feat.label}
+                      </span>
+                      <p className="text-[10px] text-text-light mt-0.5">
+                        Key: {feat.key}
+                      </p>
                     </div>
                     <input
                       type="text"
                       placeholder="e.g. 50 (or leave empty to exclude)"
                       value={currentVal}
-                      onChange={(e) => handleFeatureLimit(feat.key, e.target.value)}
+                      onChange={(e) =>
+                        handleFeatureLimit(feat.key, e.target.value)
+                      }
                       className="mt-3 w-full rounded border border-border bg-surface p-2 text-xs outline-none focus:border-primary"
                     />
                   </div>
@@ -380,23 +521,45 @@ export default function CreatePlanWizardPage() {
 
         {step === 5 && (
           <div className="space-y-6">
-            <h2 className="text-lg font-bold text-text">Step 5: Review & Submit</h2>
+            <h2 className="text-lg font-bold text-text">
+              Step 5: Review & Submit
+            </h2>
             <div className="grid gap-6 md:grid-cols-2">
               <div className="space-y-3">
-                <h3 className="font-bold text-sm text-text-light uppercase tracking-wider">Plan Information</h3>
+                <h3 className="font-bold text-sm text-text-light uppercase tracking-wider">
+                  Plan Information
+                </h3>
                 <div className="border border-border p-4 rounded-xl bg-background text-sm space-y-2">
-                  <p><strong>Name:</strong> {formData.name}</p>
-                  <p><strong>Subtitle:</strong> {formData.subtitle || "None"}</p>
-                  <p><strong>Type:</strong> {formData.planType}</p>
-                  <p><strong>Featured:</strong> {formData.isFeatured ? "Yes" : "No"}</p>
+                  <p>
+                    <strong>Name:</strong> {formData.name}
+                  </p>
+                  <p>
+                    <strong>Subtitle:</strong> {formData.subtitle || "None"}
+                  </p>
+                  <p>
+                    <strong>Type:</strong> {formData.planType}
+                  </p>
+                  <p>
+                    <strong>Featured:</strong>{" "}
+                    {formData.isFeatured ? "Yes" : "No"}
+                  </p>
                 </div>
               </div>
               <div className="space-y-3">
-                <h3 className="font-bold text-sm text-text-light uppercase tracking-wider">Default Pricing</h3>
+                <h3 className="font-bold text-sm text-text-light uppercase tracking-wider">
+                  Default Pricing
+                </h3>
                 <div className="border border-border p-4 rounded-xl bg-background text-sm space-y-2">
-                  <p><strong>Price:</strong> ${(formData.priceCents / 100).toFixed(2)} {formData.currency}</p>
-                  <p><strong>Duration:</strong> {formData.durationDays} Days</p>
-                  <p><strong>Trial Period:</strong> {formData.trialDays} Days</p>
+                  <p>
+                    <strong>Price:</strong> $
+                    {(formData.priceCents / 100).toFixed(2)} {formData.currency}
+                  </p>
+                  <p>
+                    <strong>Duration:</strong> {formData.durationDays} Days
+                  </p>
+                  <p>
+                    <strong>Trial Period:</strong> {formData.trialDays} Days
+                  </p>
                 </div>
               </div>
             </div>
@@ -423,7 +586,14 @@ export default function CreatePlanWizardPage() {
             Next Step
           </Button>
         ) : (
-          <Button onClick={handleFinalSubmit}>Submit Plan for Review</Button>
+          <Button
+            onClick={handleFinalSubmit}
+            disabled={createPlanMutation.isPending}
+          >
+            {createPlanMutation.isPending
+              ? "Creating Plan..."
+              : "Submit Plan for Review"}
+          </Button>
         )}
       </div>
     </div>

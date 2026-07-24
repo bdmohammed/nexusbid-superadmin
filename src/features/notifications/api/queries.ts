@@ -1,14 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
 import { notificationsApi } from './api';
 import { notificationQueryKeys } from './keys';
-import { AppError, ErrorCode } from '@/lib/errors';
 
 export function useNotifications(filters?: any) {
   return useQuery({
     queryKey: notificationQueryKeys.list(filters),
     queryFn: async () => {
       const { data } = await notificationsApi.list(filters);
-      // Backend returns directly list and total or mapped structure
       return data;
     },
     staleTime: 1000 * 30, // 30 seconds cache duration
@@ -31,9 +29,9 @@ export function useNotificationCategories() {
     queryKey: notificationQueryKeys.categories(),
     queryFn: async () => {
       const { data } = await notificationsApi.getCategories();
-      return data;
+      return Array.isArray(data) ? data : [];
     },
-    staleTime: 1000 * 60 * 60, // 1 hour static-ish
+    staleTime: 1000 * 60 * 60, // 1 hour static
   });
 }
 

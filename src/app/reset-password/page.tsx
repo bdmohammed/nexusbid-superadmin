@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '@/features/auth/hooks/useAuth';
 import { getErrorMessage } from '@/lib/errors';
+import { toast } from 'sonner';
 
 function ResetPasswordContent() {
   const router = useRouter();
@@ -14,38 +15,37 @@ function ResetPasswordContent() {
   const { resetPassword, isResetting } = useAuth();
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [errorMsg, setErrorMsg] = useState('');
-  const [successMsg, setSuccessMsg] = useState('');
+
+  const isValid =
+    password.length >= 8 && confirmPassword.length >= 8;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setErrorMsg('');
-    setSuccessMsg('');
 
     if (!token) {
-      setErrorMsg('Invalid or missing password reset token.');
+      toast.error('Invalid or missing password reset token.');
       return;
     }
 
     if (password.length < 8) {
-      setErrorMsg('Password must be at least 8 characters long.');
+      toast.error('Password must be at least 8 characters long.');
       return;
     }
 
     if (password !== confirmPassword) {
-      setErrorMsg('Passwords do not match.');
+      toast.error('Passwords do not match.');
       return;
     }
 
     try {
       await resetPassword({ token, password });
-      setSuccessMsg('Your password has been successfully reset.');
+      toast.success('Password reset successfully! Redirecting to login…');
       setTimeout(() => {
         router.push('/login');
-      }, 3000);
+      }, 2000);
     } catch (err: any) {
       const msg = getErrorMessage(err) || 'Failed to reset password.';
-      setErrorMsg(msg);
+      toast.error(msg);
     }
   };
 
@@ -66,25 +66,13 @@ function ResetPasswordContent() {
           </p>
         </div>
 
-        {successMsg && (
-          <div className="mb-6 p-4 bg-green-500/10 border border-green-500/30 text-green-500 rounded-lg text-sm text-center">
-            {successMsg} Redirecting to login page...
-          </div>
-        )}
-
-        {errorMsg && (
-          <div className="mb-6 p-3 bg-red-500/10 border border-red-500/30 text-red-500 rounded-lg text-xs font-medium text-center">
-            {errorMsg}
-          </div>
-        )}
-
         {!token && (
           <div className="mb-6 p-3 bg-amber-500/10 border border-amber-500/30 text-amber-500 rounded-lg text-xs font-medium text-center">
             Missing reset token. Please click the link in your email again.
           </div>
         )}
 
-        {!successMsg && token && (
+        {token && (
           <form onSubmit={handleSubmit} className="space-y-5 relative z-10">
             <div>
               <label className="block text-xs font-semibold uppercase tracking-wider text-[var(--muted)] mb-2">
@@ -116,8 +104,8 @@ function ResetPasswordContent() {
 
             <button
               type="submit"
-              disabled={isResetting}
-              className="w-full py-3.5 px-4 bg-[#003EC7] hover:bg-[#002fad] text-white font-semibold rounded-lg shadow-md transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              disabled={!isValid || isResetting}
+              className="w-full py-3.5 px-4 bg-[#003EC7] hover:bg-[#002fad] text-white font-semibold rounded-lg shadow-md transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer"
             >
               {isResetting ? (
                 <>

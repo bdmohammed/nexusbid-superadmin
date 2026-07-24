@@ -122,3 +122,85 @@ export function useAssignableUsers() {
         },
     });
 }
+
+/**
+ * Get categorized roles list.
+ */
+export function useCategorizedRoles() {
+    return useQuery({
+        queryKey: rbacKeys.categorizedRoles(),
+        queryFn: async () => {
+            const { data } = await rbacApi.getCategorizedRoles();
+            if (!data.success) {
+                throw new AppError(data.message, 400, data.error as ErrorCode);
+            }
+            return data.data;
+        },
+    });
+}
+
+/**
+ * Get RBAC module statistics.
+ */
+export function useRbacStats() {
+    return useQuery({
+        queryKey: rbacKeys.stats(),
+        queryFn: async () => {
+            const { data } = await rbacApi.getStats();
+            if (!data.success) {
+                throw new AppError(data.message, 400, data.error as ErrorCode);
+            }
+            return data.data;
+        },
+    });
+}
+
+/**
+ * Get historical role versions.
+ */
+export function useRoleVersions(roleId: string) {
+    return useQuery({
+        queryKey: rbacKeys.roleVersions(roleId),
+        queryFn: async () => {
+            const { data } = await rbacApi.getRoleVersions(roleId);
+            if (!data.success) {
+                throw new AppError(data.message, 400, data.error as ErrorCode);
+            }
+            return data.data;
+        },
+        enabled: !!roleId,
+    });
+}
+
+/**
+ * Get details of a role review.
+ */
+export function useReviewDetails(reviewId: string) {
+    return useQuery({
+        queryKey: rbacKeys.reviewDetails(reviewId),
+        queryFn: async () => {
+            const { data } = await rbacApi.getReviewDetails(reviewId);
+            if (!data.success) {
+                throw new AppError(data.message, 400, data.error as ErrorCode);
+            }
+            return data.data;
+        },
+        enabled: !!reviewId,
+    });
+}
+
+/**
+ * Get forensic activity logs.
+ */
+export function useForensicLogs(params?: any) {
+    return useQuery({
+        queryKey: rbacKeys.forensicLogs(params),
+        queryFn: async () => {
+            const { data } = await rbacApi.getForensicLogs(params);
+            if (!data.success) {
+                throw new AppError(data.message, 400, data.error as ErrorCode);
+            }
+            return data.data;
+        },
+    });
+}

@@ -1,10 +1,11 @@
 export interface NotificationAction {
   id: string;
   label: string;
-  type: string;
+  type?: string;
   payload?: any;
+  requiredPermissionKey?: string;
   permission?: string;
-  btnOrder: number;
+  btnOrder?: number;
 }
 
 export interface Notification {
@@ -16,11 +17,11 @@ export interface Notification {
   title: string;
   message: string;
   category: string;
-  severity: 'critical' | 'high' | 'medium' | 'low' | 'info';
-  entityType?: string;
-  entityId?: string;
-  actionUrl?: string;
-  actionLabel?: string;
+  severity: 'critical' | 'high' | 'medium' | 'low' | 'info' | 'CRITICAL' | 'HIGH' | 'MEDIUM' | 'LOW';
+  entityType?: string | null;
+  entityId?: string | null;
+  actionUrl?: string | null;
+  actionLabel?: string | null;
   metadata?: any;
   actions?: NotificationAction[];
 }

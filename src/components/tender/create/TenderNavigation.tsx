@@ -41,7 +41,7 @@ export default function TenderNavigation({
         )}
 
         {isLast ? (
-          <Button type="submit">Create Tender</Button>
+          <Button type="submit">Submit for Governance Review</Button>
         ) : (
           <Button type="button" onClick={onNext}>
             Continue

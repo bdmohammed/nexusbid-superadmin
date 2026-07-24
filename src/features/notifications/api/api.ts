@@ -1,34 +1,39 @@
 import { apiClient } from '@/lib/http';
-import type { ApiResponse } from '@/types';
+import type {
+  NotificationPreferences,
+  NotificationStats,
+  NotificationCategory,
+  NotificationsListResponse,
+} from '../types';
 
 export const notificationsApi = {
   list: (params?: any) =>
-    apiClient.get<ApiResponse<any>>('/notifications', { params }),
+    apiClient.get<NotificationsListResponse>('/notifications', { params }),
 
   getStatistics: () =>
-    apiClient.get<any>('/notifications/statistics'),
+    apiClient.get<NotificationStats>('/notifications/statistics'),
 
   getCategories: () =>
-    apiClient.get<any[]>('/notifications/categories'),
+    apiClient.get<NotificationCategory[]>('/notifications/categories'),
 
   markRead: (id: string) =>
-    apiClient.patch<any>(`/notifications/${id}/read`),
+    apiClient.patch<{ success: boolean; message?: string }>(`/notifications/${id}/read`),
 
   markAllRead: () =>
-    apiClient.patch<any>('/notifications/read-all'),
+    apiClient.patch<{ success: boolean; message?: string }>('/notifications/read-all'),
 
   archive: (id: string) =>
-    apiClient.patch<any>(`/notifications/${id}/archive`),
+    apiClient.patch<{ success: boolean; message?: string }>(`/notifications/${id}/archive`),
 
   dismiss: (id: string) =>
-    apiClient.patch<any>(`/notifications/${id}/dismiss`),
+    apiClient.patch<{ success: boolean; message?: string }>(`/notifications/${id}/dismiss`),
 
   executeAction: (id: string, actionId: string) =>
-    apiClient.post<any>(`/notifications/${id}/actions/${actionId}/execute`),
+    apiClient.post<{ success: boolean; message?: string }>(`/notifications/${id}/actions/${actionId}/execute`),
 
   getPreferences: () =>
-    apiClient.get<any>('/notifications/preferences'),
+    apiClient.get<NotificationPreferences>('/notifications/preferences'),
 
-  updatePreferences: (data: any) =>
-    apiClient.patch<any>('/notifications/preferences', data),
+  updatePreferences: (data: Partial<NotificationPreferences>) =>
+    apiClient.patch<NotificationPreferences>('/notifications/preferences', data),
 };

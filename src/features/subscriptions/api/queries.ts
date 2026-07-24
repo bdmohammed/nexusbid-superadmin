@@ -102,3 +102,79 @@ export function useAdminRevenueStats() {
         },
     });
 }
+
+export function useSubscriptionsDashboardStats() {
+    return useQuery({
+        queryKey: subscriptionQueryKeys.dashboardStats(),
+        queryFn: async () => {
+            const { data } = await subscriptionApi.getSubscriptionsDashboardStats();
+
+            if (!data.success) {
+                throw new AppError(data.message, 400, data.error as ErrorCode);
+            }
+
+            return data.data;
+        },
+    });
+}
+
+export function useFeatureCatalog() {
+    return useQuery({
+        queryKey: subscriptionQueryKeys.features(),
+        queryFn: async () => {
+            const { data } = await subscriptionApi.getFeatureCatalog();
+
+            if (!data.success) {
+                throw new AppError(data.message, 400, data.error as ErrorCode);
+            }
+
+            return data.data ?? [];
+        },
+    });
+}
+
+export function useCouponsList() {
+    return useQuery({
+        queryKey: subscriptionQueryKeys.coupons(),
+        queryFn: async () => {
+            const { data } = await subscriptionApi.listCoupons();
+
+            if (!data.success) {
+                throw new AppError(data.message, 400, data.error as ErrorCode);
+            }
+
+            return data.data ?? [];
+        },
+    });
+}
+
+export function usePlanDetails(id: string) {
+    return useQuery({
+        queryKey: subscriptionQueryKeys.planDetails(id),
+        queryFn: async () => {
+            const { data } = await subscriptionApi.getPlanById(id);
+
+            if (!data.success) {
+                throw new AppError(data.message, 400, data.error as ErrorCode);
+            }
+
+            return data.data;
+        },
+        enabled: !!id,
+    });
+}
+
+export function useAllPlansAdmin() {
+    return useQuery({
+        queryKey: [...subscriptionQueryKeys.all, 'admin-all-plans'],
+        queryFn: async () => {
+            const { data } = await subscriptionApi.listAllPlans();
+
+            if (!data.success) {
+                throw new AppError(data.message, 400, data.error as ErrorCode);
+            }
+
+            return data.data ?? [];
+        },
+    });
+}

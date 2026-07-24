@@ -2,8 +2,10 @@ import { Category } from "./category";
 import { State } from "./state";
 
 export type TenderLifecycleStatus = 'ACTIVE' | 'ARCHIVED' | 'CANCELLED';
-export type TenderVersionStatus = 'DRAFT' | 'SUBMITTED' | 'REVIEW_ASSIGNED' | 'UNDER_REVIEW' | 'APPROVED' | 'REJECTED' | 'CHANGES_REQUESTED';
-export type TenderPublicationStatus = 'SCHEDULED' | 'PUBLISHED' | 'OPEN' | 'CLOSING' | 'CLOSED' | 'AWARDED' | 'COMPLETED';
+export type TenderVersionStatus = 'DRAFT' | 'SUBMITTED' | 'REVIEW_ASSIGNED' | 'UNDER_REVIEW' | 'APPROVED' | 'REJECTED' | 'CHANGES_REQUESTED' | 'ARCHIVED_VERSION';
+export type TenderPublicationStatus = 'UNPUBLISHED' | 'SCHEDULED' | 'PUBLISHED' | 'RETRACTED';
+export type TenderBiddingStatus = 'NOT_OPEN' | 'OPEN' | 'CLOSED';
+export type TenderProcessStatus = 'PRE_BIDDING' | 'IN_BIDDING' | 'UNDER_EVALUATION' | 'AWARDED' | 'COMPLETED' | 'FAILED';
 
 export interface Tender {
   id: string;
@@ -11,6 +13,9 @@ export interface Tender {
   activeVersionId: string | null;
   status: TenderLifecycleStatus;
   publicationStatus: TenderPublicationStatus;
+  biddingStatus?: TenderBiddingStatus;
+  processStatus?: TenderProcessStatus;
+  publishAt?: string | null;
   createdAt: string;
   updatedAt: string;
   activeVersion?: TenderVersion | null;

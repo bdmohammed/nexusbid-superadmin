@@ -1,6 +1,4 @@
-// src/lib/errors/AppError.ts
-
-import { ErrorCode, ERROR_CODES } from './constants';
+import { ErrorCode, ERROR_CODES } from "./constants";
 
 export class AppError extends Error {
   public readonly statusCode: number;

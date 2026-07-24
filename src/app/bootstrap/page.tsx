@@ -83,7 +83,7 @@ function BootstrapContent() {
             Admin Bootstrap Setup
           </h1>
           <p className="text-gray-400 text-sm md:text-base mb-8 max-w-md mx-auto">
-            Review and approve the first administrator to initialize the NexusBid enterprise environment.
+            Review and approve the first administrator to initialize the RFPNexa enterprise environment.
           </p>
 
           {/* Loading Token state */}

@@ -19,7 +19,7 @@ export function useCreateRole() {
 
         onSuccess: () => {
             queryClient.invalidateQueries({
-                queryKey: rbacKeys.roles(),
+                queryKey: rbacKeys.all,
             });
         },
     });
@@ -45,7 +45,7 @@ export function useUpdateRole() {
 
         onSuccess: (_, variables) => {
             queryClient.invalidateQueries({
-                queryKey: rbacKeys.roles(),
+                queryKey: rbacKeys.all,
             });
 
             queryClient.invalidateQueries({
@@ -69,7 +69,7 @@ export function useDeleteRole() {
 
         onSuccess: () => {
             queryClient.invalidateQueries({
-                queryKey: rbacKeys.roles(),
+                queryKey: rbacKeys.all,
             });
         },
     });
@@ -89,7 +89,7 @@ export function useCreateAssignment() {
 
         onSuccess: () => {
             queryClient.invalidateQueries({
-                queryKey: rbacKeys.assignments(),
+                queryKey: rbacKeys.all,
             });
         },
     });
@@ -109,7 +109,7 @@ export function useDeleteAssignment() {
 
         onSuccess: () => {
             queryClient.invalidateQueries({
-                queryKey: rbacKeys.assignments(),
+                queryKey: rbacKeys.all,
             });
         },
     });

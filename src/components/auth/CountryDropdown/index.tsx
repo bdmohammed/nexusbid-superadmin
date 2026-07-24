@@ -1,10 +1,10 @@
-import { AlertCircle, RefreshCw } from 'lucide-react';
-import { useCountries } from '@/features/state/api/queries';
-import QueryBoundary from '@/components/query/QueryBoundary';
-import { useCountryDropdown } from './useCountryDropdown';
-import DropdownButton from './DropdownButton';
-import CountrySearch from './CountrySearch';
-import CountryOption from './CountryOption';
+import { AlertCircle, RefreshCw } from "lucide-react";
+import { useCountries } from "@/features/country/api/queries";
+import QueryBoundary from "@/components/query/QueryBoundary";
+import { useCountryDropdown } from "./useCountryDropdown";
+import DropdownButton from "./DropdownButton";
+import CountrySearch from "./CountrySearch";
+import CountryOption from "./CountryOption";
 
 interface CountryDropdownProps {
   value: string;
@@ -42,14 +42,20 @@ export default function CountryDropdown({
         query={countriesQuery}
         skeleton={
           <div className="w-full h-12 rounded-lg bg-[var(--surface-secondary)] border border-[var(--border)] flex items-center px-4 animate-pulse">
-            <span className="text-xs text-[var(--muted)]">Loading countries...</span>
+            <span className="text-xs text-[var(--muted)]">
+              Loading countries...
+            </span>
           </div>
         }
         error={(err, retry) => (
           <div className="w-full p-3 rounded-lg bg-red-500/10 border border-red-500/30 flex items-center justify-between text-xs text-red-500">
             <div className="flex items-center gap-2">
               <AlertCircle className="w-4 h-4" />
-              <span>{err instanceof Error ? err.message : 'Failed to load countries.'}</span>
+              <span>
+                {err instanceof Error
+                  ? err.message
+                  : "Failed to load countries."}
+              </span>
             </div>
             <button
               type="button"
@@ -78,10 +84,10 @@ export default function CountryDropdown({
                 {filteredCountries.length > 0 ? (
                   filteredCountries.map((c) => (
                     <CountryOption
-                      key={c}
-                      country={c}
+                      key={c.countryId}
+                      country={c.countryName}
                       selectedValue={value}
-                      onClick={() => handleSelect(c)}
+                      onClick={() => handleSelect(c.countryName)}
                     />
                   ))
                 ) : (
@@ -96,9 +102,7 @@ export default function CountryDropdown({
       </QueryBoundary>
 
       {error && (
-        <span className="text-xs text-red-500 mt-1 block">
-          {error}
-        </span>
+        <span className="text-xs text-red-500 mt-1 block">{error}</span>
       )}
     </div>
   );

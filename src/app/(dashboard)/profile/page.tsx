@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { 
-  User, Shield, Key, HardDrive, CreditCard, 
+import {
+  User, Shield, Key, HardDrive, CreditCard,
   Activity, Clock, LogOut, CheckCircle, Smartphone,
   Bell, FileText, Download, Trash2, AlertTriangle, Link2, RotateCw, PlusCircle, Check
 } from "lucide-react";
@@ -420,13 +420,12 @@ export default function PersonalProfilePage() {
     <div className="space-y-6 max-w-6xl mx-auto">
       {/* Toast Alert */}
       {toast && (
-        <div className={`fixed top-5 right-5 z-50 flex items-center gap-3 px-4 py-3 rounded-2xl border shadow-lg transition duration-300 animate-slide-in ${
-          toast.type === "success" 
-            ? "bg-emerald-50 text-emerald-800 border-emerald-200" 
-            : toast.type === "error" 
-              ? "bg-rose-50 text-rose-800 border-rose-200" 
-              : "bg-indigo-50 text-indigo-800 border-indigo-200"
-        }`}>
+        <div className={`fixed top-5 right-5 z-50 flex items-center gap-3 px-4 py-3 rounded-2xl border shadow-lg transition duration-300 animate-slide-in ${toast.type === "success"
+          ? "bg-emerald-50 text-emerald-800 border-emerald-200"
+          : toast.type === "error"
+            ? "bg-rose-50 text-rose-800 border-rose-200"
+            : "bg-indigo-50 text-indigo-800 border-indigo-200"
+          }`}>
           {toast.type === "success" ? <CheckCircle size={18} /> : <AlertTriangle size={18} />}
           <span className="text-sm font-semibold">{toast.message}</span>
         </div>
@@ -498,7 +497,7 @@ export default function PersonalProfilePage() {
             </div>
           </div>
 
-          <div className="flex gap-2">
+          {/* <div className="flex gap-2">
             <button
               onClick={() => setIsEditingProfile(!isEditingProfile)}
               className="flex items-center gap-1.5 px-3 py-2 rounded-xl border border-border bg-surface text-sm font-semibold hover:bg-background transition cursor-pointer"
@@ -513,7 +512,7 @@ export default function PersonalProfilePage() {
               <Download size={15} />
               Export Personal Data
             </button>
-          </div>
+          </div> */}
         </div>
 
         {/* Edit Avatar Modal */}
@@ -607,7 +606,7 @@ export default function PersonalProfilePage() {
       </div>
 
       {/* Tabs Menu */}
-      <div className="flex flex-wrap border-b border-border gap-2">
+      {/* <div className="flex flex-wrap border-b border-border gap-2">
         {[
           { id: "overview", label: "Overview", icon: User },
           { id: "security", label: "Security", icon: Shield },
@@ -623,11 +622,10 @@ export default function PersonalProfilePage() {
             <button
               key={t.id}
               onClick={() => setActiveTab(t.id as any)}
-              className={`px-4 py-3 text-sm font-semibold relative transition flex items-center gap-2 cursor-pointer ${
-                activeTab === t.id 
-                  ? "text-primary font-bold animate-pulse-subtle" 
+              className={`px-4 py-3 text-sm font-semibold relative transition flex items-center gap-2 cursor-pointer ${activeTab === t.id
+                  ? "text-primary font-bold animate-pulse-subtle"
                   : "text-text-light hover:text-text"
-              }`}
+                }`}
             >
               <Icon size={15} />
               {t.label}
@@ -637,7 +635,7 @@ export default function PersonalProfilePage() {
             </button>
           );
         })}
-      </div>
+      </div> */}
 
       {/* Tab Panels */}
       <div className="bg-surface border border-border rounded-2xl shadow-sm p-6 min-h-[350px]">
@@ -672,7 +670,7 @@ export default function PersonalProfilePage() {
                   <div className="space-y-4">
                     {[
                       { label: "Company Name", value: profile.companyName || "N/A" },
-                      { label: "Country Origin", value: profile.country || "N/A" },
+                      { label: "Country Origin", value: typeof profile.country === "object" ? (profile.country as any)?.name : (profile.country || "N/A") },
                       { label: "Email Verified", value: profile.emailVerified ? "Verified ✅" : "Unverified ⚠️" },
                     ].map((item, idx) => (
                       <div key={idx} className="border-b border-border/60 pb-3">

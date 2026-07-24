@@ -1,31 +1,17 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { ShieldAlert, AlertTriangle, AlertCircle, RefreshCw } from "lucide-react";
-import { apiClient } from "@/lib/http";
+import { ShieldAlert, AlertTriangle, AlertCircle } from "lucide-react";
+import { useDashboardAlerts } from "@/features/dashboard/api/queries";
 
 interface AlertWidgetProps {
   liveData?: any;
 }
 
 export default function AlertWidget({ liveData }: AlertWidgetProps) {
-  const [data, setData] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
+  const { data: queryData, isLoading } = useDashboardAlerts();
 
-  useEffect(() => {
-    if (liveData) {
-      setData(liveData);
-      setLoading(false);
-      return;
-    }
-
-    apiClient.get("/dashboard/alerts")
-      .then((res) => {
-        setData(res.data?.data);
-      })
-      .catch((err) => console.error("Failed to load alerts data", err))
-      .finally(() => setLoading(false));
-  }, [liveData]);
+  const data = liveData ?? queryData;
+  const loading = !liveData && isLoading;
 
   if (loading) {
     return (

@@ -1,23 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { FolderKanban, CheckCircle2, AlertTriangle, FileText, Send, Archive } from "lucide-react";
-import { apiClient } from "@/lib/http";
+import { useDashboardTenders } from "@/features/dashboard/api/queries";
 
 export default function TenderWorkflowWidget() {
-  const [data, setData] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
+  const { data, isLoading } = useDashboardTenders();
 
-  useEffect(() => {
-    apiClient.get("/dashboard/tenders")
-      .then((res) => {
-        setData(res.data?.data);
-      })
-      .catch((err) => console.error("Failed to load tender workflow statistics", err))
-      .finally(() => setLoading(false));
-  }, []);
-
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="flex h-full items-center justify-center text-sm text-text-light italic animate-pulse">
         Compiling procurement stats...
