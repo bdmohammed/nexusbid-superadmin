@@ -24,9 +24,7 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  const hasAccessToken =
-    request.cookies.has("nexusbid_token") ||
-    request.cookies.has("__Host-access_token");
+  const hasAccessToken = request.cookies.has("access_token");
 
   console.log("middleware path:", pathname, "hasAccessToken:", hasAccessToken);
 

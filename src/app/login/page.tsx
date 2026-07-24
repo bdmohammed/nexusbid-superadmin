@@ -32,7 +32,7 @@ function LoginContent() {
 
   useEffect(() => {
     if (user || isAuthenticated) {
-      router.push(redirect);
+      router.replace(redirect);
     }
   }, [user, isAuthenticated, router, redirect]);
 
@@ -64,7 +64,7 @@ function LoginContent() {
         password: data.password,
       });
       toast.success("Logged in successfully!");
-      router.push(redirect);
+      router.replace(redirect);
       router.refresh();
     } catch (err: any) {
       const backendErrors = getValidationErrors(err);
