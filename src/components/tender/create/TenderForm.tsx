@@ -29,7 +29,6 @@ interface TenderFormInput {
   description: string;
   country: string;
   state: string;
-  county: string;
   city: string;
   pinCode: string;
   address: string;
@@ -85,7 +84,6 @@ export default function TenderForm() {
       description: "",
       country: "",
       state: "",
-      county: "",
       city: "",
       pinCode: "",
       address: "",

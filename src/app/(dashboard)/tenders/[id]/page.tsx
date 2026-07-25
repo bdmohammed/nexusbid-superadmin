@@ -374,7 +374,7 @@ export default function TenderDetailsPage() {
         {/* Workflow actions */}
         <div className="flex flex-wrap items-center gap-2">
           {activeTender.publicationStatus !== "OPEN" && (
-            <Button size="sm" onClick={() => transitionStatus("OPEN")}>
+            <Button size="sm" onClick={() => transitionStatus("PUBLISHED")}>
               Publish Live
             </Button>
           )}
