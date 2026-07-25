@@ -76,7 +76,7 @@ export default function TenderForm() {
     mode: "onChange",
     defaultValues: {
       title: "",
-      referenceNumber: "",
+      referenceNumber: "Auto-generated on draft creation",
       tenderType: "",
       category: "",
       currency: "",
