@@ -75,45 +75,40 @@ export default function TenderForm() {
   const methods = useForm<TenderFormInput>({
     mode: "onChange",
     defaultValues: {
-      title:
-        "Supply & Installation of High-Performance Enterprise Data Storage",
-      referenceNumber: "Auto-generated on draft creation",
-      tenderType: "Goods",
+      title: "",
+      referenceNumber: "",
+      tenderType: "",
       category: "",
-      currency: "USD",
-      budgetMin: "100000",
-      budgetMax: "500000",
-      description:
-        "Procurement of SAN/NAS high-density flash storage arrays with 24/7 OEM maintenance support for 36 months.",
-      country: "United States",
+      currency: "",
+      budgetMin: "",
+      budgetMax: "",
+      description: "",
+      country: "",
       state: "",
-      county: "Los Angeles County",
-      city: "Los Angeles",
-      pinCode: "90001",
-      address: "100 Grand Avenue, Suite 400",
-      contactPerson: "Robert Vance",
-      contactNumber: "+1 (213) 555-0148",
-      siteVisit: "Yes",
-      mapLink: "https://maps.google.com/?q=Los+Angeles",
+      county: "",
+      city: "",
+      pinCode: "",
+      address: "",
+      contactPerson: "",
+      contactNumber: "",
+      siteVisit: "",
+      mapLink: "",
       placeId: "",
-      formattedAddress: "100 Grand Ave, Los Angeles, CA 90012, USA",
-      openingDate: "2026-08-01T09:00",
-      closingDate: "2026-08-31T17:00",
-      projectDuration: "12 Months",
-      bidValidity: "90",
-      emdAmount: "10000",
-      securityDeposit: "25000",
-      paymentTerms:
-        "30% Advance, 60% upon delivery & successful commissioning, 10% after 90 days performance review.",
-      priority: "High",
-      evaluationMethod: "QCBS (70:30)",
-      visibility: "Public",
-      eligibility:
-        "Bidders must have completed at least 3 similar enterprise storage deployments in the last 3 years.",
-      specialConditions:
-        "All hardware components must be brand new with minimum 3-year vendor SLA.",
-      internalNotes: "Pre-approved procurement batch ID: INFRA-2026-Q3.",
-      publishNow: true,
+      formattedAddress: "",
+      openingDate: "",
+      closingDate: "",
+      projectDuration: "",
+      bidValidity: "",
+      emdAmount: "",
+      securityDeposit: "",
+      paymentTerms: "",
+      priority: "",
+      evaluationMethod: "",
+      visibility: "",
+      eligibility: "",
+      specialConditions: "",
+      internalNotes: "",
+      publishNow: false,
     },
   });
 
@@ -128,19 +123,6 @@ export default function TenderForm() {
   const { data: states = [] } = useStates(
     selectedCountry ? { country: selectedCountry } : undefined,
   );
-
-  // Auto-preselect first category & state if available
-  useEffect(() => {
-    if (categories.length > 0 && !methods.getValues("category")) {
-      methods.setValue("category", categories[0].id, { shouldValidate: true });
-    }
-  }, [categories, methods]);
-
-  useEffect(() => {
-    if (states.length > 0 && !methods.getValues("state")) {
-      methods.setValue("state", states[0].id, { shouldValidate: true });
-    }
-  }, [states, methods]);
 
   // Create draft tender on demand or return existing ID
   const ensureDraftCreated = async (): Promise<string> => {
