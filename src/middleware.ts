@@ -24,16 +24,9 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  const hasAccessToken = request.cookies.has("access_token");
+  const hasAccessToken = request.cookies.has("nexusbid_token");
 
-  console.log(
-    "middleware path:",
-    pathname,
-    "hasAccessToken:",
-    hasAccessToken,
-    "cookies",
-    request.cookies.getAll(),
-  );
+  console.log("middleware path:", pathname, "hasAccessToken:", hasAccessToken);
 
   // 2. Protected routes: redirect unauthenticated users to /login
   const isPublicRoute = matches(pathname, PUBLIC_ROUTES);
