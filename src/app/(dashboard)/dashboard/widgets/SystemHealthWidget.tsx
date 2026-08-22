@@ -1,13 +1,16 @@
 "use client";
 
-import { Cpu, Server, Activity, ShieldCheck } from "lucide-react";
+import { Cpu, ShieldCheck } from "lucide-react";
+
 import { useDashboardSystemHealth } from "@/features/dashboard/api/queries";
 
 interface SystemHealthWidgetProps {
   liveData?: any;
 }
 
-export default function SystemHealthWidget({ liveData }: SystemHealthWidgetProps) {
+export default function SystemHealthWidget({
+  liveData,
+}: SystemHealthWidgetProps) {
   const { data: queryData, isLoading } = useDashboardSystemHealth();
 
   const data = liveData ?? queryData;
@@ -22,11 +25,36 @@ export default function SystemHealthWidget({ liveData }: SystemHealthWidgetProps
   }
 
   const items = [
-    { label: "API Latency", value: `${data?.apiLatencyMs ?? 98} ms`, status: "Healthy", color: "text-emerald-500" },
-    { label: "Background Queue", value: `${data?.queueSize ?? 3} Jobs`, status: "Operational", color: "text-blue-500" },
-    { label: "Redis Cache", value: data?.redisStatus ?? "Healthy", status: "Active", color: "text-emerald-500" },
-    { label: "Object Storage", value: `${data?.storageUsagePercent ?? 62}%`, status: "Available", color: "text-purple-500" },
-    { label: "Database", value: data?.databaseStatus ?? "Healthy", status: "Connected", color: "text-emerald-500" },
+    {
+      label: "API Latency",
+      value: `${data?.apiLatencyMs ?? 98} ms`,
+      status: "Healthy",
+      color: "text-emerald-500",
+    },
+    {
+      label: "Background Queue",
+      value: `${data?.queueSize ?? 3} Jobs`,
+      status: "Operational",
+      color: "text-blue-500",
+    },
+    {
+      label: "Redis Cache",
+      value: data?.redisStatus ?? "Healthy",
+      status: "Active",
+      color: "text-emerald-500",
+    },
+    {
+      label: "Object Storage",
+      value: `${data?.storageUsagePercent ?? 62}%`,
+      status: "Available",
+      color: "text-purple-500",
+    },
+    {
+      label: "Database",
+      value: data?.databaseStatus ?? "Healthy",
+      status: "Connected",
+      color: "text-emerald-500",
+    },
   ];
 
   return (
@@ -45,10 +73,21 @@ export default function SystemHealthWidget({ liveData }: SystemHealthWidgetProps
 
         <div className="grid grid-cols-2 md:grid-cols-3 gap-3.5 mt-4">
           {items.map((item) => (
-            <div key={item.label} className="bg-background rounded-xl p-3 border border-border/50">
-              <span className="block text-[10px] font-bold text-text-light">{item.label}</span>
-              <div className="text-base font-black mt-1 text-text">{item.value}</div>
-              <span className={`block text-[9px] font-semibold mt-1.5 ${item.color}`}>{item.status}</span>
+            <div
+              key={item.label}
+              className="bg-background rounded-xl p-3 border border-border/50"
+            >
+              <span className="block text-[10px] font-bold text-text-light">
+                {item.label}
+              </span>
+              <div className="text-base font-black mt-1 text-text">
+                {item.value}
+              </div>
+              <span
+                className={`block text-[9px] font-semibold mt-1.5 ${item.color}`}
+              >
+                {item.status}
+              </span>
             </div>
           ))}
 
@@ -60,7 +99,10 @@ export default function SystemHealthWidget({ liveData }: SystemHealthWidgetProps
                 <span>{data?.cpuUsagePercent ?? 12}%</span>
               </span>
               <div className="w-full bg-border rounded-full h-1 mt-1">
-                <div className="bg-primary h-1 rounded-full" style={{ width: `${data?.cpuUsagePercent ?? 12}%` }}></div>
+                <div
+                  className="bg-primary h-1 rounded-full"
+                  style={{ width: `${data?.cpuUsagePercent ?? 12}%` }}
+                ></div>
               </div>
             </div>
             <div>
@@ -69,7 +111,10 @@ export default function SystemHealthWidget({ liveData }: SystemHealthWidgetProps
                 <span>{data?.memoryUsagePercent ?? 45}%</span>
               </span>
               <div className="w-full bg-border rounded-full h-1 mt-1">
-                <div className="bg-primary h-1 rounded-full" style={{ width: `${data?.memoryUsagePercent ?? 45}%` }}></div>
+                <div
+                  className="bg-primary h-1 rounded-full"
+                  style={{ width: `${data?.memoryUsagePercent ?? 45}%` }}
+                ></div>
               </div>
             </div>
           </div>

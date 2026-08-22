@@ -4,7 +4,6 @@ import {
   Globe,
   History,
   LayoutDashboard,
-  LucideProps,
   Settings,
   Shapes,
   Shield,
@@ -13,6 +12,9 @@ import {
   User,
   Users,
 } from "lucide-react";
+
+import type {
+  LucideProps} from "lucide-react";
 import type { ComponentType } from "react";
 
 export interface NavigationItem {

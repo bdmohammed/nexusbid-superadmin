@@ -1,6 +1,3 @@
-import { apiClient } from "@/lib/http";
-
-import type { ApiResponse } from "@/types";
 import type {
   CriticalAlerts,
   DashboardConfig,
@@ -13,6 +10,8 @@ import type {
   TenderStats,
   UsersStats,
 } from "../types";
+import type { ApiResponse } from "@/types";
+import { apiClient } from "@/lib/http";
 
 export const dashboardApi = {
   getConfig() {
@@ -32,7 +31,9 @@ export const dashboardApi = {
   },
 
   getReviewQueue() {
-    return apiClient.get<ApiResponse<ReviewQueueStats>>("/dashboard/review-queue");
+    return apiClient.get<ApiResponse<ReviewQueueStats>>(
+      "/dashboard/review-queue",
+    );
   },
 
   getCriticalAlerts() {
@@ -40,7 +41,9 @@ export const dashboardApi = {
   },
 
   getRecentActivity() {
-    return apiClient.get<ApiResponse<RecentActivityItem[]>>("/dashboard/recent-activity");
+    return apiClient.get<ApiResponse<RecentActivityItem[]>>(
+      "/dashboard/recent-activity",
+    );
   },
 
   getSystemHealth() {
@@ -48,7 +51,9 @@ export const dashboardApi = {
   },
 
   getQuickActionsList() {
-    return apiClient.get<ApiResponse<QuickActionItem[]>>("/dashboard/quick-actions");
+    return apiClient.get<ApiResponse<QuickActionItem[]>>(
+      "/dashboard/quick-actions",
+    );
   },
 
   updateLayout(input: PatchLayoutInput) {

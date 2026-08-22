@@ -35,7 +35,7 @@ export interface UpdateRetentionInput {
 }
 
 export interface RequestAuditExportInput {
-  exportType: 'CSV' | 'EXCEL' | 'PDF' | 'JSON';
+  exportType: "CSV" | "EXCEL" | "PDF" | "JSON";
   filters?: AuditQuery;
 }
 
@@ -107,7 +107,7 @@ export interface AuditExportJob {
   id: string;
   userId: string;
   exportFormat: string;
-  status: 'PENDING' | 'PROCESSING' | 'COMPLETED' | 'FAILED';
+  status: "PENDING" | "PROCESSING" | "COMPLETED" | "FAILED";
   downloadUrl?: string | null;
   createdAt: string;
   completedAt?: string | null;

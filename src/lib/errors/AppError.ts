@@ -20,8 +20,8 @@ export class AppError extends Error {
     this.name = this.constructor.name;
     this.statusCode = statusCode;
     this.code = code;
-    this.metadata = metadata;
-    this.traceId = traceId;
+    this.metadata = metadata ?? {};
+    this.traceId = traceId ?? '';
 
     // Restore prototype chain for ES5/TypeScript subclassing compatibility
     Object.setPrototypeOf(this, new.target.prototype);

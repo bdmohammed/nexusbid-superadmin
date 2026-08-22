@@ -4,7 +4,14 @@ export interface Role {
   slug: string;
   description: string;
   status: "ACTIVE" | "DISABLED" | "ARCHIVED";
-  versionStatus?: "DRAFT" | "IN_REVIEW" | "CHANGES_REQUESTED" | "APPROVED" | "REJECTED";
+  versionStatus?:
+    | "DRAFT"
+    | "IN_REVIEW"
+    | "PENDING_REVIEW"
+    | "CHANGES_REQUESTED"
+    | "SUBMITTED"
+    | "APPROVED"
+    | "REJECTED";
   isSystemRole: boolean;
   isDefaultRole?: boolean;
   activeVersionId?: string | null;

@@ -1,13 +1,8 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import {
-  Globe,
-  CheckCircle2,
-  XCircle,
-  FileCheck2,
-  Clock,
-} from "lucide-react";
+import { CheckCircle2, Clock,FileCheck2, Globe, XCircle } from "lucide-react";
+
 import { apiClient } from "@/lib/http";
 
 interface StatsProps {
@@ -15,7 +10,7 @@ interface StatsProps {
   onSelectTab: (tab: "stats" | "list" | "reviews") => void;
 }
 
-export const CountriesStatsView: React.FC<StatsProps> = ({ }) => {
+export const CountriesStatsView: React.FC<StatsProps> = ({}) => {
   const [stats, setStats] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
@@ -79,7 +74,9 @@ export const CountriesStatsView: React.FC<StatsProps> = ({ }) => {
               className="rounded-2xl border border-border bg-surface p-6 shadow-xs hover:shadow-md transition-all duration-300"
             >
               <div className="flex items-center justify-between">
-                <span className="text-xs font-semibold text-text-light">{card.title}</span>
+                <span className="text-xs font-semibold text-text-light">
+                  {card.title}
+                </span>
                 <div className={`p-2 rounded-xl ${card.col}`}>
                   <Icon size={16} />
                 </div>
@@ -88,7 +85,9 @@ export const CountriesStatsView: React.FC<StatsProps> = ({ }) => {
                 {loading ? (
                   <div className="h-8 w-16 bg-border animate-pulse rounded-md" />
                 ) : (
-                  <h3 className="text-3xl font-bold tracking-tight text-text">{card.val ?? 0}</h3>
+                  <h3 className="text-3xl font-bold tracking-tight text-text">
+                    {card.val ?? 0}
+                  </h3>
                 )}
               </div>
             </div>

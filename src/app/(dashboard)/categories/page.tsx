@@ -2,38 +2,21 @@
 "use client";
 
 import {
-  useEffect,
-  useState,
   memo,
+  Suspense,
+  useCallback,
+  useEffect,
   useMemo,
   useRef,
-  useCallback,
-  Suspense,
+  useState,
 } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useRouter,useSearchParams } from "next/navigation";
+import { AgChartsEnterpriseModule } from "ag-charts-enterprise";
 import {
-  Plus,
-  Trash2,
-  FolderOpen,
-  FolderKanban,
-  CheckCircle2,
-  XCircle,
-  RotateCw,
-} from "lucide-react";
-import { useAuthStore } from "@/features/auth/store/store";
-import { categoryApi } from "@/features/categories/api/api";
-import { CategoryFormDrawer } from "@/components/categories/CategoryFormDrawer";
-import {
-  SubmitCategoryReviewModal,
-  CategoryReviewDecisionModal,
-} from "@/components/categories/CategoryGovernanceModals";
-import Button from "@/components/ui/Button";
-import { AgGridReact } from "ag-grid-react";
-import {
+  AllCommunityModule,
   type ColDef,
   type GetContextMenuItemsParams,
   themeQuartz,
-  AllCommunityModule,
 } from "ag-grid-community";
 import {
   CellSelectionModule,
@@ -42,10 +25,10 @@ import {
   ColumnsToolPanelModule,
   ContextMenuModule,
   ExcelExportModule,
+  FiltersToolPanelModule,
   IntegratedChartsModule,
   MasterDetailModule,
   MultiFilterModule,
-  FiltersToolPanelModule,
   PivotModule,
   RichSelectModule,
   RowGroupingModule,
@@ -57,12 +40,30 @@ import {
   StatusBarModule,
   TreeDataModule,
 } from "ag-grid-enterprise";
-import { AgChartsEnterpriseModule } from "ag-charts-enterprise";
+import { AgGridReact } from "ag-grid-react";
 import dayjs from "dayjs";
+import {
+  CheckCircle2,
+  FolderKanban,
+  FolderOpen,
+  Plus,
+  RotateCw,
+  Trash2,
+  XCircle,
+} from "lucide-react";
 import { toast } from "sonner";
+
+import { CategoryFormDrawer } from "@/components/categories/CategoryFormDrawer";
+import {
+  CategoryReviewDecisionModal,
+  SubmitCategoryReviewModal,
+} from "@/components/categories/CategoryGovernanceModals";
+import Button from "@/components/ui/Button";
 import { Toolbar } from "@/components/ui/Toolbar";
-import { useThemeStore } from "@/store/theme.store";
+import { useAuthStore } from "@/features/auth/store/store";
+import { categoryApi } from "@/features/categories/api/api";
 import { rbacApi } from "@/features/rbac/api/api";
+import { useThemeStore } from "@/store/theme.store";
 
 const CommunityModule = [
   AllCommunityModule,
@@ -454,7 +455,7 @@ function CategoriesPageContent() {
         };
         const res = await categoryApi.updateCategory(
           selectedCategory.id,
-          payload as any,
+          payload,
         );
         if (res.data?.success) {
           showToast("Category updated successfully");
@@ -835,14 +836,14 @@ function CategoriesPageContent() {
                 cellRendererParams: {
                   suppressCount: true,
                   innerRenderer: (params: any) => {
-                    const data = params.data;
+                    const {data} = params;
                     const val = params.value || data?.name || "";
                     if (!data && !val) return null;
 
                     const isChild = Boolean(
                       data?.parentId ||
-                      data?.parentCategoryId ||
-                      data?.parentCategory,
+                        data?.parentCategoryId ||
+                        data?.parentCategory,
                     );
                     const isRoot = !isChild;
 

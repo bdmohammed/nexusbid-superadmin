@@ -28,8 +28,8 @@ export default function TenderStepper({
                     completed && "border-primary bg-primary text-white",
                     active && "border-primary bg-primary text-white",
                     !completed &&
-                    !active &&
-                    "border-border bg-background text-text-light",
+                      !active &&
+                      "border-border bg-background text-text-light",
                   )}
                 >
                   {completed ? "✓" : index + 1}

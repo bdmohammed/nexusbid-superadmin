@@ -1,6 +1,7 @@
 "use client";
 
-import { DollarSign, TrendingUp, Users, ArrowUpRight } from "lucide-react";
+import { ArrowUpRight,DollarSign, TrendingUp, Users } from "lucide-react";
+
 import { useDashboardRevenue } from "@/features/dashboard/api/queries";
 
 export default function RevenueWidget() {
@@ -34,32 +35,52 @@ export default function RevenueWidget() {
 
       <div className="grid grid-cols-2 gap-4">
         <div className="bg-background rounded-2xl p-4 border border-border/50">
-          <div className="text-xs font-semibold text-text-light">Monthly Recurring Revenue (MRR)</div>
-          <div className="text-2xl font-black mt-1 text-text">₹{(mrr).toLocaleString('en-IN', { maximumFractionDigits: 0 })}</div>
+          <div className="text-xs font-semibold text-text-light">
+            Monthly Recurring Revenue (MRR)
+          </div>
+          <div className="text-2xl font-black mt-1 text-text">
+            ₹{mrr.toLocaleString("en-IN", { maximumFractionDigits: 0 })}
+          </div>
           <div className="text-[10px] text-emerald-500 font-bold mt-1.5 flex items-center gap-0.5">
             <ArrowUpRight className="h-3 w-3" /> +8.2% this month
           </div>
         </div>
 
         <div className="bg-background rounded-2xl p-4 border border-border/50">
-          <div className="text-xs font-semibold text-text-light">Annual Recurring Revenue (ARR)</div>
-          <div className="text-2xl font-black mt-1 text-text">₹{(arr).toLocaleString('en-IN', { maximumFractionDigits: 0 })}</div>
-          <div className="text-[10px] text-text-light mt-1.5">Projected annualized run rate</div>
+          <div className="text-xs font-semibold text-text-light">
+            Annual Recurring Revenue (ARR)
+          </div>
+          <div className="text-2xl font-black mt-1 text-text">
+            ₹{arr.toLocaleString("en-IN", { maximumFractionDigits: 0 })}
+          </div>
+          <div className="text-[10px] text-text-light mt-1.5">
+            Projected annualized run rate
+          </div>
         </div>
 
         <div className="bg-background rounded-2xl p-4 border border-border/50">
-          <div className="text-xs font-semibold text-text-light">Average Plan Value</div>
-          <div className="text-xl font-bold mt-1 text-text">₹{(avg).toLocaleString('en-IN', { maximumFractionDigits: 2 })}</div>
-          <div className="text-[10px] text-text-light mt-1.5">Per subscription average</div>
+          <div className="text-xs font-semibold text-text-light">
+            Average Plan Value
+          </div>
+          <div className="text-xl font-bold mt-1 text-text">
+            ₹{avg.toLocaleString("en-IN", { maximumFractionDigits: 2 })}
+          </div>
+          <div className="text-[10px] text-text-light mt-1.5">
+            Per subscription average
+          </div>
         </div>
 
         <div className="bg-background rounded-2xl p-4 border border-border/50">
-          <div className="text-xs font-semibold text-text-light">New Subscriptions</div>
+          <div className="text-xs font-semibold text-text-light">
+            New Subscriptions
+          </div>
           <div className="text-xl font-bold mt-1 text-text flex items-center gap-1.5">
             <Users className="h-4.5 w-4.5 text-primary" />
             {growth}
           </div>
-          <div className="text-[10px] text-text-light mt-1.5">Registered since 1st of month</div>
+          <div className="text-[10px] text-text-light mt-1.5">
+            Registered since 1st of month
+          </div>
         </div>
       </div>
     </div>

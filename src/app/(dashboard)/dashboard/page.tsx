@@ -1,30 +1,30 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
-import { RefreshCw, ShieldAlert, Lock } from "lucide-react";
-import { apiClient } from "@/lib/http";
-import { usePermissions } from "@/hooks/usePermissions";
-import {
-  useDashboardConfig,
-  useUpdateDashboardLayout,
-  useResetDashboardLayout,
-} from "@/features/dashboard/api/queries";
+import { useEffect, useRef,useState } from "react";
+import {RefreshCw } from "lucide-react";
 
-// Widgets import
-import RevenueWidget from "./widgets/RevenueWidget";
-import TenderWorkflowWidget from "./widgets/TenderWorkflowWidget";
-import UsersWidget from "./widgets/UsersWidget";
-import ReviewQueueWidget from "./widgets/ReviewQueueWidget";
-import AlertWidget from "./widgets/AlertWidget";
-import ActivityWidget from "./widgets/ActivityWidget";
-import NotificationsWidget from "./widgets/NotificationsWidget";
-import SystemHealthWidget from "./widgets/SystemHealthWidget";
-import QuickActionsWidget from "./widgets/QuickActionsWidget";
-
+import { CustomizerBar } from "./components/CustomizerBar";
 // Sub-components import
 import { DashboardBanner } from "./components/DashboardBanner";
-import { CustomizerBar } from "./components/CustomizerBar";
 import { WidgetCard } from "./components/WidgetCard";
+import ActivityWidget from "./widgets/ActivityWidget";
+import AlertWidget from "./widgets/AlertWidget";
+import NotificationsWidget from "./widgets/NotificationsWidget";
+import QuickActionsWidget from "./widgets/QuickActionsWidget";
+// Widgets import
+import RevenueWidget from "./widgets/RevenueWidget";
+import ReviewQueueWidget from "./widgets/ReviewQueueWidget";
+import SystemHealthWidget from "./widgets/SystemHealthWidget";
+import TenderWorkflowWidget from "./widgets/TenderWorkflowWidget";
+import UsersWidget from "./widgets/UsersWidget";
+
+import {
+  useDashboardConfig,
+  useResetDashboardLayout,
+  useUpdateDashboardLayout,
+} from "@/features/dashboard/api/queries";
+import { usePermissions } from "@/hooks/usePermissions";
+import { apiClient } from "@/lib/http";
 
 export default function Dashboard() {
   const { isInitializing } = usePermissions();

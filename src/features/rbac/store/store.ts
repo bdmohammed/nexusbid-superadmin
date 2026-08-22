@@ -3,146 +3,142 @@ import { create } from "zustand";
 export type SortDirection = "asc" | "desc";
 
 interface RbacStore {
-    // ---------------------------------------------------------------------------
-    // Selected entities
-    // ---------------------------------------------------------------------------
+  // ---------------------------------------------------------------------------
+  // Selected entities
+  // ---------------------------------------------------------------------------
 
-    selectedRoleId: string | null;
-    selectedModuleId: string | null;
+  selectedRoleId: string | null;
+  selectedModuleId: string | null;
 
-    // ---------------------------------------------------------------------------
-    // UI
-    // ---------------------------------------------------------------------------
+  // ---------------------------------------------------------------------------
+  // UI
+  // ---------------------------------------------------------------------------
 
-    drawerOpen: boolean;
+  drawerOpen: boolean;
 
-    // ---------------------------------------------------------------------------
-    // Search
-    // ---------------------------------------------------------------------------
+  // ---------------------------------------------------------------------------
+  // Search
+  // ---------------------------------------------------------------------------
 
-    search: string;
+  search: string;
 
-    // ---------------------------------------------------------------------------
-    // Filters
-    // ---------------------------------------------------------------------------
+  // ---------------------------------------------------------------------------
+  // Filters
+  // ---------------------------------------------------------------------------
 
-    activeOnly: boolean;
+  activeOnly: boolean;
 
-    // ---------------------------------------------------------------------------
-    // Sorting
-    // ---------------------------------------------------------------------------
+  // ---------------------------------------------------------------------------
+  // Sorting
+  // ---------------------------------------------------------------------------
 
-    sortBy: string;
-    sortDirection: SortDirection;
+  sortBy: string;
+  sortDirection: SortDirection;
 
-    // ---------------------------------------------------------------------------
-    // Pagination
-    // ---------------------------------------------------------------------------
+  // ---------------------------------------------------------------------------
+  // Pagination
+  // ---------------------------------------------------------------------------
 
-    page: number;
-    pageSize: number;
+  page: number;
+  pageSize: number;
 
-    // ---------------------------------------------------------------------------
-    // Actions
-    // ---------------------------------------------------------------------------
+  // ---------------------------------------------------------------------------
+  // Actions
+  // ---------------------------------------------------------------------------
 
-    setSelectedRole: (id: string | null) => void;
-    setSelectedModule: (id: string | null) => void;
+  setSelectedRole: (id: string | null) => void;
+  setSelectedModule: (id: string | null) => void;
 
-    openDrawer: () => void;
-    closeDrawer: () => void;
-    toggleDrawer: () => void;
+  openDrawer: () => void;
+  closeDrawer: () => void;
+  toggleDrawer: () => void;
 
-    setSearch: (value: string) => void;
+  setSearch: (value: string) => void;
 
-    setActiveOnly: (value: boolean) => void;
+  setActiveOnly: (value: boolean) => void;
 
-    setSort: (
-        sortBy: string,
-        direction: SortDirection,
-    ) => void;
+  setSort: (sortBy: string, direction: SortDirection) => void;
 
-    setPage: (page: number) => void;
+  setPage: (page: number) => void;
 
-    setPageSize: (size: number) => void;
+  setPageSize: (size: number) => void;
 
-    reset: () => void;
+  reset: () => void;
 }
 
 const initialState = {
-    selectedRoleId: null,
-    selectedModuleId: null,
+  selectedRoleId: null,
+  selectedModuleId: null,
 
-    drawerOpen: false,
+  drawerOpen: false,
 
-    search: "",
+  search: "",
 
-    activeOnly: true,
+  activeOnly: true,
 
-    sortBy: "name",
-    sortDirection: "asc" as const,
+  sortBy: "name",
+  sortDirection: "asc" as const,
 
-    page: 1,
-    pageSize: 10,
+  page: 1,
+  pageSize: 10,
 };
 
 export const useRbacStore = create<RbacStore>((set) => ({
-    ...initialState,
+  ...initialState,
 
-    setSelectedRole: (id) =>
-        set({
-            selectedRoleId: id,
-        }),
+  setSelectedRole: (id) =>
+    set({
+      selectedRoleId: id,
+    }),
 
-    setSelectedModule: (id) =>
-        set({
-            selectedModuleId: id,
-        }),
+  setSelectedModule: (id) =>
+    set({
+      selectedModuleId: id,
+    }),
 
-    openDrawer: () =>
-        set({
-            drawerOpen: true,
-        }),
+  openDrawer: () =>
+    set({
+      drawerOpen: true,
+    }),
 
-    closeDrawer: () =>
-        set({
-            drawerOpen: false,
-        }),
+  closeDrawer: () =>
+    set({
+      drawerOpen: false,
+    }),
 
-    toggleDrawer: () =>
-        set((state) => ({
-            drawerOpen: !state.drawerOpen,
-        })),
+  toggleDrawer: () =>
+    set((state) => ({
+      drawerOpen: !state.drawerOpen,
+    })),
 
-    setSearch: (search) =>
-        set({
-            search,
-            page: 1,
-        }),
+  setSearch: (search) =>
+    set({
+      search,
+      page: 1,
+    }),
 
-    setActiveOnly: (activeOnly) =>
-        set({
-            activeOnly,
-            page: 1,
-        }),
+  setActiveOnly: (activeOnly) =>
+    set({
+      activeOnly,
+      page: 1,
+    }),
 
-    setSort: (sortBy, sortDirection) =>
-        set({
-            sortBy,
-            sortDirection,
-        }),
+  setSort: (sortBy, sortDirection) =>
+    set({
+      sortBy,
+      sortDirection,
+    }),
 
-    setPage: (page) =>
-        set({
-            page,
-        }),
+  setPage: (page) =>
+    set({
+      page,
+    }),
 
-    setPageSize: (pageSize) =>
-        set({
-            pageSize,
-            page: 1,
-        }),
+  setPageSize: (pageSize) =>
+    set({
+      pageSize,
+      page: 1,
+    }),
 
-    reset: () =>
-        set(initialState),
+  reset: () => set(initialState),
 }));

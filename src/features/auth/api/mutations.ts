@@ -3,24 +3,25 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { authApi } from "./api";
 import { authQueryKeys } from "./keys";
 
-import {
-  ForgotPasswordDto,
-  LoginDto,
-  RegisterDto,
-  ResetPasswordDto,
-  DisableTotpInput,
-  EmailChangeInput,
-  OAuthCallbackInput,
-  VerifyEmailChangeInput,
-  UpdateUserDetailInput,
-  SubmitApprovalInput,
-  ReviewApprovalInput,
-  ImpersonateUserInput,
+import type {
   AssignUserRolesInput,
   CreateAdminInput,
+  DisableTotpInput,
+  EmailChangeInput,
+  ForgotPasswordDto,
+  ImpersonateUserInput,
+  LoginDto,
+  OAuthCallbackInput,
+  RegisterDto,
+  ResetPasswordDto,
+  ReviewApprovalInput,
   SetupInput,
+  SubmitApprovalInput,
+  UpdateUserDetailInput,
+  VerifyEmailChangeInput,
 } from "../types";
-import { AppError, ErrorCode } from "@/lib/errors";
+import type { ErrorCode } from "@/lib/errors";
+import { AppError } from "@/lib/errors";
 
 /**
  * Login

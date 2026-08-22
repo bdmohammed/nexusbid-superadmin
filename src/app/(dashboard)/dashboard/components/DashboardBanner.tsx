@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Sparkles, AlertCircle, Settings2 } from "lucide-react";
+import { AlertCircle, Settings2,Sparkles } from "lucide-react";
 
 interface DashboardBannerProps {
   greetingText: string;

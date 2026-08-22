@@ -1,24 +1,22 @@
 "use client";
 
-import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, {
+  memo,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import {
-  Globe,
-  MapPin,
-  FileText,
-} from "lucide-react";
-import { apiClient } from "@/lib/http";
-import { useThemeStore } from "@/store/theme.store";
-import { Toolbar } from "@/components/ui/Toolbar";
-import { AgGridReact } from "ag-grid-react";
-import {
-  ModuleRegistry,
   AllCommunityModule,
-  themeQuartz,
   type ColDef,
+  type GetContextMenuItemsParams,
   type GridOptions,
   type ICellRendererParams,
+  ModuleRegistry,
   type SideBarDef,
-  type GetContextMenuItemsParams,
+  themeQuartz,
 } from "ag-grid-community";
 import {
   CellSelectionModule,
@@ -38,6 +36,12 @@ import {
   StatusBarModule,
   TreeDataModule,
 } from "ag-grid-enterprise";
+import { AgGridReact } from "ag-grid-react";
+import { FileText,Globe, MapPin } from "lucide-react";
+
+import { Toolbar } from "@/components/ui/Toolbar";
+import { apiClient } from "@/lib/http";
+import { useThemeStore } from "@/store/theme.store";
 
 ModuleRegistry.registerModules([
   AllCommunityModule,
@@ -128,7 +132,7 @@ interface ListProps {
     countryId: string,
     stateId?: string,
     countryName?: string,
-    stateName?: string
+    stateName?: string,
   ) => void;
   onProposeAction: (
     targetType: "COUNTRY" | "STATE",
@@ -136,7 +140,7 @@ interface ListProps {
     stateId?: string,
     action?: "ACTIVATE" | "DEACTIVATE",
     countryName?: string,
-    stateName?: string
+    stateName?: string,
   ) => void;
   onOpenReview: (requestId: string) => void;
   onOpenCreateModal?: () => void;
@@ -210,7 +214,8 @@ export const CountriesListView: React.FC<ListProps> = ({
         isActive: country.isActive,
         version: country.version || 1,
         tenderCount: country.tenderCount || 0,
-        createdAt: country.createdAt || country.updatedAt || new Date().toISOString(),
+        createdAt:
+          country.createdAt || country.updatedAt || new Date().toISOString(),
         publishedAt: country.publishedAt || null,
         createdBy: formatUser(country.createdBy),
         approvedBy: formatUser(country.approvedBy),
@@ -231,7 +236,8 @@ export const CountriesListView: React.FC<ListProps> = ({
           isActive: state.isActive,
           version: state.version || 1,
           tenderCount: state.tenderCount || 0,
-          createdAt: state.createdAt || state.updatedAt || new Date().toISOString(),
+          createdAt:
+            state.createdAt || state.updatedAt || new Date().toISOString(),
           publishedAt: state.publishedAt || null,
           createdBy: formatUser(state.createdBy),
           approvedBy: formatUser(state.approvedBy),
@@ -255,7 +261,7 @@ export const CountriesListView: React.FC<ListProps> = ({
         suppressCount: true,
         innerRenderer: (params: ICellRendererParams<FlatGeographyRow>) => {
           if (!params.data) return params.value;
-          const isCountry = params.data.isCountry;
+          const {isCountry} = params.data;
           return (
             <span className="inline-flex items-center gap-2 text-xs">
               {isCountry ? (
@@ -265,7 +271,9 @@ export const CountriesListView: React.FC<ListProps> = ({
               )}
               <span
                 className={
-                  isCountry ? "font-semibold text-text" : "font-normal text-text"
+                  isCountry
+                    ? "font-semibold text-text"
+                    : "font-normal text-text"
                 }
               >
                 {params.data.name}
@@ -337,7 +345,7 @@ export const CountriesListView: React.FC<ListProps> = ({
         width: 130,
         cellRenderer: (params: ICellRendererParams<FlatGeographyRow>) => {
           if (!params.data) return null;
-          const isActive = params.data.isActive;
+          const {isActive} = params.data;
           return (
             <span
               className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium border transition-colors ${
@@ -365,9 +373,7 @@ export const CountriesListView: React.FC<ListProps> = ({
           const ticketNumber = params.data.activeRequestNumber;
           const requestId = params.data.activeRequestId;
           if (!ticketNumber || !requestId) {
-            return (
-              <span className="text-text-light text-[11px]">—</span>
-            );
+            return <span className="text-text-light text-[11px]">—</span>;
           }
           return (
             <button
@@ -490,7 +496,7 @@ export const CountriesListView: React.FC<ListProps> = ({
               row.isCountry ? undefined : row.stateId,
               action,
               row.countryName,
-              row.isCountry ? undefined : row.stateName
+              row.isCountry ? undefined : row.stateName,
             );
           },
         });
@@ -502,7 +508,7 @@ export const CountriesListView: React.FC<ListProps> = ({
               row.countryId,
               row.isCountry ? undefined : row.stateId,
               row.countryName,
-              row.isCountry ? undefined : row.stateName
+              row.isCountry ? undefined : row.stateName,
             );
           },
         });
@@ -523,7 +529,7 @@ export const CountriesListView: React.FC<ListProps> = ({
 
       return items;
     },
-    [onProposeAction, onOpenTimeline, onOpenReview]
+    [onProposeAction, onOpenTimeline, onOpenReview],
   );
 
   const getDataPath = useMemo(() => {

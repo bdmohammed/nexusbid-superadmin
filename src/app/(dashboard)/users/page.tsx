@@ -2,68 +2,22 @@
 "use client";
 
 import {
-  ChangeEvent,
   memo,
+  Suspense,
   useCallback,
   useEffect,
   useMemo,
   useRef,
   useState,
-  Suspense,
 } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { AgChartsEnterpriseModule } from "ag-charts-enterprise";
 import {
-  Users,
-  UserCheck,
-  UserMinus,
-  UserX,
-  Shield,
-  Clock,
-  ShieldAlert,
-  CreditCard,
-  Ban,
-  Globe,
-  Calendar,
-  RotateCw,
-  Download,
-  Edit2,
-  Eye,
-  UserPlus,
-  CheckCircle,
-  ArrowRight,
-  Key,
-  CheckCircle2,
-  XCircle,
-} from "lucide-react";
-import { authApi } from "@/features/auth/api/api";
-import { useUserStats } from "@/features/auth/api/queries";
-import {
-  useBlockUser,
-  useSuspendUser,
-  useActivateUser,
-  useArchiveUser,
-  useResetPasswordAdmin,
-  useSendUserVerification,
-  useForcePasswordReset,
-  useImpersonateUser,
-  useUpdateUserDetail,
-} from "@/features/auth/api/mutations";
-import { useThemeStore } from "@/store/theme.store";
-import { AgGridReact } from "ag-grid-react";
-import {
-  type ColDef,
-  themeQuartz,
-  GridOptions,
   AllCommunityModule,
-} from "ag-grid-community";
-import { Toolbar } from "@/components/ui/Toolbar";
-import { UserApprovalModal } from "@/components/users/UserApprovalModal";
-import type {
-  ColGroupDef,
-  GridReadyEvent,
+  type ColDef,ColGroupDef,
+  GridOptions,  GridReadyEvent,
   ICellRendererParams,
-  SideBarDef,
-} from "ag-grid-community";
+  SideBarDef,themeQuartz} from "ag-grid-community";
 import {
   CellSelectionModule,
   ClipboardModule,
@@ -85,8 +39,50 @@ import {
   SparklinesModule,
   StatusBarModule,
 } from "ag-grid-enterprise";
-import { AgChartsEnterpriseModule } from "ag-charts-enterprise";
+import { AgGridReact } from "ag-grid-react";
 import dayjs from "dayjs";
+import {
+  ArrowRight,
+  Ban,
+  Calendar,
+  CheckCircle,
+  CheckCircle2,
+  Clock,
+  CreditCard,
+  Download,
+  Edit2,
+  Eye,
+  Globe,
+  Key,
+  RotateCw,
+  Shield,
+  ShieldAlert,
+  UserCheck,
+  UserMinus,
+  UserPlus,
+  Users,
+  UserX,
+  XCircle,
+} from "lucide-react";
+
+import type {
+  ChangeEvent} from "react";
+import { Toolbar } from "@/components/ui/Toolbar";
+import { UserApprovalModal } from "@/components/users/UserApprovalModal";
+import { authApi } from "@/features/auth/api/api";
+import {
+  useActivateUser,
+  useArchiveUser,
+  useBlockUser,
+  useForcePasswordReset,
+  useImpersonateUser,
+  useResetPasswordAdmin,
+  useSendUserVerification,
+  useSuspendUser,
+  useUpdateUserDetail,
+} from "@/features/auth/api/mutations";
+import { useUserStats } from "@/features/auth/api/queries";
+import { useThemeStore } from "@/store/theme.store";
 
 interface UserListItem {
   id: string;
@@ -138,7 +134,7 @@ const CountryCellRenderer = (params: ICellRendererParams<UserListItem>) => {
   const u = params.data;
   if (!u) return null;
   const value = u.country.name;
-  const code = u.country.code;
+  const {code} = u.country;
   if (value == null || value === "" || value === "(Select All)") {
     return <span className="truncate">{value || ""}</span>;
   }
@@ -354,10 +350,10 @@ const STATUS_STYLES: Record<UserStatus, { label: string; className: string }> =
 const ActionsRenderer = (params: any) => {
   const u = params.data;
   if (!u) return null;
-  const router = params.router;
-  const handleOpenEdit = params.handleOpenEdit;
-  const setImpersonateUser = params.setImpersonateUser;
-  const setSelectedUserForActions = params.setSelectedUserForActions;
+  const {router} = params;
+  const {handleOpenEdit} = params;
+  const {setImpersonateUser} = params;
+  const {setSelectedUserForActions} = params;
 
   return (
     <div className="flex items-center justify-center gap-1 h-full">
@@ -956,7 +952,7 @@ function UsersPageContent() {
     // const encodedUri = encodeURI(csvContent);
     // const link = document.createElement("a");
     // link.setAttribute("href", encodedUri);
-    // link.setAttribute("download", `nexusbid_users_export_${activeTab}.csv`);
+    // link.setAttribute("download", `rfpnexa_users_export_${activeTab}.csv`);
     // document.body.appendChild(link);
     // link.click();
     // document.body.removeChild(link);
@@ -1088,7 +1084,7 @@ function UsersPageContent() {
       enableRowGroup: true,
       cellClass: "v-align",
       cellRenderer: (params: { value: boolean }) => {
-        const value = params.value;
+        const {value} = params;
         return value ? (
           <span className="inline-flex items-center gap-1 text-green-600">
             <CheckCircle2 size={16} />
@@ -2020,7 +2016,13 @@ function UsersPageContent() {
 
 export default function UsersPage() {
   return (
-    <Suspense fallback={<div className="p-6 text-sm text-text-light">Loading User Directory...</div>}>
+    <Suspense
+      fallback={
+        <div className="p-6 text-sm text-text-light">
+          Loading User Directory...
+        </div>
+      }
+    >
       <UsersPageContent />
     </Suspense>
   );

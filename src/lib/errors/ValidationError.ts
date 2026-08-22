@@ -1,11 +1,11 @@
 // src/lib/errors/ValidationError.ts
 
-import { AppError } from './AppError';
-import { ERROR_CODES } from './constants';
+import { AppError } from "./AppError";
+import { ERROR_CODES } from "./constants";
 
 export class ValidationError extends AppError {
   constructor(
-    message: string = 'Validation failed',
+    message: string = "Validation failed",
     metadata?: Record<string, unknown>,
     options?: ErrorOptions,
     traceId?: string,

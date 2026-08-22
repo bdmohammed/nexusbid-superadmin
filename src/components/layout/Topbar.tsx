@@ -1,14 +1,17 @@
 //@ts-nocheck
 "use client";
 
-import { Menu, Moon, Sun } from "lucide-react";
 import { usePathname } from "next/navigation";
-import { navigation, systemNavigation } from "@/constants/navigation";
+import { Menu, Moon, Sun } from "lucide-react";
+
 import Avatar from "../common/Avatar";
-import { useSidebarStore, useThemeStore } from "@/store";
+
 import NotificationDropdown from "./NotificationDropdown";
+
+import { navigation, systemNavigation } from "@/constants/navigation";
 import { useCurrentUser } from "@/features/auth/api/queries";
 import { useAuthStore } from "@/features/auth/store/store";
+import { useSidebarStore, useThemeStore } from "@/store";
 
 export default function Topbar() {
   const pathname = usePathname();

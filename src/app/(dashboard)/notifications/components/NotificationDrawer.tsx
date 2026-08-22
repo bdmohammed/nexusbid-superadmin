@@ -1,16 +1,34 @@
 "use client";
 
 import React from "react";
-import { X, Check, Trash2, Archive, Link2, Info, AlertTriangle, AlertCircle } from "lucide-react";
+import {
+  AlertCircle,
+  AlertTriangle,
+  Archive,
+  Check,
+  Info,
+  Link2,
+  Trash2,
+  X,
+} from "lucide-react";
+
 import type { Notification } from "@/types";
-import { useMarkRead, useArchiveNotification, useDismissNotification, useExecuteAction } from "@/features/notifications";
+import {
+  useArchiveNotification,
+  useDismissNotification,
+  useExecuteAction,
+  useMarkRead,
+} from "@/features/notifications";
 
 interface NotificationDrawerProps {
   notification: Notification | null;
   onClose: () => void;
 }
 
-export default function NotificationDrawer({ notification, onClose }: NotificationDrawerProps) {
+export default function NotificationDrawer({
+  notification,
+  onClose,
+}: NotificationDrawerProps) {
   const markReadMut = useMarkRead();
   const archiveMut = useArchiveNotification();
   const dismissMut = useDismissNotification();
@@ -48,26 +66,27 @@ export default function NotificationDrawer({ notification, onClose }: Notificati
   return (
     <>
       {/* Backdrop */}
-      <div 
+      <div
         className="fixed inset-0 z-40 bg-black/40 backdrop-blur-xs transition-opacity duration-300"
         onClick={onClose}
       />
 
       {/* Drawer Body */}
       <div className="fixed right-0 top-0 z-50 h-screen w-full max-w-md border-l border-border bg-surface p-6 shadow-2xl transition-transform duration-300 sm:max-w-lg flex flex-col justify-between">
-        
         {/* Top Header Section */}
         <div>
           <div className="flex items-center justify-between border-b border-border pb-4">
             <div className="flex items-center gap-2">
-              <span className={`rounded-full border px-2 py-0.5 text-xs font-semibold uppercase ${severityColors[sevKey] || severityColors.info}`}>
+              <span
+                className={`rounded-full border px-2 py-0.5 text-xs font-semibold uppercase ${severityColors[sevKey] || severityColors.info}`}
+              >
                 {notification.severity}
               </span>
               <span className="text-xs text-text-light capitalize">
                 {notification.category}
               </span>
             </div>
-            <button 
+            <button
               onClick={onClose}
               className="rounded-lg p-1 text-text-light hover:bg-sidebar-hover hover:text-text transition-colors cursor-pointer"
             >
@@ -81,26 +100,34 @@ export default function NotificationDrawer({ notification, onClose }: Notificati
               {severityIcons[sevKey] || severityIcons.info}
               {notification.title}
             </h3>
-            
+
             <p className="mt-4 text-sm text-text-light leading-relaxed bg-sidebar-hover p-4 rounded-xl border border-border">
               {notification.message}
             </p>
 
-            {notification.metadata && typeof notification.metadata === "object" && (
-              <div className="mt-6 rounded-xl border border-border bg-sidebar-hover/40 p-4">
-                <h4 className="text-xs font-semibold uppercase tracking-wider text-text-light">
-                  Contextual Info & Metadata
-                </h4>
-                <div className="mt-2 space-y-2 text-xs">
-                  {Object.entries(notification.metadata).map(([key, val]) => (
-                    <div key={key} className="flex justify-between py-1 border-b border-border/40 last:border-0">
-                      <span className="font-medium text-text-light capitalize">{key}</span>
-                      <span className="text-text font-mono truncate max-w-[200px]">{JSON.stringify(val)}</span>
-                    </div>
-                  ))}
+            {notification.metadata &&
+              typeof notification.metadata === "object" && (
+                <div className="mt-6 rounded-xl border border-border bg-sidebar-hover/40 p-4">
+                  <h4 className="text-xs font-semibold uppercase tracking-wider text-text-light">
+                    Contextual Info & Metadata
+                  </h4>
+                  <div className="mt-2 space-y-2 text-xs">
+                    {Object.entries(notification.metadata).map(([key, val]) => (
+                      <div
+                        key={key}
+                        className="flex justify-between py-1 border-b border-border/40 last:border-0"
+                      >
+                        <span className="font-medium text-text-light capitalize">
+                          {key}
+                        </span>
+                        <span className="text-text font-mono truncate max-w-[200px]">
+                          {JSON.stringify(val)}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
           </div>
         </div>
 
@@ -177,7 +204,6 @@ export default function NotificationDrawer({ notification, onClose }: Notificati
             </a>
           )}
         </div>
-
       </div>
     </>
   );

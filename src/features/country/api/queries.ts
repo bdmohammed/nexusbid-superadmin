@@ -1,6 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { AppError, ERROR_CODES, ErrorCode } from "@/lib/errors";
 import { countriesApi } from "./api";
 import { lookupQueryKeys } from "./keys";
 
@@ -15,6 +14,8 @@ import type {
   UpdateCountryBodyDto,
   UpdateStateBodyDto,
 } from "../types";
+import type { ErrorCode } from "@/lib/errors";
+import { AppError, ERROR_CODES } from "@/lib/errors";
 
 // ─── Query Hooks ─────────────────────────────────────────────────────────────
 

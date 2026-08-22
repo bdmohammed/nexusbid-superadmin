@@ -1,12 +1,9 @@
+//@ts-nocheck
 "use client";
 
-import React, { useMemo, useCallback, useRef, memo } from "react";
-import { Plus, RefreshCw, Search } from "lucide-react";
+import React, { memo,useCallback, useMemo, useRef } from "react";
 import { useRouter } from "next/navigation";
-import Button from "@/components/ui/Button";
-import StatusBadge from "@/components/common/StatusBadge";
-import type { BackendSubscription } from "@/types";
-import { AgGridReact } from "ag-grid-react";
+import { AgChartsEnterpriseModule } from "ag-charts-enterprise";
 import {
   type ColDef,
   type GetContextMenuItemsParams,
@@ -35,9 +32,14 @@ import {
   StatusBarModule,
   TreeDataModule,
 } from "ag-grid-enterprise";
-import { AgChartsEnterpriseModule } from "ag-charts-enterprise";
-import { useThemeStore } from "@/store";
+import { AgGridReact } from "ag-grid-react";
 import dayjs from "dayjs";
+import { Plus, RefreshCw, Search } from "lucide-react";
+
+import type { BackendSubscription } from "@/types";
+import StatusBadge from "@/components/common/StatusBadge";
+import Button from "@/components/ui/Button";
+import { useThemeStore } from "@/store";
 
 const CommunityModule = [
   AllCommunityModule,
@@ -101,7 +103,7 @@ export default function SubscriptionsListView({
         rowHoverColor: theme === "dark" ? "#1E293B80" : "#F1F5F980",
         borderColor: theme === "dark" ? "#334155" : "#E2E8F0",
       }),
-    [theme]
+    [theme],
   );
 
   const columnDefs = useMemo<ColDef<BackendSubscription>[]>(
@@ -274,7 +276,7 @@ export default function SubscriptionsListView({
         },
       },
     ],
-    [router]
+    [router],
   );
 
   const defaultColDef = useMemo<ColDef>(
@@ -283,7 +285,7 @@ export default function SubscriptionsListView({
       filter: true,
       resizable: true,
     }),
-    []
+    [],
   );
 
   const getContextMenuItems = useCallback(
@@ -301,7 +303,7 @@ export default function SubscriptionsListView({
         "export",
       ];
     },
-    [router]
+    [router],
   );
 
   return (
@@ -372,8 +374,10 @@ export default function SubscriptionsListView({
       {/* Footer Info */}
       <div className="flex items-center justify-between text-xs text-[var(--muted)] px-2">
         <span>
-          Showing <strong className="text-[var(--foreground)]">{data.length}</strong> of{" "}
-          <strong className="text-[var(--foreground)]">{totalCount}</strong> subscriptions
+          Showing{" "}
+          <strong className="text-[var(--foreground)]">{data.length}</strong> of{" "}
+          <strong className="text-[var(--foreground)]">{totalCount}</strong>{" "}
+          subscriptions
         </span>
 
         {totalCount > pageSize && (

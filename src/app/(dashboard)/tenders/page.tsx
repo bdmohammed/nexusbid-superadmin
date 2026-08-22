@@ -1,12 +1,13 @@
 "use client";
 
-import { Suspense, useState, useEffect, useCallback } from "react";
-import { Plus, BarChart2, TableProperties } from "lucide-react";
+import { Suspense, useCallback,useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import Button from "@/components/ui/Button";
+import { BarChart2, Plus, TableProperties } from "lucide-react";
+
 import type { Tender } from "@/types";
-import { TendersStatsView } from "@/components/tender/TendersStatsView";
 import { TendersListView } from "@/components/tender/TendersListView";
+import { TendersStatsView } from "@/components/tender/TendersStatsView";
+import Button from "@/components/ui/Button";
 import { tenderApi } from "@/features/tenders";
 
 function TendersPageContent() {
@@ -73,9 +74,12 @@ function TendersPageContent() {
       {/* Header Navigation Bar */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-3xl font-extrabold tracking-tight">Procurement Tenders</h1>
+          <h1 className="text-3xl font-extrabold tracking-tight">
+            Procurement Tenders
+          </h1>
           <p className="mt-1 text-text-light">
-            Central Command for tender creation, approvals, versions comparator, and evaluations.
+            Central Command for tender creation, approvals, versions comparator,
+            and evaluations.
           </p>
         </div>
 
@@ -133,7 +137,11 @@ function TendersPageContent() {
 
 export default function TendersPage() {
   return (
-    <Suspense fallback={<div className="p-6 text-sm text-text-light">Loading tenders...</div>}>
+    <Suspense
+      fallback={
+        <div className="p-6 text-sm text-text-light">Loading tenders...</div>
+      }
+    >
       <TendersPageContent />
     </Suspense>
   );

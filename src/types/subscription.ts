@@ -1,6 +1,11 @@
-export type PlanStatus = 'ACTIVE' | 'ARCHIVED';
-export type PlanVersionStatus = 'DRAFT' | 'SUBMITTED' | 'UNDER_REVIEW' | 'APPROVED' | 'PUBLISHED';
-export type MigrationStatus = 'PENDING' | 'RUNNING' | 'COMPLETED' | 'FAILED';
+export type PlanStatus = "ACTIVE" | "ARCHIVED";
+export type PlanVersionStatus =
+  | "DRAFT"
+  | "SUBMITTED"
+  | "UNDER_REVIEW"
+  | "APPROVED"
+  | "PUBLISHED";
+export type MigrationStatus = "PENDING" | "RUNNING" | "COMPLETED" | "FAILED";
 
 export interface PlanFeature {
   id: string;
@@ -34,7 +39,7 @@ export interface PlanReviewComment {
 
 export interface PlanReview {
   id: string;
-  status: 'SUBMITTED' | 'UNDER_REVIEW' | 'APPROVED' | 'CHANGES_REQUESTED';
+  status: "SUBMITTED" | "UNDER_REVIEW" | "APPROVED" | "CHANGES_REQUESTED";
   assignedReviewer?: {
     id: string;
     name: string;
@@ -60,7 +65,7 @@ export interface PlanVersion {
   isRecurring: boolean;
   isFeatured: boolean;
   badge: string | null;
-  planType: 'all-access' | 'state' | 'country' | 'category' | 'bundle';
+  planType: "all-access" | "state" | "country" | "category" | "bundle";
   targetStateId: string | null;
   targetCountry: string | null;
   targetCategoryId: string | null;
@@ -88,7 +93,7 @@ export interface SubscriptionPlan {
 export interface Coupon {
   id: string;
   code: string;
-  discountType: 'percentage' | 'fixed' | 'free_month' | 'trial_extension';
+  discountType: "percentage" | "fixed" | "free_month" | "trial_extension";
   discountValue: number;
   isActive: boolean;
   maxRedemptions: number | null;
@@ -117,7 +122,7 @@ export interface BackendSubscription {
   planVersionId: string;
   startDate: string;
   endDate: string;
-  status: 'active' | 'cancelled' | 'expired' | 'past_due' | 'pending';
+  status: "active" | "cancelled" | "expired" | "past_due" | "pending";
   createdAt: string;
   user: {
     id: string;

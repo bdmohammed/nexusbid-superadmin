@@ -1,9 +1,10 @@
 "use client";
 
-import type { ChangeEvent } from "react";
 import SearchInput from "./SearchInput";
 import Select from "./Select";
 import TableAction from "./TableAction";
+
+import type { ChangeEvent } from "react";
 
 export interface TableToolbarProps {
   search: string;

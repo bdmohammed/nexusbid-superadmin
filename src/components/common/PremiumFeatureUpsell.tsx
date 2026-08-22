@@ -1,7 +1,8 @@
 "use client";
 
 import React from "react";
-import { Lock, ArrowRight, ShieldCheck, Zap, Sparkles } from "lucide-react";
+import { ShieldCheck, Sparkles,Zap } from "lucide-react";
+
 import Button from "@/components/ui/Button";
 
 interface PremiumFeatureUpsellProps {
@@ -50,7 +51,9 @@ export default function PremiumFeatureUpsell({
           <Zap className="h-5 w-5 text-amber-500 shrink-0 mt-0.5" />
           <div>
             <h4 className="font-bold text-sm text-text">Instant Data Access</h4>
-            <p className="text-xs text-text-light mt-1">Unlock real-time syncing and comprehensive dashboards.</p>
+            <p className="text-xs text-text-light mt-1">
+              Unlock real-time syncing and comprehensive dashboards.
+            </p>
           </div>
         </div>
 
@@ -58,7 +61,10 @@ export default function PremiumFeatureUpsell({
           <ShieldCheck className="h-5 w-5 text-green-500 shrink-0 mt-0.5" />
           <div>
             <h4 className="font-bold text-sm text-text">Enterprise Controls</h4>
-            <p className="text-xs text-text-light mt-1">Strict RBAC verification, lock draft concurrency & auditable actions.</p>
+            <p className="text-xs text-text-light mt-1">
+              Strict RBAC verification, lock draft concurrency & auditable
+              actions.
+            </p>
           </div>
         </div>
       </div>
@@ -66,14 +72,21 @@ export default function PremiumFeatureUpsell({
       {/* Actions */}
       <div className="mt-10 flex flex-col sm:flex-row gap-4">
         <Button
-          onClick={() => alert("Access upgrade request submitted to your system administrator.")}
+          onClick={() =>
+            alert(
+              "Access upgrade request submitted to your system administrator.",
+            )
+          }
           className="px-8 py-3.5 font-bold text-sm bg-gradient-to-r from-primary to-indigo-600 hover:from-primary/95 hover:to-indigo-600/95 shadow-lg shadow-primary/20"
         >
           Request Access Upgrade
         </Button>
         <Button
           variant="outline"
-          onClick={() => window.location.href = "mailto:enterprise-sales@nexusbid.local?subject=Request Access Upgrade"}
+          onClick={() =>
+            (window.location.href =
+              "mailto:enterprise-sales@rfpnexa.local?subject=Request Access Upgrade")
+          }
           className="px-8 py-3.5 font-semibold text-sm border-border/80 hover:bg-background"
         >
           Contact Administrator

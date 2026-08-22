@@ -1,27 +1,27 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useEffect,useState } from "react";
 import {
-  ShieldCheck,
   AlertTriangle,
+  Building2,
+  CheckCircle2,
+  Clock,
+  FileCheck2,
+  FileText,
+  FolderGit2,
+  Layers,
+  MapPin,
+  MessageSquare,
+  RefreshCw,
+  Send,
   User,
   Users,
-  Building2,
-  FileText,
-  Layers,
-  FolderGit2,
-  MapPin,
-  FileCheck2,
-  CheckCircle2,
-  XCircle,
-  MessageSquare,
-  Send,
-  RefreshCw,
-  Clock,
   X,
+  XCircle,
 } from "lucide-react";
-import { apiClient } from "@/lib/http";
+
 import Button from "@/components/ui/Button";
+import { apiClient } from "@/lib/http";
 
 interface ReviewModalProps {
   requestId: string | null;
@@ -56,7 +56,7 @@ export const ReviewRequestModal: React.FC<ReviewModalProps> = ({
     setError(null);
     try {
       const res = await apiClient.get<any>(
-        `/countries/change-requests/${requestId}`
+        `/countries/change-requests/${requestId}`,
       );
       if (res.data?.success) {
         setDetails(res.data.data);
@@ -67,7 +67,7 @@ export const ReviewRequestModal: React.FC<ReviewModalProps> = ({
       setError(
         err.response?.data?.message ||
           err.message ||
-          "Failed to fetch request details."
+          "Failed to fetch request details.",
       );
     } finally {
       if (showFullLoading) setLoading(false);
@@ -84,11 +84,13 @@ export const ReviewRequestModal: React.FC<ReviewModalProps> = ({
         {
           action,
           comment: reviewComment || undefined,
-        }
+        },
       );
 
       if (!res.data?.success) {
-        throw new Error(res.data?.message || "Failed to process review decision");
+        throw new Error(
+          res.data?.message || "Failed to process review decision",
+        );
       }
 
       onSuccess();
@@ -97,7 +99,7 @@ export const ReviewRequestModal: React.FC<ReviewModalProps> = ({
       setError(
         err.response?.data?.message ||
           err.message ||
-          "Failed to process review decision"
+          "Failed to process review decision",
       );
     } finally {
       setSubmittingReview(false);
@@ -114,7 +116,7 @@ export const ReviewRequestModal: React.FC<ReviewModalProps> = ({
         {
           type: "REVIEW",
           content: newComment,
-        }
+        },
       );
 
       if (res.data?.success) {
@@ -161,8 +163,8 @@ export const ReviewRequestModal: React.FC<ReviewModalProps> = ({
                       details.status === "APPROVED"
                         ? "bg-emerald-500/10 text-emerald-500 border border-emerald-500/30"
                         : details.status === "REJECTED"
-                        ? "bg-rose-500/10 text-rose-500 border border-rose-500/30"
-                        : "bg-amber-500/10 text-amber-500 border border-amber-500/30"
+                          ? "bg-rose-500/10 text-rose-500 border border-rose-500/30"
+                          : "bg-amber-500/10 text-amber-500 border border-amber-500/30"
                     }`}
                   >
                     {details.status}
@@ -235,7 +237,8 @@ export const ReviewRequestModal: React.FC<ReviewModalProps> = ({
                 </div>
                 <div className="bg-background p-3 rounded-xl border border-border">
                   <div className="flex items-center gap-2 text-text-light text-xs mb-1">
-                    <Building2 className="w-3.5 h-3.5 text-indigo-500" /> Companies
+                    <Building2 className="w-3.5 h-3.5 text-indigo-500" />{" "}
+                    Companies
                   </div>
                   <span className="text-lg font-bold text-text">
                     {dep.companies || 0}
@@ -243,7 +246,8 @@ export const ReviewRequestModal: React.FC<ReviewModalProps> = ({
                 </div>
                 <div className="bg-background p-3 rounded-xl border border-border">
                   <div className="flex items-center gap-2 text-text-light text-xs mb-1">
-                    <FileText className="w-3.5 h-3.5 text-amber-500" /> Total Tenders
+                    <FileText className="w-3.5 h-3.5 text-amber-500" /> Total
+                    Tenders
                   </div>
                   <span className="text-lg font-bold text-text">
                     {dep.tenders || 0}
@@ -251,7 +255,8 @@ export const ReviewRequestModal: React.FC<ReviewModalProps> = ({
                 </div>
                 <div className="bg-background p-3 rounded-xl border border-border">
                   <div className="flex items-center gap-2 text-text-light text-xs mb-1">
-                    <Clock className="w-3.5 h-3.5 text-text-light" /> Draft Tenders
+                    <Clock className="w-3.5 h-3.5 text-text-light" /> Draft
+                    Tenders
                   </div>
                   <span className="text-lg font-bold text-text">
                     {dep.draftTenders || 0}
@@ -259,7 +264,8 @@ export const ReviewRequestModal: React.FC<ReviewModalProps> = ({
                 </div>
                 <div className="bg-background p-3 rounded-xl border border-border">
                   <div className="flex items-center gap-2 text-text-light text-xs mb-1">
-                    <FileCheck2 className="w-3.5 h-3.5 text-emerald-500" /> Published Tenders
+                    <FileCheck2 className="w-3.5 h-3.5 text-emerald-500" />{" "}
+                    Published Tenders
                   </div>
                   <span className="text-lg font-bold text-text">
                     {dep.publishedTenders || 0}
@@ -267,7 +273,8 @@ export const ReviewRequestModal: React.FC<ReviewModalProps> = ({
                 </div>
                 <div className="bg-background p-3 rounded-xl border border-border">
                   <div className="flex items-center gap-2 text-text-light text-xs mb-1">
-                    <Layers className="w-3.5 h-3.5 text-purple-500" /> Categories
+                    <Layers className="w-3.5 h-3.5 text-purple-500" />{" "}
+                    Categories
                   </div>
                   <span className="text-lg font-bold text-text">
                     {dep.categories || 0}
@@ -283,7 +290,8 @@ export const ReviewRequestModal: React.FC<ReviewModalProps> = ({
                 </div>
                 <div className="bg-background p-3 rounded-xl border border-border">
                   <div className="flex items-center gap-2 text-text-light text-xs mb-1">
-                    <FolderGit2 className="w-3.5 h-3.5 text-rose-500" /> Documents
+                    <FolderGit2 className="w-3.5 h-3.5 text-rose-500" />{" "}
+                    Documents
                   </div>
                   <span className="text-lg font-bold text-text">
                     {dep.documents || 0}
@@ -296,7 +304,8 @@ export const ReviewRequestModal: React.FC<ReviewModalProps> = ({
             <div className="space-y-3 pt-2 border-t border-border">
               <div className="flex items-center justify-between">
                 <h3 className="text-xs font-bold text-text uppercase tracking-wider flex items-center gap-2">
-                  <MessageSquare className="w-4 h-4 text-primary" /> Review Discussion Thread ({details.comments?.length || 0})
+                  <MessageSquare className="w-4 h-4 text-primary" /> Review
+                  Discussion Thread ({details.comments?.length || 0})
                 </h3>
               </div>
 
@@ -317,7 +326,10 @@ export const ReviewRequestModal: React.FC<ReviewModalProps> = ({
                         <div className="flex items-center gap-1.5 font-semibold text-text">
                           <User className="w-3.5 h-3.5 text-primary" />
                           <span>
-                            {c.author?.name || c.author?.fullName || c.author?.email || "Administrator"}
+                            {c.author?.name ||
+                              c.author?.fullName ||
+                              c.author?.email ||
+                              "Administrator"}
                           </span>
                         </div>
                         <span className="text-[10px] text-text-light">
@@ -327,7 +339,9 @@ export const ReviewRequestModal: React.FC<ReviewModalProps> = ({
                           })}
                         </span>
                       </div>
-                      <p className="text-text leading-relaxed pl-5">{c.content}</p>
+                      <p className="text-text leading-relaxed pl-5">
+                        {c.content}
+                      </p>
                     </div>
                   ))
                 )}
@@ -382,7 +396,8 @@ export const ReviewRequestModal: React.FC<ReviewModalProps> = ({
                     disabled={submittingReview}
                     className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition-all shadow-md shadow-emerald-600/20 cursor-pointer"
                   >
-                    <CheckCircle2 className="w-4 h-4" /> Approve & Execute Cascade
+                    <CheckCircle2 className="w-4 h-4" /> Approve & Execute
+                    Cascade
                   </button>
                 </div>
               </div>

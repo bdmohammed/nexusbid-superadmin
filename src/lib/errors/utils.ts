@@ -1,12 +1,15 @@
-import { logger } from '../logger';
-import { serializeError } from './serialize-error';
-import { ErrorContext, SerializedError } from './types';
+import { logger } from "../logger";
+import { serializeError } from "./serialize-error";
+import { ErrorContext, SerializedError } from "./types";
 
 /**
  * Handles errors occurring in Server Components, Route Handlers, or Middleware.
  * Normalizes, logs, and returns a safe serialized structure.
  */
-export function handleServerError(error: unknown, context?: ErrorContext): SerializedError {
+export function handleServerError(
+  error: unknown,
+  context?: ErrorContext,
+): SerializedError {
   const serialized = serializeError(error);
 
   // Log the detailed error with stack on the server console/telemetry
@@ -22,7 +25,10 @@ export function handleServerError(error: unknown, context?: ErrorContext): Seria
  * Handles errors occurring in client-side interactive elements (e.g. event handlers).
  * Logs the error to console/telemetry and normalizes it for presentation.
  */
-export function handleClientError(error: unknown, context?: ErrorContext): SerializedError {
+export function handleClientError(
+  error: unknown,
+  context?: ErrorContext,
+): SerializedError {
   const serialized = serializeError(error);
 
   logger.warn(`Client error captured: ${serialized.message}`, {
@@ -37,7 +43,10 @@ export function handleClientError(error: unknown, context?: ErrorContext): Seria
  * Normalizes and formats API response handler exceptions.
  * Returns a response structure suitable for standard Next.js Route Handlers.
  */
-export function handleApiError(error: unknown, context?: ErrorContext): { status: number; body: { success: false; error: SerializedError } } {
+export function handleApiError(
+  error: unknown,
+  context?: ErrorContext,
+): { status: number; body: { success: false; error: SerializedError } } {
   const serialized = handleServerError(error, context);
 
   return {
@@ -55,8 +64,10 @@ export function handleApiError(error: unknown, context?: ErrorContext): { status
  */
 export async function handleActionError<T>(
   action: () => Promise<T>,
-  context?: ErrorContext
-): Promise<{ success: true; data: T } | { success: false; error: SerializedError }> {
+  context?: ErrorContext,
+): Promise<
+  { success: true; data: T } | { success: false; error: SerializedError }
+> {
   try {
     const data = await action();
     return { success: true, data };
@@ -84,11 +95,9 @@ export function getErrorMessage(err: any): string {
  * Helper to safely extract field-level validation errors from either
  * normalized AppError instances or raw Axios error responses.
  */
-export function getValidationErrors(err: any): Array<{ field: string; message: string }> | undefined {
+export function getValidationErrors(
+  err: any,
+): Array<{ field: string; message: string }> | undefined {
   if (!err) return undefined;
-  return (
-    err.response?.data?.errors ||
-    err.metadata?.responseData?.errors
-  );
+  return err.response?.data?.errors || err.metadata?.responseData?.errors;
 }
-

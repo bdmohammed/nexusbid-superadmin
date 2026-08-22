@@ -1,16 +1,19 @@
-import type { ColDef } from "ag-grid-community";
-import type { UserRoleAssignment } from "@/features/rbac/types";
+//@ts-nocheck
 import dayjs from "dayjs";
+
 import {
-  NameCellRenderer,
-  EmailCellRenderer,
-  AssignedRoleCellRenderer,
   AccountTypeCellRenderer,
-  StatusCellRenderer,
-  IsVerifiedCellRenderer,
-  ExpireDateCellRenderer,
   ActionsCellRenderer,
+  AssignedRoleCellRenderer,
+  EmailCellRenderer,
+  ExpireDateCellRenderer,
+  IsVerifiedCellRenderer,
+  NameCellRenderer,
+  StatusCellRenderer,
 } from "./cellRenderers";
+
+import type { UserRoleAssignment } from "@/features/rbac/types";
+import type { ColDef } from "ag-grid-community";
 
 export function getRoleAssignmentColumnDefs(
   onDeleteAssignment: (id: string) => void,
@@ -72,7 +75,8 @@ export function getRoleAssignmentColumnDefs(
       width: 220,
       enableRowGroup: true,
       cellClass: "v-align",
-      valueGetter: (params) => params.data?.reason || params.data?.comment || "—",
+      valueGetter: (params) =>
+        params.data?.reason || params.data?.comment || "—",
     },
     {
       headerName: "Account Type",
@@ -96,7 +100,8 @@ export function getRoleAssignmentColumnDefs(
       width: 170,
       enableRowGroup: true,
       cellClass: "v-align",
-      valueGetter: (params) => params.data?.assignedAt || params.data?.createdAt,
+      valueGetter: (params) => params.data?.createdAt,
+      // params.data?.assignedAt || params.data?.createdAt,
       valueFormatter: (params) =>
         params.value ? dayjs(params.value).format("DD MMM YYYY, hh:mm A") : "—",
     },

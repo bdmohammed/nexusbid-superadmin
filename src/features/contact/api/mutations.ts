@@ -1,12 +1,11 @@
-import { useMutation } from '@tanstack/react-query';
+import { useMutation } from "@tanstack/react-query";
 
-import { supportApi } from './api';
+import { supportApi } from "./api";
 
-import type { ContactDto } from '../types';
+import type { ContactDto } from "../types";
 
 export function useSubmitContact() {
-    return useMutation({
-        mutationFn: (dto: ContactDto) =>
-            supportApi.submitContact(dto),
-    });
+  return useMutation({
+    mutationFn: (dto: ContactDto) => supportApi.submitContact(dto),
+  });
 }

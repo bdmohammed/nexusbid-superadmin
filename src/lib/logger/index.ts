@@ -1,4 +1,4 @@
-type LogLevel = 'debug' | 'info' | 'warn' | 'error';
+type LogLevel = "debug" | "info" | "warn" | "error";
 
 const LOG_LEVELS: Record<LogLevel, number> = {
   debug: 0,
@@ -8,20 +8,20 @@ const LOG_LEVELS: Record<LogLevel, number> = {
 };
 
 const styles = {
-  debug: 'color: #888888; font-weight: bold;',
-  info: 'color: #0070f3; font-weight: bold;',
-  warn: 'color: #f5a623; font-weight: bold;',
-  error: 'color: #ff0000; font-weight: bold;',
+  debug: "color: #888888; font-weight: bold;",
+  info: "color: #0070f3; font-weight: bold;",
+  warn: "color: #f5a623; font-weight: bold;",
+  error: "color: #ff0000; font-weight: bold;",
 };
 
-const isServer = typeof window === 'undefined';
-const isProd = process.env.NODE_ENV === 'production';
+const isServer = typeof window === "undefined";
+const isProd = process.env.NODE_ENV === "production";
 
 const getLogLevel = (): number => {
-  const envLevel = process.env.NEXT_PUBLIC_LOG_LEVEL || (isProd ? 'info' : 'debug');
+  const envLevel =
+    process.env.NEXT_PUBLIC_LOG_LEVEL || (isProd ? "info" : "debug");
   return LOG_LEVELS[envLevel as LogLevel] ?? 1;
 };
-
 
 /**
  * Internal helper to handle remote logging requests (e.g. Sentry/Datadog).
@@ -36,9 +36,9 @@ const sendToTelemetry = (payload: any): void => {
     console.error(serialized);
   } catch {
     // Avoid letting telemetry failure crash the host application
-    console.error('Failed to serialize log telemetry payload');
+    console.error("Failed to serialize log telemetry payload");
   }
-}
+};
 
 const formatMessage = (level: LogLevel, message: string, context?: any) => {
   const timestamp = new Date().toISOString();
@@ -51,9 +51,16 @@ const formatMessage = (level: LogLevel, message: string, context?: any) => {
         context,
       });
     }
-    const color = level === 'error' ? '\x1b[31m' : level === 'warn' ? '\x1b[33m' : level === 'info' ? '\x1b[36m' : '\x1b[90m';
-    const reset = '\x1b[0m';
-    const contextStr = context ? ` ${JSON.stringify(context, null, 2)}` : '';
+    const color =
+      level === "error"
+        ? "\x1b[31m"
+        : level === "warn"
+          ? "\x1b[33m"
+          : level === "info"
+            ? "\x1b[36m"
+            : "\x1b[90m";
+    const reset = "\x1b[0m";
+    const contextStr = context ? ` ${JSON.stringify(context, null, 2)}` : "";
     return `[${timestamp}] ${color}${level.toUpperCase()}${reset}: ${message}${contextStr}`;
   }
   return {
@@ -73,16 +80,20 @@ const writeLog = (level: LogLevel, message: string, context?: any) => {
     if (isProd) {
       return sendToTelemetry(formatted);
     }
-    if (level === 'error') {
+    if (level === "error") {
       console.error(formatted);
-    } else if (level === 'warn') {
+    } else if (level === "warn") {
       console.warn(formatted);
     } else {
       console.log(formatted);
     }
   } else {
-    const f = formatted as { timestamp: string; level: LogLevel; message: string; context?: any };
-
+    const f = formatted as {
+      timestamp: string;
+      level: LogLevel;
+      message: string;
+      context?: any;
+    };
 
     const consoleArgs = [
       `%c[${f.timestamp}] [${f.level.toUpperCase()}] %s`,
@@ -94,11 +105,11 @@ const writeLog = (level: LogLevel, message: string, context?: any) => {
       consoleArgs.push(f.context);
     }
 
-    if (f.level === 'error') {
+    if (f.level === "error") {
       console.error(...consoleArgs);
-    } else if (f.level === 'warn') {
+    } else if (f.level === "warn") {
       console.warn(...consoleArgs);
-    } else if (f.level === 'info') {
+    } else if (f.level === "info") {
       console.info(...consoleArgs);
     } else {
       console.log(...consoleArgs);
@@ -107,8 +118,10 @@ const writeLog = (level: LogLevel, message: string, context?: any) => {
 };
 
 export const logger = {
-  debug: (message: string, context?: any) => writeLog('debug', message, context),
-  info: (message: string, context?: any) => writeLog('info', message, context),
-  warn: (message: string, context?: any) => writeLog('warn', message, context),
-  error: (message: string, context?: any) => writeLog('error', message, context),
+  debug: (message: string, context?: any) =>
+    writeLog("debug", message, context),
+  info: (message: string, context?: any) => writeLog("info", message, context),
+  warn: (message: string, context?: any) => writeLog("warn", message, context),
+  error: (message: string, context?: any) =>
+    writeLog("error", message, context),
 };

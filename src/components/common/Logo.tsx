@@ -1,4 +1,5 @@
 import { Shield } from "lucide-react";
+
 import { cn } from "@/lib/tailwind/utils";
 
 export interface LogoProps {
@@ -6,7 +7,10 @@ export interface LogoProps {
   showText?: boolean;
 }
 
-export default function Logo({ variant = "light", showText = true }: LogoProps) {
+export default function Logo({
+  variant = "light",
+  showText = true,
+}: LogoProps) {
   const isDark = variant === "dark";
 
   return (

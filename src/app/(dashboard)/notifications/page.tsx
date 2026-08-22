@@ -1,17 +1,35 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useEffect,useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import {
-  Bell, CheckCircle, Archive, Trash2, Search, Filter, RefreshCw, AlertCircle, Info, ChevronLeft, ChevronRight
+  AlertCircle,
+  Archive,
+  Bell,
+  CheckCircle,
+  ChevronLeft,
+  ChevronRight,
+  Filter,
+  Info,
+  RefreshCw,
+  Search,
+  Trash2,
 } from "lucide-react";
-import {
-  useNotifications, useMarkAllRead, useMarkRead, useArchiveNotification, useDismissNotification,
-  useNotificationCategories, useNotificationStats, notificationQueryKeys
-} from "@/features/notifications";
-import type { Notification } from "@/types";
+
 import NotificationDrawer from "./components/NotificationDrawer";
+
+import type { Notification } from "@/types";
 import { clientEnv } from "@/env/client";
+import {
+  notificationQueryKeys,
+  useArchiveNotification,
+  useDismissNotification,
+  useMarkAllRead,
+  useMarkRead,
+  useNotificationCategories,
+  useNotifications,
+  useNotificationStats,
+} from "@/features/notifications";
 
 export default function NotificationsPage() {
   const queryClient = useQueryClient();
@@ -20,12 +38,17 @@ export default function NotificationsPage() {
   const [selectedSeverity, setSelectedSeverity] = useState<string>("");
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [page, setPage] = useState<number>(1);
-  const [selectedNotification, setSelectedNotification] = useState<Notification | null>(null);
+  const [selectedNotification, setSelectedNotification] =
+    useState<Notification | null>(null);
 
   const { data: categories = [] } = useNotificationCategories();
   const { data: stats } = useNotificationStats();
 
-  const { data: listData, isLoading, refetch } = useNotifications({
+  const {
+    data: listData,
+    isLoading,
+    refetch,
+  } = useNotifications({
     status: activeTab,
     category: selectedCategory || undefined,
     severity: selectedSeverity || undefined,
@@ -49,7 +72,10 @@ export default function NotificationsPage() {
     });
 
     eventSource.addEventListener("error", (e) => {
-      console.warn("SSE Connection closed or failed. Retrying in background...", e);
+      console.warn(
+        "SSE Connection closed or failed. Retrying in background...",
+        e,
+      );
     });
 
     return () => {
@@ -65,7 +91,8 @@ export default function NotificationsPage() {
     info: "border-green-500/30 bg-green-500/5 text-green-500",
   };
 
-  const notificationList = (listData?.notifications ?? []) as unknown as Notification[];
+  const notificationList = (listData?.notifications ??
+    []) as unknown as Notification[];
   const total = listData?.total ?? 0;
   const totalPages = Math.ceil(total / 10) || 1;
 
@@ -73,7 +100,7 @@ export default function NotificationsPage() {
   const filteredNotifications = notificationList.filter(
     (n) =>
       n.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      n.message.toLowerCase().includes(searchQuery.toLowerCase())
+      n.message.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
   return (
@@ -81,9 +108,12 @@ export default function NotificationsPage() {
       {/* Page Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-text">Notifications</h1>
+          <h1 className="text-2xl font-bold tracking-tight text-text">
+            Notifications
+          </h1>
           <p className="mt-1 text-sm text-text-light">
-            Manage your security notifications, review workflows, and platform events.
+            Manage your security notifications, review workflows, and platform
+            events.
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
@@ -110,20 +140,36 @@ export default function NotificationsPage() {
       {/* Statistics Cards */}
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
         <div className="rounded-2xl border border-border bg-surface p-4 shadow-sm">
-          <p className="text-xs font-semibold uppercase tracking-wider text-text-light">Unread Events</p>
-          <p className="mt-2 text-2xl font-bold text-text">{stats?.unread ?? 0}</p>
+          <p className="text-xs font-semibold uppercase tracking-wider text-text-light">
+            Unread Events
+          </p>
+          <p className="mt-2 text-2xl font-bold text-text">
+            {stats?.unread ?? 0}
+          </p>
         </div>
         <div className="rounded-2xl border border-border bg-surface p-4 shadow-sm">
-          <p className="text-xs font-semibold uppercase tracking-wider text-red-500">Critical Alerts</p>
-          <p className="mt-2 text-2xl font-bold text-red-500">{stats?.critical ?? 0}</p>
+          <p className="text-xs font-semibold uppercase tracking-wider text-red-500">
+            Critical Alerts
+          </p>
+          <p className="mt-2 text-2xl font-bold text-red-500">
+            {stats?.critical ?? 0}
+          </p>
         </div>
         <div className="rounded-2xl border border-border bg-surface p-4 shadow-sm">
-          <p className="text-xs font-semibold uppercase tracking-wider text-orange-500">Warnings</p>
-          <p className="mt-2 text-2xl font-bold text-orange-500">{stats?.warning ?? 0}</p>
+          <p className="text-xs font-semibold uppercase tracking-wider text-orange-500">
+            Warnings
+          </p>
+          <p className="mt-2 text-2xl font-bold text-orange-500">
+            {stats?.warning ?? 0}
+          </p>
         </div>
         <div className="rounded-2xl border border-border bg-surface p-4 shadow-sm">
-          <p className="text-xs font-semibold uppercase tracking-wider text-green-500">System Info</p>
-          <p className="mt-2 text-2xl font-bold text-green-500">{stats?.info ?? 0}</p>
+          <p className="text-xs font-semibold uppercase tracking-wider text-green-500">
+            System Info
+          </p>
+          <p className="mt-2 text-2xl font-bold text-green-500">
+            {stats?.info ?? 0}
+          </p>
         </div>
       </div>
 
@@ -139,12 +185,17 @@ export default function NotificationsPage() {
                   setActiveTab(tab);
                   setPage(1);
                 }}
-                className={`rounded-xl px-4 py-2 text-sm font-semibold transition-all whitespace-nowrap cursor-pointer ${activeTab === tab
-                  ? "bg-sidebar-hover text-primary"
-                  : "text-text-light hover:text-text"
-                  }`}
+                className={`rounded-xl px-4 py-2 text-sm font-semibold transition-all whitespace-nowrap cursor-pointer ${
+                  activeTab === tab
+                    ? "bg-sidebar-hover text-primary"
+                    : "text-text-light hover:text-text"
+                }`}
               >
-                {tab === "UNREAD" ? "Unread" : tab === "READ" ? "Read" : "Archived"}
+                {tab === "UNREAD"
+                  ? "Unread"
+                  : tab === "READ"
+                    ? "Read"
+                    : "Archived"}
               </button>
             ))}
           </div>
@@ -166,7 +217,9 @@ export default function NotificationsPage() {
         <div className="mt-4 flex flex-wrap gap-3">
           <div className="flex items-center gap-2">
             <Filter size={14} className="text-text-light" />
-            <span className="text-xs font-medium text-text-light">Category:</span>
+            <span className="text-xs font-medium text-text-light">
+              Category:
+            </span>
           </div>
           <select
             value={selectedCategory}
@@ -185,7 +238,9 @@ export default function NotificationsPage() {
           </select>
 
           <div className="flex items-center gap-2 ml-2">
-            <span className="text-xs font-medium text-text-light">Severity:</span>
+            <span className="text-xs font-medium text-text-light">
+              Severity:
+            </span>
           </div>
           <select
             value={selectedSeverity}
@@ -213,7 +268,9 @@ export default function NotificationsPage() {
         ) : filteredNotifications.length === 0 ? (
           <div className="flex flex-col items-center justify-center p-12 text-center">
             <Bell size={40} className="text-text-light mb-3" />
-            <h3 className="text-base font-semibold text-text">No notifications found</h3>
+            <h3 className="text-base font-semibold text-text">
+              No notifications found
+            </h3>
             <p className="mt-1 text-sm text-text-light">
               You are completely caught up! Enjoy your day.
             </p>
@@ -230,7 +287,9 @@ export default function NotificationsPage() {
                 >
                   <div className="flex gap-4 min-w-0">
                     <div className="mt-1 shrink-0">
-                      <span className={`inline-flex items-center justify-center rounded-xl border p-2 ${severityStyles[sevKey] || severityStyles.info}`}>
+                      <span
+                        className={`inline-flex items-center justify-center rounded-xl border p-2 ${severityStyles[sevKey] || severityStyles.info}`}
+                      >
                         {sevKey === "critical" || sevKey === "high" ? (
                           <AlertCircle size={16} />
                         ) : (
@@ -302,7 +361,8 @@ export default function NotificationsPage() {
         {totalPages > 1 && (
           <div className="flex items-center justify-between border-t border-border bg-sidebar-hover/40 px-6 py-4">
             <span className="text-xs text-text-light">
-              Showing page <strong className="text-text">{page}</strong> of <strong className="text-text">{totalPages}</strong>
+              Showing page <strong className="text-text">{page}</strong> of{" "}
+              <strong className="text-text">{totalPages}</strong>
             </span>
             <div className="flex items-center gap-1">
               <button

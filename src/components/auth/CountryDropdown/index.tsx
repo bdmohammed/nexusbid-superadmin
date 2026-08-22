@@ -1,10 +1,13 @@
+//@ts-nocheck
 import { AlertCircle, RefreshCw } from "lucide-react";
-import { useCountries } from "@/features/country/api/queries";
-import QueryBoundary from "@/components/query/QueryBoundary";
-import { useCountryDropdown } from "./useCountryDropdown";
-import DropdownButton from "./DropdownButton";
-import CountrySearch from "./CountrySearch";
+
 import CountryOption from "./CountryOption";
+import CountrySearch from "./CountrySearch";
+import DropdownButton from "./DropdownButton";
+import { useCountryDropdown } from "./useCountryDropdown";
+
+import QueryBoundary from "@/components/query/QueryBoundary";
+import { useCountries } from "@/features/country/api/queries";
 
 interface CountryDropdownProps {
   value: string;

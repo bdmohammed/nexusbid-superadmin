@@ -1,14 +1,15 @@
 "use client";
 
-import { ArrowLeft, CheckCircle, Mail } from "lucide-react";
-import Link from "next/link";
 import { Suspense } from "react";
-import { useForm } from "react-hook-form";
+import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { ArrowLeft, CheckCircle, Mail } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
+
 import { useAuth } from "@/features/auth/hooks/useAuth";
 import { getErrorMessage } from "@/lib/errors";
-import { toast } from "sonner";
 
 const forgotPasswordSchema = z.object({
   email: z.email({ error: "Please enter a valid email address" }),

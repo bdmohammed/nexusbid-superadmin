@@ -1,7 +1,8 @@
 "use client";
 
-import { Zap, Plus, ArrowUpRight } from "lucide-react";
 import Link from "next/link";
+import { ArrowUpRight,Plus, Zap } from "lucide-react";
+
 import { useDashboardQuickActions } from "@/features/dashboard/api/queries";
 
 export default function QuickActionsWidget() {

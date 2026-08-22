@@ -1,27 +1,25 @@
 "use client";
 
+import { type ChangeEvent, Suspense,useMemo, useState } from "react";
+import { useRouter,useSearchParams } from "next/navigation";
 import {
-  Plus,
   CreditCard,
-  BarChart3,
-  Layers,
-  CreditCard as PaymentIcon,
+  Plus,
 } from "lucide-react";
-import { type ChangeEvent, useMemo, useState, Suspense } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
+
+import PremiumFeatureUpsell from "@/components/common/PremiumFeatureUpsell";
 import TableToolbar from "@/components/common/TableToolbar";
 import PaymentHistoryTable from "@/components/subscription/PaymentHistoryTable";
 import PricingPlans from "@/components/subscription/PricingPlans";
 import SubscriptionStats from "@/components/subscription/SubscriptionStats";
 import Button from "@/components/ui/Button";
-import { usePermissions } from "@/hooks/usePermissions";
-import PremiumFeatureUpsell from "@/components/common/PremiumFeatureUpsell";
 import {
   useAdminPlans,
+  useAdminRevenueStats,
   useAdminSubscriptions,
   useAdminUserStats,
-  useAdminRevenueStats,
 } from "@/features/subscriptions/api/queries";
+import { usePermissions } from "@/hooks/usePermissions";
 
 type ViewTab = "stats" | "plan-list" | "payment-list";
 
@@ -45,7 +43,11 @@ function SubscriptionPageContent() {
   const canView =
     hasPermission("subscription.view") || hasPermission("billing.view");
 
-  const { data: plansData, isLoading: plansLoading, refetch: refetchPlans } = useAdminPlans();
+  const {
+    data: plansData,
+    isLoading: plansLoading,
+    refetch: refetchPlans,
+  } = useAdminPlans();
   const { data: subscriptionsData, isLoading: subscriptionsLoading } =
     useAdminSubscriptions(page, limit);
   const { data: userStats, isLoading: userStatsLoading } = useAdminUserStats();
@@ -108,7 +110,11 @@ function SubscriptionPageContent() {
           >
             Create Plan
           </Button>
-          <PricingPlans plans={plansData || []} loading={plansLoading} onRefresh={refetchPlans} />
+          <PricingPlans
+            plans={plansData || []}
+            loading={plansLoading}
+            onRefresh={refetchPlans}
+          />
         </div>
       )}
 

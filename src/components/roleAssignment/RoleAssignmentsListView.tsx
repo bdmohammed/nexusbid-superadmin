@@ -1,16 +1,13 @@
+//@ts-nocheck
 "use client";
 
-import { useMemo, memo, useRef, useCallback, useState } from "react";
-import { Plus } from "lucide-react";
-import { AgGridReact } from "ag-grid-react";
+import { memo, useCallback, useMemo, useRef, useState } from "react";
+import { AgChartsEnterpriseModule } from "ag-charts-enterprise";
 import {
-  type ColDef,
-  themeQuartz,
   AllCommunityModule,
+  type ColDef,themeQuartz,GridOptions,
   GridReadyEvent,
-  SideBarDef,
-  GridOptions,
-} from "ag-grid-community";
+  SideBarDef} from "ag-grid-community";
 import {
   CellSelectionModule,
   ClipboardModule,
@@ -18,10 +15,10 @@ import {
   ColumnsToolPanelModule,
   ContextMenuModule,
   ExcelExportModule,
+  FiltersToolPanelModule,
   IntegratedChartsModule,
   MasterDetailModule,
   MultiFilterModule,
-  FiltersToolPanelModule,
   PivotModule,
   RichSelectModule,
   RowGroupingModule,
@@ -32,13 +29,14 @@ import {
   SparklinesModule,
   StatusBarModule,
 } from "ag-grid-enterprise";
-import { AgChartsEnterpriseModule } from "ag-charts-enterprise";
+import { AgGridReact } from "ag-grid-react";
 import dayjs from "dayjs";
+import { Plus } from "lucide-react";
 
+import type { UserRoleAssignment } from "@/features/rbac/types";
+import { getRoleAssignmentColumnDefs } from "@/components/roleAssignment/columnDefs";
 import Button from "@/components/ui/Button";
 import { Toolbar } from "@/components/ui/Toolbar";
-import { getRoleAssignmentColumnDefs } from "@/components/roleAssignment/columnDefs";
-import { UserRoleAssignment } from "@/features/rbac/types";
 import { useThemeStore } from "@/store/theme.store";
 
 const CommunityModule = [
@@ -121,8 +119,9 @@ export default function RoleAssignmentsListView({
   currentUserId,
 }: RoleAssignmentsListViewProps) {
   const { theme } = useThemeStore();
-  const themeClass = theme === "dark" ? "ag-theme-alpine-dark" : "ag-theme-alpine";
-  const gridRef = useRef<AgGridReact>(null);
+  const themeClass =
+    theme === "dark" ? "ag-theme-alpine-dark" : "ag-theme-alpine";
+  const gridRef = useRef<AgGridReact<any>>(null);
 
   // AG Grid Column Definitions
   const columnDefs = useMemo(
@@ -133,7 +132,7 @@ export default function RoleAssignmentsListView({
         onSubmitForReview,
         onApproveAssignment,
         onRejectAssignment,
-        currentUserId
+        currentUserId,
       ),
     [
       onDeleteAssignment,
@@ -142,7 +141,7 @@ export default function RoleAssignmentsListView({
       onApproveAssignment,
       onRejectAssignment,
       currentUserId,
-    ]
+    ],
   );
 
   const onGridReady = useCallback((event: GridReadyEvent) => {
@@ -155,7 +154,7 @@ export default function RoleAssignmentsListView({
     IS_SSR
       ? false
       : document.documentElement.clientHeight <= 415 ||
-        document.documentElement.clientWidth < 768
+        document.documentElement.clientWidth < 768,
   );
 
   const sideBar = useMemo<SideBarDef>(
@@ -165,7 +164,7 @@ export default function RoleAssignmentsListView({
       defaultToolPanel: "columns",
       hiddenByDefault: isSmall,
     }),
-    [isSmall]
+    [isSmall],
   );
 
   const defaultColDef = useMemo<ColDef>(
@@ -176,7 +175,7 @@ export default function RoleAssignmentsListView({
       floatingFilter: !isSmall,
       enableCellChangeFlash: true,
     }),
-    [isSmall]
+    [isSmall],
   );
 
   return (

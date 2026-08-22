@@ -1,6 +1,7 @@
 "use client";
 
-import { ShieldAlert, AlertTriangle, AlertCircle } from "lucide-react";
+import { AlertCircle,AlertTriangle, ShieldAlert } from "lucide-react";
+
 import { useDashboardAlerts } from "@/features/dashboard/api/queries";
 
 interface AlertWidgetProps {
@@ -22,11 +23,31 @@ export default function AlertWidget({ liveData }: AlertWidgetProps) {
   }
 
   const alerts = [
-    { label: "Security Threats", value: data?.securityAlerts ?? 0, type: "security" },
-    { label: "Failed Payments", value: data?.failedPayments ?? 0, type: "billing" },
-    { label: "Expired Subscriptions", value: data?.expiredSubscriptions ?? 0, type: "billing" },
-    { label: "Closing Tenders Today", value: data?.closingTenders ?? 0, type: "tender" },
-    { label: "Database System Errors", value: data?.systemErrors ?? 0, type: "system" },
+    {
+      label: "Security Threats",
+      value: data?.securityAlerts ?? 0,
+      type: "security",
+    },
+    {
+      label: "Failed Payments",
+      value: data?.failedPayments ?? 0,
+      type: "billing",
+    },
+    {
+      label: "Expired Subscriptions",
+      value: data?.expiredSubscriptions ?? 0,
+      type: "billing",
+    },
+    {
+      label: "Closing Tenders Today",
+      value: data?.closingTenders ?? 0,
+      type: "tender",
+    },
+    {
+      label: "Database System Errors",
+      value: data?.systemErrors ?? 0,
+      type: "system",
+    },
   ];
 
   const totalWarnings = alerts.reduce((acc, curr) => acc + curr.value, 0);
@@ -64,7 +85,9 @@ export default function AlertWidget({ liveData }: AlertWidgetProps) {
                 )}
                 <span>{alert.label}</span>
               </div>
-              <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${alert.value > 0 ? "bg-red-500/10" : "bg-border/30"}`}>
+              <span
+                className={`px-2 py-0.5 rounded text-[10px] font-bold ${alert.value > 0 ? "bg-red-500/10" : "bg-border/30"}`}
+              >
                 {alert.value}
               </span>
             </div>

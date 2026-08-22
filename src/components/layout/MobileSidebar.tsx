@@ -1,9 +1,10 @@
 "use client";
 
 import { X } from "lucide-react";
-import SidebarContent from "./SidebarContent";
-import { useSidebarStore } from "@/store";
 
+import SidebarContent from "./SidebarContent";
+
+import { useSidebarStore } from "@/store";
 
 export default function MobileSidebar() {
   const isOpen = useSidebarStore((state) => state.isOpen);
@@ -11,8 +12,9 @@ export default function MobileSidebar() {
 
   return (
     <aside
-      className={`fixed left-0 top-0 z-50 h-[100dvh] w-[min(280px,calc(100vw-1rem))] border-r border-border bg-sidebar shadow-xl transition-transform duration-300 ease-out lg:hidden ${isOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
+      className={`fixed left-0 top-0 z-50 h-[100dvh] w-[min(280px,calc(100vw-1rem))] border-r border-border bg-sidebar shadow-xl transition-transform duration-300 ease-out lg:hidden ${
+        isOpen ? "translate-x-0" : "-translate-x-full"
+      }`}
       aria-hidden={!isOpen}
     >
       <button

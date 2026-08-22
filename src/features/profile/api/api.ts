@@ -1,6 +1,3 @@
-import { apiClient } from "@/lib/http";
-
-import type { ApiResponse } from "@/types";
 import type {
   ChangePasswordInput,
   PageLimitQuery,
@@ -16,6 +13,8 @@ import type {
   UserProfile,
   UserSession,
 } from "../types";
+import type { ApiResponse } from "@/types";
+import { apiClient } from "@/lib/http";
 
 export const profileApi = {
   getProfile() {
@@ -61,17 +60,24 @@ export const profileApi = {
   },
 
   getSecurityHistory(query?: PageLimitQuery) {
-    return apiClient.get<ApiResponse<ProfileActivity[]>>("/profile/security-history", {
-      params: query,
-    });
+    return apiClient.get<ApiResponse<ProfileActivity[]>>(
+      "/profile/security-history",
+      {
+        params: query,
+      },
+    );
   },
 
   getTimeline() {
-    return apiClient.get<ApiResponse<ProfileTimelineEvent[]>>("/profile/timeline");
+    return apiClient.get<ApiResponse<ProfileTimelineEvent[]>>(
+      "/profile/timeline",
+    );
   },
 
   getSubscription() {
-    return apiClient.get<ApiResponse<ProfileSubscriptionDetail>>("/profile/subscription");
+    return apiClient.get<ApiResponse<ProfileSubscriptionDetail>>(
+      "/profile/subscription",
+    );
   },
 
   getPreferences() {
@@ -79,7 +85,10 @@ export const profileApi = {
   },
 
   updatePreferences(input: UpdatePreferencesInput) {
-    return apiClient.patch<ApiResponse<UserPreferences>>("/profile/preferences", input);
+    return apiClient.patch<ApiResponse<UserPreferences>>(
+      "/profile/preferences",
+      input,
+    );
   },
 
   requestChange(input: RequestChangeInput) {

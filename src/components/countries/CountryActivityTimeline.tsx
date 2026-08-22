@@ -2,17 +2,17 @@
 
 import React, { useState } from "react";
 import {
-  CheckCircle2,
-  XCircle,
-  Clock,
-  User,
-  Shield,
-  Layers,
-  MessageSquare,
   AlertTriangle,
-  FileText,
+  CheckCircle2,
   ChevronDown,
   ChevronUp,
+  Clock,
+  FileText,
+  Layers,
+  MessageSquare,
+  Shield,
+  User,
+  XCircle,
 } from "lucide-react";
 
 export interface ActivityItem {
@@ -50,7 +50,9 @@ export const CountryActivityTimeline: React.FC<TimelineProps> = ({
   activities,
   onClose,
 }) => {
-  const [activeTimeline, setActiveTimeline] = useState<"lifecycle" | "request">("lifecycle");
+  const [activeTimeline, setActiveTimeline] = useState<"lifecycle" | "request">(
+    "lifecycle",
+  );
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
   const getEventIcon = (type: string) => {
@@ -164,15 +166,22 @@ export const CountryActivityTimeline: React.FC<TimelineProps> = ({
                         </span>
                       </div>
                       <p className="text-xs text-slate-400 mt-1">
-                        {act.actor?.fullName || (act.actorType === "SYSTEM" ? "System Engine" : "Admin User")} •{" "}
-                        {new Date(act.createdAt).toLocaleString()}
+                        {act.actor?.fullName ||
+                          (act.actorType === "SYSTEM"
+                            ? "System Engine"
+                            : "Admin User")}{" "}
+                        • {new Date(act.createdAt).toLocaleString()}
                       </p>
                     </div>
                     <button
                       onClick={() => setExpandedId(isExpanded ? null : act.id)}
                       className="text-slate-500 hover:text-slate-300 p-1"
                     >
-                      {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                      {isExpanded ? (
+                        <ChevronUp className="w-4 h-4" />
+                      ) : (
+                        <ChevronDown className="w-4 h-4" />
+                      )}
                     </button>
                   </div>
 
@@ -187,21 +196,29 @@ export const CountryActivityTimeline: React.FC<TimelineProps> = ({
                     <div className="mt-3 pt-3 border-t border-slate-850 text-xs space-y-2">
                       {act.metadata?.reason && (
                         <div>
-                          <span className="text-slate-500 font-medium">Reason: </span>
-                          <span className="text-amber-300">{act.metadata.reason}</span>
+                          <span className="text-slate-500 font-medium">
+                            Reason:{" "}
+                          </span>
+                          <span className="text-amber-300">
+                            {act.metadata.reason}
+                          </span>
                         </div>
                       )}
 
                       {act.oldValue && act.newValue && (
                         <div className="grid grid-cols-2 gap-2 mt-2 bg-slate-900 p-2 rounded border border-slate-800">
                           <div>
-                            <span className="text-rose-400 font-medium">Previous:</span>
+                            <span className="text-rose-400 font-medium">
+                              Previous:
+                            </span>
                             <pre className="text-[11px] text-slate-400 font-mono mt-1">
                               {JSON.stringify(act.oldValue, null, 2)}
                             </pre>
                           </div>
                           <div>
-                            <span className="text-emerald-400 font-medium">New:</span>
+                            <span className="text-emerald-400 font-medium">
+                              New:
+                            </span>
                             <pre className="text-[11px] text-slate-400 font-mono mt-1">
                               {JSON.stringify(act.newValue, null, 2)}
                             </pre>

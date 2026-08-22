@@ -1,5 +1,6 @@
-import { ReactNode } from 'react';
-import { Inbox } from 'lucide-react';
+import { Inbox } from "lucide-react";
+
+import type { ReactNode } from "react";
 
 interface EmptyStateProps {
   title?: string;
@@ -9,8 +10,8 @@ interface EmptyStateProps {
 }
 
 export default function EmptyState({
-  title = 'No data found',
-  description = 'There are no items to display at the moment.',
+  title = "No data found",
+  description = "There are no items to display at the moment.",
   icon,
   actions,
 }: EmptyStateProps) {

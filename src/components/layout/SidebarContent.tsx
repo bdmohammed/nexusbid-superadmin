@@ -1,15 +1,17 @@
 "use client";
 
-import { navigation, systemNavigation } from "@/constants/navigation";
-import Logo from "../common/Logo";
-import SidebarItem from "./SidebarItem";
-import { usePermissions } from "@/hooks/usePermissions";
-import { LogOut, Loader2 } from "lucide-react";
-import { useAuth } from "@/features/auth/hooks/useAuth";
 import { useRouter } from "next/navigation";
+import { Loader2,LogOut } from "lucide-react";
 
-import { useSidebarStore } from "@/store";
+import Logo from "../common/Logo";
+
+import SidebarItem from "./SidebarItem";
+
+import { navigation, systemNavigation } from "@/constants/navigation";
+import { useAuth } from "@/features/auth/hooks/useAuth";
+import { usePermissions } from "@/hooks/usePermissions";
 import { cn } from "@/lib/tailwind/utils";
+import { useSidebarStore } from "@/store";
 
 export interface SidebarContentProps {
   onNavigate?: () => void;
@@ -123,7 +125,11 @@ export default function SidebarContent({ onNavigate }: SidebarContentProps) {
 
             <nav className="space-y-2">
               {filteredNavigation.map((item) => (
-                <SidebarItem key={item.href} item={item} onClick={onNavigate} />
+                <SidebarItem
+                  key={item.href}
+                  item={item}
+                  {...(onNavigate ? { onClick: onNavigate } : {})}
+                />
               ))}
             </nav>
           </>
@@ -141,7 +147,11 @@ export default function SidebarContent({ onNavigate }: SidebarContentProps) {
 
             <nav className="space-y-2">
               {filteredSystemNavigation.map((item) => (
-                <SidebarItem key={item.href} item={item} onClick={onNavigate} />
+                <SidebarItem
+                  key={item.href}
+                  item={item}
+                  {...(onNavigate ? { onClick: onNavigate } : {})}
+                />
               ))}
             </nav>
           </>

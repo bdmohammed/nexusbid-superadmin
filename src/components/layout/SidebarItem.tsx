@@ -1,11 +1,12 @@
 "use client";
 
+import { useEffect,useState } from "react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
-import { useState, useEffect } from "react";
+import { ChevronDown } from "lucide-react";
+
 import type { NavigationItem } from "@/constants/navigation";
 import { cn } from "@/lib/tailwind/utils";
-import { ChevronDown } from "lucide-react";
 import { useSidebarStore } from "@/store";
 
 export interface SidebarItemProps {
@@ -26,7 +27,7 @@ export default function SidebarItem({ item, onClick }: SidebarItemProps) {
       : pathname.startsWith(item.href);
 
   const hasChildren = !!item.children && item.children.length > 0;
-  
+
   // Set isOpen if pathname matches or if we expand it manually
   const [isOpen, setIsOpen] = useState(false);
 
@@ -49,7 +50,7 @@ export default function SidebarItem({ item, onClick }: SidebarItemProps) {
     if (pathname !== path) return false;
     if (query) {
       const [key, val] = query.split("=");
-      return searchParams.get(key) === val;
+      return searchParams.get(key as string) === val;
     }
     return !searchParams.get("view");
   };
@@ -71,13 +72,15 @@ export default function SidebarItem({ item, onClick }: SidebarItemProps) {
       </span>
       {!isCollapsed && (
         <>
-          <span className="px-1 transition-all duration-300 font-semibold">{item.title}</span>
+          <span className="px-1 transition-all duration-300 font-semibold">
+            {item.title}
+          </span>
           {hasChildren && (
             <ChevronDown
               size={14}
               className={cn(
                 "ml-auto text-text-light transition-transform duration-200",
-                isOpen && "rotate-180"
+                isOpen && "rotate-180",
               )}
             />
           )}
@@ -105,7 +108,7 @@ export default function SidebarItem({ item, onClick }: SidebarItemProps) {
       ) : (
         <Link
           href={item.href}
-          onClick={onClick}
+          {...(onClick ? { onClick } : {})}
           title={isCollapsed ? item.title : undefined}
           className={cn(
             "group relative flex items-center gap-3 rounded-xl px-4 py-2 text-sm font-medium transition-all duration-200",
@@ -121,17 +124,19 @@ export default function SidebarItem({ item, onClick }: SidebarItemProps) {
 
       {/* Render sub-items if expanded */}
       {hasChildren && isOpen && (
-        <div className={cn(
-          "transition-all duration-300 overflow-hidden flex flex-col gap-1 mt-1",
-          isCollapsed ? "items-center pl-0" : "pl-12"
-        )}>
+        <div
+          className={cn(
+            "transition-all duration-300 overflow-hidden flex flex-col gap-1 mt-1",
+            isCollapsed ? "items-center pl-0" : "pl-12",
+          )}
+        >
           {item.children?.map((child) => {
             const childActive = isChildActive(child.href);
             return (
               <Link
                 key={child.href}
                 href={child.href}
-                onClick={onClick}
+                {...(onClick ? { onClick } : {})}
                 className={cn(
                   "relative flex items-center transition-all duration-200 font-semibold rounded-lg",
                   isCollapsed
@@ -141,7 +146,7 @@ export default function SidebarItem({ item, onClick }: SidebarItemProps) {
                     ? isCollapsed
                       ? "bg-primary/10 text-primary border border-primary/20"
                       : "text-primary font-bold animate-fade-in"
-                    : ""
+                    : "",
                 )}
               >
                 {childActive && !isCollapsed && (

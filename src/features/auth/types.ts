@@ -1,166 +1,165 @@
 export interface LoginDto {
-    email: string;
-    password: string;
+  email: string;
+  password: string;
 }
 
 export interface RegisterDto {
-    name: string;
-    email: string;
-    password: string;
-    companyName: string;
-    countryId: string;
+  name: string;
+  email: string;
+  password: string;
+  companyName: string;
+  countryId: string;
 }
 
 export interface ForgotPasswordDto {
-    email: string;
+  email: string;
 }
 
 export interface ResetPasswordDto {
-    token: string;
-    password?: string; // backend dto has password or newPassword?
+  token: string;
+  password?: string; // backend dto has password or newPassword?
 }
 
 export interface User {
-    id: string;
-    name: string;
-    email: string;
-    accountType: 'user' | 'admin';
-    companyName: string | null;
-    country: string | null;
-    emailVerified: boolean;
-    isBlocked: boolean;
-    createdAt: string;
-    updatedAt: string;
+  id: string;
+  name: string;
+  email: string;
+  accountType: "user" | "admin";
+  companyName: string | null;
+  country: string | null;
+  emailVerified: boolean;
+  isBlocked: boolean;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface AuthResponse {
-    user: User;
+  user: User;
 }
 
 export interface CsrfTokenResponse {
-    csrfToken: string;
+  csrfToken: string;
 }
 
 export interface EmailChangeInput {
-    email: string;
+  email: string;
 }
 
 export interface VerifyEmailChangeInput {
-    token: string;
+  token: string;
 }
 
 export interface UserSession {
-    id: string;
-    userAgent?: string | null;
-    ipAddress?: string | null;
-    isCurrent: boolean;
-    lastActiveAt: string;
-    createdAt: string;
+  id: string;
+  userAgent?: string | null;
+  ipAddress?: string | null;
+  isCurrent: boolean;
+  lastActiveAt: string;
+  createdAt: string;
 }
 
 export interface UserDevice {
-    id: string;
-    deviceName: string;
-    deviceType: string;
-    osName: string;
-    browserName: string;
-    lastUsedAt: string;
+  id: string;
+  deviceName: string;
+  deviceType: string;
+  osName: string;
+  browserName: string;
+  lastUsedAt: string;
 }
 
 export interface TotpSetupResponse {
-    secret: string;
-    qrCodeUrl: string;
+  secret: string;
+  qrCodeUrl: string;
 }
 
 export interface DisableTotpInput {
-    code: string;
+  code: string;
 }
 
 export interface OAuthCallbackInput {
-    code: string;
-    state: string;
+  code: string;
+  state: string;
 }
 
 export interface ListUsersQuery {
-    page?: number;
-    limit?: number;
-    search?: string;
-    status?: string;
-    role?: string;
-    country?: string;
-    ipAddress?: string;
-    device?: string;
-    browser?: string;
-    os?: string;
-    entityType?: string;
-    entityId?: string;
-    correlationId?: string;
-    requestId?: string;
+  page?: number;
+  limit?: number;
+  search?: string;
+  status?: string;
+  role?: string;
+  country?: string;
+  ipAddress?: string;
+  device?: string;
+  browser?: string;
+  os?: string;
+  entityType?: string;
+  entityId?: string;
+  correlationId?: string;
+  requestId?: string;
 }
 
 export interface UpdateUserDetailInput {
-    email?: string;
-    firstName?: string;
-    lastName?: string;
-    countryId?: string | null;
+  email?: string;
+  firstName?: string;
+  lastName?: string;
+  countryId?: string | null;
 }
 
 export interface SubmitApprovalInput {
-    reviewerId: string;
-    notes: string;
+  reviewerId: string;
+  notes: string;
 }
 
 export interface ReviewApprovalInput {
-    action: 'approve' | 'reject';
-    reason?: string;
+  action: "APPROVE" | "REJECT";
+  reason?: string;
 }
 
 export interface ImpersonateUserInput {
-    reason: string;
+  reason: string;
 }
 
 export interface AssignUserRolesInput {
-    assignments: {
-        roleId: string;
-        expiresAt?: string | null;
-    }[];
+  assignments: {
+    roleId: string;
+    expiresAt?: string | null;
+  }[];
 }
 
 export interface CreateAdminInput {
-    email: string;
-    firstName: string;
-    lastName: string;
+  email: string;
+  firstName: string;
+  lastName: string;
 }
 
 export interface SetupInput {
-    name: string;
-    email: string;
-    password?: string;
+  name: string;
+  email: string;
+  password?: string;
 }
 
 export interface UserStats {
-    totalUsers: number;
-    activeUsers: number;
-    blockedUsers: number;
-    adminUsers: number;
+  totalUsers: number;
+  activeUsers: number;
+  blockedUsers: number;
+  adminUsers: number;
 }
 
 export interface UserNote {
-    id: string;
-    userId: string;
-    note: string;
-    createdBy: string;
-    createdAt: string;
+  id: string;
+  userId: string;
+  note: string;
+  createdBy: string;
+  createdAt: string;
 }
 
 export interface ApprovalRequest {
-    id: string;
-    userId: string;
-    status: 'PENDING' | 'APPROVED' | 'REJECTED';
-    reviewerId: string;
-    notes?: string | null;
-    reason?: string | null;
-    createdAt: string;
-    reviewedAt?: string | null;
+  id: string;
+  userId: string;
+  status: "PENDING" | "APPROVED" | "REJECTED";
+  reviewerId: string;
+  notes?: string | null;
+  reason?: string | null;
+  createdAt: string;
+  reviewedAt?: string | null;
 }
-

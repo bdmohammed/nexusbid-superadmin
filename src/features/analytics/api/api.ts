@@ -1,6 +1,3 @@
-import { apiClient } from "@/lib/http";
-
-import type { ApiResponse } from "@/types";
 import type {
   ActiveAlert,
   AnalyticsQuery,
@@ -19,6 +16,8 @@ import type {
   UserAnalyticsRow,
   UserGrowthResult,
 } from "../types";
+import type { ApiResponse } from "@/types";
+import { apiClient } from "@/lib/http";
 
 export const analyticsApi = {
   getOverview(query?: AnalyticsQuery) {
@@ -28,9 +27,12 @@ export const analyticsApi = {
   },
 
   getTenders(query?: AnalyticsQuery) {
-    return apiClient.get<ApiResponse<TenderAnalyticsRow[]>>("/analytics/tenders", {
-      params: query,
-    });
+    return apiClient.get<ApiResponse<TenderAnalyticsRow[]>>(
+      "/analytics/tenders",
+      {
+        params: query,
+      },
+    );
   },
 
   getUsersMetrics(query?: AnalyticsQuery) {
@@ -40,17 +42,24 @@ export const analyticsApi = {
   },
 
   getRevenueMetrics(query?: AnalyticsQuery) {
-    return apiClient.get<ApiResponse<RevenueAnalyticsResult[]>>("/analytics/revenue", {
-      params: query,
-    });
+    return apiClient.get<ApiResponse<RevenueAnalyticsResult[]>>(
+      "/analytics/revenue",
+      {
+        params: query,
+      },
+    );
   },
 
   getCategoriesMetrics() {
-    return apiClient.get<ApiResponse<CategoryAnalyticsRow[]>>("/analytics/categories");
+    return apiClient.get<ApiResponse<CategoryAnalyticsRow[]>>(
+      "/analytics/categories",
+    );
   },
 
   getSystemMetrics() {
-    return apiClient.get<ApiResponse<SystemPerformanceMetrics>>("/analytics/system");
+    return apiClient.get<ApiResponse<SystemPerformanceMetrics>>(
+      "/analytics/system",
+    );
   },
 
   getDashboard() {
@@ -58,7 +67,10 @@ export const analyticsApi = {
   },
 
   saveDashboard(input: SaveDashboardLayoutInput) {
-    return apiClient.post<ApiResponse<DashboardLayout>>("/analytics/dashboard", input);
+    return apiClient.post<ApiResponse<DashboardLayout>>(
+      "/analytics/dashboard",
+      input,
+    );
   },
 
   getAlertsList() {
@@ -66,11 +78,16 @@ export const analyticsApi = {
   },
 
   resolveAlertTrigger(alertId: string) {
-    return apiClient.post<ApiResponse<any>>(`/analytics/alerts/${alertId}/resolve`);
+    return apiClient.post<ApiResponse<any>>(
+      `/analytics/alerts/${alertId}/resolve`,
+    );
   },
 
   requestDataExport(input: RequestExportInput) {
-    return apiClient.post<ApiResponse<ExportJob>>("/analytics/exports/request", input);
+    return apiClient.post<ApiResponse<ExportJob>>(
+      "/analytics/exports/request",
+      input,
+    );
   },
 
   getExportJobs() {
@@ -86,20 +103,23 @@ export const analyticsApi = {
   createReportSchedule(input: CreateScheduledReportInput) {
     return apiClient.post<ApiResponse<ScheduledReport>>(
       "/analytics/reports/schedules",
-      input
+      input,
     );
   },
 
   listReportSchedules() {
     return apiClient.get<ApiResponse<ScheduledReport[]>>(
-      "/analytics/reports/schedules"
+      "/analytics/reports/schedules",
     );
   },
 
   getUserGrowth(query?: AnalyticsQuery) {
-    return apiClient.get<ApiResponse<UserGrowthResult[]>>("/analytics/user-growth", {
-      params: query,
-    });
+    return apiClient.get<ApiResponse<UserGrowthResult[]>>(
+      "/analytics/user-growth",
+      {
+        params: query,
+      },
+    );
   },
 
   getRevenueLegacy(query?: AnalyticsQuery) {
@@ -109,6 +129,8 @@ export const analyticsApi = {
   },
 
   getTopDownloads() {
-    return apiClient.get<ApiResponse<TopDownloadResult[]>>("/analytics/downloads");
+    return apiClient.get<ApiResponse<TopDownloadResult[]>>(
+      "/analytics/downloads",
+    );
   },
 };

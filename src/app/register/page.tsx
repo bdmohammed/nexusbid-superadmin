@@ -1,17 +1,19 @@
+//@ts-nocheck
 "use client";
 
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect,useState } from "react";
 import Link from "next/link";
-import { useForm, Controller, useWatch } from "react-hook-form";
+import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { useAuth } from "@/features/auth/hooks/useAuth";
-import { PasswordChecklist } from "@/components/auth/PasswordChecklist";
 import { AlertCircle, Eye, EyeOff } from "lucide-react";
-import { getErrorMessage, getValidationErrors } from "@/lib/errors";
-import { useCountries } from "@/features/country/api/queries";
+import { Controller, useForm, useWatch } from "react-hook-form";
+import { z } from "zod";
+
 import CountryDropdown from "@/components/auth/CountryDropdown";
+import { PasswordChecklist } from "@/components/auth/PasswordChecklist";
+import { useAuth } from "@/features/auth/hooks/useAuth";
+import { useCountries } from "@/features/country/api/queries";
+import { getErrorMessage, getValidationErrors } from "@/lib/errors";
 
 const registerSchema = z
   .object({

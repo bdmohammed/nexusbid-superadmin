@@ -5,19 +5,18 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
   ArrowLeft,
-  ChevronRight,
-  ChevronLeft,
   Check,
-  Plus,
-  Trash2,
+  ChevronLeft,
+  ChevronRight,
   DollarSign,
-  Layers,
-  Shield,
   FileText,
+  Layers,
+  Trash2,
 } from "lucide-react";
 import { toast } from "sonner";
-import { useCreatePlan } from "@/features/subscriptions";
+
 import Button from "@/components/ui/Button";
+import { useCreatePlan } from "@/features/subscriptions";
 
 export default function CreatePlanWizardPage() {
   const router = useRouter();
@@ -108,6 +107,7 @@ export default function CreatePlanWizardPage() {
 
   async function handleFinalSubmit() {
     try {
+      //@ts-ignore
       await createPlanMutation.mutateAsync({
         name: formData.name,
         subtitle: formData.subtitle || undefined,

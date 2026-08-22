@@ -1,6 +1,7 @@
-import { ReactNode } from 'react';
-import { AlertCircle, RefreshCw } from 'lucide-react';
-import { AppError } from '@/lib/errors';
+import { AlertCircle, RefreshCw } from "lucide-react";
+
+import type { AppError } from "@/lib/errors";
+import type { ReactNode } from "react";
 
 interface ErrorStateProps {
   title?: string;
@@ -12,14 +13,17 @@ interface ErrorStateProps {
 }
 
 export default function ErrorState({
-  title = 'Something went wrong',
+  title = "Something went wrong",
   description,
   error,
   icon,
   retry,
   actions,
 }: ErrorStateProps) {
-  const displayDescription = description || error?.message || 'An unexpected error occurred while loading this data.';
+  const displayDescription =
+    description ||
+    error?.message ||
+    "An unexpected error occurred while loading this data.";
 
   return (
     <div className="w-full p-8 md:p-10 my-4 bg-[var(--surface-secondary)] border border-red-500/10 rounded-2xl relative overflow-hidden text-center flex flex-col items-center justify-center">

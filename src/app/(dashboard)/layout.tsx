@@ -2,11 +2,9 @@ import type { ReactNode } from "react";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 
 interface LayoutProps {
-    children: ReactNode;
+  children: ReactNode;
 }
 
 export default function Layout({ children }: LayoutProps) {
-    return (
-        <DashboardLayout>{children}</DashboardLayout>
-    );
+  return <DashboardLayout>{children}</DashboardLayout>;
 }

@@ -1,14 +1,23 @@
-import type { ButtonHTMLAttributes, ForwardRefExoticComponent, ReactNode, RefAttributes } from "react";
+import type { LucideProps } from "lucide-react";
+import type {
+  ButtonHTMLAttributes,
+  ForwardRefExoticComponent,
+  ReactNode,
+  RefAttributes,
+} from "react";
 import { cn } from "@/lib/tailwind/utils";
-import { LucideProps } from "lucide-react";
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   fullWidth?: boolean;
   children?: ReactNode;
   variant?: "primary" | "secondary" | "outline" | "danger" | "ghost";
   size?: "sm" | "md" | "lg";
-  leftIcon?: ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>;
-  rightIcon?: ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>;
+  leftIcon?: ForwardRefExoticComponent<
+    Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>
+  >;
+  rightIcon?: ForwardRefExoticComponent<
+    Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>
+  >;
 }
 
 export default function Button({

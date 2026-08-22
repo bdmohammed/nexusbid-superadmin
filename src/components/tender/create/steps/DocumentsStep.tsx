@@ -1,9 +1,10 @@
 "use client";
 
 import React, { useState } from "react";
+import { CheckCircle2, FileText, Loader2,Trash2, Upload } from "lucide-react";
 import { useFormContext } from "react-hook-form";
-import { Upload, CheckCircle2, Trash2, FileText, Loader2 } from "lucide-react";
 import { toast } from "sonner";
+
 import { tenderApi } from "@/features/tenders";
 
 interface DocumentsStepProps {
@@ -16,11 +17,19 @@ interface DocumentsStepProps {
 const DOCUMENT_TYPES = [
   { key: "Tender Document", label: "Tender Document", required: true },
   { key: "BOQ File", label: "BOQ File", required: false },
-  { key: "Technical Specification", label: "Technical Specification", required: false },
+  {
+    key: "Technical Specification",
+    label: "Technical Specification",
+    required: false,
+  },
   { key: "Drawings", label: "Drawings", required: false },
   { key: "NIT Document", label: "NIT Document", required: false },
   { key: "Terms & Conditions", label: "Terms & Conditions", required: false },
-  { key: "Additional Document", label: "Additional Documents", required: false },
+  {
+    key: "Additional Document",
+    label: "Additional Documents",
+    required: false,
+  },
 ];
 
 export default function DocumentsStep({
@@ -58,7 +67,10 @@ export default function DocumentsStep({
       });
 
       if (!presignedRes.data.success || !presignedRes.data.data) {
-        throw new Error(presignedRes.data.message || "Failed to generate presigned S3 upload URL");
+        throw new Error(
+          presignedRes.data.message ||
+            "Failed to generate presigned S3 upload URL",
+        );
       }
 
       const { uploadUrl, documentKey } = presignedRes.data.data;
@@ -80,7 +92,7 @@ export default function DocumentsStep({
       const regRes = await tenderApi.adminRegisterDocument(tenderId, {
         documentType,
         s3Key: documentKey,
-        bucket: "nexusbid-tenders",
+        bucket: "rfpnexa-tenders",
         originalName: file.name,
         mimeType: file.type || "application/pdf",
         fileSize: file.size,
@@ -88,7 +100,10 @@ export default function DocumentsStep({
       });
 
       if (!regRes.data.success) {
-        throw new Error(regRes.data.message || "Failed to register document metadata in PostgreSQL");
+        throw new Error(
+          regRes.data.message ||
+            "Failed to register document metadata in PostgreSQL",
+        );
       }
 
       const newDoc = regRes.data.data || regRes.data;
@@ -124,7 +139,8 @@ export default function DocumentsStep({
       <div>
         <h2 className="text-2xl font-semibold">Tender Documents</h2>
         <p className="mt-2 text-text-light text-sm">
-          Files are uploaded immediately to S3 using secure presigned URLs and stored as metadata linked to the draft version in PostgreSQL.
+          Files are uploaded immediately to S3 using secure presigned URLs and
+          stored as metadata linked to the draft version in PostgreSQL.
         </p>
       </div>
 
@@ -144,7 +160,8 @@ export default function DocumentsStep({
               <div className="flex items-center justify-between">
                 <label className="text-sm font-semibold text-text flex items-center gap-1.5">
                   <FileText className="h-4 w-4 text-primary" />
-                  {docType.label} {docType.required && <span className="text-red-500">*</span>}
+                  {docType.label}{" "}
+                  {docType.required && <span className="text-red-500">*</span>}
                 </label>
 
                 {matchingDocs.length > 0 ? (
@@ -230,7 +247,9 @@ export default function DocumentsStep({
 
       {/* Internal Notes */}
       <div>
-        <label className="mb-2 block text-sm font-semibold text-text">Internal Notes</label>
+        <label className="mb-2 block text-sm font-semibold text-text">
+          Internal Notes
+        </label>
         <textarea
           rows={4}
           placeholder="Add any internal documentation notes for reviewers..."

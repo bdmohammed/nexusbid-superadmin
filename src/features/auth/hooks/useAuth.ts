@@ -1,88 +1,83 @@
-import { useMemo } from 'react';
+import { useMemo } from "react";
 
-import { useCurrentUser } from '../api/queries';
 import {
-    useLogin,
-    useLogout,
-    useRegister,
-    useForgotPassword,
-    useResetPassword,
-    useVerifyEmail,
-    useResendVerification,
-} from '../api/mutations';
-
-import { useAuthStore } from '../store/store';
+  useForgotPassword,
+  useLogin,
+  useLogout,
+  useRegister,
+  useResendVerification,
+  useResetPassword,
+  useVerifyEmail,
+} from "../api/mutations";
+import { useCurrentUser } from "../api/queries";
+import { useAuthStore } from "../store/store";
 
 export function useAuth() {
-    const me = useCurrentUser();
+  const me = useCurrentUser();
 
-    const login = useLogin();
-    const register = useRegister();
-    const logout = useLogout();
-    const forgotPassword = useForgotPassword();
-    const resetPassword = useResetPassword();
-    const verifyEmail = useVerifyEmail();
-    const resendVerification = useResendVerification();
+  const login = useLogin();
+  const register = useRegister();
+  const logout = useLogout();
+  const forgotPassword = useForgotPassword();
+  const resetPassword = useResetPassword();
+  const verifyEmail = useVerifyEmail();
+  const resendVerification = useResendVerification();
 
-    const {
-        isAuthenticated,
-        isInitializing,
-        setAuthenticated,
-    } = useAuthStore();
+  const { isAuthenticated, isInitializing, setAuthenticated } = useAuthStore();
 
-    return useMemo(
-        () => ({
-            user: me.data ?? null,
+  return useMemo(
+    () => ({
+      user: me.data ?? null,
 
-            isAuthenticated,
-            isInitializing,
+      isAuthenticated,
+      isInitializing,
 
-            isLoading: me.isLoading,
-            isFetching: me.isFetching,
-            isError: me.isError,
-            error: me.error,
+      isLoading: me.isLoading,
+      isFetching: me.isFetching,
+      isError: me.isError,
+      error: me.error,
 
-            refetch: me.refetch,
+      refetch: me.refetch,
 
-            login: login.mutateAsync,
-            register: register.mutateAsync,
-            logout: logout.mutateAsync,
+      login: login.mutateAsync,
+      register: register.mutateAsync,
+      logout: logout.mutateAsync,
 
-            forgotPassword: forgotPassword.mutateAsync,
-            resetPassword: resetPassword.mutateAsync,
-            verifyEmail: verifyEmail.mutateAsync,
-            resendVerification: resendVerification.mutateAsync,
+      forgotPassword: forgotPassword.mutateAsync,
+      resetPassword: resetPassword.mutateAsync,
+      verifyEmail: verifyEmail.mutateAsync,
+      resendVerification: resendVerification.mutateAsync,
 
-            isLoggingIn: login.isPending,
-            isRegistering: register.isPending,
-            isLoggingOut: logout.isPending,
-            isForgotSending: forgotPassword.isPending,
-            isResetting: resetPassword.isPending,
-            isVerifying: verifyEmail.isPending,
-            isResendingVerification: resendVerification.isPending,
+      isLoggingIn: login.isPending,
+      isRegistering: register.isPending,
+      isLoggingOut: logout.isPending,
+      isForgotSending: forgotPassword.isPending,
+      isResetting: resetPassword.isPending,
+      isVerifying: verifyEmail.isPending,
+      isResendingVerification: resendVerification.isPending,
 
-            loginError: login.error,
-            registerError: register.error,
-            logoutError: logout.error,
-            forgotPasswordError: forgotPassword.error,
-            resetPasswordError: resetPassword.error,
-            verifyEmailError: verifyEmail.error,
-            resendVerificationError: resendVerification.error,
+      loginError: login.error,
+      registerError: register.error,
+      logoutError: logout.error,
+      forgotPasswordError: forgotPassword.error,
+      resetPasswordError: resetPassword.error,
+      verifyEmailError: verifyEmail.error,
+      resendVerificationError: resendVerification.error,
 
-            setAuthenticated,
-        }),
-        [
-            me,
-            login,
-            register,
-            logout,
-            forgotPassword,
-            resetPassword,
-            verifyEmail,
-            resendVerification,
-            isAuthenticated,
-            isInitializing,
-            setAuthenticated,
-        ],
-    );
+      setAuthenticated,
+    }),
+    [
+      me,
+      login,
+      register,
+      logout,
+      forgotPassword,
+      resetPassword,
+      verifyEmail,
+      resendVerification,
+      isAuthenticated,
+      isInitializing,
+      setAuthenticated,
+    ],
+  );
 }

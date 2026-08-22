@@ -1,4 +1,5 @@
-import { NextRequest, NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
+import { NextResponse } from "next/server";
 
 const GUEST_ROUTES = ["/login", "/register", "/forgot-password"] as const;
 
@@ -16,7 +17,7 @@ function matches(pathname: string, routes: readonly string[]) {
   );
 }
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // 1. Guest routes (/login, /register, etc.): allow request to proceed so client /auth/me can evaluate session
@@ -24,9 +25,9 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  const hasAccessToken = request.cookies.has("nexusbid_token");
+  const hasAccessToken = request.cookies.has("rfpnexa_token");
 
-  console.log("middleware path:", pathname, "hasAccessToken:", hasAccessToken);
+  console.log("proxy path:", pathname, "hasAccessToken:", hasAccessToken);
 
   // 2. Protected routes: redirect unauthenticated users to /login
   const isPublicRoute = matches(pathname, PUBLIC_ROUTES);

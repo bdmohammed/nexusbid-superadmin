@@ -1,31 +1,32 @@
 "use client";
 
+import { useEffect, useMemo,useState } from "react";
+import dayjs from "dayjs";
 import {
-  X,
-  Calendar,
-  Key,
   AlertCircle,
-  ShieldCheck,
-  UserCheck,
-  Save,
-  Send,
-  Clock,
   ChevronDown,
   ChevronRight,
+  Clock,
   Info,
+  Key,
+  Save,
   Search,
+  Send,
+  ShieldCheck,
+  UserCheck,
+  X,
 } from "lucide-react";
-import { useEffect, useState, useMemo } from "react";
-import ReactSelect, { SingleValue } from "react-select";
-import Button from "@/components/ui/Button";
-import {
-  Role,
+import ReactSelect from "react-select";
+
+import type {
   CreateAssignmentDto,
   PermissionModule,
+  Role,
 } from "@/features/rbac/types";
+import type { SingleValue } from "react-select";
+import Button from "@/components/ui/Button";
 import { rbacApi } from "@/features/rbac/api/api";
 import { useThemeStore } from "@/store/theme.store";
-import dayjs from "dayjs";
 
 export interface RoleCreateDrawerProps {
   open: boolean;
@@ -74,8 +75,8 @@ function getPermissionMetadata(
     const parts = normKey.split("_");
     if (parts.length >= 2) {
       const act =
-        parts[parts.length - 1].charAt(0).toUpperCase() +
-        parts[parts.length - 1].slice(1).toLowerCase();
+        parts[parts.length - 1]!.charAt(0).toUpperCase() +
+        parts[parts.length - 1]!.slice(1).toLowerCase();
       const mod = parts
         .slice(0, parts.length - 1)
         .map((p) => p.charAt(0).toUpperCase() + p.slice(1).toLowerCase())
@@ -447,10 +448,10 @@ export default function RoleCreateDrawer({
         : new Date().toISOString(),
       expiresAt:
         hasExpiry && expiryDate ? new Date(expiryDate).toISOString() : null,
-      reason: reason.trim() || undefined,
-      comment: comment.trim() || undefined,
-      reviewerId: reviewerId || undefined,
-      status: status,
+      reason: reason.trim(),
+      comment: comment.trim(),
+      reviewerId,
+      status,
     };
 
     onSubmit(payload);

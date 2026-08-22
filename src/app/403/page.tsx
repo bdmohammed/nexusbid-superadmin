@@ -1,7 +1,7 @@
 "use client";
 
-import { ArrowLeft, ShieldAlert } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { ArrowLeft, ShieldAlert } from "lucide-react";
 
 export default function ForbiddenPage() {
   const router = useRouter();
@@ -16,10 +16,13 @@ export default function ForbiddenPage() {
         <div className="inline-flex p-4 bg-red-500/10 rounded-2xl text-red-500 mb-6 border border-red-500/20">
           <ShieldAlert className="h-10 w-10" />
         </div>
-        
-        <h1 className="text-3xl font-extrabold tracking-tight text-white mb-3">403 Forbidden</h1>
+
+        <h1 className="text-3xl font-extrabold tracking-tight text-white mb-3">
+          403 Forbidden
+        </h1>
         <p className="text-gray-400 mb-8 leading-relaxed text-sm">
-          Access Denied. The initial system installation and setup wizard has already been completed. Further administrator registration is blocked.
+          Access Denied. The initial system installation and setup wizard has
+          already been completed. Further administrator registration is blocked.
         </p>
 
         <button

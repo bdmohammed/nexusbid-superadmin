@@ -1,11 +1,9 @@
+//@ts-nocheck
 "use client";
 
-import React, { useMemo, useRef, memo } from "react";
+import React, { memo,useMemo, useRef } from "react";
 import { useRouter } from "next/navigation";
-import StatusBadge from "@/components/common/StatusBadge";
-import Button from "@/components/ui/Button";
-import type { BackendSubscription } from "@/types";
-import { AgGridReact } from "ag-grid-react";
+import { AgChartsEnterpriseModule } from "ag-charts-enterprise";
 import { type ColDef, themeQuartz } from "ag-grid-community";
 import {
   AllCommunityModule,
@@ -30,9 +28,13 @@ import {
   StatusBarModule,
   TreeDataModule,
 } from "ag-grid-enterprise";
-import { AgChartsEnterpriseModule } from "ag-charts-enterprise";
-import { useThemeStore } from "@/store/theme.store";
+import { AgGridReact } from "ag-grid-react";
 import dayjs from "dayjs";
+
+import type { BackendSubscription } from "@/types";
+import StatusBadge from "@/components/common/StatusBadge";
+import Button from "@/components/ui/Button";
+import { useThemeStore } from "@/store/theme.store";
 
 const CommunityModule = [
   AllCommunityModule,

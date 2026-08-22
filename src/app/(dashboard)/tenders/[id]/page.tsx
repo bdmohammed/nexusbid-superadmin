@@ -1,37 +1,36 @@
 //@ts-nocheck
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useCallback,useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import {
-  FileText,
-  ShieldCheck,
-  Download,
-  Users,
-  Star,
-  MessageSquare,
-  Info,
-  History,
-  ShieldAlert,
   ArrowLeft,
+  Download,
+  FileText,
+  History,
+  Info,
+  MessageSquare,
+  ShieldAlert,
+  ShieldCheck,
+  Star,
+  Users,
 } from "lucide-react";
-import Button from "@/components/ui/Button";
-import StatusBadge from "@/components/common/StatusBadge";
+import { toast } from "sonner";
+
 import type {
   Tender,
-  TenderParticipant,
-  TenderEvaluation,
-  TenderCommittee,
-  TenderQuestion,
-  TenderClarification,
   TenderAmendment,
+  TenderClarification,
+  TenderCommittee,
+  TenderEvaluation,
+  TenderParticipant,
+  TenderQuestion,
   TenderReview,
-  TenderReviewComment,
 } from "@/types";
-
-import { toast } from "sonner";
-import { tenderApi } from "@/features/tenders";
+import StatusBadge from "@/components/common/StatusBadge";
+import Button from "@/components/ui/Button";
 import { useAuthStore } from "@/features/auth/store/store";
+import { tenderApi } from "@/features/tenders";
 
 export default function TenderDetailsPage() {
   const params = useParams();
@@ -200,7 +199,7 @@ export default function TenderDetailsPage() {
   async function transitionStatus(pubStatus: string, verStatus?: string) {
     try {
       const res = await tenderApi.adminUpdateStatus(tenderId, {
-        publicationStatus: pubStatus as any,
+        publicationStatus: pubStatus,
         status: verStatus as any,
       });
       if (res.data && res.data.success) {
@@ -286,7 +285,7 @@ export default function TenderDetailsPage() {
       tenderId,
       userId: `u-${Date.now()}`,
       userName: commUser,
-      userEmail: `${commUser.toLowerCase().replace(" ", "")}@nexusbid.gov`,
+      userEmail: `${commUser.toLowerCase().replace(" ", "")}@rfpnexa.gov`,
       role: commRole,
     };
     setCommittee([...committee, item]);

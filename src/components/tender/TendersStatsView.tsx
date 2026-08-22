@@ -1,7 +1,15 @@
 "use client";
 
 import React from "react";
-import { Briefcase, FileText, Clock, CheckCircle, Layers, Users } from "lucide-react";
+import {
+  Briefcase,
+  CheckCircle,
+  Clock,
+  FileText,
+  Layers,
+  Users,
+} from "lucide-react";
+
 import type { Tender } from "@/types";
 
 interface TendersStatsViewProps {
@@ -15,7 +23,10 @@ function resolveTenderRow(raw: any) {
     const parentTender = raw.tender || {};
     return {
       status: raw.status || "DRAFT",
-      publicationStatus: parentTender.publicationStatus || raw.publicationStatus || "UNPUBLISHED",
+      publicationStatus:
+        parentTender.publicationStatus ||
+        raw.publicationStatus ||
+        "UNPUBLISHED",
       estimatedBudget: raw.estimatedBudget ?? 0,
     };
   }
@@ -38,7 +49,8 @@ export const TendersStatsView: React.FC<TendersStatsViewProps> = ({
     (r) => r?.status === "UNDER_REVIEW" || r?.status === "REVIEW_ASSIGNED",
   ).length;
   const publishedCount = rows.filter(
-    (r) => r?.publicationStatus === "PUBLISHED" || r?.publicationStatus === "OPEN",
+    (r) =>
+      r?.publicationStatus === "PUBLISHED" || r?.publicationStatus === "OPEN",
   ).length;
 
   return (
@@ -51,7 +63,9 @@ export const TendersStatsView: React.FC<TendersStatsViewProps> = ({
               <Briefcase size={20} />
             </div>
             <div>
-              <p className="text-xs font-medium text-text-light">Total Tenders</p>
+              <p className="text-xs font-medium text-text-light">
+                Total Tenders
+              </p>
               <h3 className="text-lg font-bold">{tenders.length}</h3>
             </div>
           </div>
@@ -75,7 +89,9 @@ export const TendersStatsView: React.FC<TendersStatsViewProps> = ({
               <Clock size={20} />
             </div>
             <div>
-              <p className="text-xs font-medium text-text-light">Under Review</p>
+              <p className="text-xs font-medium text-text-light">
+                Under Review
+              </p>
               <h3 className="text-lg font-bold">{reviewCount}</h3>
             </div>
           </div>
@@ -99,7 +115,9 @@ export const TendersStatsView: React.FC<TendersStatsViewProps> = ({
               <Layers size={20} />
             </div>
             <div>
-              <p className="text-xs font-medium text-text-light">Total Budget</p>
+              <p className="text-xs font-medium text-text-light">
+                Total Budget
+              </p>
               <h3 className="text-lg font-bold">
                 ${(totalBudgetSum / 1000000).toFixed(1)}M
               </h3>
@@ -113,7 +131,9 @@ export const TendersStatsView: React.FC<TendersStatsViewProps> = ({
               <Users size={20} />
             </div>
             <div>
-              <p className="text-xs font-medium text-text-light">Total Bidders</p>
+              <p className="text-xs font-medium text-text-light">
+                Total Bidders
+              </p>
               <h3 className="text-lg font-bold">12</h3>
             </div>
           </div>

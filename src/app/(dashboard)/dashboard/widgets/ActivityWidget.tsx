@@ -1,6 +1,7 @@
 "use client";
 
-import { History, Clock } from "lucide-react";
+import { Clock,History } from "lucide-react";
+
 import { useDashboardRecentActivity } from "@/features/dashboard/api/queries";
 
 export default function ActivityWidget() {
@@ -28,17 +29,21 @@ export default function ActivityWidget() {
           <div key={act.id} className="relative text-xs">
             {/* Timeline node */}
             <span className="absolute -left-[20.5px] top-1 h-2.5 w-2.5 rounded-full bg-primary border-2 border-surface"></span>
-            
+
             <div className="flex items-center gap-1.5 text-text-light text-[10px] mb-0.5">
               <Clock className="h-3 w-3" />
               <span>{new Date(act.timestamp).toLocaleTimeString()}</span>
             </div>
-            <p className="text-text font-medium leading-relaxed">{act.description}</p>
+            <p className="text-text font-medium leading-relaxed">
+              {act.description}
+            </p>
           </div>
         ))}
 
         {activities.length === 0 && (
-          <div className="text-text-light italic text-center py-4">No recent activity logs found.</div>
+          <div className="text-text-light italic text-center py-4">
+            No recent activity logs found.
+          </div>
         )}
       </div>
     </div>

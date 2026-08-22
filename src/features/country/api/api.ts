@@ -1,6 +1,3 @@
-import { apiClient } from "@/lib/http";
-
-import type { ApiResponse, State } from "@/types";
 import type {
   ActivityItem,
   AddCommentInput,
@@ -18,6 +15,8 @@ import type {
   UpdateCountryBodyDto,
   UpdateStateBodyDto,
 } from "../types";
+import type { ApiResponse, State } from "@/types";
+import { apiClient } from "@/lib/http";
 
 export const countriesApi = {
   getStates(query?: StateQuery) {

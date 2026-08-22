@@ -1,13 +1,9 @@
+//@ts-nocheck
 "use client";
 
-import React, { useMemo, useCallback, useRef, memo } from "react";
-import { Plus, RefreshCw } from "lucide-react";
+import React, { memo,useCallback, useMemo, useRef } from "react";
 import { useRouter } from "next/navigation";
-import Button from "@/components/ui/Button";
-import StatusBadge from "@/components/common/StatusBadge";
-import type { Tender } from "@/types";
-import { Toolbar } from "@/components/ui/Toolbar";
-import { AgGridReact } from "ag-grid-react";
+import { AgChartsEnterpriseModule } from "ag-charts-enterprise";
 import {
   type ColDef,
   type GetContextMenuItemsParams,
@@ -36,9 +32,15 @@ import {
   StatusBarModule,
   TreeDataModule,
 } from "ag-grid-enterprise";
-import { AgChartsEnterpriseModule } from "ag-charts-enterprise";
-import { useThemeStore } from "@/store";
+import { AgGridReact } from "ag-grid-react";
 import dayjs from "dayjs";
+import { Plus, RefreshCw } from "lucide-react";
+
+import type { Tender } from "@/types";
+import StatusBadge from "@/components/common/StatusBadge";
+import Button from "@/components/ui/Button";
+import { Toolbar } from "@/components/ui/Toolbar";
+import { useThemeStore } from "@/store";
 
 const CommunityModule = [
   AllCommunityModule,

@@ -1,11 +1,29 @@
-import { Category } from "./category";
-import { State } from "./state";
+import type { Category } from "./category";
+import type { State } from "./state";
 
-export type TenderLifecycleStatus = 'ACTIVE' | 'ARCHIVED' | 'CANCELLED';
-export type TenderVersionStatus = 'DRAFT' | 'SUBMITTED' | 'REVIEW_ASSIGNED' | 'UNDER_REVIEW' | 'APPROVED' | 'REJECTED' | 'CHANGES_REQUESTED' | 'ARCHIVED_VERSION';
-export type TenderPublicationStatus = 'UNPUBLISHED' | 'SCHEDULED' | 'PUBLISHED' | 'RETRACTED';
-export type TenderBiddingStatus = 'NOT_OPEN' | 'OPEN' | 'CLOSED';
-export type TenderProcessStatus = 'PRE_BIDDING' | 'IN_BIDDING' | 'UNDER_EVALUATION' | 'AWARDED' | 'COMPLETED' | 'FAILED';
+export type TenderLifecycleStatus = "ACTIVE" | "ARCHIVED" | "CANCELLED";
+export type TenderVersionStatus =
+  | "DRAFT"
+  | "SUBMITTED"
+  | "REVIEW_ASSIGNED"
+  | "UNDER_REVIEW"
+  | "APPROVED"
+  | "REJECTED"
+  | "CHANGES_REQUESTED"
+  | "ARCHIVED_VERSION";
+export type TenderPublicationStatus =
+  | "UNPUBLISHED"
+  | "SCHEDULED"
+  | "PUBLISHED"
+  | "RETRACTED";
+export type TenderBiddingStatus = "NOT_OPEN" | "OPEN" | "CLOSED";
+export type TenderProcessStatus =
+  | "PRE_BIDDING"
+  | "IN_BIDDING"
+  | "UNDER_EVALUATION"
+  | "AWARDED"
+  | "COMPLETED"
+  | "FAILED";
 
 export interface Tender {
   id: string;
@@ -76,7 +94,7 @@ export interface TenderDocument {
   fileSize: number | null;
   version: number;
   checksum: string | null;
-  virusScanStatus: 'Pending' | 'Scanning' | 'Clean' | 'Infected' | 'Rejected';
+  virusScanStatus: "Pending" | "Scanning" | "Clean" | "Infected" | "Rejected";
   isPublic: boolean;
   downloadCount: number;
   uploadedAt: string;
@@ -88,7 +106,15 @@ export interface TenderParticipant {
   vendorId: string;
   vendorName: string;
   vendorEmail: string;
-  status: 'invited' | 'registered' | 'submitted' | 'qualified' | 'rejected' | 'awarded' | 'disqualified' | 'withdrawn';
+  status:
+    | "invited"
+    | "registered"
+    | "submitted"
+    | "qualified"
+    | "rejected"
+    | "awarded"
+    | "disqualified"
+    | "withdrawn";
   submissionVersion: number | null;
   withdrawnAt: string | null;
   evaluationCompleted: boolean;
@@ -97,7 +123,7 @@ export interface TenderParticipant {
 export interface TenderEvaluation {
   id: string;
   participantId: string;
-  evaluationType: 'technical' | 'financial' | 'overall';
+  evaluationType: "technical" | "financial" | "overall";
   criteriaName: string;
   weight: number;
   score: number;
@@ -112,7 +138,7 @@ export interface TenderCommittee {
   userId: string;
   userName: string;
   userEmail: string;
-  role: 'Chairperson' | 'Evaluator' | 'Observer';
+  role: "Chairperson" | "Evaluator" | "Observer";
 }
 
 export interface TenderQuestion {

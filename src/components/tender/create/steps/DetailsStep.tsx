@@ -1,9 +1,10 @@
 "use client";
 
+import { AlertCircle, ArrowRight,Calendar, Clock } from "lucide-react";
 import { useFormContext } from "react-hook-form";
+
 import Select from "@/components/common/Select";
 import Input from "@/components/ui/Input";
-import { Calendar, Clock, AlertCircle, ArrowRight } from "lucide-react";
 
 export default function DetailsStep() {
   const {
@@ -39,7 +40,9 @@ export default function DetailsStep() {
     const baseDate = openingDate ? new Date(openingDate) : new Date();
     baseDate.setDate(baseDate.getDate() + days);
     baseDate.setHours(17, 0, 0, 0);
-    setValue("closingDate", toLocalISOString(baseDate), { shouldValidate: true });
+    setValue("closingDate", toLocalISOString(baseDate), {
+      shouldValidate: true,
+    });
   };
 
   const formatFriendlyDate = (dateStr: string) => {
@@ -68,11 +71,16 @@ export default function DetailsStep() {
     if (isNaN(diffMs)) return null;
 
     if (diffMs <= 0) {
-      return { isError: true, text: "Closing date must be after the opening date." };
+      return {
+        isError: true,
+        text: "Closing date must be after the opening date.",
+      };
     }
 
     const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-    const diffHours = Math.floor((diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const diffHours = Math.floor(
+      (diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
+    );
 
     let timeText = "";
     if (diffDays > 0) {
@@ -211,7 +219,8 @@ export default function DetailsStep() {
                   validate: (val) => {
                     if (!openingDate) return true;
                     return (
-                      new Date(val).getTime() > new Date(openingDate).getTime() ||
+                      new Date(val).getTime() >
+                        new Date(openingDate).getTime() ||
                       "Closing date must be after the opening date."
                     );
                   },
@@ -250,7 +259,9 @@ export default function DetailsStep() {
             )}
             <div>
               <p className="text-xs font-bold uppercase tracking-wider">
-                {windowInfo.isError ? "Scheduling Conflict" : "Schedule Timeline"}
+                {windowInfo.isError
+                  ? "Scheduling Conflict"
+                  : "Schedule Timeline"}
               </p>
               <p className="text-sm mt-0.5 font-medium">{windowInfo.text}</p>
             </div>

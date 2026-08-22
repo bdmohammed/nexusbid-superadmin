@@ -1,11 +1,15 @@
 // src/components/error-boundary/ErrorBoundary.tsx
-'use client';
+"use client";
 
-import React, { Component, ErrorInfo, ReactNode } from 'react';
-import { handleClientError } from '@/lib/errors/utils';
+import React, { Component } from "react";
+
+import type { ErrorInfo, ReactNode } from "react";
+import { handleClientError } from "@/lib/errors/utils";
 
 export interface ErrorBoundaryProps {
-  fallback?: ReactNode | React.ComponentType<{ error: Error; reset: () => void }>;
+  fallback?:
+    | ReactNode
+    | React.ComponentType<{ error: Error; reset: () => void }>;
   onReset?: () => void;
   onError?: (error: Error, errorInfo: ErrorInfo) => void;
   children: ReactNode;
@@ -16,7 +20,10 @@ interface ErrorBoundaryState {
   error: Error | null;
 }
 
-export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
+export class ErrorBoundary extends Component<
+  ErrorBoundaryProps,
+  ErrorBoundaryState
+> {
   constructor(props: ErrorBoundaryProps) {
     super(props);
     this.state = {
@@ -33,10 +40,11 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
     };
   }
 
-  componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
+  override componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
     // Log client-side error to logger/telemetry
+    //@ts-ignore
     handleClientError(error, {
-      component: 'ErrorBoundary',
+      component: "ErrorBoundary",
       componentStack: errorInfo.componentStack || undefined,
     });
 
@@ -45,7 +53,10 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
       try {
         this.props.onError(error, errorInfo);
       } catch (callbackError) {
-        console.error('Error in ErrorBoundary onError callback:', callbackError);
+        console.error(
+          "Error in ErrorBoundary onError callback:",
+          callbackError,
+        );
       }
     }
   }
@@ -55,7 +66,10 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
       try {
         this.props.onReset();
       } catch (callbackError) {
-        console.error('Error in ErrorBoundary onReset callback:', callbackError);
+        console.error(
+          "Error in ErrorBoundary onReset callback:",
+          callbackError,
+        );
       }
     }
 
@@ -65,14 +79,17 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
     });
   };
 
-  render(): ReactNode {
+  override render(): ReactNode {
     const { hasError, error } = this.state;
     const { fallback, children } = this.props;
 
     if (hasError && error) {
       if (fallback) {
-        if (typeof fallback === 'function') {
-          const FallbackComponent = fallback as React.ComponentType<{ error: Error; reset: () => void }>;
+        if (typeof fallback === "function") {
+          const FallbackComponent = fallback as React.ComponentType<{
+            error: Error;
+            reset: () => void;
+          }>;
           return <FallbackComponent error={error} reset={this.reset} />;
         }
         return fallback;

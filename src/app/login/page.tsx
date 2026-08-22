@@ -1,15 +1,16 @@
 "use client";
 
-import { getErrorMessage, getValidationErrors } from "@/lib/errors";
-import Link from "next/link";
 import { Suspense, useEffect, useState } from "react";
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { useAuth } from "@/features/auth/hooks/useAuth";
-import { toast } from "sonner";
 import { Eye, EyeOff } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
+
+import { useAuth } from "@/features/auth/hooks/useAuth";
+import { getErrorMessage, getValidationErrors } from "@/lib/errors";
 
 const loginSchema = z.object({
   email: z

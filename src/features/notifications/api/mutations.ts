@@ -1,7 +1,9 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { notificationsApi } from './api';
-import { notificationQueryKeys } from './keys';
-import type { NotificationPreferences } from '../types';
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+
+import { notificationsApi } from "./api";
+import { notificationQueryKeys } from "./keys";
+
+import type { NotificationPreferences } from "../types";
 
 export function useMarkRead() {
   const queryClient = useQueryClient();
@@ -76,7 +78,9 @@ export function useUpdatePreferences() {
       return data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: notificationQueryKeys.preferences() });
+      queryClient.invalidateQueries({
+        queryKey: notificationQueryKeys.preferences(),
+      });
     },
   });
 }

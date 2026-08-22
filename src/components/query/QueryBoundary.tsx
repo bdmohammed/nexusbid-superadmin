@@ -1,7 +1,8 @@
-import { ReactNode } from 'react';
-import { UseQueryResult } from '@tanstack/react-query';
-import ErrorState from './ErrorState';
-import { AppError } from '@/lib/errors';
+import ErrorState from "./ErrorState";
+
+import type { AppError } from "@/lib/errors";
+import type { UseQueryResult } from "@tanstack/react-query";
+import type { ReactNode } from "react";
 
 interface QueryBoundaryProps<TData, TError = AppError> {
   query: UseQueryResult<TData, TError>;
@@ -19,11 +20,11 @@ function defaultIsEmpty(data: any): boolean {
   if (Array.isArray(data)) {
     return data.length === 0;
   }
-  if (typeof data === 'object') {
-    if ('data' in data) {
+  if (typeof data === "object") {
+    if ("data" in data) {
       return defaultIsEmpty(data.data);
     }
-    if ('success' in data && data.success === false) {
+    if ("success" in data && data.success === false) {
       return true;
     }
   }
@@ -42,12 +43,18 @@ export default function QueryBoundary<TData, TError = AppError>({
 
   // 1. Pending / Loading state
   if (isPending) {
-    return <>{skeleton || <div className="h-32 w-full animate-pulse bg-[var(--surface-secondary)] border border-[var(--border)] rounded-xl" />}</>;
+    return (
+      <>
+        {skeleton || (
+          <div className="h-32 w-full animate-pulse bg-[var(--surface-secondary)] border border-[var(--border)] rounded-xl" />
+        )}
+      </>
+    );
   }
 
   // 2. Error state
   if (isError) {
-    if (typeof error === 'function') {
+    if (typeof error === "function") {
       return <>{error(queryError, refetch)}</>;
     }
     if (error) {
@@ -55,7 +62,11 @@ export default function QueryBoundary<TData, TError = AppError>({
     }
     return (
       <ErrorState
-        error={queryError instanceof Error ? queryError : new Error(String(queryError))}
+        error={
+          queryError instanceof Error
+            ? queryError
+            : new Error(String(queryError))
+        }
         retry={refetch}
       />
     );
@@ -70,7 +81,7 @@ export default function QueryBoundary<TData, TError = AppError>({
 
   // 4. Success state with data
   if (data !== undefined) {
-    if (typeof children === 'function') {
+    if (typeof children === "function") {
       return <>{children(data)}</>;
     }
     return <>{children}</>;

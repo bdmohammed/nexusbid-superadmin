@@ -17,8 +17,8 @@ export default function CountryOption({
       onClick={onClick}
       className={`w-full text-left px-4 py-2.5 text-sm hover:bg-[var(--surface-secondary)] transition-colors ${
         isSelected
-          ? 'bg-[#003EC7]/10 text-[#003EC7] font-semibold'
-          : 'text-[var(--foreground)]'
+          ? "bg-[#003EC7]/10 text-[#003EC7] font-semibold"
+          : "text-[var(--foreground)]"
       }`}
     >
       {country}

@@ -3,8 +3,9 @@
 import { useEffect, useRef } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { useCurrentUser } from "@/features/auth/api/queries";
+
 import { authApi } from "@/features/auth/api/api";
+import { useCurrentUser } from "@/features/auth/api/queries";
 import { useAuthStore } from "@/features/auth/store/store";
 
 export default function AuthProvider({
@@ -22,8 +23,10 @@ export default function AuthProvider({
   useEffect(() => {
     if (isLoading) return;
 
-    const pathname = typeof window !== "undefined" ? window.location.pathname : "";
-    const isGuestPage = pathname.startsWith("/login") || pathname.startsWith("/register");
+    const pathname =
+      typeof window !== "undefined" ? window.location.pathname : "";
+    const isGuestPage =
+      pathname.startsWith("/login") || pathname.startsWith("/register");
 
     // Reset check flag when route changes
     if (prevPathnameRef.current !== pathname) {
@@ -50,7 +53,10 @@ export default function AuthProvider({
               document.cookie.split(";").forEach((c) => {
                 document.cookie = c
                   .replace(/^ +/, "")
-                  .replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+                  .replace(
+                    /=.*/,
+                    `=;expires=${  new Date().toUTCString()  };path=/`,
+                  );
               });
             }
             initialize(null);
@@ -63,7 +69,7 @@ export default function AuthProvider({
       }
     }
 
-    initialize(user as any ?? null);
+    initialize((user as any) ?? null);
   }, [isLoading, user, initialize, queryClient]);
 
   return children;

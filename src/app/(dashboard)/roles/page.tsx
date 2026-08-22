@@ -1,39 +1,38 @@
 //@ts-nocheck
 "use client";
 
-import React, { useEffect, useState, useMemo, Suspense } from "react";
+import React, { Suspense,useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { ShieldAlert, RefreshCw } from "lucide-react";
-import { rbacApi } from "@/features/rbac/api/api";
-import { Role } from "@/features/rbac/types";
-import { useAuthStore } from "@/features/auth/store/store";
-import { usePermissions } from "@/hooks/usePermissions";
-import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
-import {
-  useCategorizedRoles,
-  useRbacStats,
-  usePermissions as useRbacPermissions,
-  useRoleVersions,
-  useAssignableUsers,
-} from "@/features/rbac/api/queries";
-import {
-  useCreateRole,
-  useUpdateRole,
-  useDeleteRole,
-  useCreateAssignment,
-} from "@/features/rbac/api/mutations";
+import { RefreshCw,ShieldAlert } from "lucide-react";
+import { toast } from "sonner";
 
-// Subcomponents
-import { RolesStatsView } from "@/components/roles/RolesStatsView";
-import { RolesListView } from "@/components/roles/RolesListView";
+import type { Role } from "@/features/rbac/types";
 import { RoleFormDrawer } from "@/components/roles/RoleFormDrawer";
 import {
-  SubmitReviewModal,
-  RoleReviewModal,
-  RoleCompareModal,
   RoleAssignModal,
+  RoleCompareModal,
+  RoleReviewModal,
+  SubmitReviewModal,
 } from "@/components/roles/RoleGovernanceModals";
+import { RolesListView } from "@/components/roles/RolesListView";
+// Subcomponents
+import { RolesStatsView } from "@/components/roles/RolesStatsView";
+import { useAuthStore } from "@/features/auth/store/store";
+import { rbacApi } from "@/features/rbac/api/api";
+import {
+  useCreateAssignment,
+  useCreateRole,
+  useDeleteRole,
+  useUpdateRole,
+} from "@/features/rbac/api/mutations";
+import {
+  useCategorizedRoles,
+  usePermissions as useRbacPermissions,
+  useRbacStats,
+  useRoleVersions,
+} from "@/features/rbac/api/queries";
+import { usePermissions } from "@/hooks/usePermissions";
 
 function RolesPageContent() {
   const { hasPermission, isInitializing } = usePermissions();
@@ -522,7 +521,7 @@ function RolesPageContent() {
 
   const openReviewActionModal = async (role: any, reviewId?: string) => {
     let rId = reviewId;
-    const roleId = role?.id || (role as any)?.roleId;
+    const roleId = role?.id || (role)?.roleId;
 
     if (!rId && roleId) {
       try {
@@ -578,8 +577,8 @@ function RolesPageContent() {
     setReviewRoleName(role?.name || "Role Draft");
     setReviewCreatorId(
       role?.createdBy ||
-        (role as any)?.createdByUserId ||
-        (role as any)?.createdByUser?.id ||
+        (role)?.createdByUserId ||
+        (role)?.createdByUser?.id ||
         "",
     );
     setReviewDecision("APPROVED");
@@ -922,7 +921,11 @@ function RolesPageContent() {
 
 export default function RolesPage() {
   return (
-    <Suspense fallback={<div className="p-6 text-sm text-text-light">Loading Roles...</div>}>
+    <Suspense
+      fallback={
+        <div className="p-6 text-sm text-text-light">Loading Roles...</div>
+      }
+    >
       <RolesPageContent />
     </Suspense>
   );

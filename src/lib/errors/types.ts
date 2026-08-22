@@ -1,6 +1,6 @@
 // src/lib/errors/types.ts
 
-import { ErrorCode } from './constants';
+import { ErrorCode } from "./constants";
 
 export interface ErrorContext {
   pathname?: string;

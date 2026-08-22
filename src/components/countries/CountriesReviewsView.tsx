@@ -2,17 +2,11 @@
 
 import React, { useEffect, useState } from "react";
 import {
-  FileText,
-  Clock,
-  User,
-  CheckCircle2,
-  XCircle,
-  AlertCircle,
-  Filter,
   ChevronRight,
+  FileText,
   RefreshCw,
-  Globe,
 } from "lucide-react";
+
 import { apiClient } from "@/lib/http";
 
 interface TicketItem {
@@ -60,7 +54,7 @@ export const CountriesReviewsView: React.FC<ReviewsProps> = ({
     setLoading(true);
     try {
       const res = await apiClient.get<any>(
-        `/countries/change-requests?filter=${filter}`
+        `/countries/change-requests?filter=${filter}`,
       );
       if (res.data?.success) {
         setTickets(res.data.data);
@@ -115,7 +109,9 @@ export const CountriesReviewsView: React.FC<ReviewsProps> = ({
       ) : tickets.length === 0 ? (
         <div className="bg-surface border border-border rounded-2xl p-12 text-center text-text-light">
           <FileText className="w-10 h-10 mx-auto mb-3 opacity-40" />
-          <p className="text-sm font-medium">No change request tickets found in this queue.</p>
+          <p className="text-sm font-medium">
+            No change request tickets found in this queue.
+          </p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -135,8 +131,8 @@ export const CountriesReviewsView: React.FC<ReviewsProps> = ({
                       ticket.status === "APPROVED"
                         ? "bg-emerald-500/10 text-emerald-500 border border-emerald-500/30"
                         : ticket.status === "REJECTED"
-                        ? "bg-rose-500/10 text-rose-500 border border-rose-500/30"
-                        : "bg-amber-500/10 text-amber-500 border border-amber-500/30"
+                          ? "bg-rose-500/10 text-rose-500 border border-rose-500/30"
+                          : "bg-amber-500/10 text-amber-500 border border-amber-500/30"
                     }`}
                   >
                     {ticket.status}
@@ -144,7 +140,8 @@ export const CountriesReviewsView: React.FC<ReviewsProps> = ({
                 </div>
 
                 <h4 className="text-base font-bold text-text group-hover:text-primary transition-colors">
-                  {ticket.countryName} {ticket.stateName ? `→ ${ticket.stateName}` : ""}
+                  {ticket.countryName}{" "}
+                  {ticket.stateName ? `→ ${ticket.stateName}` : ""}
                 </h4>
 
                 <div className="flex items-center gap-2 mt-2">
@@ -168,7 +165,12 @@ export const CountriesReviewsView: React.FC<ReviewsProps> = ({
               </div>
 
               <div className="flex items-center justify-between mt-4 pt-3 border-t border-border text-xs text-text-light">
-                <span className="truncate">By: <strong className="text-text font-semibold">{ticket.requestedBy?.fullName}</strong></span>
+                <span className="truncate">
+                  By:{" "}
+                  <strong className="text-text font-semibold">
+                    {ticket.requestedBy?.fullName}
+                  </strong>
+                </span>
                 <span className="flex items-center gap-1 text-primary font-medium shrink-0">
                   Inspect Ticket <ChevronRight className="w-3.5 h-3.5" />
                 </span>

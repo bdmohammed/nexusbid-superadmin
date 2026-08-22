@@ -1,20 +1,22 @@
 "use client";
 
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useEffect, useMemo,useState } from "react";
 import {
-  Shield,
   AlertCircle,
+  CheckCircle2,
+  Info,
   RefreshCw,
   Send,
-  CheckCircle2,
+  Shield,
   XCircle,
-  Info,
 } from "lucide-react";
+import ReactSelect from "react-select";
 import { toast } from "sonner";
-import ReactSelect, { SingleValue } from "react-select";
-import { apiClient } from "@/lib/http";
-import Modal from "@/components/ui/Modal";
+
+import type { SingleValue } from "react-select";
 import Button from "@/components/ui/Button";
+import Modal from "@/components/ui/Modal";
+import { apiClient } from "@/lib/http";
 import { useThemeStore } from "@/store/theme.store";
 
 interface Reviewer {
@@ -54,12 +56,14 @@ export const CreateChangeRequestModal: React.FC<ModalProps> = ({
   countryName = "",
   stateName = "",
 }) => {
-  const [targetType, setTargetType] =
-    useState<"COUNTRY" | "STATE">(initialTargetType);
+  const [targetType, setTargetType] = useState<"COUNTRY" | "STATE">(
+    initialTargetType,
+  );
   const [countryId, setCountryId] = useState(initialCountryId);
   const [stateId, setStateId] = useState(initialStateId);
-  const [action, setAction] =
-    useState<"ACTIVATE" | "DEACTIVATE">(initialAction);
+  const [action, setAction] = useState<"ACTIVATE" | "DEACTIVATE">(
+    initialAction,
+  );
   const [reason, setReason] = useState("");
   const [reviewerId, setReviewerId] = useState("");
   const [reviewers, setReviewers] = useState<Reviewer[]>([]);
@@ -172,7 +176,7 @@ export const CreateChangeRequestModal: React.FC<ModalProps> = ({
         fontSize: "0.75rem",
       }),
     }),
-    [isDark]
+    [isDark],
   );
 
   const fetchEligibleReviewers = async () => {
@@ -181,9 +185,7 @@ export const CreateChangeRequestModal: React.FC<ModalProps> = ({
       const res = await apiClient.get<any>("/countries/eligible-reviewers");
       if (res.data?.success) {
         setReviewers(res.data.data);
-        const autoSelect = res.data.data.find(
-          (r: Reviewer) => r.canBeAssigned
-        );
+        const autoSelect = res.data.data.find((r: Reviewer) => r.canBeAssigned);
         if (autoSelect) setReviewerId(autoSelect.id);
       }
     } catch (err: any) {
@@ -197,7 +199,7 @@ export const CreateChangeRequestModal: React.FC<ModalProps> = ({
     e.preventDefault();
     if (!reason || reason.trim().length < 10) {
       setError(
-        "Please provide a business justification (at least 10 characters)."
+        "Please provide a business justification (at least 10 characters).",
       );
       return;
     }
@@ -215,24 +217,21 @@ export const CreateChangeRequestModal: React.FC<ModalProps> = ({
           action,
           reason,
           cascadePolicy,
-        }
+        },
       );
 
       if (!createRes.data?.success) {
         throw new Error(
-          createRes.data?.message || "Failed to create change request ticket"
+          createRes.data?.message || "Failed to create change request ticket",
         );
       }
 
       const requestId = createRes.data.data.id;
 
       if (reviewerId) {
-        await apiClient.post(
-          `/countries/change-requests/${requestId}/assign`,
-          {
-            reviewerId,
-          }
-        );
+        await apiClient.post(`/countries/change-requests/${requestId}/assign`, {
+          reviewerId,
+        });
       }
 
       toast.success("Governance change request submitted successfully.");
@@ -241,8 +240,8 @@ export const CreateChangeRequestModal: React.FC<ModalProps> = ({
     } catch (err: any) {
       setError(
         err.response?.data?.message ||
-        err.message ||
-        "An error occurred during submission."
+          err.message ||
+          "An error occurred during submission.",
       );
     } finally {
       setSubmitting(false);

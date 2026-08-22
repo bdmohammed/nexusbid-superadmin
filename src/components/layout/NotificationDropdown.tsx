@@ -1,14 +1,26 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useEffect, useRef,useState } from "react";
 import Link from "next/link";
 import { useQueryClient } from "@tanstack/react-query";
-import { Bell, ShieldAlert, Check, Settings, Eye, Info, AlertTriangle } from "lucide-react";
 import {
-  useNotifications, useMarkAllRead, useNotificationStats, notificationQueryKeys
-} from "@/features/notifications";
+  AlertTriangle,
+  Bell,
+  Check,
+  Eye,
+  Info,
+  Settings,
+  ShieldAlert,
+} from "lucide-react";
+
 import type { Notification } from "@/types";
 import { clientEnv } from "@/env/client";
+import {
+  notificationQueryKeys,
+  useMarkAllRead,
+  useNotifications,
+  useNotificationStats,
+} from "@/features/notifications";
 
 export default function NotificationDropdown() {
   const queryClient = useQueryClient();
@@ -23,7 +35,8 @@ export default function NotificationDropdown() {
   });
 
   const markAllReadMut = useMarkAllRead();
-  const unreadNotifications = (listData?.notifications ?? []) as unknown as Notification[];
+  const unreadNotifications = (listData?.notifications ??
+    []) as unknown as Notification[];
 
   // Live SSE listener for real-time unread updates
   useEffect(() => {
@@ -46,7 +59,10 @@ export default function NotificationDropdown() {
   // Click outside to close dropdown
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         setIsOpen(false);
       }
     };
@@ -82,7 +98,6 @@ export default function NotificationDropdown() {
       {/* Dropdown Menu */}
       {isOpen && (
         <div className="absolute right-0 mt-2 z-50 w-80 sm:w-96 rounded-2xl border border-border bg-surface shadow-2xl p-4 transition-all duration-200">
-
           {/* Header */}
           <div className="flex items-center justify-between border-b border-border pb-3">
             <h4 className="text-sm font-bold text-text flex items-center gap-1.5">
@@ -104,16 +119,26 @@ export default function NotificationDropdown() {
           {/* Severity Stats Grid */}
           <div className="grid grid-cols-3 gap-2 py-2.5 my-2 rounded-xl bg-sidebar-hover/40 text-center text-xs">
             <div>
-              <p className="font-semibold text-red-500">{stats?.critical ?? 0}</p>
-              <p className="text-[10px] text-text-light font-medium uppercase tracking-wider">Critical</p>
+              <p className="font-semibold text-red-500">
+                {stats?.critical ?? 0}
+              </p>
+              <p className="text-[10px] text-text-light font-medium uppercase tracking-wider">
+                Critical
+              </p>
             </div>
             <div className="border-x border-border">
-              <p className="font-semibold text-orange-500">{stats?.warning ?? 0}</p>
-              <p className="text-[10px] text-text-light font-medium uppercase tracking-wider">Warnings</p>
+              <p className="font-semibold text-orange-500">
+                {stats?.warning ?? 0}
+              </p>
+              <p className="text-[10px] text-text-light font-medium uppercase tracking-wider">
+                Warnings
+              </p>
             </div>
             <div>
               <p className="font-semibold text-green-500">{stats?.info ?? 0}</p>
-              <p className="text-[10px] text-text-light font-medium uppercase tracking-wider">Info</p>
+              <p className="text-[10px] text-text-light font-medium uppercase tracking-wider">
+                Info
+              </p>
             </div>
           </div>
 
@@ -144,7 +169,10 @@ export default function NotificationDropdown() {
                         {notif.message}
                       </p>
                       <p className="text-[9px] text-text-light/80 mt-1">
-                        {new Date(notif.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        {new Date(notif.createdAt).toLocaleTimeString([], {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
                       </p>
                     </div>
                   </Link>
@@ -172,7 +200,6 @@ export default function NotificationDropdown() {
               View All Notifications
             </Link>
           </div>
-
         </div>
       )}
     </div>

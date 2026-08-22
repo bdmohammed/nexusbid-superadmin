@@ -50,8 +50,8 @@ export const WidgetCard: React.FC<WidgetCardProps> = ({
     item.w === 1
       ? "md:col-span-2"
       : item.w === 2
-      ? "md:col-span-3"
-      : "md:col-span-6";
+        ? "md:col-span-3"
+        : "md:col-span-6";
 
   return (
     <div

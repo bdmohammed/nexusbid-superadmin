@@ -1,6 +1,7 @@
 "use client";
 
 import { Search } from "lucide-react";
+
 import type { ChangeEvent } from "react";
 
 export interface SearchInputProps {

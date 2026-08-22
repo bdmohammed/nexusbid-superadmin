@@ -1,5 +1,4 @@
-import { apiClient } from "@/lib/http";
-import {
+import type {
   AuditLog,
   CreateAssignmentDto,
   CreateRoleDto,
@@ -8,7 +7,8 @@ import {
   UpdateRoleDto,
   UserRoleAssignment,
 } from "../types";
-import { ApiResponse } from "@/types";
+import type { ApiResponse } from "@/types";
+import { apiClient } from "@/lib/http";
 
 export const rbacApi = {
   getRoles() {

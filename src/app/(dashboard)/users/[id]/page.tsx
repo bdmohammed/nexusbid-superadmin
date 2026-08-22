@@ -1,39 +1,38 @@
 //@ts-nocheck
 "use client";
 
-import { useEffect, useState, use } from "react";
-import { useRouter, useParams } from "next/navigation";
+import {useEffect, useState } from "react";
+import { useParams,useRouter } from "next/navigation";
 import {
-  ArrowLeft,
-  User,
-  Shield,
-  Key,
-  HardDrive,
-  CreditCard,
-  BookOpen,
   Activity,
-  Clock,
-  ShieldAlert,
+  ArrowLeft,
   Ban,
-  UserCheck,
-  RotateCw,
-  PlusCircle,
-  Trash2,
-  LogOut,
+  BookOpen,
   CheckCircle,
+  Clock,
+  CreditCard,
+  HardDrive,
+  Key,
+  LogOut,
+  PlusCircle,
+  Shield,
+  ShieldAlert,
   Smartphone,
+  User,
+  UserCheck,
 } from "lucide-react";
+
+import { UserApprovalModal } from "@/components/users/UserApprovalModal";
 import { authApi } from "@/features/auth/api/api";
 import {
-  useBlockUser,
-  useSuspendUser,
   useActivateUser,
-  useForcePasswordReset,
-  useRevokeUserSession,
-  useRevokeAllUserSessions,
+  useBlockUser,
   useCreateUserNote,
+  useForcePasswordReset,
+  useRevokeAllUserSessions,
+  useRevokeUserSession,
+  useSuspendUser,
 } from "@/features/auth/api/mutations";
-import { UserApprovalModal } from "@/components/users/UserApprovalModal";
 
 interface CountryItem {
   id?: number | string;

@@ -1,6 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { AppError, ErrorCode } from "@/lib/errors";
 import { analyticsApi } from "./api";
 import { analyticsQueryKeys } from "./keys";
 
@@ -10,6 +9,8 @@ import type {
   RequestExportInput,
   SaveDashboardLayoutInput,
 } from "../types";
+import type { ErrorCode } from "@/lib/errors";
+import { AppError } from "@/lib/errors";
 
 // ─── Query Hooks ─────────────────────────────────────────────────────────────
 
@@ -23,7 +24,7 @@ export function useAnalyticsOverview(query?: AnalyticsQuery) {
         throw new AppError(
           data.message || "Failed to fetch overview stats",
           status,
-          data.error as ErrorCode
+          data.error as ErrorCode,
         );
       }
 
@@ -42,7 +43,7 @@ export function useAnalyticsTenders(query?: AnalyticsQuery) {
         throw new AppError(
           data.message || "Failed to fetch tender analytics",
           status,
-          data.error as ErrorCode
+          data.error as ErrorCode,
         );
       }
 
@@ -61,7 +62,7 @@ export function useAnalyticsUsers(query?: AnalyticsQuery) {
         throw new AppError(
           data.message || "Failed to fetch user metrics",
           status,
-          data.error as ErrorCode
+          data.error as ErrorCode,
         );
       }
 
@@ -80,7 +81,7 @@ export function useAnalyticsRevenue(query?: AnalyticsQuery) {
         throw new AppError(
           data.message || "Failed to fetch revenue metrics",
           status,
-          data.error as ErrorCode
+          data.error as ErrorCode,
         );
       }
 
@@ -99,7 +100,7 @@ export function useAnalyticsCategories() {
         throw new AppError(
           data.message || "Failed to fetch category metrics",
           status,
-          data.error as ErrorCode
+          data.error as ErrorCode,
         );
       }
 
@@ -118,7 +119,7 @@ export function useAnalyticsSystem() {
         throw new AppError(
           data.message || "Failed to fetch system metrics",
           status,
-          data.error as ErrorCode
+          data.error as ErrorCode,
         );
       }
 
@@ -137,7 +138,7 @@ export function useAnalyticsDashboard() {
         throw new AppError(
           data.message || "Failed to fetch dashboard layout",
           status,
-          data.error as ErrorCode
+          data.error as ErrorCode,
         );
       }
 
@@ -156,7 +157,7 @@ export function useAnalyticsAlerts() {
         throw new AppError(
           data.message || "Failed to fetch active alerts list",
           status,
-          data.error as ErrorCode
+          data.error as ErrorCode,
         );
       }
 
@@ -175,7 +176,7 @@ export function useAnalyticsExportJobs() {
         throw new AppError(
           data.message || "Failed to fetch export jobs list",
           status,
-          data.error as ErrorCode
+          data.error as ErrorCode,
         );
       }
 
@@ -194,7 +195,7 @@ export function useAnalyticsReportSchedules() {
         throw new AppError(
           data.message || "Failed to list report schedules",
           status,
-          data.error as ErrorCode
+          data.error as ErrorCode,
         );
       }
 
@@ -213,7 +214,7 @@ export function useAnalyticsUserGrowth(query?: AnalyticsQuery) {
         throw new AppError(
           data.message || "Failed to fetch user growth data",
           status,
-          data.error as ErrorCode
+          data.error as ErrorCode,
         );
       }
 
@@ -232,7 +233,7 @@ export function useAnalyticsRevenueLegacy(query?: AnalyticsQuery) {
         throw new AppError(
           data.message || "Failed to fetch legacy revenue data",
           status,
-          data.error as ErrorCode
+          data.error as ErrorCode,
         );
       }
 
@@ -251,7 +252,7 @@ export function useAnalyticsTopDownloads() {
         throw new AppError(
           data.message || "Failed to fetch top downloads",
           status,
-          data.error as ErrorCode
+          data.error as ErrorCode,
         );
       }
 
@@ -276,7 +277,9 @@ export function useSaveAnalyticsDashboard() {
       return data.data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: analyticsQueryKeys.dashboard() });
+      queryClient.invalidateQueries({
+        queryKey: analyticsQueryKeys.dashboard(),
+      });
     },
   });
 }
@@ -314,7 +317,9 @@ export function useRequestDataExport() {
       return data.data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: analyticsQueryKeys.exportJobs() });
+      queryClient.invalidateQueries({
+        queryKey: analyticsQueryKeys.exportJobs(),
+      });
     },
   });
 }
@@ -333,7 +338,9 @@ export function useCreateReportSchedule() {
       return data.data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: analyticsQueryKeys.reportSchedules() });
+      queryClient.invalidateQueries({
+        queryKey: analyticsQueryKeys.reportSchedules(),
+      });
     },
   });
 }

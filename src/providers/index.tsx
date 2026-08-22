@@ -1,32 +1,31 @@
-'use client';
+"use client";
 
-import { ReactNode } from 'react';
-import { Toaster } from 'sonner';
+import { Toaster } from "sonner";
 
-import QueryProvider from './QueryProvider';
-import AuthProvider from './AuthProvider';
-import ThemeProvider from './ThemeProvider';
+import AuthProvider from "./AuthProvider";
+import QueryProvider from "./QueryProvider";
+import ThemeProvider from "./ThemeProvider";
+
+import type { ReactNode } from "react";
 
 interface ProvidersProps {
-    children: ReactNode;
+  children: ReactNode;
 }
 
-export default function Providers({
-    children,
-}: ProvidersProps) {
-    return (
-        <QueryProvider>
-            <ThemeProvider>
-                <AuthProvider>
-                    {children}
-                    <Toaster
-                        position="top-right"
-                        richColors
-                        closeButton
-                        duration={4000}
-                    />
-                </AuthProvider>
-            </ThemeProvider>
-        </QueryProvider>
-    );
+export default function Providers({ children }: ProvidersProps) {
+  return (
+    <QueryProvider>
+      <ThemeProvider>
+        <AuthProvider>
+          {children}
+          <Toaster
+            position="top-right"
+            richColors
+            closeButton
+            duration={4000}
+          />
+        </AuthProvider>
+      </ThemeProvider>
+    </QueryProvider>
+  );
 }

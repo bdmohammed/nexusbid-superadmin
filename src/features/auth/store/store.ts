@@ -1,45 +1,46 @@
-import { User } from '@/types';
-import { create } from 'zustand';
+import { create } from "zustand";
+
+import type { User } from "@/types";
 
 interface AuthState {
-    user: User | null;
-    isAuthenticated: boolean;
-    isInitializing: boolean;
+  user: User | null;
+  isAuthenticated: boolean;
+  isInitializing: boolean;
 }
 
 interface AuthActions {
-    setAuthenticated: (value: boolean) => void;
-    initialize: (user: User | null) => void;
-    setUser: (user: User) => void;
-    logout: () => void;
+  setAuthenticated: (value: boolean) => void;
+  initialize: (user: User | null) => void;
+  setUser: (user: User) => void;
+  logout: () => void;
 }
 
 export const useAuthStore = create<AuthState & AuthActions>((set) => ({
-    user: null,
-    isAuthenticated: false,
-    isInitializing: true,
+  user: null,
+  isAuthenticated: false,
+  isInitializing: true,
 
-    setAuthenticated: (value) =>
-        set({
-            isAuthenticated: value,
-        }),
+  setAuthenticated: (value) =>
+    set({
+      isAuthenticated: value,
+    }),
 
-    initialize: (user) =>
-        set({
-            user,
-            isAuthenticated: !!user,
-            isInitializing: false,
-        }),
-    setUser: (user) =>
-        set({
-            user,
-            isAuthenticated: !!user,
-        }),
+  initialize: (user) =>
+    set({
+      user,
+      isAuthenticated: !!user,
+      isInitializing: false,
+    }),
+  setUser: (user) =>
+    set({
+      user,
+      isAuthenticated: !!user,
+    }),
 
-    logout: () =>
-        set({
-            user: null,
-            isAuthenticated: false,
-            isInitializing: false,
-        }),
+  logout: () =>
+    set({
+      user: null,
+      isAuthenticated: false,
+      isInitializing: false,
+    }),
 }));

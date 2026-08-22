@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+
 import { useThemeStore } from "@/store/theme.store";
 
 export default function ThemeProvider({

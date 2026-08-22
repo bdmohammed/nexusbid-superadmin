@@ -1,22 +1,23 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useMemo,useState } from "react";
+import Link from "next/link";
 import {
-  LayoutGrid,
-  Table,
-  Search,
   Copy,
   EyeOff,
-  RefreshCw,
-  Sparkles,
   Globe,
   Layers,
+  LayoutGrid,
+  RefreshCw,
+  Search,
+  Sparkles,
+  Table,
   Users,
 } from "lucide-react";
-import Link from "next/link";
-import Button from "@/components/ui/Button";
-import StatusBadge from "@/components/common/StatusBadge";
+
 import type { SubscriptionPlan } from "@/types";
+import StatusBadge from "@/components/common/StatusBadge";
+import Button from "@/components/ui/Button";
 
 interface PricingPlansProps {
   plans: SubscriptionPlan[];
@@ -24,31 +25,43 @@ interface PricingPlansProps {
   onRefresh?: () => void;
 }
 
-export default function PricingPlans({ plans, loading, onRefresh }: PricingPlansProps) {
+export default function PricingPlans({
+  plans,
+  loading,
+  onRefresh,
+}: PricingPlansProps) {
   const [viewMode, setViewMode] = useState<"cards" | "table">("cards");
   const [search, setSearch] = useState("");
-  const [statusFilter, setStatusFilter] = useState<"ALL" | "ACTIVE" | "ARCHIVED">("ALL");
+  const [statusFilter, setStatusFilter] = useState<
+    "ALL" | "ACTIVE" | "ARCHIVED"
+  >("ALL");
 
   const mappedPlans = useMemo(() => {
     return plans.map((plan) => {
       const version = plan.activeVersion;
       return {
         id: plan.id,
-        referenceNo: plan.referenceNo || `PLN-${plan.id.slice(0, 4).toUpperCase()}`,
+        referenceNo:
+          plan.referenceNo || `PLN-${plan.id.slice(0, 4).toUpperCase()}`,
         name: version?.name || "Unnamed Plan",
-        subtitle: version?.subtitle || version?.description || "No description provided.",
+        subtitle:
+          version?.subtitle ||
+          version?.description ||
+          "No description provided.",
         price: `$${((version?.priceCents || 0) / 100).toFixed(0)}`,
         duration:
           version?.durationDays === 30
             ? "month"
             : version?.durationDays === 365
-            ? "year"
-            : `${version?.durationDays || 30} days`,
+              ? "year"
+              : `${version?.durationDays || 30} days`,
         isRecurring: version?.isRecurring ?? true,
         featured: version?.isFeatured || false,
         badge: version?.badge || null,
         countries: version?.targetCountry || "Global",
-        categories: version?.targetCategoryId ? "Category-Specific" : "All Categories",
+        categories: version?.targetCategoryId
+          ? "Category-Specific"
+          : "All Categories",
         users: 0,
         status: plan.status || "ACTIVE",
         version: version?.version || 1,
@@ -65,7 +78,8 @@ export default function PricingPlans({ plans, loading, onRefresh }: PricingPlans
         plan.countries.toLowerCase().includes(search.toLowerCase()) ||
         plan.categories.toLowerCase().includes(search.toLowerCase());
 
-      const matchesStatus = statusFilter === "ALL" || plan.status === statusFilter;
+      const matchesStatus =
+        statusFilter === "ALL" || plan.status === statusFilter;
 
       return matchesSearch && matchesStatus;
     });
@@ -108,13 +122,16 @@ export default function PricingPlans({ plans, loading, onRefresh }: PricingPlans
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h2 className="text-lg font-extrabold tracking-tight text-text">Subscription Tiers</h2>
+              <h2 className="text-lg font-extrabold tracking-tight text-text">
+                Subscription Tiers
+              </h2>
               <span className="rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-bold text-primary">
                 {filteredPlans.length} Plans
               </span>
             </div>
             <p className="text-xs text-text-light mt-0.5">
-              Overview of active billing tiers, target scopes, and pricing packages.
+              Overview of active billing tiers, target scopes, and pricing
+              packages.
             </p>
           </div>
         </div>
@@ -197,7 +214,9 @@ export default function PricingPlans({ plans, loading, onRefresh }: PricingPlans
       {filteredPlans.length === 0 && (
         <div className="py-16 text-center rounded-2xl border border-dashed border-border bg-surface/50">
           <Sparkles className="w-8 h-8 mx-auto text-text-light opacity-50 mb-2" />
-          <h3 className="text-sm font-bold text-text">No subscription plans found</h3>
+          <h3 className="text-sm font-bold text-text">
+            No subscription plans found
+          </h3>
           <p className="text-xs text-text-light mt-1">
             Try adjusting your search keywords or status filters.
           </p>
@@ -211,7 +230,9 @@ export default function PricingPlans({ plans, loading, onRefresh }: PricingPlans
             <div
               key={plan.id}
               className={`relative flex flex-col justify-between rounded-2xl border bg-surface p-6 shadow-xs transition-all duration-200 hover:shadow-md hover:border-primary/50 ${
-                plan.featured ? "border-primary ring-2 ring-primary/20" : "border-border"
+                plan.featured
+                  ? "border-primary ring-2 ring-primary/20"
+                  : "border-border"
               }`}
             >
               {/* Featured Badge */}
@@ -262,7 +283,9 @@ export default function PricingPlans({ plans, loading, onRefresh }: PricingPlans
                       <Globe className="w-3.5 h-3.5" />
                       Scope:
                     </span>
-                    <span className="font-semibold text-xs">{plan.countries}</span>
+                    <span className="font-semibold text-xs">
+                      {plan.countries}
+                    </span>
                   </div>
 
                   <div className="flex justify-between items-center">
@@ -280,7 +303,9 @@ export default function PricingPlans({ plans, loading, onRefresh }: PricingPlans
                       <Users className="w-3.5 h-3.5" />
                       Status:
                     </span>
-                    <StatusBadge status={plan.status === "ACTIVE" ? "Active" : "Inactive"} />
+                    <StatusBadge
+                      status={plan.status === "ACTIVE" ? "Active" : "Inactive"}
+                    />
                   </div>
                 </div>
               </div>
@@ -288,7 +313,11 @@ export default function PricingPlans({ plans, loading, onRefresh }: PricingPlans
               {/* Action Buttons */}
               <div className="mt-6 flex items-center gap-2 border-t border-border pt-4">
                 <Link href={`/subscriptions/${plan.id}`} className="flex-1">
-                  <Button variant="outline" size="sm" className="w-full text-xs font-semibold py-1.5">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="w-full text-xs font-semibold py-1.5"
+                  >
                     Workspace
                   </Button>
                 </Link>
@@ -328,9 +357,15 @@ export default function PricingPlans({ plans, loading, onRefresh }: PricingPlans
             </thead>
             <tbody className="divide-y divide-border">
               {filteredPlans.map((plan) => (
-                <tr key={plan.id} className="hover:bg-surface-secondary/50 transition">
+                <tr
+                  key={plan.id}
+                  className="hover:bg-surface-secondary/50 transition"
+                >
                   <td className="px-6 py-4 font-semibold text-xs">
-                    <Link href={`/subscriptions/${plan.id}`} className="hover:text-primary transition font-bold">
+                    <Link
+                      href={`/subscriptions/${plan.id}`}
+                      className="hover:text-primary transition font-bold"
+                    >
                       {plan.name}
                     </Link>
                     <p className="text-[11px] text-text-light font-normal line-clamp-1">
@@ -346,17 +381,25 @@ export default function PricingPlans({ plans, loading, onRefresh }: PricingPlans
                   <td className="px-6 py-4 font-bold text-xs">
                     {plan.price}/{plan.duration}
                   </td>
-                  <td className="px-6 py-4 text-xs font-medium">v{plan.version}</td>
+                  <td className="px-6 py-4 text-xs font-medium">
+                    v{plan.version}
+                  </td>
                   <td className="px-6 py-4 text-xs text-text-light font-medium">
                     {plan.countries} • {plan.categories}
                   </td>
                   <td className="px-6 py-4">
-                    <StatusBadge status={plan.status === "ACTIVE" ? "Active" : "Inactive"} />
+                    <StatusBadge
+                      status={plan.status === "ACTIVE" ? "Active" : "Inactive"}
+                    />
                   </td>
                   <td className="px-6 py-4 text-right">
                     <div className="flex justify-end gap-1.5">
                       <Link href={`/subscriptions/${plan.id}`}>
-                        <Button variant="outline" size="sm" className="text-xs py-1 px-2.5 h-7">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="text-xs py-1 px-2.5 h-7"
+                        >
                           Workspace
                         </Button>
                       </Link>

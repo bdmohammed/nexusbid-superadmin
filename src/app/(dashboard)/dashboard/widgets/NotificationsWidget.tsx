@@ -6,8 +6,14 @@ export default function NotificationsWidget() {
   const notifications = [
     { text: "Security Role 'Auditor' requires approval", type: "ROLE" },
     { text: "Tender ID #1105 closing deadline is tomorrow", type: "TENDER" },
-    { text: "Tenant subscription 'Standard' expires in 3 days", type: "SUBSCRIPTION" },
-    { text: "Payment transaction failure reported for Tenant #88", type: "PAYMENT" },
+    {
+      text: "Tenant subscription 'Standard' expires in 3 days",
+      type: "SUBSCRIPTION",
+    },
+    {
+      text: "Payment transaction failure reported for Tenant #88",
+      type: "PAYMENT",
+    },
   ];
 
   return (
@@ -21,10 +27,15 @@ export default function NotificationsWidget() {
 
       <div className="space-y-3">
         {notifications.map((notif, index) => (
-          <div key={index} className="flex items-start gap-2.5 p-3 rounded-xl bg-background border border-border/50 text-xs">
+          <div
+            key={index}
+            className="flex items-start gap-2.5 p-3 rounded-xl bg-background border border-border/50 text-xs"
+          >
             <Info className="h-4 w-4 text-primary shrink-0 mt-0.5" />
             <div>
-              <span className="font-bold text-[9px] text-primary block uppercase tracking-wider mb-0.5">{notif.type}</span>
+              <span className="font-bold text-[9px] text-primary block uppercase tracking-wider mb-0.5">
+                {notif.type}
+              </span>
               <p className="text-text leading-normal">{notif.text}</p>
             </div>
           </div>

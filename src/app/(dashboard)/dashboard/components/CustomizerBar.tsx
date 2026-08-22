@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Undo, Check } from "lucide-react";
+import { Check,Undo } from "lucide-react";
 
 interface CustomizerBarProps {
   onResetLayout: () => void;
@@ -17,7 +17,8 @@ export const CustomizerBar: React.FC<CustomizerBarProps> = ({
   return (
     <div className="p-4 rounded-2xl border border-dashed border-primary/45 bg-primary/5 flex items-center justify-between gap-4 animate-fade-in">
       <div className="text-xs font-semibold text-text-light">
-        Customizer mode active: drag/order widgets, adjust width sizes, or hide columns.
+        Customizer mode active: drag/order widgets, adjust width sizes, or hide
+        columns.
       </div>
       <div className="flex items-center gap-3">
         <button

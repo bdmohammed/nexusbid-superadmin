@@ -1,10 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { EyeOff, AlertTriangle } from "lucide-react";
+import { AlertTriangle,EyeOff } from "lucide-react";
 
 export default function ImpersonationBanner() {
-  const [impersonated, setImpersonated] = useState<{ name: string; email: string } | null>(null);
+  const [impersonated, setImpersonated] = useState<{
+    name: string;
+    email: string;
+  } | null>(null);
 
   useEffect(() => {
     // Check localStorage for active impersonation session
@@ -13,7 +16,7 @@ export default function ImpersonationBanner() {
       if (stored) {
         try {
           const user = JSON.parse(stored);
-          if (user && user.name) {
+          if (user?.name) {
             setImpersonated({ name: user.name, email: user.email });
           }
         } catch {
@@ -40,10 +43,10 @@ export default function ImpersonationBanner() {
   const handleEndSession = () => {
     localStorage.removeItem("impersonatedUser");
     localStorage.removeItem("impersonatedToken");
-    
+
     // Dispatch event to notify listeners
     window.dispatchEvent(new Event("impersonationChange"));
-    
+
     // Optionally redirect back or refresh the page to update the context
     window.location.reload();
   };
@@ -55,7 +58,9 @@ export default function ImpersonationBanner() {
       <div className="flex items-center gap-2 mx-auto">
         <AlertTriangle size={16} className="text-amber-100 animate-pulse" />
         <span className="font-medium">
-          You are impersonating <strong className="text-white underline">{impersonated.name}</strong> ({impersonated.email})
+          You are impersonating{" "}
+          <strong className="text-white underline">{impersonated.name}</strong>{" "}
+          ({impersonated.email})
         </span>
         <span className="hidden md:inline text-xs text-amber-100 ml-1">
           (Actions perform as this user, recorded in audit log)

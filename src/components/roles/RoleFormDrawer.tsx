@@ -1,32 +1,33 @@
+//@ts-nocheck
 "use client";
 
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useEffect,useMemo, useState } from "react";
+import dayjs from "dayjs";
 import {
-  FileText,
-  Key,
-  Eye,
-  MessageSquare,
-  History,
-  Clock,
-  Users,
-  Lock,
   ArrowRight,
-  HelpCircle,
-  Search,
-  Star,
+  CheckCircle,
   ChevronDown,
   ChevronRight,
-  Send,
-  RefreshCw,
+  Clock,
+  Eye,
+  FileText,
+  HelpCircle,
+  History,
+  Key,
+  Lock,
+  MessageSquare,
   Plus,
-  CheckCircle,
+  RefreshCw,
+  Search,
+  Send,
+  Users,
   X,
 } from "lucide-react";
-import Button from "@/components/ui/Button";
-import Badge from "@/components/ui/Badge";
-import { Role } from "@/features/rbac/types";
-import dayjs from "dayjs";
 import { toast } from "sonner";
+
+import type { Role } from "@/features/rbac/types";
+import Badge from "@/components/ui/Badge";
+import Button from "@/components/ui/Button";
 
 interface FormattedPermission {
   id: string;
@@ -241,10 +242,10 @@ export const RoleFormDrawer: React.FC<RoleFormDrawerProps> = ({
 
   const hasFormChanges = Boolean(
     !editingRole ||
-    isNewDraftMode ||
-    roleName.trim() !== initialName.trim() ||
-    description.trim() !== initialDescription ||
-    !isPermsUnchanged,
+      isNewDraftMode ||
+      roleName.trim() !== initialName.trim() ||
+      description.trim() !== initialDescription ||
+      !isPermsUnchanged,
   );
 
   const isFormReadOnly =

@@ -13,7 +13,8 @@ export const lookupQueryKeys = {
 
   hierarchy: () => [...lookupQueryKeys.all, "hierarchy"] as const,
   stats: () => [...lookupQueryKeys.all, "stats"] as const,
-  eligibleReviewers: () => [...lookupQueryKeys.all, "eligible-reviewers"] as const,
+  eligibleReviewers: () =>
+    [...lookupQueryKeys.all, "eligible-reviewers"] as const,
 
   dependencyMatrix: (query?: DependencyMatrixQueryInput) =>
     [...lookupQueryKeys.all, "dependency-matrix", query] as const,

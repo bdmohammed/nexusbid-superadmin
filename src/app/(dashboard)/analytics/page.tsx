@@ -1,45 +1,43 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, {useState } from "react";
 import {
+  AlertTriangle,
   BarChart3,
+  CheckCircle,
+  Clock,
+  DollarSign,
+  Download,
+  FileText,
+  Filter,
+  Grid,
+  Layers,
+  Mail,
+  MapPin,
+  PieChart,
+  Settings,
+  Sparkles,
   TrendingUp,
   Users,
-  FileText,
-  CheckCircle,
-  DollarSign,
-  Layers,
-  MapPin,
-  Clock,
-  Download,
-  Calendar,
-  Settings,
-  AlertTriangle,
-  Sparkles,
-  PieChart,
-  Grid,
-  Filter,
-  RefreshCw,
-  Mail,
   Zap,
 } from "lucide-react";
-import { usePermissions } from "@/hooks/usePermissions";
-import PremiumFeatureUpsell from "@/components/common/PremiumFeatureUpsell";
-import Card from "@/components/ui/Card";
 import {
-  AreaChart,
   Area,
-  BarChart,
+  AreaChart,
   Bar,
+  BarChart,
+  Legend,
+  Line,
+  LineChart,
+  ResponsiveContainer,
+  Tooltip,
   XAxis,
   YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  Legend,
-  LineChart,
-  Line,
 } from "recharts";
+
+import PremiumFeatureUpsell from "@/components/common/PremiumFeatureUpsell";
+import Card from "@/components/ui/Card";
+import { usePermissions } from "@/hooks/usePermissions";
 
 export default function AnalyticsPage() {
   const { hasPermission } = usePermissions();
@@ -82,15 +80,40 @@ export default function AnalyticsPage() {
 
   // Mock Alert Registry
   const [alerts, setAlerts] = useState([
-    { id: "1", key: "churn_rate", title: "Subscriber Churn Increased", condition: "churn > 5%", actual: "6.2%", severity: "HIGH", resolved: false },
-    { id: "2", key: "failed_payments", title: "Failed Credit Card Payments Spike", condition: "failed > 10", actual: "14 CC", severity: "CRITICAL", resolved: false },
+    {
+      id: "1",
+      key: "churn_rate",
+      title: "Subscriber Churn Increased",
+      condition: "churn > 5%",
+      actual: "6.2%",
+      severity: "HIGH",
+      resolved: false,
+    },
+    {
+      id: "2",
+      key: "failed_payments",
+      title: "Failed Credit Card Payments Spike",
+      condition: "failed > 10",
+      actual: "14 CC",
+      severity: "CRITICAL",
+      resolved: false,
+    },
   ]);
 
   // AI recommendations
   const insights = [
-    { text: "Tender participation dropped 14% this week in Healthcare segments. Consider launching direct email invitations.", type: "warning" },
-    { text: "Construction tenders currently hold the highest average award budget ($480k) with 8.2 bidders average.", type: "success" },
-    { text: "Renewal rates improved 18.2% after introducing the Enterprise Subscription Plan version 2.", type: "info" },
+    {
+      text: "Tender participation dropped 14% this week in Healthcare segments. Consider launching direct email invitations.",
+      type: "warning",
+    },
+    {
+      text: "Construction tenders currently hold the highest average award budget ($480k) with 8.2 bidders average.",
+      type: "success",
+    },
+    {
+      text: "Renewal rates improved 18.2% after introducing the Enterprise Subscription Plan version 2.",
+      type: "info",
+    },
   ];
 
   // Mock aggregates datasets
@@ -168,7 +191,8 @@ export default function AnalyticsPage() {
             BI Analytics Console
           </h1>
           <p className="mt-1.5 text-text-light">
-            Enterprise analytics, domain aggregation rollups, and infrastructure latency dashboards.
+            Enterprise analytics, domain aggregation rollups, and infrastructure
+            latency dashboards.
           </p>
         </div>
 
@@ -206,7 +230,9 @@ export default function AnalyticsPage() {
               <div className="flex items-center gap-3">
                 <AlertTriangle className="h-5 w-5 shrink-0" />
                 <div>
-                  <span className="font-extrabold text-sm block">{alert.title}</span>
+                  <span className="font-extrabold text-sm block">
+                    {alert.title}
+                  </span>
                   <span className="text-xs opacity-90">
                     Condition: {alert.condition} | Actual: {alert.actual}
                   </span>
@@ -246,7 +272,9 @@ export default function AnalyticsPage() {
 
         <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-7">
           <div className="space-y-1">
-            <label className="text-[11px] font-bold text-text-light block">Granularity</label>
+            <label className="text-[11px] font-bold text-text-light block">
+              Granularity
+            </label>
             <select
               value={granularity}
               onChange={(e) => setGranularity(e.target.value)}
@@ -262,7 +290,9 @@ export default function AnalyticsPage() {
           </div>
 
           <div className="space-y-1">
-            <label className="text-[11px] font-bold text-text-light block">Date Range</label>
+            <label className="text-[11px] font-bold text-text-light block">
+              Date Range
+            </label>
             <select
               value={dateRange}
               onChange={(e) => setDateRange(e.target.value)}
@@ -276,7 +306,9 @@ export default function AnalyticsPage() {
           </div>
 
           <div className="space-y-1">
-            <label className="text-[11px] font-bold text-text-light block">Country</label>
+            <label className="text-[11px] font-bold text-text-light block">
+              Country
+            </label>
             <select
               value={country}
               onChange={(e) => setCountry(e.target.value)}
@@ -290,7 +322,9 @@ export default function AnalyticsPage() {
           </div>
 
           <div className="space-y-1">
-            <label className="text-[11px] font-bold text-text-light block">Category</label>
+            <label className="text-[11px] font-bold text-text-light block">
+              Category
+            </label>
             <select
               value={category}
               onChange={(e) => setCategory(e.target.value)}
@@ -304,7 +338,9 @@ export default function AnalyticsPage() {
           </div>
 
           <div className="space-y-1">
-            <label className="text-[11px] font-bold text-text-light block">Tender Type</label>
+            <label className="text-[11px] font-bold text-text-light block">
+              Tender Type
+            </label>
             <select
               value={tenderType}
               onChange={(e) => setTenderType(e.target.value)}
@@ -317,7 +353,9 @@ export default function AnalyticsPage() {
           </div>
 
           <div className="space-y-1">
-            <label className="text-[11px] font-bold text-text-light block">Currency</label>
+            <label className="text-[11px] font-bold text-text-light block">
+              Currency
+            </label>
             <select
               value={currency}
               onChange={(e) => setCurrency(e.target.value)}
@@ -330,7 +368,9 @@ export default function AnalyticsPage() {
           </div>
 
           <div className="space-y-1">
-            <label className="text-[11px] font-bold text-text-light block">Plan</label>
+            <label className="text-[11px] font-bold text-text-light block">
+              Plan
+            </label>
             <select
               value={planFilter}
               onChange={(e) => setPlanFilter(e.target.value)}
@@ -351,15 +391,45 @@ export default function AnalyticsPage() {
           { id: "overview", label: "Overview", icon: Layers, allowed: true },
           { id: "tenders", label: "Tenders", icon: FileText, allowed: true },
           { id: "bidding", label: "Bidding", icon: TrendingUp, allowed: true },
-          { id: "revenue", label: "Revenue", icon: DollarSign, allowed: canViewFinancial },
-          { id: "subscriptions", label: "Subscriptions", icon: PieChart, allowed: canViewFinancial },
+          {
+            id: "revenue",
+            label: "Revenue",
+            icon: DollarSign,
+            allowed: canViewFinancial,
+          },
+          {
+            id: "subscriptions",
+            label: "Subscriptions",
+            icon: PieChart,
+            allowed: canViewFinancial,
+          },
           { id: "users", label: "Users", icon: Users, allowed: canViewUsers },
-          { id: "vendors", label: "Vendors", icon: CheckCircle, allowed: canViewVendors },
+          {
+            id: "vendors",
+            label: "Vendors",
+            icon: CheckCircle,
+            allowed: canViewVendors,
+          },
           { id: "traffic", label: "Traffic", icon: Clock, allowed: true },
-          { id: "categories", label: "Categories", icon: BarChart3, allowed: true },
+          {
+            id: "categories",
+            label: "Categories",
+            icon: BarChart3,
+            allowed: true,
+          },
           { id: "geography", label: "Geography", icon: MapPin, allowed: true },
-          { id: "reports", label: "Scheduled Reports", icon: Mail, allowed: canManageReports },
-          { id: "system", label: "System Health", icon: Zap, allowed: canViewSystem },
+          {
+            id: "reports",
+            label: "Scheduled Reports",
+            icon: Mail,
+            allowed: canManageReports,
+          },
+          {
+            id: "system",
+            label: "System Health",
+            icon: Zap,
+            allowed: canViewSystem,
+          },
         ].map((tab) => {
           if (!tab.allowed) return null;
           const Icon = tab.icon;
@@ -394,7 +464,10 @@ export default function AnalyticsPage() {
               </div>
               <div className="grid gap-3 md:grid-cols-3">
                 {insights.map((insight, idx) => (
-                  <div key={idx} className="bg-surface/80 p-3 rounded-lg border border-border/40 text-xs text-text shadow-sm">
+                  <div
+                    key={idx}
+                    className="bg-surface/80 p-3 rounded-lg border border-border/40 text-xs text-text shadow-sm"
+                  >
                     {insight.text}
                   </div>
                 ))}
@@ -405,54 +478,99 @@ export default function AnalyticsPage() {
           {/* Widgets Grid */}
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             <Card className="p-5 bg-surface/50 border-border/70">
-              <span className="text-[11px] font-bold text-text-light block uppercase tracking-wider">Total Aggregated Budget</span>
-              <h3 className="text-2xl font-black mt-2 text-text">$840,490,000</h3>
-              <span className="text-xs text-emerald-600 font-semibold block mt-1">+14.2% vs last month</span>
+              <span className="text-[11px] font-bold text-text-light block uppercase tracking-wider">
+                Total Aggregated Budget
+              </span>
+              <h3 className="text-2xl font-black mt-2 text-text">
+                $840,490,000
+              </h3>
+              <span className="text-xs text-emerald-600 font-semibold block mt-1">
+                +14.2% vs last month
+              </span>
             </Card>
             <Card className="p-5 bg-surface/50 border-border/70">
-              <span className="text-[11px] font-bold text-text-light block uppercase tracking-wider">Monthly Recurring Revenue (MRR)</span>
+              <span className="text-[11px] font-bold text-text-light block uppercase tracking-wider">
+                Monthly Recurring Revenue (MRR)
+              </span>
               <h3 className="text-2xl font-black mt-2 text-text">$125,000</h3>
-              <span className="text-xs text-emerald-600 font-semibold block mt-1">+8.4% growth rate</span>
+              <span className="text-xs text-emerald-600 font-semibold block mt-1">
+                +8.4% growth rate
+              </span>
             </Card>
             <Card className="p-5 bg-surface/50 border-border/70">
-              <span className="text-[11px] font-bold text-text-light block uppercase tracking-wider">Conversion rate</span>
+              <span className="text-[11px] font-bold text-text-light block uppercase tracking-wider">
+                Conversion rate
+              </span>
               <h3 className="text-2xl font-black mt-2 text-text">3.42%</h3>
-              <span className="text-xs text-emerald-600 font-semibold block mt-1">+0.8% increase</span>
+              <span className="text-xs text-emerald-600 font-semibold block mt-1">
+                +0.8% increase
+              </span>
             </Card>
             <Card className="p-5 bg-surface/50 border-border/70">
-              <span className="text-[11px] font-bold text-text-light block uppercase tracking-wider">Subscriber Churn rate</span>
+              <span className="text-[11px] font-bold text-text-light block uppercase tracking-wider">
+                Subscriber Churn rate
+              </span>
               <h3 className="text-2xl font-black mt-2 text-text">2.85%</h3>
-              <span className="text-xs text-emerald-600 font-semibold block mt-1">-0.4% improvement</span>
+              <span className="text-xs text-emerald-600 font-semibold block mt-1">
+                -0.4% improvement
+              </span>
             </Card>
           </div>
 
           <div className="grid gap-6 lg:grid-cols-3">
             <Card className="lg:col-span-2 p-6 bg-surface/50 border-border/80 space-y-4">
-              <h3 className="font-bold text-sm text-text">Visitor Counts & Analytical Traffic Curves</h3>
+              <h3 className="font-bold text-sm text-text">
+                Visitor Counts & Analytical Traffic Curves
+              </h3>
               <div className="h-72">
                 <ResponsiveContainer width="100%" height="100%">
                   <AreaChart data={overviewData}>
                     <XAxis dataKey="name" />
                     <YAxis />
                     <Tooltip />
-                    <Area type="monotone" dataKey="visitors" stroke="#4F46E5" fill="#4F46E5" fillOpacity={0.1} />
-                    <Area type="monotone" dataKey="revenue" stroke="#10B981" fill="#10B981" fillOpacity={0.1} />
+                    <Area
+                      type="monotone"
+                      dataKey="visitors"
+                      stroke="#4F46E5"
+                      fill="#4F46E5"
+                      fillOpacity={0.1}
+                    />
+                    <Area
+                      type="monotone"
+                      dataKey="revenue"
+                      stroke="#10B981"
+                      fill="#10B981"
+                      fillOpacity={0.1}
+                    />
                   </AreaChart>
                 </ResponsiveContainer>
               </div>
             </Card>
 
             <Card className="p-6 bg-surface/50 border-border/80 space-y-4">
-              <h3 className="font-bold text-sm text-text">Top category budgets</h3>
+              <h3 className="font-bold text-sm text-text">
+                Top category budgets
+              </h3>
               <div className="space-y-4">
                 {categoryBudget.map((c, i) => (
-                  <div key={i} className="space-y-1.5 cursor-pointer" onClick={() => handleDrillDownCategory(c.name)}>
+                  <div
+                    key={i}
+                    className="space-y-1.5 cursor-pointer"
+                    onClick={() => handleDrillDownCategory(c.name)}
+                  >
                     <div className="flex justify-between text-xs font-bold">
-                      <span className="text-text hover:underline">{c.name}</span>
-                      <span className="text-text-light">${(c.budget / 1000).toFixed(0)}k</span>
+                      <span className="text-text hover:underline">
+                        {c.name}
+                      </span>
+                      <span className="text-text-light">
+                        ${(c.budget / 1000).toFixed(0)}k
+                      </span>
                     </div>
                     <div className="h-2 bg-background rounded-full overflow-hidden">
-                      <div style={{ width: `${(c.budget / 300000) * 100}%` }} className="h-full bg-primary" />
+                      <div
+                        style={{ width: `${(c.budget / 300000) * 100}%` }}
+                        className="h-full bg-primary"
+                      />
                     </div>
                   </div>
                 ))}
@@ -465,7 +583,9 @@ export default function AnalyticsPage() {
       {/* 2. TENDERS */}
       {activeTab === "tenders" && (
         <Card className="p-6 bg-surface/50 border-border space-y-6">
-          <h3 className="font-bold text-lg text-text">Tender Lifecycles & Creation Trends</h3>
+          <h3 className="font-bold text-lg text-text">
+            Tender Lifecycles & Creation Trends
+          </h3>
           <div className="h-80">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={overviewData}>
@@ -484,18 +604,26 @@ export default function AnalyticsPage() {
       {/* 3. BIDDING */}
       {activeTab === "bidding" && (
         <Card className="p-6 bg-surface/50 border-border space-y-6">
-          <h3 className="font-bold text-lg text-text">Bidding funnels & response latencies</h3>
+          <h3 className="font-bold text-lg text-text">
+            Bidding funnels & response latencies
+          </h3>
           <div className="grid gap-6 md:grid-cols-3">
             <div className="p-4 bg-background border rounded-xl text-center">
-              <span className="text-xs text-text-light block">Bids Submitted</span>
+              <span className="text-xs text-text-light block">
+                Bids Submitted
+              </span>
               <span className="text-2xl font-black mt-1 block">12,940</span>
             </div>
             <div className="p-4 bg-background border rounded-xl text-center">
-              <span className="text-xs text-text-light block">Bids Qualified</span>
+              <span className="text-xs text-text-light block">
+                Bids Qualified
+              </span>
               <span className="text-2xl font-black mt-1 block">9,840</span>
             </div>
             <div className="p-4 bg-background border rounded-xl text-center">
-              <span className="text-xs text-text-light block">Bids Rejected</span>
+              <span className="text-xs text-text-light block">
+                Bids Rejected
+              </span>
               <span className="text-2xl font-black mt-1 block">3,100</span>
             </div>
           </div>
@@ -505,14 +633,21 @@ export default function AnalyticsPage() {
       {/* 4. REVENUE */}
       {activeTab === "revenue" && (
         <Card className="p-6 bg-surface/50 border-border space-y-6">
-          <h3 className="font-bold text-lg text-text">MRR / ARR financial progression</h3>
+          <h3 className="font-bold text-lg text-text">
+            MRR / ARR financial progression
+          </h3>
           <div className="h-80">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={overviewData}>
                 <XAxis dataKey="name" />
                 <YAxis />
                 <Tooltip />
-                <Line type="monotone" dataKey="revenue" stroke="#10B981" strokeWidth={3} />
+                <Line
+                  type="monotone"
+                  dataKey="revenue"
+                  stroke="#10B981"
+                  strokeWidth={3}
+                />
               </LineChart>
             </ResponsiveContainer>
           </div>
@@ -525,19 +660,37 @@ export default function AnalyticsPage() {
           <h3 className="font-bold text-lg text-text">Plan Tiers splits</h3>
           <div className="grid gap-6 sm:grid-cols-3">
             <div className="p-5 border rounded-xl bg-background/50 text-center">
-              <h4 className="font-bold text-xs text-text-light uppercase">Professional Plan</h4>
-              <span className="text-3xl font-black mt-2 block text-primary">320 Users</span>
-              <span className="text-xs mt-1 block text-text-light">$49 / mo billing</span>
+              <h4 className="font-bold text-xs text-text-light uppercase">
+                Professional Plan
+              </h4>
+              <span className="text-3xl font-black mt-2 block text-primary">
+                320 Users
+              </span>
+              <span className="text-xs mt-1 block text-text-light">
+                $49 / mo billing
+              </span>
             </div>
             <div className="p-5 border rounded-xl bg-background/50 text-center">
-              <h4 className="font-bold text-xs text-text-light uppercase">Enterprise Tier</h4>
-              <span className="text-3xl font-black mt-2 block text-indigo-600">84 Accounts</span>
-              <span className="text-xs mt-1 block text-text-light">$299 / mo custom</span>
+              <h4 className="font-bold text-xs text-text-light uppercase">
+                Enterprise Tier
+              </h4>
+              <span className="text-3xl font-black mt-2 block text-indigo-600">
+                84 Accounts
+              </span>
+              <span className="text-xs mt-1 block text-text-light">
+                $299 / mo custom
+              </span>
             </div>
             <div className="p-5 border rounded-xl bg-background/50 text-center">
-              <h4 className="font-bold text-xs text-text-light uppercase">Basic Access</h4>
-              <span className="text-3xl font-black mt-2 block text-text">412 Users</span>
-              <span className="text-xs mt-1 block text-text-light">Free plan versions</span>
+              <h4 className="font-bold text-xs text-text-light uppercase">
+                Basic Access
+              </h4>
+              <span className="text-3xl font-black mt-2 block text-text">
+                412 Users
+              </span>
+              <span className="text-xs mt-1 block text-text-light">
+                Free plan versions
+              </span>
             </div>
           </div>
         </Card>
@@ -546,7 +699,9 @@ export default function AnalyticsPage() {
       {/* 6. USERS */}
       {activeTab === "users" && (
         <Card className="p-6 bg-surface/50 border-border space-y-4">
-          <h3 className="font-bold text-lg text-text">User accounts verification progression</h3>
+          <h3 className="font-bold text-lg text-text">
+            User accounts verification progression
+          </h3>
           <div className="h-72">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={overviewData}>
@@ -563,7 +718,9 @@ export default function AnalyticsPage() {
       {/* 7. VENDORS */}
       {activeTab === "vendors" && (
         <Card className="p-6 bg-surface/50 border-border space-y-6">
-          <h3 className="font-bold text-lg text-text">Vendor bid success leaderboard</h3>
+          <h3 className="font-bold text-lg text-text">
+            Vendor bid success leaderboard
+          </h3>
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs border-collapse">
               <thead>
@@ -576,9 +733,24 @@ export default function AnalyticsPage() {
               </thead>
               <tbody className="divide-y">
                 {[
-                  { name: "Acme Logistics Corp", bids: 124, wins: 48, rate: "38.7%" },
-                  { name: "Global Tech Integrations", bids: 84, wins: 32, rate: "38.0%" },
-                  { name: "Cascade Engineering Services", bids: 92, wins: 28, rate: "30.4%" },
+                  {
+                    name: "Acme Logistics Corp",
+                    bids: 124,
+                    wins: 48,
+                    rate: "38.7%",
+                  },
+                  {
+                    name: "Global Tech Integrations",
+                    bids: 84,
+                    wins: 32,
+                    rate: "38.0%",
+                  },
+                  {
+                    name: "Cascade Engineering Services",
+                    bids: 92,
+                    wins: 28,
+                    rate: "30.4%",
+                  },
                 ].map((v, idx) => (
                   <tr key={idx} className="hover:bg-background/40 transition">
                     <td className="py-3 font-bold text-text">{v.name}</td>
@@ -599,7 +771,9 @@ export default function AnalyticsPage() {
           <h3 className="font-bold text-lg text-text">Traffic analysis</h3>
           <div className="grid gap-6 md:grid-cols-2">
             <div className="space-y-3">
-              <h4 className="font-bold text-sm text-text-light">Device distribution</h4>
+              <h4 className="font-bold text-sm text-text-light">
+                Device distribution
+              </h4>
               <div className="space-y-2">
                 {[
                   { device: "Desktop", share: "72.4%" },
@@ -614,10 +788,21 @@ export default function AnalyticsPage() {
               </div>
             </div>
             <div className="space-y-3">
-              <h4 className="font-bold text-sm text-text-light">Top search keyword queries</h4>
+              <h4 className="font-bold text-sm text-text-light">
+                Top search keyword queries
+              </h4>
               <div className="flex flex-wrap gap-2">
-                {["construction rfp", "it services bid", "usa government tender", "medical supply requests", "logistics"].map((kw, i) => (
-                  <span key={i} className="px-3 py-1 bg-background border rounded-lg text-xs font-semibold text-text">
+                {[
+                  "construction rfp",
+                  "it services bid",
+                  "usa government tender",
+                  "medical supply requests",
+                  "logistics",
+                ].map((kw, i) => (
+                  <span
+                    key={i}
+                    className="px-3 py-1 bg-background border rounded-lg text-xs font-semibold text-text"
+                  >
                     {kw}
                   </span>
                 ))}
@@ -630,14 +815,20 @@ export default function AnalyticsPage() {
       {/* 9. CATEGORIES */}
       {activeTab === "categories" && (
         <Card className="p-6 bg-surface/50 border-border space-y-6">
-          <h3 className="font-bold text-lg text-text">Top fields categorized</h3>
+          <h3 className="font-bold text-lg text-text">
+            Top fields categorized
+          </h3>
           <div className="h-80">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={categoryBudget}>
                 <XAxis dataKey="name" />
                 <YAxis />
                 <Tooltip />
-                <Bar dataKey="budget" name="Aggregated budget ($)" fill="#10B981" />
+                <Bar
+                  dataKey="budget"
+                  name="Aggregated budget ($)"
+                  fill="#10B981"
+                />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -647,14 +838,19 @@ export default function AnalyticsPage() {
       {/* 10. GEOGRAPHY */}
       {activeTab === "geography" && (
         <Card className="p-6 bg-surface/50 border-border space-y-6">
-          <h3 className="font-bold text-lg text-text">Regional geographic distributions</h3>
+          <h3 className="font-bold text-lg text-text">
+            Regional geographic distributions
+          </h3>
           <div className="space-y-4">
             {[
               { region: "California, USA", density: 450, budget: "$142M" },
               { region: "Ontario, Canada", density: 240, budget: "$89M" },
               { region: "Maharashtra, India", density: 310, budget: "$64M" },
             ].map((r, i) => (
-              <div key={i} className="flex justify-between items-center text-xs p-3 border rounded-xl bg-background/50">
+              <div
+                key={i}
+                className="flex justify-between items-center text-xs p-3 border rounded-xl bg-background/50"
+              >
                 <span className="font-bold text-text">{r.region}</span>
                 <div className="flex gap-4">
                   <span className="text-text-light">{r.density} Tenders</span>
@@ -670,11 +866,15 @@ export default function AnalyticsPage() {
       {activeTab === "reports" && (
         <div className="grid gap-6 md:grid-cols-3">
           <Card className="md:col-span-2 p-6 bg-surface/50 border-border space-y-6">
-            <h3 className="font-bold text-lg text-text">Create Scheduled analytical report</h3>
+            <h3 className="font-bold text-lg text-text">
+              Create Scheduled analytical report
+            </h3>
             <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="space-y-1">
-                  <label className="text-[11px] font-bold text-text-light">Report Name</label>
+                  <label className="text-[11px] font-bold text-text-light">
+                    Report Name
+                  </label>
                   <input
                     type="text"
                     placeholder="Weekly Revenue and Traffic Summary"
@@ -682,7 +882,9 @@ export default function AnalyticsPage() {
                   />
                 </div>
                 <div className="space-y-1">
-                  <label className="text-[11px] font-bold text-text-light">Frequency</label>
+                  <label className="text-[11px] font-bold text-text-light">
+                    Frequency
+                  </label>
                   <select className="w-full text-xs bg-background border rounded-lg px-2.5 py-2 focus:outline-none">
                     <option value="DAILY">Daily</option>
                     <option value="WEEKLY">Weekly</option>
@@ -693,7 +895,9 @@ export default function AnalyticsPage() {
 
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="space-y-1">
-                  <label className="text-[11px] font-bold text-text-light">Timezone</label>
+                  <label className="text-[11px] font-bold text-text-light">
+                    Timezone
+                  </label>
                   <select className="w-full text-xs bg-background border rounded-lg px-2.5 py-2 focus:outline-none">
                     <option value="UTC">UTC</option>
                     <option value="America/New_York">EST (UTC-5)</option>
@@ -701,7 +905,9 @@ export default function AnalyticsPage() {
                   </select>
                 </div>
                 <div className="space-y-1">
-                  <label className="text-[11px] font-bold text-text-light">Recipients Role</label>
+                  <label className="text-[11px] font-bold text-text-light">
+                    Recipients Role
+                  </label>
                   <select className="w-full text-xs bg-background border rounded-lg px-2.5 py-2 focus:outline-none">
                     <option value="admin">Administrator Role</option>
                     <option value="finance">Finance Role</option>
@@ -719,16 +925,27 @@ export default function AnalyticsPage() {
           </Card>
 
           <Card className="p-6 bg-surface/50 border-border space-y-4">
-            <h3 className="font-bold text-sm text-text">Async Export jobs history</h3>
+            <h3 className="font-bold text-sm text-text">
+              Async Export jobs history
+            </h3>
             <div className="space-y-3">
               {exportJobs.length === 0 ? (
-                <span className="text-xs text-text-light block text-center py-8">No export jobs triggered yet.</span>
+                <span className="text-xs text-text-light block text-center py-8">
+                  No export jobs triggered yet.
+                </span>
               ) : (
                 exportJobs.map((job) => (
-                  <div key={job.id} className="p-3 border rounded-xl bg-background/50 flex justify-between items-center text-xs">
+                  <div
+                    key={job.id}
+                    className="p-3 border rounded-xl bg-background/50 flex justify-between items-center text-xs"
+                  >
                     <div>
-                      <span className="font-bold text-text block uppercase">{job.type} csv</span>
-                      <span className="text-[10px] text-text-light">{job.createdAt}</span>
+                      <span className="font-bold text-text block uppercase">
+                        {job.type} csv
+                      </span>
+                      <span className="text-[10px] text-text-light">
+                        {job.createdAt}
+                      </span>
                     </div>
                     <a
                       href={job.fileUrl}
@@ -748,36 +965,52 @@ export default function AnalyticsPage() {
       {activeTab === "system" && (
         <div className="grid gap-6 md:grid-cols-2">
           <Card className="p-6 bg-surface/50 border-border space-y-4">
-            <h3 className="font-bold text-lg text-text">API & Database latencies</h3>
+            <h3 className="font-bold text-lg text-text">
+              API & Database latencies
+            </h3>
             <div className="space-y-3">
               <div className="flex justify-between items-center text-xs">
-                <span className="text-text-light font-semibold">API average response latency</span>
+                <span className="text-text-light font-semibold">
+                  API average response latency
+                </span>
                 <span className="font-bold text-emerald-600">142 ms</span>
               </div>
               <div className="flex justify-between items-center text-xs">
-                <span className="text-text-light font-semibold">Database Queries per second</span>
+                <span className="text-text-light font-semibold">
+                  Database Queries per second
+                </span>
                 <span className="font-bold text-text">64 QPS</span>
               </div>
               <div className="flex justify-between items-center text-xs">
-                <span className="text-text-light font-semibold">Cache hit ratio</span>
+                <span className="text-text-light font-semibold">
+                  Cache hit ratio
+                </span>
                 <span className="font-bold text-primary">94.2%</span>
               </div>
             </div>
           </Card>
 
           <Card className="p-6 bg-surface/50 border-border space-y-4">
-            <h3 className="font-bold text-lg text-text">Background queues depths</h3>
+            <h3 className="font-bold text-lg text-text">
+              Background queues depths
+            </h3>
             <div className="space-y-3">
               <div className="flex justify-between items-center text-xs">
-                <span className="text-text-light font-semibold">Active background workers</span>
+                <span className="text-text-light font-semibold">
+                  Active background workers
+                </span>
                 <span className="font-bold text-text">3 threads</span>
               </div>
               <div className="flex justify-between items-center text-xs">
-                <span className="text-text-light font-semibold">BullMQ pending queue length</span>
+                <span className="text-text-light font-semibold">
+                  BullMQ pending queue length
+                </span>
                 <span className="font-bold text-primary">2 tasks</span>
               </div>
               <div className="flex justify-between items-center text-xs">
-                <span className="text-text-light font-semibold">Failed cron schedules</span>
+                <span className="text-text-light font-semibold">
+                  Failed cron schedules
+                </span>
                 <span className="font-bold text-emerald-600">0</span>
               </div>
             </div>
@@ -794,14 +1027,18 @@ export default function AnalyticsPage() {
                 <Settings size={18} />
                 Dashboard Personalization
               </h3>
-              <button onClick={() => setShowConfigModal(false)} className="text-xs text-text-light hover:underline font-bold">
+              <button
+                onClick={() => setShowConfigModal(false)}
+                className="text-xs text-text-light hover:underline font-bold"
+              >
                 Close
               </button>
             </div>
 
             <div className="space-y-3">
               <span className="text-xs text-text-light block font-semibold">
-                Toggle widgets to render in your customized dashboard view layout:
+                Toggle widgets to render in your customized dashboard view
+                layout:
               </span>
               {[
                 { key: "kpi-revenue", name: "Total Budget Aggregations" },
@@ -811,13 +1048,18 @@ export default function AnalyticsPage() {
                 { key: "chart-tenders", name: "Tenders traffic curves" },
                 { key: "chart-categories", name: "Top categories budgets" },
               ].map((w) => (
-                <label key={w.key} className="flex items-center gap-3 text-xs font-bold text-text cursor-pointer">
+                <label
+                  key={w.key}
+                  className="flex items-center gap-3 text-xs font-bold text-text cursor-pointer"
+                >
                   <input
                     type="checkbox"
                     checked={layoutWidgets.includes(w.key)}
                     onChange={() => {
                       if (layoutWidgets.includes(w.key)) {
-                        setLayoutWidgets(layoutWidgets.filter((item) => item !== w.key));
+                        setLayoutWidgets(
+                          layoutWidgets.filter((item) => item !== w.key),
+                        );
                       } else {
                         setLayoutWidgets([...layoutWidgets, w.key]);
                       }

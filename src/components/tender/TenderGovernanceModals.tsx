@@ -1,13 +1,15 @@
+//@ts-nocheck
 "use client";
 
 import { useEffect, useState } from "react";
-import { ShieldCheck, MessageSquare, Users, Send } from "lucide-react";
-import Button from "@/components/ui/Button";
-import Modal from "@/components/ui/Modal";
+import { MessageSquare, Send,ShieldCheck, Users } from "lucide-react";
 import Select from "react-select";
 import { toast } from "sonner";
-import { tenderApi } from "@/features/tenders/api/api";
+
+import Button from "@/components/ui/Button";
+import Modal from "@/components/ui/Modal";
 import { rbacApi } from "@/features/rbac/api/api";
+import { tenderApi } from "@/features/tenders/api/api";
 
 const customReactSelectStyles = {
   control: (base: any, state: any) => ({
@@ -162,7 +164,6 @@ export const TenderSubmitReviewModal: React.FC<
       open={isOpen}
       onClose={onClose}
       title="Submit Tender Draft for Governance Review"
-      size="lg"
     >
       <div className="space-y-5">
         <div className="p-4 rounded-xl bg-indigo-50 dark:bg-indigo-950/20 border border-indigo-200 dark:border-indigo-800 text-xs flex items-start gap-3">

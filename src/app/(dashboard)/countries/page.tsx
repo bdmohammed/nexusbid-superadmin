@@ -1,19 +1,20 @@
 //@ts-nocheck
 "use client";
 
-import { useState, Suspense } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
-import { ShieldAlert, RefreshCw } from "lucide-react";
+import { Suspense,useState } from "react";
+import { useRouter,useSearchParams } from "next/navigation";
+import { RefreshCw,ShieldAlert } from "lucide-react";
 
-import { CountriesStatsView } from "@/components/countries/CountriesStatsView";
+import type {
+  ActivityItem} from "@/components/countries/CountryActivityTimeline";
 import { CountriesListView } from "@/components/countries/CountriesListView";
 import { CountriesReviewsView } from "@/components/countries/CountriesReviewsView";
-import { CreateChangeRequestModal } from "@/components/countries/CreateChangeRequestModal";
-import { ReviewRequestModal } from "@/components/countries/ReviewRequestModal";
+import { CountriesStatsView } from "@/components/countries/CountriesStatsView";
 import {
   CountryActivityTimeline,
-  ActivityItem,
 } from "@/components/countries/CountryActivityTimeline";
+import { CreateChangeRequestModal } from "@/components/countries/CreateChangeRequestModal";
+import { ReviewRequestModal } from "@/components/countries/ReviewRequestModal";
 import { countriesApi } from "@/features/country";
 import { usePermissions } from "@/hooks/usePermissions";
 
@@ -213,7 +214,11 @@ function CountriesPageContent() {
 
 export default function CountriesPage() {
   return (
-    <Suspense fallback={<div className="p-6 text-sm text-text-light">Loading Countries...</div>}>
+    <Suspense
+      fallback={
+        <div className="p-6 text-sm text-text-light">Loading Countries...</div>
+      }
+    >
       <CountriesPageContent />
     </Suspense>
   );

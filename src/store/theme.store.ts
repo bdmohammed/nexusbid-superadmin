@@ -28,7 +28,7 @@ export const useThemeStore = create<ThemeStore>()(
       ...initialState,
 
       initialize: () => {
-        const theme = get().theme;
+        const {theme} = get();
 
         // First load: if nothing persisted yet, use system preference
         if (!localStorage.getItem("theme-storage")) {

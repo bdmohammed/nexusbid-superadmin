@@ -1,110 +1,109 @@
-import { create } from 'zustand';
+import { create } from "zustand";
 
 interface SidebarStore {
-    /**
-     * Whether the sidebar is currently open.
-     */
-    isOpen: boolean;
+  /**
+   * Whether the sidebar is currently open.
+   */
+  isOpen: boolean;
 
-    /**
-     * Whether the sidebar is collapsed.
-     */
-    isCollapsed: boolean;
+  /**
+   * Whether the sidebar is collapsed.
+   */
+  isCollapsed: boolean;
 
-    /**
-     * Open the sidebar.
-     */
-    open: () => void;
+  /**
+   * Open the sidebar.
+   */
+  open: () => void;
 
-    /**
-     * Close the sidebar.
-     */
-    close: () => void;
+  /**
+   * Close the sidebar.
+   */
+  close: () => void;
 
-    /**
-     * Toggle sidebar visibility.
-     */
-    toggle: () => void;
+  /**
+   * Toggle sidebar visibility.
+   */
+  toggle: () => void;
 
-    /**
-     * Collapse the sidebar.
-     */
-    collapse: () => void;
+  /**
+   * Collapse the sidebar.
+   */
+  collapse: () => void;
 
-    /**
-     * Expand the sidebar.
-     */
-    expand: () => void;
+  /**
+   * Expand the sidebar.
+   */
+  expand: () => void;
 
-    /**
-     * Toggle collapsed state.
-     */
-    toggleCollapse: () => void;
+  /**
+   * Toggle collapsed state.
+   */
+  toggleCollapse: () => void;
 
-    /**
-     * Set collapsed state.
-     */
-    setCollapsed: (collapsed: boolean) => void;
+  /**
+   * Set collapsed state.
+   */
+  setCollapsed: (collapsed: boolean) => void;
 
-    /**
-     * Set open state.
-     */
-    setOpen: (open: boolean) => void;
+  /**
+   * Set open state.
+   */
+  setOpen: (open: boolean) => void;
 
-    /**
-     * Reset sidebar to defaults.
-     */
-    reset: () => void;
+  /**
+   * Reset sidebar to defaults.
+   */
+  reset: () => void;
 }
 
 const initialState = {
-    isOpen: true,
-    isCollapsed: false,
+  isOpen: true,
+  isCollapsed: false,
 };
 
 export const useSidebarStore = create<SidebarStore>((set) => ({
-    ...initialState,
+  ...initialState,
 
-    open: () =>
-        set({
-            isOpen: true,
-        }),
+  open: () =>
+    set({
+      isOpen: true,
+    }),
 
-    close: () =>
-        set({
-            isOpen: false,
-        }),
+  close: () =>
+    set({
+      isOpen: false,
+    }),
 
-    toggle: () =>
-        set((state) => ({
-            isOpen: !state.isOpen,
-        })),
+  toggle: () =>
+    set((state) => ({
+      isOpen: !state.isOpen,
+    })),
 
-    collapse: () =>
-        set({
-            isCollapsed: true,
-        }),
+  collapse: () =>
+    set({
+      isCollapsed: true,
+    }),
 
-    expand: () =>
-        set({
-            isCollapsed: false,
-        }),
+  expand: () =>
+    set({
+      isCollapsed: false,
+    }),
 
-    toggleCollapse: () =>
-        set((state) => ({
-            isCollapsed: !state.isCollapsed,
-        })),
+  toggleCollapse: () =>
+    set((state) => ({
+      isCollapsed: !state.isCollapsed,
+    })),
 
-    setCollapsed: (collapsed) =>
-        set({
-            isCollapsed: collapsed,
-        }),
+  setCollapsed: (collapsed) =>
+    set({
+      isCollapsed: collapsed,
+    }),
 
-    setOpen: (open) =>
-        set({
-            isOpen: open,
-        }),
+  setOpen: (open) =>
+    set({
+      isOpen: open,
+    }),
 
-    reset: () =>
-        set(initialState),
+  reset: () => set(initialState),
 }));

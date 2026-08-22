@@ -1,9 +1,10 @@
 // src/components/error-boundary/ErrorDialog.tsx
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import { AlertCircle, X, Copy, Check, RefreshCw } from 'lucide-react';
-import { serializeError } from '@/lib/errors/serialize-error';
+import React, { useState } from "react";
+import { AlertCircle, Check, Copy, RefreshCw,X } from "lucide-react";
+
+import { serializeError } from "@/lib/errors/serialize-error";
 
 export interface ErrorDialogProps {
   error: Error;
@@ -11,9 +12,13 @@ export interface ErrorDialogProps {
   onClose?: () => void;
 }
 
-export const ErrorDialog: React.FC<ErrorDialogProps> = ({ error, reset, onClose }) => {
+export const ErrorDialog: React.FC<ErrorDialogProps> = ({
+  error,
+  reset,
+  onClose,
+}) => {
   const [copied, setCopied] = useState(false);
-  const isDevelopment = process.env.NODE_ENV === 'development';
+  const isDevelopment = process.env.NODE_ENV === "development";
   const serialized = serializeError(error);
 
   const handleCopy = async () => {
@@ -26,14 +31,14 @@ export const ErrorDialog: React.FC<ErrorDialogProps> = ({ error, reset, onClose 
         timestamp: new Date().toISOString(),
       },
       null,
-      2
+      2,
     );
     try {
       await navigator.clipboard.writeText(diagnosticPayload);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
-      console.error('Failed to copy diagnostics:', err);
+      console.error("Failed to copy diagnostics:", err);
     }
   };
 
@@ -90,7 +95,7 @@ export const ErrorDialog: React.FC<ErrorDialogProps> = ({ error, reset, onClose 
                   ) : (
                     <Copy className="w-3" />
                   )}
-                  {copied ? 'Copied' : 'Copy'}
+                  {copied ? "Copied" : "Copy"}
                 </button>
               </div>
               <div className="max-h-24 overflow-y-auto font-mono text-[10px] text-neutral-400 whitespace-pre-wrap">

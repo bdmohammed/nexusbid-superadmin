@@ -2,7 +2,7 @@ interface SkeletonProps {
   className?: string;
 }
 
-export function Skeleton({ className = '' }: SkeletonProps) {
+export function Skeleton({ className = "" }: SkeletonProps) {
   return (
     <div
       className={`animate-pulse bg-[var(--surface-secondary)] border border-[var(--border)] rounded-xl ${className}`}
@@ -18,8 +18,8 @@ interface SkeletonGridProps {
 
 export function SkeletonGrid({
   count = 4,
-  cols = 'grid md:grid-cols-2 lg:grid-cols-4 gap-6',
-  heightClass = 'h-44',
+  cols = "grid md:grid-cols-2 lg:grid-cols-4 gap-6",
+  heightClass = "h-44",
 }: SkeletonGridProps) {
   return (
     <div className={cols}>
@@ -31,7 +31,13 @@ export function SkeletonGrid({
   );
 }
 
-export function SkeletonList({ count = 5, heightClass = 'h-16' }: { count?: number; heightClass?: string }) {
+export function SkeletonList({
+  count = 5,
+  heightClass = "h-16",
+}: {
+  count?: number;
+  heightClass?: string;
+}) {
   return (
     <div className="space-y-4">
       {Array.from({ length: count }).map((_, i) => (

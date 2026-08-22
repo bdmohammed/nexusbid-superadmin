@@ -1,10 +1,11 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { AppError, ERROR_CODES, ErrorCode } from "@/lib/errors";
 import { dashboardApi } from "./api";
 import { dashboardQueryKeys } from "./keys";
 
 import type { PatchLayoutInput } from "../types";
+import type { ErrorCode } from "@/lib/errors";
+import { AppError } from "@/lib/errors";
 
 // ─── Query Hooks ─────────────────────────────────────────────────────────────
 

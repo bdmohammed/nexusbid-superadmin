@@ -1,0 +1,69 @@
+# Auto-detect text files and normalize line endings to LF in the repo,
+# regardless of what a contributor's local Git config does on checkout.
+* text=auto eol=lf
+
+# ─── Explicit text files ──────────────────────────────────────────────────
+*.ts     text eol=lf
+*.tsx    text eol=lf
+*.js     text eol=lf
+*.jsx    text eol=lf
+*.mjs    text eol=lf
+*.cjs    text eol=lf
+*.json   text eol=lf
+*.jsonc   text eol=lf
+*.md     text eol=lf
+*.yml    text eol=lf
+*.yaml   text eol=lf
+*.xml     text eol=lf
+*.html   text eol=lf
+*.css    text eol=lf
+*.scss   text eol=lf
+*.sql    text eol=lf
+*.sh     text eol=lf
+.env*    text eol=lf
+*.gitignore   text eol=lf
+*.gitattributes text eol=lf
+
+# Windows-only scripts genuinely need CRLF
+*.bat    text eol=crlf
+*.cmd    text eol=crlf
+*.ps1    text eol=crlf
+
+# ─── Binary files — never diff, never convert line endings ───────────────
+*.png    binary
+*.jpg    binary
+*.jpeg   binary
+*.gif    binary
+*.webp   binary
+*.bmp     binary
+*.avif    binary
+*.ico    binary
+*.svg    binary
+*.woff   binary
+*.woff2  binary
+*.ttf    binary
+*.eot    binary
+*.pdf    binary
+*.zip    binary
+*.tar    binary
+*.gz     binary
+*.tgz     binary
+*.7z      binary
+*.rar     binary
+*.mp4     binary
+*.mov     binary
+*.avi     binary
+*.mp3     binary
+*.wav     binary
+
+# ─── Lockfiles — treat as text but don't let Git try to merge them ───────
+package-lock.json  text eol=lf -diff merge=ours
+yarn.lock          text eol=lf -diff merge=ours
+
+# ─── Migration files — never auto-format-diff, preserve exact history ────
+src/database/migrations/*.ts linguist-generated=true
+
+# ─── Language stats — exclude generated/vendored content from GitHub's language bar ──
+**/dist/**        linguist-generated=true
+**/coverage/**    linguist-generated=true
+**/*.min.js       linguist-generated=true

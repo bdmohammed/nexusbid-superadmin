@@ -4,15 +4,16 @@
 import React from "react";
 import {
   AlertTriangle,
-  MessageSquare,
   CheckCircle2,
-  XCircle,
   HelpCircle,
+  MessageSquare,
+  XCircle,
 } from "lucide-react";
+import Select from "react-select";
+
+import type { Category } from "@/components/categories/CategoryFormDrawer";
 import Button from "@/components/ui/Button";
 import Modal from "@/components/ui/Modal";
-import Select from "react-select";
-import { Category } from "@/components/categories/CategoryFormDrawer";
 
 // Reusable Custom Styles for react-select matching theme CSS variables
 const customReactSelectStyles = {

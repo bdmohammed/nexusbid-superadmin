@@ -1,7 +1,8 @@
 "use client";
 
-import { Layers, ArrowRight } from "lucide-react";
 import Link from "next/link";
+import { ArrowRight,Layers } from "lucide-react";
+
 import { useDashboardReviewQueue } from "@/features/dashboard/api/queries";
 
 interface ReviewQueueProps {
@@ -23,10 +24,26 @@ export default function ReviewQueueWidget({ liveData }: ReviewQueueProps) {
   }
 
   const items = [
-    { label: "Pending Role Reviews", value: data?.pendingRoleReviews ?? 0, path: "/rbac" },
-    { label: "Pending Tender Reviews", value: data?.pendingTenderReviews ?? 0, path: "/tenders" },
-    { label: "Pending Subscription Reviews", value: data?.pendingSubscriptionReviews ?? 0, path: "/subscriptions" },
-    { label: "Pending Category Reviews", value: data?.pendingCategoryReviews ?? 0, path: "/categories" },
+    {
+      label: "Pending Role Reviews",
+      value: data?.pendingRoleReviews ?? 0,
+      path: "/rbac",
+    },
+    {
+      label: "Pending Tender Reviews",
+      value: data?.pendingTenderReviews ?? 0,
+      path: "/tenders",
+    },
+    {
+      label: "Pending Subscription Reviews",
+      value: data?.pendingSubscriptionReviews ?? 0,
+      path: "/subscriptions",
+    },
+    {
+      label: "Pending Category Reviews",
+      value: data?.pendingCategoryReviews ?? 0,
+      path: "/categories",
+    },
   ];
 
   return (
@@ -40,9 +57,14 @@ export default function ReviewQueueWidget({ liveData }: ReviewQueueProps) {
 
       <div className="space-y-2.5">
         {items.map((item) => (
-          <div key={item.label} className="flex items-center justify-between bg-background rounded-xl p-3 border border-border/50">
+          <div
+            key={item.label}
+            className="flex items-center justify-between bg-background rounded-xl p-3 border border-border/50"
+          >
             <div>
-              <span className="block text-xs font-semibold text-text-light">{item.label}</span>
+              <span className="block text-xs font-semibold text-text-light">
+                {item.label}
+              </span>
               <span className="text-lg font-black text-text">{item.value}</span>
             </div>
             <Link
