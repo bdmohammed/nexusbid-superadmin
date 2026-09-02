@@ -1,6 +1,6 @@
-import { dirname } from 'path';
+import { dirname } from 'node:path';
 import globals from 'globals';
-import { fileURLToPath } from 'url';
+import { fileURLToPath } from 'node:url';
 
 import js from '@eslint/js';
 import tanstackQuery from '@tanstack/eslint-plugin-query';
@@ -17,23 +17,39 @@ import sonarjs from 'eslint-plugin-sonarjs';
 import testingLibrary from 'eslint-plugin-testing-library';
 import unicorn from 'eslint-plugin-unicorn';
 import unusedImports from 'eslint-plugin-unused-imports';
-import { FlatCompat } from '@eslint/eslintrc';
 import playwright from 'eslint-plugin-playwright';
 import vitestPlugin from '@vitest/eslint-plugin';
 import { createTypeScriptImportResolver } from 'eslint-import-resolver-typescript';
 import next from '@next/eslint-plugin-next';
+import { ignore } from 'eslint-plugin-import-x/utils';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const rootTsConfigDir = __dirname;
 
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
-  recommendedConfig: js.configs.recommended,
-});
+interface BaseConfigOptions {
+  additionalGlobals?: Record<string, 'readonly' | 'writable' | boolean>;
+  additionalPlugins?: Record<string, unknown>;
+  additionalRules?: Record<string, unknown>;
+  filePatterns?: string[];
+  tsconfigRootDir?: string;
+}
+
+export interface TestConfigOptions {
+  additionalTestFiles?: string[];
+  additionalGlobals?: Record<string, 'readonly' | 'writable' | boolean>;
+  additionalPlugins?: Record<string, unknown>;
+  additionalRules?: Record<string, unknown>;
+}
+
+export interface ConfigFilesOptions {
+  additionalFiles?: string[];
+  additionalGlobals?: Record<string, 'readonly' | 'writable' | boolean>;
+  additionalRules?: Record<string, unknown>;
+}
 
 // Base configuration factory
-export const createBaseConfig = (options: any = {}) => {
+export const createBaseConfig = (options: BaseConfigOptions = {}) => {
   const {
     additionalGlobals = {},
     additionalPlugins = {},
@@ -148,12 +164,15 @@ export const createBaseConfig = (options: any = {}) => {
       '@typescript-eslint/no-non-null-assertion': 'warn',
 
       // Development-time relaxed rules
+      'no-unused-vars': 'off',
       '@typescript-eslint/no-unused-vars':
         process.env.NODE_ENV === 'production' ? ['error', { argsIgnorePattern: '^_' }] : 'warn',
       '@typescript-eslint/no-explicit-any':
         process.env.NODE_ENV === 'production' ? 'error' : 'warn',
+      'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'warn',
+      'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'warn',
 
-      // import/Export rules
+      // Import sorting & hygiene rules
       'simple-import-sort/imports': [
         'error',
         {
@@ -172,9 +191,6 @@ export const createBaseConfig = (options: any = {}) => {
               // '^react-dom/(.*)$',
               '^@?\\w',
             ],
-
-            // Internal packages
-            ['^@vera/'],
 
             // Parent imports
             [
@@ -225,9 +241,7 @@ export const createBaseConfig = (options: any = {}) => {
         },
       ],
 
-      // General rules
-      'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'warn',
-      'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'warn',
+      // General JS rules
       'prefer-const': 'error',
       'no-var': 'error',
       'object-shorthand': 'error',
@@ -235,7 +249,7 @@ export const createBaseConfig = (options: any = {}) => {
       'prefer-spread': 'error',
       'prefer-destructuring': ['error', { object: true, array: false }],
 
-      // Unicorn rules
+      // Unicorn & Code Quality rules
       'unicorn/prevent-abbreviations': 'off',
       'unicorn/filename-case': [
         'error',
@@ -245,6 +259,7 @@ export const createBaseConfig = (options: any = {}) => {
             pascalCase: true,
             kebabCase: true,
           },
+          ignore: ['^__tests__$'],
         },
       ],
       'unicorn/no-null': 'off',
@@ -253,11 +268,11 @@ export const createBaseConfig = (options: any = {}) => {
       'unicorn/prefer-ternary': 'off',
       'unicorn/prefer-top-level-await': 'off',
 
-      // SonarJS rules
+      // SonarJS & Complexity control
       'sonarjs/cognitive-complexity': ['error', 15],
       'sonarjs/no-duplicate-string': 'off',
       'sonarjs/no-small-switch': 'off',
-      complexity: ['error', 5],
+      complexity: ['error', 15],
       // Security
       'security/detect-object-injection': 'warn',
       'security/detect-non-literal-regexp': 'warn',
@@ -269,6 +284,10 @@ export const createBaseConfig = (options: any = {}) => {
       // JSX A11y
       'jsx-a11y/anchor-is-valid': 'off',
 
+      '@next/next/no-img-element': 'error',
+      '@next/next/no-head-element': 'error',
+      '@next/next/no-html-link-for-pages': 'error',
+
       ...tanstackQuery.configs.recommended.rules,
       ...next.configs.recommended.rules,
       ...next.configs['core-web-vitals'].rules,
@@ -279,11 +298,14 @@ export const createBaseConfig = (options: any = {}) => {
   return config;
 };
 
-// Test configuration factory
-export const createTestConfig = (options: any = {}) => ({
+/**
+ * Test Files Configuration Factory
+ */
+export const createTestConfig = (options: TestConfigOptions = {}) => ({
   files: [
-    '**/__tests__/**/*',
-    '**/*.{test,spec}.{js,jsx,ts,tsx}',
+    '**/__tests__/**/*.{test,spec}.{ts,tsx}',
+    'tests/**/*.{ts,tsx}',
+    'e2e/**/*.{ts,tsx}',
     ...(options.additionalTestFiles || []),
   ],
   languageOptions: {
@@ -325,9 +347,11 @@ export const createTestConfig = (options: any = {}) => ({
 //   },
 // });
 
-// Config files configuration factory
-export const createConfigFilesConfig = (options: any = {}) => ({
-  files: ['*.config.{js,mjs,cjs}', 'eslint.config.js', ...(options.additionalFiles || [])],
+/**
+ * Configuration Files Factory
+ */
+export const createConfigFilesConfig = (options: ConfigFilesOptions = {}) => ({
+  files: ['*.config.{js,mjs,cjs,ts}', 'eslint.config.js', ...(options.additionalFiles || [])],
   languageOptions: {
     globals: {
       module: 'writable',
@@ -398,8 +422,6 @@ export const defaultIgnoresPath = [
   '**/.build/**',
   '**/.prettierignore',
   'sonar-project.properties',
-  '**/**.md',
-  '**/**.json',
   '**/**.lock',
   '**/**.yaml',
   '**/**.yml',
@@ -428,16 +450,31 @@ export const defaultIgnoresPath = [
   'build',
   '**/*.d.ts',
   'env.d.ts',
+  'storybook-static',
+  '.turbo',
+  '.cache',
+  '.vercel',
 ];
 
-// Default export for root
+/**
+ * ESLint Flat Configuration Export Order:
+ * 1. JavaScript recommended base
+ * 2. Application Base Config
+ * 3. Configuration file overrides
+ * 4. Test file overrides (MUST run after base config to ensure rule overrides apply)
+ * 5. Playwright config
+ * 6. Prettier formatting config (MUST run last to disable conflicting format rules)
+ */
 export default [
-  playwright.configs['flat/recommended'],
+  {
+    ...playwright.configs['flat/recommended'],
+    files: ['e2e/**/*.{ts,tsx,js,jsx}'],
+  },
   js.configs.recommended,
-  createTestConfig(),
   // createStorybookConfig(),
   createConfigFilesConfig(),
   createBaseConfig(),
+  createTestConfig(),
   prettierConfig,
   {
     ignores: defaultIgnoresPath,

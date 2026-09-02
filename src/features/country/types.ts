@@ -9,9 +9,9 @@ export interface StateQuery {
   limit?: number;
 }
 
-export type CountryChangeRequestTargetType = "COUNTRY" | "STATE";
-export type CountryChangeRequestAction = "ACTIVATE" | "DEACTIVATE";
-export type CountryCommentType = "GENERAL" | "REVIEW" | "SYSTEM";
+export type CountryChangeRequestTargetType = 'COUNTRY' | 'STATE';
+export type CountryChangeRequestAction = 'ACTIVATE' | 'DEACTIVATE';
+export type CountryCommentType = 'GENERAL' | 'REVIEW' | 'SYSTEM';
 
 export interface CascadePolicy {
   disableStates: boolean;
@@ -40,12 +40,12 @@ export interface AddCommentInput {
 }
 
 export interface ReviewChangeRequestInput {
-  action: "APPROVE" | "REJECT";
+  action: 'APPROVE' | 'REJECT';
   comment?: string;
 }
 
 export interface ChangeRequestQueryInput {
-  filter?: "assigned" | "pending" | "approved" | "rejected" | "all";
+  filter?: 'assigned' | 'pending' | 'approved' | 'rejected' | 'all';
   search?: string;
   page?: number;
   limit?: number;
@@ -149,7 +149,7 @@ export interface CountryHierarchyNode {
   id: string;
   name: string;
   code: string;
-  type: "COUNTRY" | "STATE";
+  type: 'COUNTRY' | 'STATE';
   isActive: boolean;
   version: number;
   tenderCount: number;

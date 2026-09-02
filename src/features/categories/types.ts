@@ -64,7 +64,7 @@ export interface UpdateCategoryInput {
 }
 
 export interface BatchCategoryItem {
-  action?: "upsert" | "delete";
+  action?: 'upsert' | 'delete';
   code?: string;
   name?: string;
   slug?: string;
@@ -85,7 +85,7 @@ export interface SubmitCategoryReviewInput {
 }
 
 export interface CategoryDecisionInput {
-  action: "APPROVE" | "REJECT" | "REQUEST_CHANGES";
+  action: 'APPROVE' | 'REJECT' | 'REQUEST_CHANGES';
   comment?: string;
   reason?: string;
 }

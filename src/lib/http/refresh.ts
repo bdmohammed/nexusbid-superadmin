@@ -1,6 +1,6 @@
 import httpClient from "./client";
 import { clientEnv } from "@/env/client";
-import { AUTH_ENDPOINTS } from "./constants";
+import { API_ENDPOINTS } from "./constants";
 import { ApiAxiosError, PendingRequest } from "./types";
 
 const API_BASE_URL = `${clientEnv.NEXT_PUBLIC_API_URL}/api/v1`;
@@ -48,7 +48,7 @@ export async function refreshSession(): Promise<void> {
 
   try {
     await httpClient.post(
-      `${API_BASE_URL}${AUTH_ENDPOINTS.REFRESH}`,
+      `${API_BASE_URL}${API_ENDPOINTS.AUTH.REFRESH}`,
       {},
       {
         withCredentials: true,

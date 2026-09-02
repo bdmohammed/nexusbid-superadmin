@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { Clock,ShieldCheck } from "lucide-react";
+import { Clock, ShieldCheck } from 'lucide-react';
 
-import type { UserRoleAssignment } from "@/features/rbac/types";
-import RoleStats from "@/components/roleAssignment/RoleStats";
-import Button from "@/components/ui/Button";
+import type { UserRoleAssignment } from '@/features/rbac/types';
+import RoleStats from '@/components/roleAssignment/RoleStats';
+import Button from '@/components/ui/Button';
 
 interface RoleAssignmentsStatsViewProps {
   assignments: UserRoleAssignment[];
@@ -31,9 +31,8 @@ export default function RoleAssignmentsStatsView({
             Role Distribution & Security Governance
           </div>
           <p className="text-xs text-text-light leading-relaxed">
-            Review assigned administrative privileges across active users.
-            Enforce separation of duties by ensuring non-admin users cannot hold
-            system governance roles.
+            Review assigned administrative privileges across active users. Enforce separation of
+            duties by ensuring non-admin users cannot hold system governance roles.
           </p>
           <div className="pt-2 flex gap-3">
             <Button size="sm" onClick={onNavigateToList}>
@@ -48,9 +47,9 @@ export default function RoleAssignmentsStatsView({
             Time-Bound Lifecycle Auditing
           </div>
           <p className="text-xs text-text-light leading-relaxed">
-            Temporary role access automatically expires upon reaching the
-            specified expiration timestamp. Expired access rights are flagged
-            for revocation to maintain strict audit integrity.
+            Temporary role access automatically expires upon reaching the specified expiration
+            timestamp. Expired access rights are flagged for revocation to maintain strict audit
+            integrity.
           </p>
           <div className="pt-2 flex items-center gap-2 text-xs text-amber-700 font-semibold">
             <span>● Active Time-bound: {activeTimeBoundCount}</span>

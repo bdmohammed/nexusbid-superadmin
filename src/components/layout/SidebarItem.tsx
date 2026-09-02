@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import { useEffect,useState } from "react";
-import Link from "next/link";
-import { usePathname, useSearchParams } from "next/navigation";
-import { ChevronDown } from "lucide-react";
+import { useEffect, useState } from 'react';
+import Link from 'next/link';
+import { usePathname, useSearchParams } from 'next/navigation';
+import { ChevronDown } from 'lucide-react';
 
-import type { NavigationItem } from "@/constants/navigation";
-import { cn } from "@/lib/tailwind/utils";
-import { useSidebarStore } from "@/store";
+import type { NavigationItem } from '@/constants/navigation';
+import { cn } from '@/lib/tailwind/utils';
+import { useSidebarStore } from '@/store';
 
 export interface SidebarItemProps {
   item: NavigationItem;
@@ -22,9 +22,7 @@ export default function SidebarItem({ item, onClick }: SidebarItemProps) {
 
   // Check if this item is currently active
   const active =
-    item.href === "/dashboard"
-      ? pathname === "/dashboard"
-      : pathname.startsWith(item.href);
+    item.href === '/dashboard' ? pathname === '/dashboard' : pathname.startsWith(item.href);
 
   const hasChildren = !!item.children && item.children.length > 0;
 
@@ -46,13 +44,13 @@ export default function SidebarItem({ item, onClick }: SidebarItemProps) {
 
   // Helper to check if a specific child link is active (including query params)
   const isChildActive = (childHref: string) => {
-    const [path, query] = childHref.split("?");
+    const [path, query] = childHref.split('?');
     if (pathname !== path) return false;
     if (query) {
-      const [key, val] = query.split("=");
+      const [key, val] = query.split('=');
       return searchParams.get(key as string) === val;
     }
-    return !searchParams.get("view");
+    return !searchParams.get('view');
   };
 
   const renderItemContent = () => (
@@ -62,25 +60,23 @@ export default function SidebarItem({ item, onClick }: SidebarItemProps) {
       )}
       <span
         className={cn(
-          "flex h-8 w-8 shrink-0 items-center justify-center rounded-lg transition-colors",
+          'flex h-8 w-8 shrink-0 items-center justify-center rounded-lg transition-colors',
           active
-            ? "bg-primary/10 text-primary"
-            : "bg-background text-text-light group-hover:bg-white group-hover:text-text",
+            ? 'bg-primary/10 text-primary'
+            : 'bg-background text-text-light group-hover:bg-white group-hover:text-text',
         )}
       >
         <Icon size={18} />
       </span>
       {!isCollapsed && (
         <>
-          <span className="px-1 transition-all duration-300 font-semibold">
-            {item.title}
-          </span>
+          <span className="px-1 transition-all duration-300 font-semibold">{item.title}</span>
           {hasChildren && (
             <ChevronDown
               size={14}
               className={cn(
-                "ml-auto text-text-light transition-transform duration-200",
-                isOpen && "rotate-180",
+                'ml-auto text-text-light transition-transform duration-200',
+                isOpen && 'rotate-180',
               )}
             />
           )}
@@ -96,11 +92,11 @@ export default function SidebarItem({ item, onClick }: SidebarItemProps) {
           onClick={handleToggle}
           title={isCollapsed ? item.title : undefined}
           className={cn(
-            "group relative flex items-center gap-3 rounded-xl px-4 py-2 text-sm font-medium transition-all duration-200 w-full text-left cursor-pointer",
-            isCollapsed ? "justify-center px-2" : "",
+            'group relative flex items-center gap-3 rounded-xl px-4 py-2 text-sm font-medium transition-all duration-200 w-full text-left cursor-pointer',
+            isCollapsed ? 'justify-center px-2' : '',
             active && !isOpen
-              ? "bg-sidebar-active text-primary"
-              : "text-text-light hover:bg-sidebar-hover hover:text-text",
+              ? 'bg-sidebar-active text-primary'
+              : 'text-text-light hover:bg-sidebar-hover hover:text-text',
           )}
         >
           {renderItemContent()}
@@ -111,11 +107,11 @@ export default function SidebarItem({ item, onClick }: SidebarItemProps) {
           {...(onClick ? { onClick } : {})}
           title={isCollapsed ? item.title : undefined}
           className={cn(
-            "group relative flex items-center gap-3 rounded-xl px-4 py-2 text-sm font-medium transition-all duration-200",
-            isCollapsed ? "justify-center px-2" : "",
+            'group relative flex items-center gap-3 rounded-xl px-4 py-2 text-sm font-medium transition-all duration-200',
+            isCollapsed ? 'justify-center px-2' : '',
             active
-              ? "bg-sidebar-active text-primary"
-              : "text-text-light hover:bg-sidebar-hover hover:text-text",
+              ? 'bg-sidebar-active text-primary'
+              : 'text-text-light hover:bg-sidebar-hover hover:text-text',
           )}
         >
           {renderItemContent()}
@@ -126,8 +122,8 @@ export default function SidebarItem({ item, onClick }: SidebarItemProps) {
       {hasChildren && isOpen && (
         <div
           className={cn(
-            "transition-all duration-300 overflow-hidden flex flex-col gap-1 mt-1",
-            isCollapsed ? "items-center pl-0" : "pl-12",
+            'transition-all duration-300 overflow-hidden flex flex-col gap-1 mt-1',
+            isCollapsed ? 'items-center pl-0' : 'pl-12',
           )}
         >
           {item.children?.map((child) => {
@@ -138,15 +134,15 @@ export default function SidebarItem({ item, onClick }: SidebarItemProps) {
                 href={child.href}
                 {...(onClick ? { onClick } : {})}
                 className={cn(
-                  "relative flex items-center transition-all duration-200 font-semibold rounded-lg",
+                  'relative flex items-center transition-all duration-200 font-semibold rounded-lg',
                   isCollapsed
-                    ? "w-8 h-8 justify-center text-[10px] bg-background hover:bg-sidebar-hover text-text-light hover:text-text"
-                    : "px-3 py-1.5 text-xs text-text-light hover:text-text",
+                    ? 'w-8 h-8 justify-center text-[10px] bg-background hover:bg-sidebar-hover text-text-light hover:text-text'
+                    : 'px-3 py-1.5 text-xs text-text-light hover:text-text',
                   childActive
                     ? isCollapsed
-                      ? "bg-primary/10 text-primary border border-primary/20"
-                      : "text-primary font-bold animate-fade-in"
-                    : "",
+                      ? 'bg-primary/10 text-primary border border-primary/20'
+                      : 'text-primary font-bold animate-fade-in'
+                    : '',
                 )}
               >
                 {childActive && !isCollapsed && (

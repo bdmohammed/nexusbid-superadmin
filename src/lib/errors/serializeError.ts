@@ -1,6 +1,7 @@
 import { SerializedError } from "./types";
-import { normalizeError } from "./normalize-error";
+import { normalizeError } from "./normalizeError";
 import { ERROR_CODES } from "./constants";
+import { isDevEnv } from "@/env/client";
 
 export function serializeError(
   error: unknown,
@@ -14,9 +15,7 @@ export function serializeError(
       ? crypto.randomUUID()
       : Math.random().toString(36).substring(2, 15);
 
-  const isDevelopment = process.env.NODE_ENV === "development";
-
-  if (isDevelopment) {
+  if (isDevEnv()) {
     return {
       errorId,
       message: normalized.message,

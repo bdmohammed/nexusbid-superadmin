@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { Search } from "lucide-react";
+import { Search } from 'lucide-react';
 
-import type { ChangeEvent } from "react";
+import type { ChangeEvent } from 'react';
 
 export interface SearchInputProps {
   placeholder?: string;
@@ -11,16 +11,13 @@ export interface SearchInputProps {
 }
 
 export default function SearchInput({
-  placeholder = "Search...",
+  placeholder = 'Search...',
   value,
   onChange,
 }: SearchInputProps) {
   return (
     <div className="relative w-full max-w-sm">
-      <Search
-        size={18}
-        className="absolute left-3 top-1/2 -translate-y-1/2 text-text-light"
-      />
+      <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-light" />
 
       <input
         value={value}

@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useState } from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import {
   ArrowLeft,
   Check,
@@ -12,11 +12,11 @@ import {
   FileText,
   Layers,
   Trash2,
-} from "lucide-react";
-import { toast } from "sonner";
+} from 'lucide-react';
+import { toast } from 'sonner';
 
-import Button from "@/components/ui/Button";
-import { useCreatePlan } from "@/features/subscriptions";
+import Button from '@/components/ui/Button';
+import { useCreatePlan } from '@/features/subscriptions';
 
 export default function CreatePlanWizardPage() {
   const router = useRouter();
@@ -25,13 +25,13 @@ export default function CreatePlanWizardPage() {
 
   // Form State
   const [formData, setFormData] = useState({
-    name: "",
-    subtitle: "",
-    description: "",
-    badge: "",
-    planType: "all-access",
+    name: '',
+    subtitle: '',
+    description: '',
+    badge: '',
+    planType: 'all-access',
     priceCents: 0,
-    currency: "USD",
+    currency: 'USD',
     durationDays: 30,
     trialDays: 0,
     setupFeeCents: 0,
@@ -44,24 +44,24 @@ export default function CreatePlanWizardPage() {
     }[],
     categoryPricing: [] as { categoryId: string; priceCents: number }[],
     features: [] as { featureKey: string; limitValue: string }[],
-    targetCountry: "",
-    targetStateId: "",
-    targetCategoryId: "",
+    targetCountry: '',
+    targetStateId: '',
+    targetCategoryId: '',
     bundleSize: 5,
   });
 
   // Country Pricing row inputs
   const [newCountry, setNewCountry] = useState({
-    country: "",
-    currency: "USD",
+    country: '',
+    currency: 'USD',
     priceCents: 0,
   });
   // Features catalog key choices
   const featureCatalog = [
-    { key: "max_tenders", label: "Max Bid Submissions" },
-    { key: "api_access", label: "Developer API Access" },
-    { key: "ai_search", label: "AI Search Assistant" },
-    { key: "unlimited_documents", label: "Unlimited Documents" },
+    { key: 'max_tenders', label: 'Max Bid Submissions' },
+    { key: 'api_access', label: 'Developer API Access' },
+    { key: 'ai_search', label: 'AI Search Assistant' },
+    { key: 'unlimited_documents', label: 'Unlimited Documents' },
   ];
 
   function addCountryPricing() {
@@ -70,7 +70,7 @@ export default function CreatePlanWizardPage() {
       ...prev,
       countryPricing: [...prev.countryPricing, newCountry],
     }));
-    setNewCountry({ country: "", currency: "USD", priceCents: 0 });
+    setNewCountry({ country: '', currency: 'USD', priceCents: 0 });
   }
 
   function removeCountryPricing(idx: number) {
@@ -98,11 +98,11 @@ export default function CreatePlanWizardPage() {
   }
 
   const steps = [
-    { id: 1, name: "Plan Info", icon: FileText },
-    { id: 2, name: "Pricing Setup", icon: DollarSign },
-    { id: 3, name: "Geographic Pricing", icon: DollarSign },
-    { id: 4, name: "Features & Limits", icon: Layers },
-    { id: 5, name: "Summary & Review", icon: Check },
+    { id: 1, name: 'Plan Info', icon: FileText },
+    { id: 2, name: 'Pricing Setup', icon: DollarSign },
+    { id: 3, name: 'Geographic Pricing', icon: DollarSign },
+    { id: 4, name: 'Features & Limits', icon: Layers },
+    { id: 5, name: 'Summary & Review', icon: Check },
   ];
 
   async function handleFinalSubmit() {
@@ -124,9 +124,7 @@ export default function CreatePlanWizardPage() {
         targetStateId: formData.targetStateId || undefined,
         targetCountry: formData.targetCountry || undefined,
         targetCategoryId: formData.targetCategoryId || undefined,
-        bundleSize: formData.bundleSize
-          ? Number(formData.bundleSize)
-          : undefined,
+        bundleSize: formData.bundleSize ? Number(formData.bundleSize) : undefined,
         features: formData.features,
         countryPricing: formData.countryPricing.map((cp) => ({
           ...cp,
@@ -138,10 +136,10 @@ export default function CreatePlanWizardPage() {
         })),
       });
 
-      toast.success("Plan created successfully!");
-      router.push("/subscriptions?view=plan-list");
+      toast.success('Plan created successfully!');
+      router.push('/subscriptions?view=plan-list');
     } catch (err: any) {
-      toast.error(err?.message || "Failed to create plan.");
+      toast.error(err?.message || 'Failed to create plan.');
     }
   }
 
@@ -156,9 +154,7 @@ export default function CreatePlanWizardPage() {
           <ArrowLeft size={18} />
         </Link>
         <div>
-          <h1 className="text-2xl font-bold text-text">
-            Create Subscription Plan
-          </h1>
+          <h1 className="text-2xl font-bold text-text">Create Subscription Plan</h1>
           <p className="text-sm text-text-light mt-0.5">
             Setup new versioned pricing tiers for vendors.
           </p>
@@ -175,23 +171,20 @@ export default function CreatePlanWizardPage() {
             const isActive = step === s.id;
 
             return (
-              <div
-                key={s.id}
-                className="flex flex-col items-center gap-1.5 bg-surface px-4 z-10"
-              >
+              <div key={s.id} className="flex flex-col items-center gap-1.5 bg-surface px-4 z-10">
                 <div
                   className={`flex h-10 w-10 items-center justify-center rounded-full border-2 transition ${
                     isCompleted
-                      ? "border-primary bg-primary text-white"
+                      ? 'border-primary bg-primary text-white'
                       : isActive
-                        ? "border-primary text-primary bg-primary/5"
-                        : "border-border text-text-light bg-surface"
+                        ? 'border-primary text-primary bg-primary/5'
+                        : 'border-border text-text-light bg-surface'
                   }`}
                 >
                   {isCompleted ? <Check size={16} /> : <Icon size={16} />}
                 </div>
                 <span
-                  className={`text-xs font-semibold ${isActive ? "text-primary" : "text-text-light"}`}
+                  className={`text-xs font-semibold ${isActive ? 'text-primary' : 'text-text-light'}`}
                 >
                   {s.name}
                 </span>
@@ -205,21 +198,15 @@ export default function CreatePlanWizardPage() {
       <div className="rounded-2xl border border-border bg-surface p-6 shadow-sm min-h-[350px]">
         {step === 1 && (
           <div className="space-y-4">
-            <h2 className="text-lg font-bold text-text">
-              Step 1: Plan Information
-            </h2>
+            <h2 className="text-lg font-bold text-text">Step 1: Plan Information</h2>
             <div className="grid gap-4 md:grid-cols-2">
               <div>
-                <label className="text-xs font-bold text-text-light uppercase">
-                  Plan Name *
-                </label>
+                <label className="text-xs font-bold text-text-light uppercase">Plan Name *</label>
                 <input
                   type="text"
                   placeholder="e.g. Professional Plan"
                   value={formData.name}
-                  onChange={(e) =>
-                    setFormData({ ...formData, name: e.target.value })
-                  }
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   className="mt-1 w-full rounded-lg border border-border bg-background p-3 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/10"
                 />
               </div>
@@ -231,9 +218,7 @@ export default function CreatePlanWizardPage() {
                   type="text"
                   placeholder="e.g. Most Popular"
                   value={formData.badge}
-                  onChange={(e) =>
-                    setFormData({ ...formData, badge: e.target.value })
-                  }
+                  onChange={(e) => setFormData({ ...formData, badge: e.target.value })}
                   className="mt-1 w-full rounded-lg border border-border bg-background p-3 text-sm outline-none focus:border-primary"
                 />
               </div>
@@ -246,23 +231,17 @@ export default function CreatePlanWizardPage() {
                 type="text"
                 placeholder="Brief summary sentence"
                 value={formData.subtitle}
-                onChange={(e) =>
-                  setFormData({ ...formData, subtitle: e.target.value })
-                }
+                onChange={(e) => setFormData({ ...formData, subtitle: e.target.value })}
                 className="mt-1 w-full rounded-lg border border-border bg-background p-3 text-sm outline-none focus:border-primary"
               />
             </div>
             <div>
-              <label className="text-xs font-bold text-text-light uppercase">
-                Description
-              </label>
+              <label className="text-xs font-bold text-text-light uppercase">Description</label>
               <textarea
                 placeholder="Full details of what is included..."
                 rows={4}
                 value={formData.description}
-                onChange={(e) =>
-                  setFormData({ ...formData, description: e.target.value })
-                }
+                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                 className="mt-1 w-full rounded-lg border border-border bg-background p-3 text-sm outline-none focus:border-primary"
               />
             </div>
@@ -272,9 +251,7 @@ export default function CreatePlanWizardPage() {
               </label>
               <select
                 value={formData.planType}
-                onChange={(e) =>
-                  setFormData({ ...formData, planType: e.target.value })
-                }
+                onChange={(e) => setFormData({ ...formData, planType: e.target.value })}
                 className="mt-1 w-full rounded-lg border border-border bg-background p-3 text-sm outline-none focus:border-primary"
               >
                 <option value="all-access">All-Access (Unrestricted)</option>
@@ -289,9 +266,7 @@ export default function CreatePlanWizardPage() {
 
         {step === 2 && (
           <div className="space-y-4">
-            <h2 className="text-lg font-bold text-text">
-              Step 2: Pricing Configuration
-            </h2>
+            <h2 className="text-lg font-bold text-text">Step 2: Pricing Configuration</h2>
             <div className="grid gap-4 md:grid-cols-2">
               <div>
                 <label className="text-xs font-bold text-text-light uppercase">
@@ -300,7 +275,7 @@ export default function CreatePlanWizardPage() {
                 <input
                   type="number"
                   placeholder="e.g. 4900 for $49.00"
-                  value={formData.priceCents || ""}
+                  value={formData.priceCents || ''}
                   onChange={(e) =>
                     setFormData({
                       ...formData,
@@ -311,15 +286,11 @@ export default function CreatePlanWizardPage() {
                 />
               </div>
               <div>
-                <label className="text-xs font-bold text-text-light uppercase">
-                  Currency
-                </label>
+                <label className="text-xs font-bold text-text-light uppercase">Currency</label>
                 <input
                   type="text"
                   value={formData.currency}
-                  onChange={(e) =>
-                    setFormData({ ...formData, currency: e.target.value })
-                  }
+                  onChange={(e) => setFormData({ ...formData, currency: e.target.value })}
                   className="mt-1 w-full rounded-lg border border-border bg-background p-3 text-sm outline-none focus:border-primary"
                 />
               </div>
@@ -361,9 +332,7 @@ export default function CreatePlanWizardPage() {
                 <input
                   type="checkbox"
                   checked={formData.isRecurring}
-                  onChange={(e) =>
-                    setFormData({ ...formData, isRecurring: e.target.checked })
-                  }
+                  onChange={(e) => setFormData({ ...formData, isRecurring: e.target.checked })}
                   className="h-4 w-4 rounded border-border text-primary focus:ring-primary"
                 />
                 Is Recurring Subscription
@@ -372,9 +341,7 @@ export default function CreatePlanWizardPage() {
                 <input
                   type="checkbox"
                   checked={formData.isFeatured}
-                  onChange={(e) =>
-                    setFormData({ ...formData, isFeatured: e.target.checked })
-                  }
+                  onChange={(e) => setFormData({ ...formData, isFeatured: e.target.checked })}
                   className="h-4 w-4 rounded border-border text-primary focus:ring-primary"
                 />
                 Feature this Plan
@@ -385,38 +352,28 @@ export default function CreatePlanWizardPage() {
 
         {step === 3 && (
           <div className="space-y-4">
-            <h2 className="text-lg font-bold text-text">
-              Step 3: Geographic Price Overrides
-            </h2>
+            <h2 className="text-lg font-bold text-text">Step 3: Geographic Price Overrides</h2>
             <p className="text-xs text-text-light">
               Define regional pricing rules based on customer location.
             </p>
 
             <div className="flex flex-wrap gap-2.5 items-end bg-background p-4 rounded-xl border border-border">
               <div className="flex-1 min-w-[150px]">
-                <label className="text-[10px] font-bold uppercase text-text-light">
-                  Country
-                </label>
+                <label className="text-[10px] font-bold uppercase text-text-light">Country</label>
                 <input
                   type="text"
                   placeholder="e.g. Canada"
                   value={newCountry.country}
-                  onChange={(e) =>
-                    setNewCountry({ ...newCountry, country: e.target.value })
-                  }
+                  onChange={(e) => setNewCountry({ ...newCountry, country: e.target.value })}
                   className="mt-1 w-full rounded border border-border bg-surface p-2 text-xs outline-none"
                 />
               </div>
               <div className="w-24">
-                <label className="text-[10px] font-bold uppercase text-text-light">
-                  Currency
-                </label>
+                <label className="text-[10px] font-bold uppercase text-text-light">Currency</label>
                 <input
                   type="text"
                   value={newCountry.currency}
-                  onChange={(e) =>
-                    setNewCountry({ ...newCountry, currency: e.target.value })
-                  }
+                  onChange={(e) => setNewCountry({ ...newCountry, currency: e.target.value })}
                   className="mt-1 w-full rounded border border-border bg-surface p-2 text-xs outline-none"
                 />
               </div>
@@ -427,7 +384,7 @@ export default function CreatePlanWizardPage() {
                 <input
                   type="number"
                   placeholder="6500"
-                  value={newCountry.priceCents || ""}
+                  value={newCountry.priceCents || ''}
                   onChange={(e) =>
                     setNewCountry({
                       ...newCountry,
@@ -458,9 +415,7 @@ export default function CreatePlanWizardPage() {
                       <tr key={idx}>
                         <td className="px-4 py-2 font-bold">{cp.country}</td>
                         <td className="px-4 py-2">{cp.currency}</td>
-                        <td className="px-4 py-2">
-                          ${(cp.priceCents / 100).toFixed(2)}
-                        </td>
+                        <td className="px-4 py-2">${(cp.priceCents / 100).toFixed(2)}</td>
                         <td className="px-4 py-2 text-right">
                           <button
                             type="button"
@@ -481,14 +436,11 @@ export default function CreatePlanWizardPage() {
 
         {step === 4 && (
           <div className="space-y-4">
-            <h2 className="text-lg font-bold text-text">
-              Step 4: Features & Capabilities
-            </h2>
+            <h2 className="text-lg font-bold text-text">Step 4: Features & Capabilities</h2>
             <div className="grid gap-4 md:grid-cols-2">
               {featureCatalog.map((feat) => {
                 const currentVal =
-                  formData.features.find((f) => f.featureKey === feat.key)
-                    ?.limitValue || "";
+                  formData.features.find((f) => f.featureKey === feat.key)?.limitValue || '';
 
                 return (
                   <div
@@ -496,20 +448,14 @@ export default function CreatePlanWizardPage() {
                     className="border border-border p-4 rounded-xl bg-background flex flex-col justify-between"
                   >
                     <div>
-                      <span className="text-sm font-semibold text-text">
-                        {feat.label}
-                      </span>
-                      <p className="text-[10px] text-text-light mt-0.5">
-                        Key: {feat.key}
-                      </p>
+                      <span className="text-sm font-semibold text-text">{feat.label}</span>
+                      <p className="text-[10px] text-text-light mt-0.5">Key: {feat.key}</p>
                     </div>
                     <input
                       type="text"
                       placeholder="e.g. 50 (or leave empty to exclude)"
                       value={currentVal}
-                      onChange={(e) =>
-                        handleFeatureLimit(feat.key, e.target.value)
-                      }
+                      onChange={(e) => handleFeatureLimit(feat.key, e.target.value)}
                       className="mt-3 w-full rounded border border-border bg-surface p-2 text-xs outline-none focus:border-primary"
                     />
                   </div>
@@ -521,9 +467,7 @@ export default function CreatePlanWizardPage() {
 
         {step === 5 && (
           <div className="space-y-6">
-            <h2 className="text-lg font-bold text-text">
-              Step 5: Review & Submit
-            </h2>
+            <h2 className="text-lg font-bold text-text">Step 5: Review & Submit</h2>
             <div className="grid gap-6 md:grid-cols-2">
               <div className="space-y-3">
                 <h3 className="font-bold text-sm text-text-light uppercase tracking-wider">
@@ -534,14 +478,13 @@ export default function CreatePlanWizardPage() {
                     <strong>Name:</strong> {formData.name}
                   </p>
                   <p>
-                    <strong>Subtitle:</strong> {formData.subtitle || "None"}
+                    <strong>Subtitle:</strong> {formData.subtitle || 'None'}
                   </p>
                   <p>
                     <strong>Type:</strong> {formData.planType}
                   </p>
                   <p>
-                    <strong>Featured:</strong>{" "}
-                    {formData.isFeatured ? "Yes" : "No"}
+                    <strong>Featured:</strong> {formData.isFeatured ? 'Yes' : 'No'}
                   </p>
                 </div>
               </div>
@@ -551,8 +494,8 @@ export default function CreatePlanWizardPage() {
                 </h3>
                 <div className="border border-border p-4 rounded-xl bg-background text-sm space-y-2">
                   <p>
-                    <strong>Price:</strong> $
-                    {(formData.priceCents / 100).toFixed(2)} {formData.currency}
+                    <strong>Price:</strong> ${(formData.priceCents / 100).toFixed(2)}{' '}
+                    {formData.currency}
                   </p>
                   <p>
                     <strong>Duration:</strong> {formData.durationDays} Days
@@ -586,13 +529,8 @@ export default function CreatePlanWizardPage() {
             Next Step
           </Button>
         ) : (
-          <Button
-            onClick={handleFinalSubmit}
-            disabled={createPlanMutation.isPending}
-          >
-            {createPlanMutation.isPending
-              ? "Creating Plan..."
-              : "Submit Plan for Review"}
+          <Button onClick={handleFinalSubmit} disabled={createPlanMutation.isPending}>
+            {createPlanMutation.isPending ? 'Creating Plan...' : 'Submit Plan for Review'}
           </Button>
         )}
       </div>

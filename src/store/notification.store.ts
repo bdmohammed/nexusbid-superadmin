@@ -1,6 +1,6 @@
-import { create } from "zustand";
+import { create } from 'zustand';
 
-export type NotificationType = "success" | "error" | "warning" | "info";
+export type NotificationType = 'success' | 'error' | 'warning' | 'info';
 
 export interface Notification {
   id: string;
@@ -12,7 +12,7 @@ export interface Notification {
 
 interface NotificationStore {
   notifications: Notification[];
-  add: (notification: Omit<Notification, "id">) => void;
+  add: (notification: Omit<Notification, 'id'>) => void;
   remove: (id: string) => void;
   clear: () => void;
 }
@@ -34,9 +34,7 @@ export const useNotificationStore = create<NotificationStore>((set) => ({
 
   remove: (id) =>
     set((state) => ({
-      notifications: state.notifications.filter(
-        (notification) => notification.id !== id,
-      ),
+      notifications: state.notifications.filter((notification) => notification.id !== id),
     })),
 
   clear: () =>

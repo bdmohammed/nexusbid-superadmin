@@ -1,16 +1,16 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { analyticsApi } from "./api";
-import { analyticsQueryKeys } from "./keys";
+import { analyticsApi } from './api';
+import { analyticsQueryKeys } from './keys';
 
 import type {
   AnalyticsQuery,
   CreateScheduledReportInput,
   RequestExportInput,
   SaveDashboardLayoutInput,
-} from "../types";
-import type { ErrorCode } from "@/lib/errors";
-import { AppError } from "@/lib/errors";
+} from '../types';
+import type { ErrorCode } from '@/lib/errors';
+import { AppError } from '@/lib/errors';
 
 // ─── Query Hooks ─────────────────────────────────────────────────────────────
 
@@ -22,7 +22,7 @@ export function useAnalyticsOverview(query?: AnalyticsQuery) {
 
       if (!data.success) {
         throw new AppError(
-          data.message || "Failed to fetch overview stats",
+          data.message || 'Failed to fetch overview stats',
           status,
           data.error as ErrorCode,
         );
@@ -41,7 +41,7 @@ export function useAnalyticsTenders(query?: AnalyticsQuery) {
 
       if (!data.success) {
         throw new AppError(
-          data.message || "Failed to fetch tender analytics",
+          data.message || 'Failed to fetch tender analytics',
           status,
           data.error as ErrorCode,
         );
@@ -60,7 +60,7 @@ export function useAnalyticsUsers(query?: AnalyticsQuery) {
 
       if (!data.success) {
         throw new AppError(
-          data.message || "Failed to fetch user metrics",
+          data.message || 'Failed to fetch user metrics',
           status,
           data.error as ErrorCode,
         );
@@ -79,7 +79,7 @@ export function useAnalyticsRevenue(query?: AnalyticsQuery) {
 
       if (!data.success) {
         throw new AppError(
-          data.message || "Failed to fetch revenue metrics",
+          data.message || 'Failed to fetch revenue metrics',
           status,
           data.error as ErrorCode,
         );
@@ -98,7 +98,7 @@ export function useAnalyticsCategories() {
 
       if (!data.success) {
         throw new AppError(
-          data.message || "Failed to fetch category metrics",
+          data.message || 'Failed to fetch category metrics',
           status,
           data.error as ErrorCode,
         );
@@ -117,7 +117,7 @@ export function useAnalyticsSystem() {
 
       if (!data.success) {
         throw new AppError(
-          data.message || "Failed to fetch system metrics",
+          data.message || 'Failed to fetch system metrics',
           status,
           data.error as ErrorCode,
         );
@@ -136,7 +136,7 @@ export function useAnalyticsDashboard() {
 
       if (!data.success) {
         throw new AppError(
-          data.message || "Failed to fetch dashboard layout",
+          data.message || 'Failed to fetch dashboard layout',
           status,
           data.error as ErrorCode,
         );
@@ -155,7 +155,7 @@ export function useAnalyticsAlerts() {
 
       if (!data.success) {
         throw new AppError(
-          data.message || "Failed to fetch active alerts list",
+          data.message || 'Failed to fetch active alerts list',
           status,
           data.error as ErrorCode,
         );
@@ -174,7 +174,7 @@ export function useAnalyticsExportJobs() {
 
       if (!data.success) {
         throw new AppError(
-          data.message || "Failed to fetch export jobs list",
+          data.message || 'Failed to fetch export jobs list',
           status,
           data.error as ErrorCode,
         );
@@ -193,7 +193,7 @@ export function useAnalyticsReportSchedules() {
 
       if (!data.success) {
         throw new AppError(
-          data.message || "Failed to list report schedules",
+          data.message || 'Failed to list report schedules',
           status,
           data.error as ErrorCode,
         );
@@ -212,7 +212,7 @@ export function useAnalyticsUserGrowth(query?: AnalyticsQuery) {
 
       if (!data.success) {
         throw new AppError(
-          data.message || "Failed to fetch user growth data",
+          data.message || 'Failed to fetch user growth data',
           status,
           data.error as ErrorCode,
         );
@@ -231,7 +231,7 @@ export function useAnalyticsRevenueLegacy(query?: AnalyticsQuery) {
 
       if (!data.success) {
         throw new AppError(
-          data.message || "Failed to fetch legacy revenue data",
+          data.message || 'Failed to fetch legacy revenue data',
           status,
           data.error as ErrorCode,
         );
@@ -250,7 +250,7 @@ export function useAnalyticsTopDownloads() {
 
       if (!data.success) {
         throw new AppError(
-          data.message || "Failed to fetch top downloads",
+          data.message || 'Failed to fetch top downloads',
           status,
           data.error as ErrorCode,
         );

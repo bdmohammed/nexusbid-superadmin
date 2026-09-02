@@ -11,22 +11,14 @@ export interface NotificationAction {
 export interface Notification {
   id: string;
   recipientId: string;
-  status: "UNREAD" | "READ" | "ARCHIVED" | "DISMISSED";
+  status: 'UNREAD' | 'READ' | 'ARCHIVED' | 'DISMISSED';
   readAt: string | null;
   createdAt: string;
   title: string;
   message: string;
   category: string;
   severity:
-    | "critical"
-    | "high"
-    | "medium"
-    | "low"
-    | "info"
-    | "CRITICAL"
-    | "HIGH"
-    | "MEDIUM"
-    | "LOW";
+    'critical' | 'high' | 'medium' | 'low' | 'info' | 'CRITICAL' | 'HIGH' | 'MEDIUM' | 'LOW';
   entityType?: string | null;
   entityId?: string | null;
   actionUrl?: string | null;

@@ -1,6 +1,6 @@
 import httpClient from "./client";
 import { clientEnv } from "@/env/client";
-import { AUTH_ENDPOINTS } from "./constants";
+import { API_ENDPOINTS } from "./constants";
 import { ApiResponse, CsrfTokenResponse } from "./types";
 import { logger } from "@/lib/logger";
 
@@ -46,7 +46,7 @@ export async function fetchCsrfToken(): Promise<string | null> {
   csrfPromise = (async () => {
     try {
       const { data } = await httpClient.get<ApiResponse<CsrfTokenResponse>>(
-        `${API_BASE_URL}${AUTH_ENDPOINTS.CSRF_TOKEN}`,
+        `${API_BASE_URL}${API_ENDPOINTS.AUTH.CSRF_TOKEN}`,
         {
           withCredentials: true,
         },
@@ -56,7 +56,7 @@ export async function fetchCsrfToken(): Promise<string | null> {
 
       return csrfToken;
     } catch (error) {
-      logger.error("Failed to fetch CSRF token", error);
+      logger.error("Failed to fetch CSRF token", error as Error);
 
       csrfToken = null;
 

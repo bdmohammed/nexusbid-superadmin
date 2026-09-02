@@ -1,10 +1,10 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery } from '@tanstack/react-query';
 
-import { subscriptionApi } from "./api";
-import { subscriptionQueryKeys } from "./keys";
+import { subscriptionApi } from './api';
+import { subscriptionQueryKeys } from './keys';
 
-import type { ErrorCode } from "@/lib/errors";
-import { AppError } from "@/lib/errors";
+import type { ErrorCode } from '@/lib/errors';
+import { AppError } from '@/lib/errors';
 
 export function usePlans() {
   return useQuery({
@@ -168,7 +168,7 @@ export function usePlanDetails(id: string) {
 
 export function useAllPlansAdmin() {
   return useQuery({
-    queryKey: [...subscriptionQueryKeys.all, "admin-all-plans"],
+    queryKey: [...subscriptionQueryKeys.all, 'admin-all-plans'],
     queryFn: async () => {
       const { data } = await subscriptionApi.listAllPlans();
 

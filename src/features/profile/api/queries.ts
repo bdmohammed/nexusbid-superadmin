@@ -1,7 +1,7 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { profileApi } from "./api";
-import { profileQueryKeys } from "./keys";
+import { profileApi } from './api';
+import { profileQueryKeys } from './keys';
 
 import type {
   ChangePasswordInput,
@@ -10,9 +10,9 @@ import type {
   UpdateAvatarInput,
   UpdatePreferencesInput,
   UpdateProfileInput,
-} from "../types";
-import type { ErrorCode } from "@/lib/errors";
-import { AppError } from "@/lib/errors";
+} from '../types';
+import type { ErrorCode } from '@/lib/errors';
+import { AppError } from '@/lib/errors';
 
 // ─── Query Hooks ─────────────────────────────────────────────────────────────
 
@@ -24,7 +24,7 @@ export function useUserProfile() {
 
       if (!data.success) {
         throw new AppError(
-          data.message || "Failed to fetch profile details",
+          data.message || 'Failed to fetch profile details',
           status,
           data.error as ErrorCode,
         );
@@ -43,7 +43,7 @@ export function useUserSessions() {
 
       if (!data.success) {
         throw new AppError(
-          data.message || "Failed to fetch user sessions",
+          data.message || 'Failed to fetch user sessions',
           status,
           data.error as ErrorCode,
         );
@@ -62,7 +62,7 @@ export function useUserDevices() {
 
       if (!data.success) {
         throw new AppError(
-          data.message || "Failed to fetch user devices",
+          data.message || 'Failed to fetch user devices',
           status,
           data.error as ErrorCode,
         );
@@ -81,7 +81,7 @@ export function useUserActivity(query?: PageLimitQuery) {
 
       if (!data.success) {
         throw new AppError(
-          data.message || "Failed to fetch user activity feed",
+          data.message || 'Failed to fetch user activity feed',
           status,
           data.error as ErrorCode,
         );
@@ -100,7 +100,7 @@ export function useUserSecurityHistory(query?: PageLimitQuery) {
 
       if (!data.success) {
         throw new AppError(
-          data.message || "Failed to fetch security logs",
+          data.message || 'Failed to fetch security logs',
           status,
           data.error as ErrorCode,
         );
@@ -119,7 +119,7 @@ export function useUserTimeline() {
 
       if (!data.success) {
         throw new AppError(
-          data.message || "Failed to fetch profile timeline",
+          data.message || 'Failed to fetch profile timeline',
           status,
           data.error as ErrorCode,
         );
@@ -138,7 +138,7 @@ export function useUserSubscription() {
 
       if (!data.success) {
         throw new AppError(
-          data.message || "Failed to fetch subscription details",
+          data.message || 'Failed to fetch subscription details',
           status,
           data.error as ErrorCode,
         );
@@ -157,7 +157,7 @@ export function useUserPreferences() {
 
       if (!data.success) {
         throw new AppError(
-          data.message || "Failed to fetch user preferences",
+          data.message || 'Failed to fetch user preferences',
           status,
           data.error as ErrorCode,
         );

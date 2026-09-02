@@ -1,11 +1,11 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { dashboardApi } from "./api";
-import { dashboardQueryKeys } from "./keys";
+import { dashboardApi } from './api';
+import { dashboardQueryKeys } from './keys';
 
-import type { PatchLayoutInput } from "../types";
-import type { ErrorCode } from "@/lib/errors";
-import { AppError } from "@/lib/errors";
+import type { PatchLayoutInput } from '../types';
+import type { ErrorCode } from '@/lib/errors';
+import { AppError } from '@/lib/errors';
 
 // ─── Query Hooks ─────────────────────────────────────────────────────────────
 
@@ -17,7 +17,7 @@ export function useDashboardConfig() {
       console.log(data);
       if (!data.success) {
         throw new AppError(
-          data.message || "Failed to fetch dashboard config",
+          data.message || 'Failed to fetch dashboard config',
           status,
           data.error as ErrorCode,
         );
@@ -36,7 +36,7 @@ export function useDashboardTenders() {
 
       if (!data.success) {
         throw new AppError(
-          data.message || "Failed to fetch tender stats",
+          data.message || 'Failed to fetch tender stats',
           status,
           data.error as ErrorCode,
         );
@@ -55,7 +55,7 @@ export function useDashboardRevenue() {
 
       if (!data.success) {
         throw new AppError(
-          data.message || "Failed to fetch revenue stats",
+          data.message || 'Failed to fetch revenue stats',
           status,
           data.error as ErrorCode,
         );
@@ -74,7 +74,7 @@ export function useDashboardUsers() {
 
       if (!data.success) {
         throw new AppError(
-          data.message || "Failed to fetch user stats",
+          data.message || 'Failed to fetch user stats',
           status,
           data.error as ErrorCode,
         );
@@ -93,7 +93,7 @@ export function useDashboardReviewQueue() {
 
       if (!data.success) {
         throw new AppError(
-          data.message || "Failed to fetch review queue stats",
+          data.message || 'Failed to fetch review queue stats',
           status,
           data.error as ErrorCode,
         );
@@ -112,7 +112,7 @@ export function useDashboardAlerts() {
 
       if (!data.success) {
         throw new AppError(
-          data.message || "Failed to fetch dashboard alerts",
+          data.message || 'Failed to fetch dashboard alerts',
           status,
           data.error as ErrorCode,
         );
@@ -131,7 +131,7 @@ export function useDashboardRecentActivity() {
 
       if (!data.success) {
         throw new AppError(
-          data.message || "Failed to fetch recent activities",
+          data.message || 'Failed to fetch recent activities',
           status,
           data.error as ErrorCode,
         );
@@ -150,7 +150,7 @@ export function useDashboardSystemHealth() {
 
       if (!data.success) {
         throw new AppError(
-          data.message || "Failed to fetch system health telemetry",
+          data.message || 'Failed to fetch system health telemetry',
           status,
           data.error as ErrorCode,
         );
@@ -169,7 +169,7 @@ export function useDashboardQuickActions() {
 
       if (!data.success) {
         throw new AppError(
-          data.message || "Failed to fetch quick actions list",
+          data.message || 'Failed to fetch quick actions list',
           status,
           data.error as ErrorCode,
         );

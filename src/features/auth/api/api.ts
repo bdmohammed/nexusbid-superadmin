@@ -17,69 +17,62 @@ import type {
   SubmitApprovalInput,
   TotpSetupResponse,
   UpdateUserDetailInput,
-  User,
   UserDevice,
   UserNote,
   UserSession,
   UserStats,
-} from "../types";
-import type { ApiResponse } from "@/types";
-import { apiClient } from "@/lib/http";
+} from '../types';
+import type { ApiResponse, User } from '@/types';
+import { apiClient } from '@/lib/http';
 
 export const authApi = {
   /**
    * Login
    */
   login(dto: LoginDto) {
-    return apiClient.post<ApiResponse<AuthResponse>>("/admin/auth/login", dto);
+    return apiClient.post<ApiResponse<AuthResponse>>('/auth/admin/login', dto);
   },
 
   /**
    * Register
    */
   register(payload: RegisterDto) {
-    return apiClient.post<ApiResponse<AuthResponse>>(
-      "/admin/auth/register",
-      payload,
-    );
+    return apiClient.post<ApiResponse<AuthResponse>>('/auth/admin/register', payload);
   },
 
   /**
    * Logout
    */
   logout() {
-    return apiClient.post<ApiResponse<void>>("/auth/logout");
+    return apiClient.post<ApiResponse<void>>('/auth/logout');
   },
 
   /**
    * Current User
    */
   me() {
-    return apiClient.get<ApiResponse<User>>("/auth/me");
+    return apiClient.get<ApiResponse<User>>('/auth/me');
   },
 
   /**
    * Forgot Password
    */
   forgotPassword(dto: ForgotPasswordDto) {
-    return apiClient.post<ApiResponse<void>>(
-      "/admin/auth/forgot-password",
-      dto,
-    );
+    return apiClient.post<ApiResponse<void>>('/auth/forgot-password', dto);
   },
 
   /**
    * Reset Password
    */
   resetPassword(dto: ResetPasswordDto) {
-    return apiClient.post<ApiResponse<void>>("/admin/auth/reset-password", dto);
+    return apiClient.post<ApiResponse<void>>('/auth/reset-password', dto);
   },
 
   /**
    * Verify Email
    */
   verifyEmail(token: string) {
-    return apiClient.post<void>("/admin/auth/verify-email", {
+    return apiClient.post<void>('/auth/admin/verify-email', {
       token,
     });
   },
@@ -88,31 +81,25 @@ export const authApi = {
    * Resend Verification Email
    */
   resendVerification(email: string) {
-    return apiClient.post<ApiResponse<void>>(
-      "/admin/auth/resend-verification",
-      {
-        email,
-      },
-    );
+    return apiClient.post<ApiResponse<void>>('/auth/resend-verification', {
+      email,
+    });
   },
 
   /**
    * Verify Bootstrap Token
    */
   bootstrapVerify(token: string) {
-    return apiClient.get<ApiResponse<{ name: string; email: string }>>(
-      "/admin/auth/bootstrap",
-      {
-        params: { token },
-      },
-    );
+    return apiClient.get<ApiResponse<{ name: string; email: string }>>('/auth/admin/bootstrap', {
+      params: { token },
+    });
   },
 
   /**
    * Approve Bootstrap Admin
    */
-  bootstrapApprove(token: string, action: "approve" | "reject" = "approve") {
-    return apiClient.post<ApiResponse<void>>("/admin/auth/bootstrap", {
+  bootstrapApprove(token: string, action: 'approve' | 'reject' = 'approve') {
+    return apiClient.post<ApiResponse<void>>('/auth/admin/bootstrap', {
       token,
       action,
     });
@@ -122,21 +109,21 @@ export const authApi = {
    * CSRF Token
    */
   getCsrfToken() {
-    return apiClient.get<ApiResponse<CsrfTokenResponse>>("/auth/csrf-token");
+    return apiClient.get<ApiResponse<CsrfTokenResponse>>('/auth/csrf-token');
   },
 
   /**
    * Refresh Token Session
    */
   refresh() {
-    return apiClient.post<ApiResponse<any>>("/auth/refresh");
+    return apiClient.post<ApiResponse<any>>('/auth/refresh');
   },
 
   /**
    * Get active sessions
    */
   getSessions() {
-    return apiClient.get<ApiResponse<UserSession[]>>("/auth/sessions");
+    return apiClient.get<ApiResponse<UserSession[]>>('/auth/sessions');
   },
 
   /**
@@ -150,14 +137,14 @@ export const authApi = {
    * Revoke all user sessions
    */
   revokeAllSessions() {
-    return apiClient.delete<ApiResponse<any>>("/auth/sessions");
+    return apiClient.delete<ApiResponse<any>>('/auth/sessions');
   },
 
   /**
    * Verify email change verification code
    */
   verifyEmailChange(token: string) {
-    return apiClient.post<ApiResponse<any>>("/auth/email/change/verify", {
+    return apiClient.post<ApiResponse<any>>('/auth/email/change/verify', {
       token,
     });
   },
@@ -166,7 +153,7 @@ export const authApi = {
    * Propose email change request
    */
   requestEmailChange(email: string) {
-    return apiClient.post<ApiResponse<any>>("/auth/email/change/request", {
+    return apiClient.post<ApiResponse<any>>('/auth/email/change/request', {
       email,
     });
   },
@@ -175,23 +162,21 @@ export const authApi = {
    * List user login devices
    */
   getDevices() {
-    return apiClient.get<ApiResponse<UserDevice[]>>("/auth/devices");
+    return apiClient.get<ApiResponse<UserDevice[]>>('/auth/devices');
   },
 
   /**
    * Generate TOTP secret and QR URL
    */
   setupTotp() {
-    return apiClient.post<ApiResponse<TotpSetupResponse>>(
-      "/auth/mfa/totp/setup",
-    );
+    return apiClient.post<ApiResponse<TotpSetupResponse>>('/auth/mfa/totp/setup');
   },
 
   /**
    * Disable TOTP MFA
    */
   disableTotp(input: DisableTotpInput) {
-    return apiClient.delete<ApiResponse<any>>("/auth/mfa/totp/disable", {
+    return apiClient.delete<ApiResponse<any>>('/auth/mfa/totp/disable', {
       data: input,
     });
   },
@@ -207,19 +192,16 @@ export const authApi = {
    * Handle OAuth provider code exchange callback
    */
   oauthCallback(provider: string, query: OAuthCallbackInput) {
-    return apiClient.get<ApiResponse<AuthResponse>>(
-      `/auth/oauth/${provider}/callback`,
-      {
-        params: query,
-      },
-    );
+    return apiClient.get<ApiResponse<AuthResponse>>(`/auth/oauth/${provider}/callback`, {
+      params: query,
+    });
   },
 
   /**
    * Owner Review admin registrations
    */
   ownerReview(query: { token: string }) {
-    return apiClient.get<ApiResponse<any[]>>("/admin/auth/owner-review", {
+    return apiClient.get<ApiResponse<any[]>>('/auth/admin/owner-review', {
       params: query,
     });
   },
@@ -228,7 +210,7 @@ export const authApi = {
    * List system users with pagination/filtering
    */
   listUsers(query?: ListUsersQuery) {
-    return apiClient.get<ApiResponse<User[]>>("/admin/users", {
+    return apiClient.get<ApiResponse<User[]>>('/admin/users', {
       params: query,
     });
   },
@@ -237,7 +219,7 @@ export const authApi = {
    * Get user administrative statistics
    */
   getUserStats() {
-    return apiClient.get<ApiResponse<UserStats>>("/admin/users/stats");
+    return apiClient.get<ApiResponse<UserStats>>('/admin/users/stats');
   },
 
   /**
@@ -251,17 +233,14 @@ export const authApi = {
    * Block/unblock user
    */
   blockUser(id: string, input: { isBlocked: boolean }) {
-    return apiClient.patch<ApiResponse<User>>(
-      `/admin/users/${id}/block`,
-      input,
-    );
+    return apiClient.patch<ApiResponse<User>>(`/admin/users/${id}/block`, input);
   },
 
   /**
    * Create administrator account directly
    */
   createAdmin(input: CreateAdminInput) {
-    return apiClient.post<ApiResponse<User>>("/admin/users/admin", input);
+    return apiClient.post<ApiResponse<User>>('/admin/users/admin', input);
   },
 
   /**
@@ -282,18 +261,14 @@ export const authApi = {
    * Get active login sessions of user
    */
   getUserSessions(id: string) {
-    return apiClient.get<ApiResponse<UserSession[]>>(
-      `/admin/users/${id}/sessions`,
-    );
+    return apiClient.get<ApiResponse<UserSession[]>>(`/admin/users/${id}/sessions`);
   },
 
   /**
    * Get login devices of user
    */
   getUserDevices(id: string) {
-    return apiClient.get<ApiResponse<UserDevice[]>>(
-      `/admin/users/${id}/devices`,
-    );
+    return apiClient.get<ApiResponse<UserDevice[]>>(`/admin/users/${id}/devices`);
   },
 
   /**
@@ -335,20 +310,14 @@ export const authApi = {
    * Create/append internal warning note to user profile
    */
   createUserNote(id: string, input: { note: string }) {
-    return apiClient.post<ApiResponse<UserNote>>(
-      `/admin/users/${id}/notes`,
-      input,
-    );
+    return apiClient.post<ApiResponse<UserNote>>(`/admin/users/${id}/notes`, input);
   },
 
   /**
    * Update user details directly
    */
   updateUserDetail(id: string, input: UpdateUserDetailInput) {
-    return apiClient.patch<ApiResponse<User>>(
-      `/admin/users/${id}/details`,
-      input,
-    );
+    return apiClient.patch<ApiResponse<User>>(`/admin/users/${id}/details`, input);
   },
 
   /**
@@ -383,9 +352,7 @@ export const authApi = {
    * Terminate user session
    */
   revokeUserSession(id: string, sessionId: string) {
-    return apiClient.delete<ApiResponse<any>>(
-      `/admin/users/${id}/sessions/${sessionId}`,
-    );
+    return apiClient.delete<ApiResponse<any>>(`/admin/users/${id}/sessions/${sessionId}`);
   },
 
   /**
@@ -399,27 +366,21 @@ export const authApi = {
    * Force user to reset password on next login
    */
   forcePasswordReset(id: string) {
-    return apiClient.post<ApiResponse<any>>(
-      `/admin/users/${id}/force-password-reset`,
-    );
+    return apiClient.post<ApiResponse<any>>(`/admin/users/${id}/force-password-reset`);
   },
 
   /**
    * Reset user password
    */
   resetPasswordAdmin(id: string) {
-    return apiClient.post<ApiResponse<any>>(
-      `/admin/users/${id}/reset-password`,
-    );
+    return apiClient.post<ApiResponse<any>>(`/admin/users/${id}/reset-password`);
   },
 
   /**
    * Resend verification email to user
    */
   sendUserVerification(id: string) {
-    return apiClient.post<ApiResponse<any>>(
-      `/admin/users/${id}/send-verification`,
-    );
+    return apiClient.post<ApiResponse<any>>(`/admin/users/${id}/send-verification`);
   },
 
   /**
@@ -446,19 +407,14 @@ export const authApi = {
    * Get pending approval request details
    */
   getApprovalRequest(id: string) {
-    return apiClient.get<ApiResponse<ApprovalRequest>>(
-      `/admin/users/${id}/approval-request`,
-    );
+    return apiClient.get<ApiResponse<ApprovalRequest>>(`/admin/users/${id}/approval-request`);
   },
 
   /**
    * Impersonate user session
    */
   impersonateUser(id: string, input: ImpersonateUserInput) {
-    return apiClient.post<ApiResponse<any>>(
-      `/admin/users/${id}/impersonate`,
-      input,
-    );
+    return apiClient.post<ApiResponse<any>>(`/admin/users/${id}/impersonate`, input);
   },
 
   /**
@@ -479,36 +435,27 @@ export const authApi = {
    * Revoke role assignment from user
    */
   revokeUserRole(id: string, roleId: string) {
-    return apiClient.delete<ApiResponse<any>>(
-      `/admin/users/${id}/roles/${roleId}`,
-    );
+    return apiClient.delete<ApiResponse<any>>(`/admin/users/${id}/roles/${roleId}`);
   },
 
   /**
    * Preview final compiled permissions of user
    */
   previewUserPermissions(id: string) {
-    return apiClient.get<ApiResponse<string[]>>(
-      `/admin/users/${id}/permissions`,
-    );
+    return apiClient.get<ApiResponse<string[]>>(`/admin/users/${id}/permissions`);
   },
 
   /**
    * Check setup wizard availability
    */
   checkSetupAllowed() {
-    return apiClient.get<ApiResponse<{ setupAllowed: boolean }>>(
-      "/admin/register/check",
-    );
+    return apiClient.get<ApiResponse<{ setupAllowed: boolean }>>('/admin/register/check');
   },
 
   /**
    * Run first-time platform setup wizard
    */
   runSetupWizard(input: SetupInput) {
-    return apiClient.post<ApiResponse<{ userId: string; email: string }>>(
-      "/admin/register",
-      input,
-    );
+    return apiClient.post<ApiResponse<{ userId: string; email: string }>>('/admin/register', input);
   },
 };

@@ -1,18 +1,14 @@
-"use client";
+'use client';
 
-import { useEffect, useRef } from "react";
-import { useQueryClient } from "@tanstack/react-query";
-import { toast } from "sonner";
+import { type ReactNode, useEffect, useRef } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
 
-import { authApi } from "@/features/auth/api/api";
-import { useCurrentUser } from "@/features/auth/api/queries";
-import { useAuthStore } from "@/features/auth/store/store";
+import { authApi } from '@/features/auth/api/api';
+import { useCurrentUser } from '@/features/auth/api/queries';
+import { useAuthStore } from '@/features/auth/store/store';
 
-export default function AuthProvider({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function AuthProvider({ children }: { children: ReactNode }) {
   const { data: user, isLoading } = useCurrentUser();
   const initialize = useAuthStore((state) => state.initialize);
   const queryClient = useQueryClient();
@@ -23,10 +19,8 @@ export default function AuthProvider({
   useEffect(() => {
     if (isLoading) return;
 
-    const pathname =
-      typeof window !== "undefined" ? window.location.pathname : "";
-    const isGuestPage =
-      pathname.startsWith("/login") || pathname.startsWith("/register");
+    const pathname = typeof window !== 'undefined' ? window.location.pathname : '';
+    const isGuestPage = pathname.startsWith('/login') || pathname.startsWith('/register');
 
     // Reset check flag when route changes
     if (prevPathnameRef.current !== pathname) {
@@ -47,21 +41,18 @@ export default function AuthProvider({
           try {
             await authApi.logout();
           } catch (e) {
-            console.error("Logout API error on guest page access:", e);
+            console.error('Logout API error on guest page access:', e);
           } finally {
-            if (typeof document !== "undefined") {
-              document.cookie.split(";").forEach((c) => {
+            if (typeof document !== 'undefined') {
+              document.cookie.split(';').forEach((c) => {
                 document.cookie = c
-                  .replace(/^ +/, "")
-                  .replace(
-                    /=.*/,
-                    `=;expires=${  new Date().toUTCString()  };path=/`,
-                  );
+                  .replace(/^ +/, '')
+                  .replace(/=.*/, `=;expires=${new Date().toUTCString()};path=/`);
               });
             }
             initialize(null);
             queryClient.clear();
-            toast.info("Logged out of existing session.");
+            toast.info('Logged out of existing session.');
             loggingOutRef.current = false;
           }
         })();
@@ -69,7 +60,7 @@ export default function AuthProvider({
       }
     }
 
-    initialize((user as any) ?? null);
+    initialize(user ?? null);
   }, [isLoading, user, initialize, queryClient]);
 
   return children;

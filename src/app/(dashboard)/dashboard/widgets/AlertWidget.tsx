@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { AlertCircle,AlertTriangle, ShieldAlert } from "lucide-react";
+import { AlertCircle, AlertTriangle, ShieldAlert } from 'lucide-react';
 
-import { useDashboardAlerts } from "@/features/dashboard/api/queries";
+import { useDashboardAlerts } from '@/features/dashboard/api/queries';
 
 interface AlertWidgetProps {
   liveData?: any;
@@ -24,29 +24,29 @@ export default function AlertWidget({ liveData }: AlertWidgetProps) {
 
   const alerts = [
     {
-      label: "Security Threats",
+      label: 'Security Threats',
       value: data?.securityAlerts ?? 0,
-      type: "security",
+      type: 'security',
     },
     {
-      label: "Failed Payments",
+      label: 'Failed Payments',
       value: data?.failedPayments ?? 0,
-      type: "billing",
+      type: 'billing',
     },
     {
-      label: "Expired Subscriptions",
+      label: 'Expired Subscriptions',
       value: data?.expiredSubscriptions ?? 0,
-      type: "billing",
+      type: 'billing',
     },
     {
-      label: "Closing Tenders Today",
+      label: 'Closing Tenders Today',
       value: data?.closingTenders ?? 0,
-      type: "tender",
+      type: 'tender',
     },
     {
-      label: "Database System Errors",
+      label: 'Database System Errors',
       value: data?.systemErrors ?? 0,
-      type: "system",
+      type: 'system',
     },
   ];
 
@@ -73,8 +73,8 @@ export default function AlertWidget({ liveData }: AlertWidgetProps) {
               key={alert.label}
               className={`flex items-center justify-between p-2.5 rounded-xl border text-xs ${
                 alert.value > 0
-                  ? "bg-red-500/5 border-red-500/20 text-red-600 font-semibold"
-                  : "bg-background border-border/50 text-text-light"
+                  ? 'bg-red-500/5 border-red-500/20 text-red-600 font-semibold'
+                  : 'bg-background border-border/50 text-text-light'
               }`}
             >
               <div className="flex items-center gap-2">
@@ -86,7 +86,7 @@ export default function AlertWidget({ liveData }: AlertWidgetProps) {
                 <span>{alert.label}</span>
               </div>
               <span
-                className={`px-2 py-0.5 rounded text-[10px] font-bold ${alert.value > 0 ? "bg-red-500/10" : "bg-border/30"}`}
+                className={`px-2 py-0.5 rounded text-[10px] font-bold ${alert.value > 0 ? 'bg-red-500/10' : 'bg-border/30'}`}
               >
                 {alert.value}
               </span>

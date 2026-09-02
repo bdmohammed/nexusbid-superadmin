@@ -1,5 +1,3 @@
-// src/lib/errors/constants.ts
-
 export const ERROR_CODES = {
   VALIDATION: "VALIDATION_001",
   UNAUTHENTICATED: "AUTH_001",

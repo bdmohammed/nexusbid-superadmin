@@ -12,9 +12,7 @@ export interface ApiErrorResponse {
   errors?: Record<string, string[]>;
 }
 
-export type ApiResponse<T = unknown, M = unknown> =
-  | ApiSuccessResponse<T, M>
-  | ApiErrorResponse;
+export type ApiResponse<T = unknown, M = unknown> = ApiSuccessResponse<T, M> | ApiErrorResponse;
 
 export interface PaginatedMeta {
   total: number;

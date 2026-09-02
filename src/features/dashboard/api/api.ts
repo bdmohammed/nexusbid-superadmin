@@ -9,58 +9,52 @@ import type {
   SystemHealth,
   TenderStats,
   UsersStats,
-} from "../types";
-import type { ApiResponse } from "@/types";
-import { apiClient } from "@/lib/http";
+} from '../types';
+import type { ApiResponse } from '@/types';
+import { apiClient } from '@/lib/http';
 
 export const dashboardApi = {
   getConfig() {
-    return apiClient.get<ApiResponse<DashboardConfig>>("/dashboard/config");
+    return apiClient.get<ApiResponse<DashboardConfig>>('/dashboard/config');
   },
 
   getTenderStats() {
-    return apiClient.get<ApiResponse<TenderStats>>("/dashboard/tenders");
+    return apiClient.get<ApiResponse<TenderStats>>('/dashboard/tenders');
   },
 
   getRevenueStats() {
-    return apiClient.get<ApiResponse<RevenueStats>>("/dashboard/revenue");
+    return apiClient.get<ApiResponse<RevenueStats>>('/dashboard/revenue');
   },
 
   getUsersStats() {
-    return apiClient.get<ApiResponse<UsersStats>>("/dashboard/users");
+    return apiClient.get<ApiResponse<UsersStats>>('/dashboard/users');
   },
 
   getReviewQueue() {
-    return apiClient.get<ApiResponse<ReviewQueueStats>>(
-      "/dashboard/review-queue",
-    );
+    return apiClient.get<ApiResponse<ReviewQueueStats>>('/dashboard/review-queue');
   },
 
   getCriticalAlerts() {
-    return apiClient.get<ApiResponse<CriticalAlerts>>("/dashboard/alerts");
+    return apiClient.get<ApiResponse<CriticalAlerts>>('/dashboard/alerts');
   },
 
   getRecentActivity() {
-    return apiClient.get<ApiResponse<RecentActivityItem[]>>(
-      "/dashboard/recent-activity",
-    );
+    return apiClient.get<ApiResponse<RecentActivityItem[]>>('/dashboard/recent-activity');
   },
 
   getSystemHealth() {
-    return apiClient.get<ApiResponse<SystemHealth>>("/dashboard/system-health");
+    return apiClient.get<ApiResponse<SystemHealth>>('/dashboard/system-health');
   },
 
   getQuickActionsList() {
-    return apiClient.get<ApiResponse<QuickActionItem[]>>(
-      "/dashboard/quick-actions",
-    );
+    return apiClient.get<ApiResponse<QuickActionItem[]>>('/dashboard/quick-actions');
   },
 
   updateLayout(input: PatchLayoutInput) {
-    return apiClient.patch<ApiResponse<any>>("/dashboard/layout", input);
+    return apiClient.patch<ApiResponse<any>>('/dashboard/layout', input);
   },
 
   resetLayout() {
-    return apiClient.post<ApiResponse<any>>("/dashboard/layout/reset");
+    return apiClient.post<ApiResponse<any>>('/dashboard/layout/reset');
   },
 };

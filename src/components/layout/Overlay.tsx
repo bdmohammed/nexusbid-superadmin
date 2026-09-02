@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useSidebarStore } from "@/store";
+import { useSidebarStore } from '@/store';
 
 export default function Overlay() {
   const isOpen = useSidebarStore((state) => state.isOpen);

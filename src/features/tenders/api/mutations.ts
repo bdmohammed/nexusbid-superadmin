@@ -1,7 +1,7 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { tenderApi } from "./api";
-import { tenderQueryKeys } from "./keys";
+import { tenderApi } from './api';
+import { tenderQueryKeys } from './keys';
 
 import type {
   AnswerQuestionDto,
@@ -20,9 +20,9 @@ import type {
   UpdateTenderDto,
   UpdateTenderStatusDto,
   UploadUrlDto,
-} from "../types";
-import type { ErrorCode } from "@/lib/errors";
-import { AppError } from "@/lib/errors";
+} from '../types';
+import type { ErrorCode } from '@/lib/errors';
+import { AppError } from '@/lib/errors';
 
 export function useDownloadTender() {
   return useMutation({
@@ -38,13 +38,7 @@ export function useDownloadTender() {
 
 export function usePostQuestion() {
   return useMutation({
-    mutationFn: async ({
-      id,
-      input,
-    }: {
-      id: string;
-      input: CreateQuestionDto;
-    }) => {
+    mutationFn: async ({ id, input }: { id: string; input: CreateQuestionDto }) => {
       const { data } = await tenderApi.postQuestion(id, input);
       if (!data.success) {
         throw new AppError(data.message, 400, data.error as ErrorCode);
@@ -56,13 +50,7 @@ export function usePostQuestion() {
 
 export function useToggleWatcher() {
   return useMutation({
-    mutationFn: async ({
-      id,
-      input,
-    }: {
-      id: string;
-      input: TenderWatcherDto;
-    }) => {
+    mutationFn: async ({ id, input }: { id: string; input: TenderWatcherDto }) => {
       const { data } = await tenderApi.toggleWatcher(id, input);
       if (!data.success) {
         throw new AppError(data.message, 400, data.error as ErrorCode);
@@ -86,13 +74,7 @@ export function useAdminGetUploadUrl() {
 
 export function useAdminRegisterDocument() {
   return useMutation({
-    mutationFn: async ({
-      id,
-      input,
-    }: {
-      id: string;
-      input: RegisterDocumentDto;
-    }) => {
+    mutationFn: async ({ id, input }: { id: string; input: RegisterDocumentDto }) => {
       const { data } = await tenderApi.adminRegisterDocument(id, input);
       if (!data.success) {
         throw new AppError(data.message, 400, data.error as ErrorCode);
@@ -124,13 +106,7 @@ export function useAdminUpdateTender() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({
-      id,
-      input,
-    }: {
-      id: string;
-      input: UpdateTenderDto;
-    }) => {
+    mutationFn: async ({ id, input }: { id: string; input: UpdateTenderDto }) => {
       const { data } = await tenderApi.adminUpdate(id, input);
       if (!data.success) {
         throw new AppError(data.message, 400, data.error as ErrorCode);
@@ -169,13 +145,7 @@ export function useAdminUpdateTenderStatus() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({
-      id,
-      input,
-    }: {
-      id: string;
-      input: UpdateTenderStatusDto;
-    }) => {
+    mutationFn: async ({ id, input }: { id: string; input: UpdateTenderStatusDto }) => {
       const { data } = await tenderApi.adminUpdateStatus(id, input);
       if (!data.success) {
         throw new AppError(data.message, 400, data.error as ErrorCode);
@@ -257,13 +227,7 @@ export function useScheduleTender() {
 
 export function useAnswerQuestion() {
   return useMutation({
-    mutationFn: async ({
-      qId,
-      input,
-    }: {
-      qId: string;
-      input: AnswerQuestionDto;
-    }) => {
+    mutationFn: async ({ qId, input }: { qId: string; input: AnswerQuestionDto }) => {
       const { data } = await tenderApi.answerQuestion(qId, input);
       if (!data.success) {
         throw new AppError(data.message, 400, data.error as ErrorCode);
@@ -277,13 +241,7 @@ export function useCreateClarification() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({
-      id,
-      input,
-    }: {
-      id: string;
-      input: CreateClarificationDto;
-    }) => {
+    mutationFn: async ({ id, input }: { id: string; input: CreateClarificationDto }) => {
       const { data } = await tenderApi.createClarification(id, input);
       if (!data.success) {
         throw new AppError(data.message, 400, data.error as ErrorCode);
@@ -302,13 +260,7 @@ export function useCreateAmendment() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({
-      id,
-      input,
-    }: {
-      id: string;
-      input: CreateAmendmentDto;
-    }) => {
+    mutationFn: async ({ id, input }: { id: string; input: CreateAmendmentDto }) => {
       const { data } = await tenderApi.createAmendment(id, input);
       if (!data.success) {
         throw new AppError(data.message, 400, data.error as ErrorCode);
@@ -330,13 +282,7 @@ export function useAssignReviewers() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({
-      id,
-      input,
-    }: {
-      id: string;
-      input: AssignReviewerDto;
-    }) => {
+    mutationFn: async ({ id, input }: { id: string; input: AssignReviewerDto }) => {
       const { data } = await tenderApi.assignReviewers(id, input);
       if (!data.success) {
         throw new AppError(data.message, 400, data.error as ErrorCode);
@@ -373,13 +319,7 @@ export function useAddCommitteeMember() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({
-      id,
-      input,
-    }: {
-      id: string;
-      input: TenderCommitteeDto;
-    }) => {
+    mutationFn: async ({ id, input }: { id: string; input: TenderCommitteeDto }) => {
       const { data } = await tenderApi.addCommitteeMember(id, input);
       if (!data.success) {
         throw new AppError(data.message, 400, data.error as ErrorCode);
@@ -414,13 +354,7 @@ export function useSubmitEvaluation() {
 
 export function useInviteTender() {
   return useMutation({
-    mutationFn: async ({
-      id,
-      input,
-    }: {
-      id: string;
-      input: TenderInvitationDto;
-    }) => {
+    mutationFn: async ({ id, input }: { id: string; input: TenderInvitationDto }) => {
       const { data } = await tenderApi.inviteTender(id, input);
       if (!data.success) {
         throw new AppError(data.message, 400, data.error as ErrorCode);

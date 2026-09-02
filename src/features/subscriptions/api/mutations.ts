@@ -1,7 +1,7 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { subscriptionApi } from "./api";
-import { subscriptionQueryKeys } from "./keys";
+import { subscriptionApi } from './api';
+import { subscriptionQueryKeys } from './keys';
 
 import type {
   AssignReviewerInput,
@@ -11,10 +11,10 @@ import type {
   SubmitReviewActionInput,
   SubscriptionMigrationInput,
   UpdatePlanLegacyInput,
-} from "../types";
-import type { ErrorCode } from "@/lib/errors";
-import { authQueryKeys } from "@/features/auth/api/keys";
-import { AppError } from "@/lib/errors";
+} from '../types';
+import type { ErrorCode } from '@/lib/errors';
+import { authQueryKeys } from '@/features/auth/api/keys';
+import { AppError } from '@/lib/errors';
 
 export function useCreateSubscription() {
   return useMutation({
@@ -63,11 +63,7 @@ export function useCreateFeatureCatalogItem() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (input: {
-      key: string;
-      name: string;
-      description?: string;
-    }) => {
+    mutationFn: async (input: { key: string; name: string; description?: string }) => {
       const { data } = await subscriptionApi.createFeatureCatalogItem(input);
       if (!data.success) {
         throw new AppError(data.message, 400, data.error as ErrorCode);
@@ -89,11 +85,7 @@ export function useCreateCoupon() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (input: {
-      code: string;
-      type: "percentage" | "fixed";
-      value: number;
-    }) => {
+    mutationFn: async (input: { code: string; type: 'percentage' | 'fixed'; value: number }) => {
       const { data } = await subscriptionApi.createCoupon(input);
       if (!data.success) {
         throw new AppError(data.message, 400, data.error as ErrorCode);
@@ -136,8 +128,7 @@ export function useToggleCouponStatus() {
 export function useInitiateSubscriptionMigration() {
   return useMutation({
     mutationFn: async (input: SubscriptionMigrationInput) => {
-      const { data } =
-        await subscriptionApi.initiateSubscriptionMigration(input);
+      const { data } = await subscriptionApi.initiateSubscriptionMigration(input);
       if (!data.success) {
         throw new AppError(data.message, 400, data.error as ErrorCode);
       }
@@ -178,13 +169,7 @@ export function useCreatePlanVersionDraft() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({
-      id,
-      input,
-    }: {
-      id: string;
-      input: CreatePlanVersionDraftInput;
-    }) => {
+    mutationFn: async ({ id, input }: { id: string; input: CreatePlanVersionDraftInput }) => {
       const { data } = await subscriptionApi.createPlanVersionDraft(id, input);
       if (!data.success) {
         throw new AppError(data.message, 400, data.error as ErrorCode);
@@ -219,17 +204,8 @@ export function useSubmitPlanForReview() {
  */
 export function useAssignPlanReviewer() {
   return useMutation({
-    mutationFn: async ({
-      reviewId,
-      input,
-    }: {
-      reviewId: string;
-      input: AssignReviewerInput;
-    }) => {
-      const { data } = await subscriptionApi.assignPlanReviewer(
-        reviewId,
-        input,
-      );
+    mutationFn: async ({ reviewId, input }: { reviewId: string; input: AssignReviewerInput }) => {
+      const { data } = await subscriptionApi.assignPlanReviewer(reviewId, input);
       if (!data.success) {
         throw new AppError(data.message, 400, data.error as ErrorCode);
       }
@@ -252,10 +228,7 @@ export function useSubmitPlanReviewAction() {
       reviewId: string;
       input: SubmitReviewActionInput;
     }) => {
-      const { data } = await subscriptionApi.submitPlanReviewAction(
-        reviewId,
-        input,
-      );
+      const { data } = await subscriptionApi.submitPlanReviewAction(reviewId, input);
       if (!data.success) {
         throw new AppError(data.message, 400, data.error as ErrorCode);
       }
@@ -329,13 +302,7 @@ export function useUpdatePlanLegacy() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({
-      id,
-      input,
-    }: {
-      id: string;
-      input: UpdatePlanLegacyInput;
-    }) => {
+    mutationFn: async ({ id, input }: { id: string; input: UpdatePlanLegacyInput }) => {
       const { data } = await subscriptionApi.updatePlanLegacy(id, input);
       if (!data.success) {
         throw new AppError(data.message, 400, data.error as ErrorCode);

@@ -1,3 +1,3 @@
 export const supportQueryKeys = {
-  all: ["support"] as const,
+  all: ['support'] as const,
 };

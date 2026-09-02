@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { Trash2 } from "lucide-react";
+import { Trash2 } from 'lucide-react';
 
-import type { UserRoleAssignment } from "@/features/rbac/types";
-import Button from "@/components/ui/Button";
+import type { UserRoleAssignment } from '@/features/rbac/types';
+import Button from '@/components/ui/Button';
 
 export interface RoleRowProps {
   assignment: UserRoleAssignment;
@@ -11,20 +11,18 @@ export interface RoleRowProps {
 }
 
 export default function RoleRow({ assignment, onDelete }: RoleRowProps) {
-  const userName = assignment.user?.name || "Unknown User";
-  const userEmail = assignment.user?.email || "N/A";
-  const roleName = assignment.role?.name || "No Role";
+  const userName = assignment.user?.name || 'Unknown User';
+  const userEmail = assignment.user?.email || 'N/A';
+  const roleName = assignment.role?.name || 'No Role';
   const assignedBy =
-    typeof assignment.assignedBy === "object" && assignment.assignedBy !== null
-      ? assignment.assignedBy.name || assignment.assignedBy.email || "System"
-      : "System";
+    typeof assignment.assignedBy === 'object' && assignment.assignedBy !== null
+      ? assignment.assignedBy.name || assignment.assignedBy.email || 'System'
+      : 'System';
 
-  const isExpired =
-    assignment.expiresAt &&
-    new Date(assignment.expiresAt).getTime() < Date.now();
+  const isExpired = assignment.expiresAt && new Date(assignment.expiresAt).getTime() < Date.now();
   const expiryText = assignment.expiresAt
     ? new Date(assignment.expiresAt).toLocaleString()
-    : "Permanent";
+    : 'Permanent';
 
   return (
     <tr className="border-b border-border transition hover:bg-background">

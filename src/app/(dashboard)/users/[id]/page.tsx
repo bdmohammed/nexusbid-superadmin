@@ -1,8 +1,8 @@
 //@ts-nocheck
-"use client";
+'use client';
 
-import {useEffect, useState } from "react";
-import { useParams,useRouter } from "next/navigation";
+import { useEffect, useState } from 'react';
+import { useParams, useRouter } from 'next/navigation';
 import {
   Activity,
   ArrowLeft,
@@ -20,10 +20,10 @@ import {
   Smartphone,
   User,
   UserCheck,
-} from "lucide-react";
+} from 'lucide-react';
 
-import { UserApprovalModal } from "@/components/users/UserApprovalModal";
-import { authApi } from "@/features/auth/api/api";
+import { UserApprovalModal } from '@/components/users/UserApprovalModal';
+import { authApi } from '@/features/auth/api/api';
 import {
   useActivateUser,
   useBlockUser,
@@ -32,7 +32,7 @@ import {
   useRevokeAllUserSessions,
   useRevokeUserSession,
   useSuspendUser,
-} from "@/features/auth/api/mutations";
+} from '@/features/auth/api/mutations';
 
 interface CountryItem {
   id?: number | string;
@@ -172,14 +172,8 @@ export default function UserDetailsPage() {
 
   // Active sub-tab
   const [activeTab, setActiveTab] = useState<
-    | "overview"
-    | "security"
-    | "sessions"
-    | "subscription"
-    | "notes"
-    | "activity"
-    | "timeline"
-  >("overview");
+    'overview' | 'security' | 'sessions' | 'subscription' | 'notes' | 'activity' | 'timeline'
+  >('overview');
 
   // Sub-resource states
   const [overview, setOverview] = useState<UserOverview | null>(null);
@@ -187,9 +181,7 @@ export default function UserDetailsPage() {
   const [roles, setRoles] = useState<UserRoleAssignment[]>([]);
   const [sessions, setSessions] = useState<UserSession[]>([]);
   const [devices, setDevices] = useState<UserDevice[]>([]);
-  const [subscription, setSubscription] = useState<UserSubscriptionInfo | null>(
-    null,
-  );
+  const [subscription, setSubscription] = useState<UserSubscriptionInfo | null>(null);
   const [notes, setNotes] = useState<UserNote[]>([]);
   const [activities, setActivities] = useState<ActivityLog[]>([]);
   const [auditLogs, setAuditLogs] = useState<AuditLog[]>([]);
@@ -197,10 +189,10 @@ export default function UserDetailsPage() {
 
   // Loading and action state
   const [loading, setLoading] = useState(true);
-  const [noteText, setNoteText] = useState("");
+  const [noteText, setNoteText] = useState('');
   const [toast, setToast] = useState<{
     message: string;
-    type: "success" | "error" | "info";
+    type: 'success' | 'error' | 'info';
   } | null>(null);
   const [confirmAction, setConfirmAction] = useState<{
     title: string;
@@ -226,10 +218,7 @@ export default function UserDetailsPage() {
     }
   }, [toast]);
 
-  const showToast = (
-    message: string,
-    type: "success" | "error" | "info" = "success",
-  ) => {
+  const showToast = (message: string, type: 'success' | 'error' | 'info' = 'success') => {
     setToast({ message, type });
   };
 
@@ -238,45 +227,42 @@ export default function UserDetailsPage() {
     if (!id) return;
     try {
       setLoading(true);
-      if (activeTab === "overview") {
+      if (activeTab === 'overview') {
         const res = await authApi.getUserOverview(id);
         setOverview(res.data.data);
-      } else if (activeTab === "security") {
+      } else if (activeTab === 'security') {
         const [secRes, rolesRes] = await Promise.all([
           authApi.getUserSecurityLog(id),
           authApi.getUserRoles(id),
         ]);
         setSecurity(secRes.data.data);
         setRoles(rolesRes.data.data?.assigned || rolesRes.data.data || []);
-      } else if (activeTab === "sessions") {
+      } else if (activeTab === 'sessions') {
         const [sessRes, devRes] = await Promise.all([
           authApi.getUserSessions(id),
           authApi.getUserDevices(id),
         ]);
         setSessions(sessRes.data.data ?? []);
         setDevices(devRes.data.data ?? []);
-      } else if (activeTab === "subscription") {
+      } else if (activeTab === 'subscription') {
         const res = await authApi.getUserSubscription(id);
         setSubscription(res.data.data);
-      } else if (activeTab === "notes") {
+      } else if (activeTab === 'notes') {
         const res = await authApi.getUserNotes(id);
         setNotes(res.data.data ?? []);
-      } else if (activeTab === "activity") {
+      } else if (activeTab === 'activity') {
         const [actRes, auditRes] = await Promise.all([
           authApi.getUserActivity(id),
           authApi.getUserAuditLog(id),
         ]);
         setActivities(actRes.data.data ?? []);
         setAuditLogs(auditRes.data.data ?? []);
-      } else if (activeTab === "timeline") {
+      } else if (activeTab === 'timeline') {
         const res = await authApi.getUserTimeline(id);
         setTimeline(res.data.data ?? []);
       }
     } catch (err: any) {
-      showToast(
-        err.message || err.response?.data?.message || "Failed to load tab data",
-        "error",
-      );
+      showToast(err.message || err.response?.data?.message || 'Failed to load tab data', 'error');
     } finally {
       setLoading(false);
     }
@@ -288,7 +274,7 @@ export default function UserDetailsPage() {
 
   // Initial load of overview to get user header details
   useEffect(() => {
-    if (id && activeTab !== "overview") {
+    if (id && activeTab !== 'overview') {
       authApi
         .getUserOverview(id)
         .then((res) => setOverview(res.data.data))
@@ -301,21 +287,18 @@ export default function UserDetailsPage() {
     if (!overview) return;
     const nextBlocked = !overview.isBlocked;
     setConfirmAction({
-      title: nextBlocked ? "Block User Account" : "Unblock User Account",
-      message: `Are you sure you want to ${nextBlocked ? "block" : "unblock"} the account of "${overview.name}"?`,
+      title: nextBlocked ? 'Block User Account' : 'Unblock User Account',
+      message: `Are you sure you want to ${nextBlocked ? 'block' : 'unblock'} the account of "${overview.name}"?`,
       onConfirm: async () => {
         try {
           await blockUserMutation.mutateAsync({ id, isBlocked: nextBlocked });
           showToast(
-            `Account for ${overview.name} is now ${nextBlocked ? "blocked" : "active"}`,
-            "success",
+            `Account for ${overview.name} is now ${nextBlocked ? 'blocked' : 'active'}`,
+            'success',
           );
           fetchSubResource();
         } catch (err: any) {
-          showToast(
-            err.message || err.response?.data?.message || "Action failed",
-            "error",
-          );
+          showToast(err.message || err.response?.data?.message || 'Action failed', 'error');
         } finally {
           setConfirmAction(null);
         }
@@ -325,25 +308,22 @@ export default function UserDetailsPage() {
 
   const handleToggleSuspend = () => {
     if (!overview) return;
-    const isSuspended = overview.status === "suspended";
+    const isSuspended = overview.status === 'suspended';
     setConfirmAction({
-      title: isSuspended ? "Activate User" : "Suspend User",
-      message: `Are you sure you want to ${isSuspended ? "activate" : "suspend"} "${overview.name}"?`,
+      title: isSuspended ? 'Activate User' : 'Suspend User',
+      message: `Are you sure you want to ${isSuspended ? 'activate' : 'suspend'} "${overview.name}"?`,
       onConfirm: async () => {
         try {
           if (isSuspended) {
             await activateUserMutation.mutateAsync(id);
-            showToast("User account activated successfully", "success");
+            showToast('User account activated successfully', 'success');
           } else {
             await suspendUserMutation.mutateAsync(id);
-            showToast("User account suspended successfully", "success");
+            showToast('User account suspended successfully', 'success');
           }
           fetchSubResource();
         } catch (err: any) {
-          showToast(
-            err.message || err.response?.data?.message || "Action failed",
-            "error",
-          );
+          showToast(err.message || err.response?.data?.message || 'Action failed', 'error');
         } finally {
           setConfirmAction(null);
         }
@@ -358,18 +338,15 @@ export default function UserDetailsPage() {
 
   const handleForcePasswordReset = () => {
     setConfirmAction({
-      title: "Force Password Change",
-      message: "Force user to change password on next login attempt?",
+      title: 'Force Password Change',
+      message: 'Force user to change password on next login attempt?',
       onConfirm: async () => {
         try {
           await forcePasswordResetMutation.mutateAsync(id);
-          showToast("Password reset flag set successfully", "success");
-          if (activeTab === "security") fetchSubResource();
+          showToast('Password reset flag set successfully', 'success');
+          if (activeTab === 'security') fetchSubResource();
         } catch (err: any) {
-          showToast(
-            err.message || err.response?.data?.message || "Action failed",
-            "error",
-          );
+          showToast(err.message || err.response?.data?.message || 'Action failed', 'error');
         } finally {
           setConfirmAction(null);
         }
@@ -379,18 +356,15 @@ export default function UserDetailsPage() {
 
   const handleRevokeSession = (sessionId: string) => {
     setConfirmAction({
-      title: "Revoke Device Session",
-      message: "Are you sure you want to terminate this active user session?",
+      title: 'Revoke Device Session',
+      message: 'Are you sure you want to terminate this active user session?',
       onConfirm: async () => {
         try {
           await revokeUserSessionMutation.mutateAsync({ id, sessionId });
-          showToast("Session revoked", "success");
+          showToast('Session revoked', 'success');
           fetchSubResource();
         } catch (err: any) {
-          showToast(
-            err.message || err.response?.data?.message || "Revocation failed",
-            "error",
-          );
+          showToast(err.message || err.response?.data?.message || 'Revocation failed', 'error');
         } finally {
           setConfirmAction(null);
         }
@@ -400,19 +374,15 @@ export default function UserDetailsPage() {
 
   const handleRevokeAllSessions = () => {
     setConfirmAction({
-      title: "Revoke All Active Sessions",
-      message:
-        "Terminate all current user sessions and log the user out across all devices?",
+      title: 'Revoke All Active Sessions',
+      message: 'Terminate all current user sessions and log the user out across all devices?',
       onConfirm: async () => {
         try {
           await revokeAllUserSessionsMutation.mutateAsync(id);
-          showToast("All active sessions terminated", "success");
+          showToast('All active sessions terminated', 'success');
           fetchSubResource();
         } catch (err: any) {
-          showToast(
-            err.message || err.response?.data?.message || "Revocation failed",
-            "error",
-          );
+          showToast(err.message || err.response?.data?.message || 'Revocation failed', 'error');
         } finally {
           setConfirmAction(null);
         }
@@ -425,14 +395,11 @@ export default function UserDetailsPage() {
     if (!noteText.trim()) return;
     try {
       await createUserNoteMutation.mutateAsync({ id, note: noteText });
-      showToast("Internal admin note added", "success");
-      setNoteText("");
+      showToast('Internal admin note added', 'success');
+      setNoteText('');
       fetchSubResource();
     } catch (err: any) {
-      showToast(
-        err.message || err.response?.data?.message || "Failed to add note",
-        "error",
-      );
+      showToast(err.message || err.response?.data?.message || 'Failed to add note', 'error');
     }
   };
 
@@ -443,19 +410,19 @@ export default function UserDetailsPage() {
         <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
           <div className="flex items-center gap-5">
             <div className="h-14 w-14 rounded-full bg-primary/10 text-primary font-bold flex items-center justify-center text-xl shadow-inner">
-              {overview?.name?.substring(0, 2).toUpperCase() || "US"}
+              {overview?.name?.substring(0, 2).toUpperCase() || 'US'}
             </div>
             <div>
               <div className="flex items-center gap-3">
                 <h2 className="text-2xl font-bold tracking-tight text-text">
-                  {overview?.name || "User Details"}
+                  {overview?.name || 'User Details'}
                 </h2>
                 {overview?.isBlocked && (
                   <span className="px-2 py-0.5 rounded-full text-xs font-bold bg-rose-50 text-rose-500 border border-rose-100">
                     Blocked
                   </span>
                 )}
-                {overview?.status === "suspended" && (
+                {overview?.status === 'suspended' && (
                   <span className="px-2 py-0.5 rounded-full text-xs font-bold bg-amber-50 text-amber-500 border border-amber-100">
                     Suspended
                   </span>
@@ -464,34 +431,29 @@ export default function UserDetailsPage() {
               <p className="mt-1 text-sm text-text-light">{overview?.email}</p>
               <div className="mt-2 flex flex-wrap gap-2 text-xs">
                 <span className="bg-primary/5 text-primary px-2.5 py-0.5 rounded-full font-bold border border-primary/10">
-                  {overview?.accountType === "admin"
-                    ? "Administrator"
-                    : "Customer"}
+                  {overview?.accountType === 'admin' ? 'Administrator' : 'Customer'}
                 </span>
                 <span className="bg-muted text-text-light px-2.5 py-0.5 rounded-full font-semibold">
-                  Country:{" "}
-                  {overview?.country?.name || overview?.country?.code || "N/A"}
+                  Country: {overview?.country?.name || overview?.country?.code || 'N/A'}
                 </span>
               </div>
             </div>
           </div>
 
           <div className="flex flex-wrap gap-2">
-            {(overview?.status === "pending_approval" ||
-              overview?.status === "pending_review" ||
-              overview?.status === "pending_email_verification") && (
+            {(overview?.status === 'pending_approval' ||
+              overview?.status === 'pending_review' ||
+              overview?.status === 'pending_email_verification') && (
               <button
                 onClick={handleApproveUser}
                 className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold transition cursor-pointer shadow-xs"
               >
                 <CheckCircle size={15} />
-                {overview?.status === "pending_review"
-                  ? "Evaluate Approval"
-                  : "Approve Request"}
+                {overview?.status === 'pending_review' ? 'Evaluate Approval' : 'Approve Request'}
               </button>
             )}
             <button
-              onClick={() => router.push("/users")}
+              onClick={() => router.push('/users')}
               className="flex items-center gap-1.5 px-3 py-2 rounded-xl border border-border bg-surface text-sm font-semibold hover:bg-background transition cursor-pointer"
             >
               <ArrowLeft size={15} />
@@ -501,19 +463,19 @@ export default function UserDetailsPage() {
               onClick={handleToggleBlock}
               className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-semibold transition cursor-pointer ${
                 overview?.isBlocked
-                  ? "bg-emerald-500 hover:bg-emerald-600 text-white"
-                  : "bg-rose-500 hover:bg-rose-600 text-white"
+                  ? 'bg-emerald-500 hover:bg-emerald-600 text-white'
+                  : 'bg-rose-500 hover:bg-rose-600 text-white'
               }`}
             >
               <Ban size={15} />
-              {overview?.isBlocked ? "Unblock Account" : "Block User"}
+              {overview?.isBlocked ? 'Unblock Account' : 'Block User'}
             </button>
             <button
               onClick={handleToggleSuspend}
               className="flex items-center gap-1.5 px-3 py-2 rounded-xl border border-border bg-surface text-sm font-semibold hover:bg-background transition cursor-pointer"
             >
               <UserCheck size={15} className="text-amber-500" />
-              {overview?.status === "suspended" ? "Unsuspend User" : "Suspend"}
+              {overview?.status === 'suspended' ? 'Unsuspend User' : 'Suspend'}
             </button>
           </div>
         </div>
@@ -522,17 +484,17 @@ export default function UserDetailsPage() {
       {/* Sub-tabs menu */}
       <div className="flex flex-wrap border-b border-border gap-2">
         {[
-          { id: "overview", label: "Overview", icon: User },
-          { id: "security", label: "Security & Roles", icon: Shield },
-          { id: "sessions", label: "Sessions & Devices", icon: HardDrive },
+          { id: 'overview', label: 'Overview', icon: User },
+          { id: 'security', label: 'Security & Roles', icon: Shield },
+          { id: 'sessions', label: 'Sessions & Devices', icon: HardDrive },
           {
-            id: "subscription",
-            label: "Subscription & Billing",
+            id: 'subscription',
+            label: 'Subscription & Billing',
             icon: CreditCard,
           },
-          { id: "notes", label: "Internal Notes", icon: BookOpen },
-          { id: "activity", label: "Activity & Audits", icon: Activity },
-          { id: "timeline", label: "Timeline History", icon: Clock },
+          { id: 'notes', label: 'Internal Notes', icon: BookOpen },
+          { id: 'activity', label: 'Activity & Audits', icon: Activity },
+          { id: 'timeline', label: 'Timeline History', icon: Clock },
         ].map((t) => {
           const Icon = t.icon;
           return (
@@ -540,9 +502,7 @@ export default function UserDetailsPage() {
               key={t.id}
               onClick={() => setActiveTab(t.id as any)}
               className={`px-4 py-3 text-sm font-semibold relative transition flex items-center gap-2 cursor-pointer ${
-                activeTab === t.id
-                  ? "text-primary font-bold"
-                  : "text-text-light hover:text-text"
+                activeTab === t.id ? 'text-primary font-bold' : 'text-text-light hover:text-text'
               }`}
             >
               <Icon size={15} />
@@ -567,26 +527,24 @@ export default function UserDetailsPage() {
         ) : (
           <>
             {/* Overview sub-tab */}
-            {activeTab === "overview" && overview && (
+            {activeTab === 'overview' && overview && (
               <div className="space-y-6">
                 <div>
                   <h3 className="text-lg font-bold">Profile Summary</h3>
-                  <p className="text-xs text-text-light">
-                    Account overview details and metadata.
-                  </p>
+                  <p className="text-xs text-text-light">Account overview details and metadata.</p>
                 </div>
                 <div className="grid gap-6 md:grid-cols-2">
                   <div className="space-y-4">
                     {[
-                      { label: "Full Name", value: overview.name },
-                      { label: "Email Address", value: overview.email },
+                      { label: 'Full Name', value: overview.name },
+                      { label: 'Email Address', value: overview.email },
                       {
-                        label: "Mobile Number",
-                        value: overview.phone || "N/A",
+                        label: 'Mobile Number',
+                        value: overview.phone || 'N/A',
                       },
                       {
-                        label: "Company Name",
-                        value: overview.companyName || "N/A",
+                        label: 'Company Name',
+                        value: overview.companyName || 'N/A',
                       },
                     ].map((item, idx) => (
                       <div key={idx} className="border-b border-border/60 pb-3">
@@ -602,27 +560,22 @@ export default function UserDetailsPage() {
                   <div className="space-y-4">
                     {[
                       {
-                        label: "Verification Status",
-                        value: overview.emailVerified
-                          ? "Verified ✅"
-                          : "Pending Verification ⚠️",
+                        label: 'Verification Status',
+                        value: overview.emailVerified ? 'Verified ✅' : 'Pending Verification ⚠️',
                       },
                       {
-                        label: "Country Origin",
-                        value:
-                          overview.country?.name ||
-                          overview.country?.code ||
-                          "N/A",
+                        label: 'Country Origin',
+                        value: overview.country?.name || overview.country?.code || 'N/A',
                       },
                       {
-                        label: "Registered At",
+                        label: 'Registered At',
                         value: new Date(overview.createdAt).toLocaleString(),
                       },
                       {
-                        label: "Last Login Active",
+                        label: 'Last Login Active',
                         value: overview.lastLoginAt
                           ? new Date(overview.lastLoginAt).toLocaleString()
-                          : "Never",
+                          : 'Never',
                       },
                     ].map((item, idx) => (
                       <div key={idx} className="border-b border-border/60 pb-3">
@@ -640,16 +593,13 @@ export default function UserDetailsPage() {
             )}
 
             {/* Security & Roles sub-tab */}
-            {activeTab === "security" && (
+            {activeTab === 'security' && (
               <div className="space-y-6">
                 <div className="flex items-center justify-between border-b border-border pb-4">
                   <div>
-                    <h3 className="text-lg font-bold">
-                      Security & Authorization Settings
-                    </h3>
+                    <h3 className="text-lg font-bold">Security & Authorization Settings</h3>
                     <p className="text-xs text-text-light">
-                      Password compliance, MFA status, and admin role
-                      assignments.
+                      Password compliance, MFA status, and admin role assignments.
                     </p>
                   </div>
                   <button
@@ -663,29 +613,23 @@ export default function UserDetailsPage() {
 
                 <div className="grid gap-6 md:grid-cols-2">
                   <div className="space-y-4">
-                    <h4 className="text-sm font-bold text-text">
-                      Security Metadata
-                    </h4>
+                    <h4 className="text-sm font-bold text-text">Security Metadata</h4>
                     {[
                       {
-                        label: "Last Password Changed At",
+                        label: 'Last Password Changed At',
                         value: security?.passwordChangedAt
-                          ? new Date(
-                              security.passwordChangedAt,
-                            ).toLocaleString()
-                          : "Never",
+                          ? new Date(security.passwordChangedAt).toLocaleString()
+                          : 'Never',
                       },
                       {
-                        label: "Forced Password Reset Active",
+                        label: 'Forced Password Reset Active',
                         value: security?.forcePasswordChange
-                          ? "Yes (Requires reset on next login)"
-                          : "No",
+                          ? 'Yes (Requires reset on next login)'
+                          : 'No',
                       },
                       {
-                        label: "Multi-Factor Authentication (MFA)",
-                        value: security?.twoFactorEnabled
-                          ? "Enabled"
-                          : "Disabled",
+                        label: 'Multi-Factor Authentication (MFA)',
+                        value: security?.twoFactorEnabled ? 'Enabled' : 'Disabled',
                       },
                     ].map((item, idx) => (
                       <div key={idx} className="pb-3 border-b border-border/60">
@@ -700,9 +644,7 @@ export default function UserDetailsPage() {
                   </div>
 
                   <div className="space-y-4">
-                    <h4 className="text-sm font-bold text-text">
-                      Assigned Roles
-                    </h4>
+                    <h4 className="text-sm font-bold text-text">Assigned Roles</h4>
                     {roles.length === 0 ? (
                       <p className="text-xs text-text-light italic">
                         No admin roles assigned to this account.
@@ -710,13 +652,8 @@ export default function UserDetailsPage() {
                     ) : (
                       <div className="space-y-3">
                         {roles.map((r, idx) => {
-                          const roleName =
-                            r.role?.name ||
-                            r.name ||
-                            r.roleId ||
-                            "Assigned Role";
-                          const roleDesc =
-                            r.role?.description || r.description || "";
+                          const roleName = r.role?.name || r.name || r.roleId || 'Assigned Role';
+                          const roleDesc = r.role?.description || r.description || '';
                           return (
                             <div
                               key={r.id || r.roleId || idx}
@@ -727,14 +664,11 @@ export default function UserDetailsPage() {
                                   {roleName}
                                 </span>
                                 {roleDesc && (
-                                  <span className="text-xs text-text-light block">
-                                    {roleDesc}
-                                  </span>
+                                  <span className="text-xs text-text-light block">{roleDesc}</span>
                                 )}
                                 {r.expiresAt && (
                                   <span className="text-[10px] text-amber-500 font-bold block mt-1">
-                                    Expires:{" "}
-                                    {new Date(r.expiresAt).toLocaleDateString()}
+                                    Expires: {new Date(r.expiresAt).toLocaleDateString()}
                                   </span>
                                 )}
                               </div>
@@ -749,13 +683,11 @@ export default function UserDetailsPage() {
             )}
 
             {/* Sessions & Devices sub-tab */}
-            {activeTab === "sessions" && (
+            {activeTab === 'sessions' && (
               <div className="space-y-6">
                 <div className="flex items-center justify-between border-b border-border pb-4">
                   <div>
-                    <h3 className="text-lg font-bold">
-                      Active Sessions & Trusted Devices
-                    </h3>
+                    <h3 className="text-lg font-bold">Active Sessions & Trusted Devices</h3>
                     <p className="text-xs text-text-light">
                       Manage and revoke active authorization sessions globally.
                     </p>
@@ -771,13 +703,9 @@ export default function UserDetailsPage() {
                 </div>
 
                 <div className="space-y-4">
-                  <h4 className="text-sm font-bold text-text">
-                    Active Login Sessions
-                  </h4>
+                  <h4 className="text-sm font-bold text-text">Active Login Sessions</h4>
                   {sessions.length === 0 ? (
-                    <p className="text-xs text-text-light italic">
-                      No active sessions found.
-                    </p>
+                    <p className="text-xs text-text-light italic">No active sessions found.</p>
                   ) : (
                     <div className="grid gap-3 sm:grid-cols-2">
                       {sessions.map((s) => (
@@ -800,13 +728,12 @@ export default function UserDetailsPage() {
                               IP: {s.ipAddress}
                             </span>
                             <span className="text-xs text-text-light block">
-                              Location: {s.location || "Unknown"}
+                              Location: {s.location || 'Unknown'}
                             </span>
                           </div>
                           <div className="flex items-center justify-between pt-2 border-t border-border/50 text-xs">
                             <span className="text-[10px] text-text-light">
-                              Active:{" "}
-                              {new Date(s.lastActivityAt).toLocaleString()}
+                              Active: {new Date(s.lastActivityAt).toLocaleString()}
                             </span>
                             <button
                               onClick={() => handleRevokeSession(s.id)}
@@ -822,13 +749,9 @@ export default function UserDetailsPage() {
                 </div>
 
                 <div className="space-y-4 pt-4 border-t border-border">
-                  <h4 className="text-sm font-bold text-text">
-                    Device History Registry
-                  </h4>
+                  <h4 className="text-sm font-bold text-text">Device History Registry</h4>
                   {devices.length === 0 ? (
-                    <p className="text-xs text-text-light italic">
-                      No registered devices.
-                    </p>
+                    <p className="text-xs text-text-light italic">No registered devices.</p>
                   ) : (
                     <div className="space-y-3">
                       {devices.map((d) => (
@@ -852,8 +775,7 @@ export default function UserDetailsPage() {
                               Last IP: {d.lastIpAddress}
                             </span>
                             <span className="text-[10px] text-text-light block">
-                              Last Active:{" "}
-                              {new Date(d.lastActiveAt).toLocaleString()}
+                              Last Active: {new Date(d.lastActiveAt).toLocaleString()}
                             </span>
                           </div>
                         </div>
@@ -865,12 +787,10 @@ export default function UserDetailsPage() {
             )}
 
             {/* Subscription & Billing sub-tab */}
-            {activeTab === "subscription" && (
+            {activeTab === 'subscription' && (
               <div className="space-y-6">
                 <div>
-                  <h3 className="text-lg font-bold">
-                    Subscription Plan & Billing Information
-                  </h3>
+                  <h3 className="text-lg font-bold">Subscription Plan & Billing Information</h3>
                   <p className="text-xs text-text-light">
                     Current subscription level, period range, and statuses.
                   </p>
@@ -882,28 +802,24 @@ export default function UserDetailsPage() {
                       Active Subscription Plan
                     </span>
                     <h4 className="text-2xl font-bold text-indigo-600 dark:text-indigo-400 mt-1">
-                      {subscription?.plan?.name || "Free Trial Tier"}
+                      {subscription?.plan?.name || 'Free Trial Tier'}
                     </h4>
                     {subscription?.plan && (
                       <p className="text-xs text-text-light mt-1">
-                        Price: ${subscription.plan.price} /{" "}
-                        {subscription.plan.billingInterval}
+                        Price: ${subscription.plan.price} / {subscription.plan.billingInterval}
                       </p>
                     )}
                   </div>
                   <div className="text-xs font-semibold text-text-light space-y-1 sm:text-right">
                     <div>
-                      Status:{" "}
+                      Status:{' '}
                       <span className="text-emerald-500 font-bold uppercase">
-                        {subscription?.status || "ACTIVE"}
+                        {subscription?.status || 'ACTIVE'}
                       </span>
                     </div>
                     {subscription?.currentPeriodEnd && (
                       <div>
-                        Period Ends:{" "}
-                        {new Date(
-                          subscription.currentPeriodEnd,
-                        ).toLocaleDateString()}
+                        Period Ends: {new Date(subscription.currentPeriodEnd).toLocaleDateString()}
                       </div>
                     )}
                     {subscription?.cancelAtPeriodEnd && (
@@ -917,12 +833,10 @@ export default function UserDetailsPage() {
             )}
 
             {/* Internal Notes sub-tab */}
-            {activeTab === "notes" && (
+            {activeTab === 'notes' && (
               <div className="space-y-6">
                 <div>
-                  <h3 className="text-lg font-bold">
-                    Internal Administrator Notes
-                  </h3>
+                  <h3 className="text-lg font-bold">Internal Administrator Notes</h3>
                   <p className="text-xs text-text-light">
                     Private team logs and comments regarding this user account.
                   </p>
@@ -975,15 +889,12 @@ export default function UserDetailsPage() {
             )}
 
             {/* Activity & Audits sub-tab */}
-            {activeTab === "activity" && (
+            {activeTab === 'activity' && (
               <div className="space-y-6">
                 <div>
-                  <h3 className="text-lg font-bold">
-                    Activity Events & System Audit Logs
-                  </h3>
+                  <h3 className="text-lg font-bold">Activity Events & System Audit Logs</h3>
                   <p className="text-xs text-text-light">
-                    Track login activity, changes, and audit operations relating
-                    to this user.
+                    Track login activity, changes, and audit operations relating to this user.
                   </p>
                 </div>
 
@@ -994,9 +905,7 @@ export default function UserDetailsPage() {
                       User Activities
                     </h4>
                     {activities.length === 0 ? (
-                      <p className="text-xs text-text-light italic">
-                        No activity logged.
-                      </p>
+                      <p className="text-xs text-text-light italic">No activity logged.</p>
                     ) : (
                       <div className="space-y-3">
                         {activities.map((a) => (
@@ -1010,9 +919,7 @@ export default function UserDetailsPage() {
                                 {new Date(a.createdAt).toLocaleString()}
                               </span>
                             </div>
-                            <p className="text-text-light mt-1">
-                              {a.description}
-                            </p>
+                            <p className="text-text-light mt-1">{a.description}</p>
                             <span className="text-[10px] text-text-light block mt-1">
                               IP: {a.ipAddress}
                             </span>
@@ -1028,9 +935,7 @@ export default function UserDetailsPage() {
                       Admin Audit Actions
                     </h4>
                     {auditLogs.length === 0 ? (
-                      <p className="text-xs text-text-light italic">
-                        No admin audit events.
-                      </p>
+                      <p className="text-xs text-text-light italic">No admin audit events.</p>
                     ) : (
                       <div className="space-y-3">
                         {auditLogs.map((a) => (
@@ -1044,9 +949,7 @@ export default function UserDetailsPage() {
                                 {new Date(a.createdAt).toLocaleString()}
                               </span>
                             </div>
-                            <span className="text-text-light block">
-                              Actor: {a.actor.name}
-                            </span>
+                            <span className="text-text-light block">Actor: {a.actor.name}</span>
                             {a.newValues && (
                               <div className="p-2 bg-muted/50 rounded-lg text-[10px] font-mono mt-1 whitespace-pre-wrap max-h-20 overflow-y-auto">
                                 {JSON.stringify(a.newValues, null, 2)}
@@ -1062,15 +965,12 @@ export default function UserDetailsPage() {
             )}
 
             {/* Timeline History sub-tab */}
-            {activeTab === "timeline" && (
+            {activeTab === 'timeline' && (
               <div className="space-y-6">
                 <div>
-                  <h3 className="text-lg font-bold">
-                    Historical Account Timeline
-                  </h3>
+                  <h3 className="text-lg font-bold">Historical Account Timeline</h3>
                   <p className="text-xs text-text-light">
-                    Chronological feed of key lifecycle events since
-                    registration.
+                    Chronological feed of key lifecycle events since registration.
                   </p>
                 </div>
 
@@ -1089,9 +989,7 @@ export default function UserDetailsPage() {
                           <span className="text-xs text-text-light font-bold block">
                             {new Date(t.createdAt).toLocaleString()}
                           </span>
-                          <span className="text-sm font-bold text-text block">
-                            {t.title}
-                          </span>
+                          <span className="text-sm font-bold text-text block">{t.title}</span>
                           <p className="text-xs text-text-light leading-relaxed mt-0.5">
                             {t.description}
                           </p>
@@ -1110,12 +1008,8 @@ export default function UserDetailsPage() {
       {confirmAction && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 z-50 animate-fade-in">
           <div className="bg-surface border border-border w-full max-w-md rounded-2xl shadow-2xl p-6 space-y-4">
-            <h3 className="text-lg font-bold text-text">
-              {confirmAction.title}
-            </h3>
-            <p className="text-sm text-text-light leading-relaxed">
-              {confirmAction.message}
-            </p>
+            <h3 className="text-lg font-bold text-text">{confirmAction.title}</h3>
+            <p className="text-sm text-text-light leading-relaxed">{confirmAction.message}</p>
             <div className="flex items-center justify-end gap-2 pt-2 border-t border-border">
               <button
                 onClick={() => setConfirmAction(null)}
@@ -1144,8 +1038,7 @@ export default function UserDetailsPage() {
             email: overview.email,
             companyName: overview.companyName || undefined,
             accountType: overview.accountType,
-            country:
-              overview.country?.name || overview.country?.code || undefined,
+            country: overview.country?.name || overview.country?.code || undefined,
             status: overview.status,
             requestedRoleId: overview.requestedRoleId,
             requestedDescription: overview.requestedDescription,
@@ -1164,17 +1057,17 @@ export default function UserDetailsPage() {
       {toast && (
         <div className="fixed bottom-4 right-4 z-50 flex items-center gap-3 bg-gray-950 text-white px-4 py-3.5 rounded-2xl shadow-2xl border border-white/10 max-w-sm animate-slide-up">
           <div
-            className={`p-2 rounded-xl bg-white/10 ${toast.type === "error" ? "text-red-400" : toast.type === "success" ? "text-green-400" : "text-sky-400"}`}
+            className={`p-2 rounded-xl bg-white/10 ${toast.type === 'error' ? 'text-red-400' : toast.type === 'success' ? 'text-green-400' : 'text-sky-400'}`}
           >
             <ShieldAlert size={18} />
           </div>
           <div className="flex flex-col flex-1">
             <span className="text-[11px] text-white/50 font-bold uppercase tracking-wider">
-              {toast.type === "error"
-                ? "Action Failed"
-                : toast.type === "success"
-                  ? "Completed"
-                  : "Notification"}
+              {toast.type === 'error'
+                ? 'Action Failed'
+                : toast.type === 'success'
+                  ? 'Completed'
+                  : 'Notification'}
             </span>
             <span className="text-xs text-white/90 leading-normal font-semibold">
               {toast.message}

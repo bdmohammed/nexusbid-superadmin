@@ -7,7 +7,7 @@ export interface Plan {
   isActive: boolean;
   features: Record<string, any>;
   paypalPlanId: string | null;
-  planType: "all-access" | "state" | "country" | "category" | "bundle";
+  planType: 'all-access' | 'state' | 'country' | 'category' | 'bundle';
   targetStateId: string | null;
   targetCountry: string | null;
   targetCategoryId: string | null;
@@ -22,7 +22,7 @@ export interface Subscription {
   id: string;
   userId: string;
   planId: string;
-  status: "pending" | "active" | "cancelled" | "expired" | "past_due";
+  status: 'pending' | 'active' | 'cancelled' | 'expired' | 'past_due';
   startDate: string;
   endDate: string;
   paypalSubscriptionId: string | null;
@@ -66,9 +66,9 @@ export interface PlanFeatureCatalogItem {
 export interface Coupon {
   id: string;
   code: string;
-  type: "percentage" | "fixed";
+  type: 'percentage' | 'fixed';
   value: number;
-  status: "ACTIVE" | "INACTIVE";
+  status: 'ACTIVE' | 'INACTIVE';
 }
 
 export interface SubscriptionMigrationInput {
@@ -88,7 +88,7 @@ export interface CreatePlanInput {
   isRecurring?: boolean;
   isFeatured?: boolean;
   badge?: string | null;
-  planType: "all-access" | "state" | "country" | "category" | "bundle";
+  planType: 'all-access' | 'state' | 'country' | 'category' | 'bundle';
   targetStateId?: string | null;
   targetCountry?: string | null;
   targetCategoryId?: string | null;
@@ -111,7 +111,7 @@ export interface AssignReviewerInput {
 }
 
 export interface SubmitReviewActionInput {
-  action: "APPROVE" | "REJECT";
+  action: 'APPROVE' | 'REJECT';
   comment?: string;
 }
 

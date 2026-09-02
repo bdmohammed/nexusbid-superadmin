@@ -1,11 +1,11 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery } from '@tanstack/react-query';
 
-import { authApi } from "./api";
-import { authQueryKeys } from "./keys";
+import { authApi } from './api';
+import { authQueryKeys } from './keys';
 
-import type { ListUsersQuery } from "../types";
-import type { ErrorCode } from "@/lib/errors";
-import { AppError } from "@/lib/errors";
+import type { ListUsersQuery } from '../types';
+import type { ErrorCode } from '@/lib/errors';
+import { AppError } from '@/lib/errors';
 
 /**
  * Get currently authenticated user.
@@ -16,9 +16,9 @@ export function useCurrentUser() {
 
     queryFn: async () => {
       const isGuestPage =
-        typeof window !== "undefined" &&
-        (window.location.pathname.startsWith("/login") ||
-          window.location.pathname.startsWith("/register"));
+        typeof window !== 'undefined' &&
+        (window.location.pathname.startsWith('/login') ||
+          window.location.pathname.startsWith('/register'));
 
       try {
         const { data } = await authApi.me();
@@ -38,9 +38,9 @@ export function useCurrentUser() {
 
     retry: (failureCount) => {
       const isGuestPage =
-        typeof window !== "undefined" &&
-        (window.location.pathname.startsWith("/login") ||
-          window.location.pathname.startsWith("/register"));
+        typeof window !== 'undefined' &&
+        (window.location.pathname.startsWith('/login') ||
+          window.location.pathname.startsWith('/register'));
       if (isGuestPage) return false;
       return failureCount < 1;
     },
@@ -80,7 +80,7 @@ export function useUserSessions() {
 
       if (!data.success) {
         throw new AppError(
-          data.message || "Failed to fetch active sessions",
+          data.message || 'Failed to fetch active sessions',
           status,
           data.error as ErrorCode,
         );
@@ -102,7 +102,7 @@ export function useUserDevices() {
 
       if (!data.success) {
         throw new AppError(
-          data.message || "Failed to fetch registered devices",
+          data.message || 'Failed to fetch registered devices',
           status,
           data.error as ErrorCode,
         );
@@ -124,7 +124,7 @@ export function useOwnerReview(query: { token: string }) {
 
       if (!data.success) {
         throw new AppError(
-          data.message || "Failed to fetch owner review list",
+          data.message || 'Failed to fetch owner review list',
           status,
           data.error as ErrorCode,
         );
@@ -147,7 +147,7 @@ export function useListUsers(query?: ListUsersQuery) {
 
       if (!data.success) {
         throw new AppError(
-          data.message || "Failed to fetch users list",
+          data.message || 'Failed to fetch users list',
           status,
           data.error as ErrorCode,
         );
@@ -169,7 +169,7 @@ export function useUserStats() {
 
       if (!data.success) {
         throw new AppError(
-          data.message || "Failed to fetch users stats",
+          data.message || 'Failed to fetch users stats',
           status,
           data.error as ErrorCode,
         );
@@ -191,7 +191,7 @@ export function useAdminUserDetails(id: string) {
 
       if (!data.success) {
         throw new AppError(
-          data.message || "Failed to fetch user details",
+          data.message || 'Failed to fetch user details',
           status,
           data.error as ErrorCode,
         );
@@ -214,7 +214,7 @@ export function useAdminUserOverview(id: string) {
 
       if (!data.success) {
         throw new AppError(
-          data.message || "Failed to fetch user overview",
+          data.message || 'Failed to fetch user overview',
           status,
           data.error as ErrorCode,
         );
@@ -237,7 +237,7 @@ export function useAdminUserSecurityLog(id: string) {
 
       if (!data.success) {
         throw new AppError(
-          data.message || "Failed to fetch user security history",
+          data.message || 'Failed to fetch user security history',
           status,
           data.error as ErrorCode,
         );
@@ -260,7 +260,7 @@ export function useAdminUserSessions(id: string) {
 
       if (!data.success) {
         throw new AppError(
-          data.message || "Failed to fetch user sessions",
+          data.message || 'Failed to fetch user sessions',
           status,
           data.error as ErrorCode,
         );
@@ -283,7 +283,7 @@ export function useAdminUserDevices(id: string) {
 
       if (!data.success) {
         throw new AppError(
-          data.message || "Failed to fetch user devices",
+          data.message || 'Failed to fetch user devices',
           status,
           data.error as ErrorCode,
         );
@@ -306,7 +306,7 @@ export function useAdminUserActivity(id: string) {
 
       if (!data.success) {
         throw new AppError(
-          data.message || "Failed to fetch user activity feed",
+          data.message || 'Failed to fetch user activity feed',
           status,
           data.error as ErrorCode,
         );
@@ -329,7 +329,7 @@ export function useAdminUserTimeline(id: string) {
 
       if (!data.success) {
         throw new AppError(
-          data.message || "Failed to fetch user timeline",
+          data.message || 'Failed to fetch user timeline',
           status,
           data.error as ErrorCode,
         );
@@ -352,7 +352,7 @@ export function useAdminUserAuditLog(id: string) {
 
       if (!data.success) {
         throw new AppError(
-          data.message || "Failed to fetch user audit logs",
+          data.message || 'Failed to fetch user audit logs',
           status,
           data.error as ErrorCode,
         );
@@ -375,7 +375,7 @@ export function useAdminUserSubscription(id: string) {
 
       if (!data.success) {
         throw new AppError(
-          data.message || "Failed to fetch user subscription details",
+          data.message || 'Failed to fetch user subscription details',
           status,
           data.error as ErrorCode,
         );
@@ -398,7 +398,7 @@ export function useAdminUserNotes(id: string) {
 
       if (!data.success) {
         throw new AppError(
-          data.message || "Failed to fetch user notes",
+          data.message || 'Failed to fetch user notes',
           status,
           data.error as ErrorCode,
         );
@@ -421,7 +421,7 @@ export function useAdminUserRoles(id: string) {
 
       if (!data.success) {
         throw new AppError(
-          data.message || "Failed to fetch user roles",
+          data.message || 'Failed to fetch user roles',
           status,
           data.error as ErrorCode,
         );
@@ -444,7 +444,7 @@ export function useAdminUserPermissions(id: string) {
 
       if (!data.success) {
         throw new AppError(
-          data.message || "Failed to fetch user permissions preview",
+          data.message || 'Failed to fetch user permissions preview',
           status,
           data.error as ErrorCode,
         );
@@ -461,13 +461,13 @@ export function useAdminUserPermissions(id: string) {
  */
 export function useApprovalRequest(id: string) {
   return useQuery({
-    queryKey: ["approval-request", id],
+    queryKey: ['approval-request', id],
     queryFn: async () => {
       const { data, status } = await authApi.getApprovalRequest(id);
 
       if (!data.success) {
         throw new AppError(
-          data.message || "Failed to fetch approval request details",
+          data.message || 'Failed to fetch approval request details',
           status,
           data.error as ErrorCode,
         );
@@ -490,7 +490,7 @@ export function useSetupAllowed() {
 
       if (!data.success) {
         throw new AppError(
-          data.message || "Failed to check setup availability",
+          data.message || 'Failed to check setup availability',
           status,
           data.error as ErrorCode,
         );

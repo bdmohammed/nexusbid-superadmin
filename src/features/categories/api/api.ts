@@ -9,37 +9,31 @@ import type {
   CreateCategoryInput,
   SubmitCategoryReviewInput,
   UpdateCategoryInput,
-} from "../types";
-import type { ApiResponse, Category } from "@/types";
-import { apiClient } from "@/lib/http";
+} from '../types';
+import type { ApiResponse, Category } from '@/types';
+import { apiClient } from '@/lib/http';
 
 export const categoryApi = {
   getCategories(query?: CategoryQuery) {
-    return apiClient.get<
-      ApiResponse<{ categories: Category[]; total: number }>
-    >("/categories", {
+    return apiClient.get<ApiResponse<{ categories: Category[]; total: number }>>('/categories', {
       params: query,
     });
   },
 
   getCategoryStats() {
-    return apiClient.get<ApiResponse<CategoryStats>>("/categories/analytics");
+    return apiClient.get<ApiResponse<CategoryStats>>('/categories/analytics');
   },
 
   createCategory(input: CreateCategoryInput) {
-    return apiClient.post<ApiResponse<Category>>("/categories", input);
+    return apiClient.post<ApiResponse<Category>>('/categories', input);
   },
 
   batchCategories(payload: BatchCategoryItem[] | string, isCsv = false) {
-    return apiClient.post<ApiResponse<BatchCategoriesResult>>(
-      "/categories/batch",
-      payload,
-      {
-        headers: {
-          "Content-Type": isCsv ? "text/csv" : "application/json",
-        },
+    return apiClient.post<ApiResponse<BatchCategoriesResult>>('/categories/batch', payload, {
+      headers: {
+        'Content-Type': isCsv ? 'text/csv' : 'application/json',
       },
-    );
+    });
   },
 
   updateCategory(id: string, input: UpdateCategoryInput) {
@@ -51,15 +45,11 @@ export const categoryApi = {
   },
 
   getCategoryHistory(id: string) {
-    return apiClient.get<ApiResponse<CategoryHistoryItem[]>>(
-      `/categories/${id}/history`,
-    );
+    return apiClient.get<ApiResponse<CategoryHistoryItem[]>>(`/categories/${id}/history`);
   },
 
   getCategoryGovernance(id: string) {
-    return apiClient.get<ApiResponse<CategoryGovernance>>(
-      `/categories/${id}/governance`,
-    );
+    return apiClient.get<ApiResponse<CategoryGovernance>>(`/categories/${id}/governance`);
   },
 
   submitCategoryReview(id: string, input: SubmitCategoryReviewInput) {
@@ -73,10 +63,7 @@ export const categoryApi = {
   },
 
   assignCategoryReviewer(id: string, reviewerIds: string[]) {
-    return apiClient.post<ApiResponse<any>>(
-      `/categories/${id}/assign-reviewer`,
-      { reviewerIds },
-    );
+    return apiClient.post<ApiResponse<any>>(`/categories/${id}/assign-reviewer`, { reviewerIds });
   },
 
   reviewCategoryDecision(id: string, input: CategoryDecisionInput) {

@@ -1,17 +1,15 @@
-"use client";
+'use client';
 
-import dayjs from "dayjs";
-import { CheckCircle2, Eye, Send,Trash2, XCircle } from "lucide-react";
+import dayjs from 'dayjs';
+import { CheckCircle2, Eye, Send, Trash2, XCircle } from 'lucide-react';
 
-import type { UserRoleAssignment } from "@/features/rbac/types";
-import type { ICellRendererParams } from "ag-grid-community";
+import type { UserRoleAssignment } from '@/features/rbac/types';
+import type { ICellRendererParams } from 'ag-grid-community';
 
 // 1. Name Cell Renderer (Avatar + Name)
-export const NameCellRenderer = (
-  params: ICellRendererParams<UserRoleAssignment>,
-) => {
+export const NameCellRenderer = (params: ICellRendererParams<UserRoleAssignment>) => {
   const u = params.data?.user;
-  const userName = u?.name || "Unknown User";
+  const userName = u?.name || 'Unknown User';
   const initial = userName.charAt(0).toUpperCase();
 
   return (
@@ -19,41 +17,33 @@ export const NameCellRenderer = (
       <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary/10 border border-primary/20 font-bold text-primary text-xs shadow-2xs">
         {initial}
       </div>
-      <span className="font-semibold text-xs text-text truncate">
-        {userName}
-      </span>
+      <span className="font-semibold text-xs text-text truncate">{userName}</span>
     </div>
   );
 };
 
 // 2. Email Cell Renderer
-export const EmailCellRenderer = (
-  params: ICellRendererParams<UserRoleAssignment>,
-) => {
-  const email = params.data?.user?.email || "N/A";
+export const EmailCellRenderer = (params: ICellRendererParams<UserRoleAssignment>) => {
+  const email = params.data?.user?.email || 'N/A';
   return (
     <div className="flex items-center h-full">
-      <span className="text-xs text-text-light font-mono truncate">
-        {email}
-      </span>
+      <span className="text-xs text-text-light font-mono truncate">{email}</span>
     </div>
   );
 };
 
 // 3. Assigned Role Cell Renderer
-export const AssignedRoleCellRenderer = (
-  params: ICellRendererParams<UserRoleAssignment>,
-) => {
+export const AssignedRoleCellRenderer = (params: ICellRendererParams<UserRoleAssignment>) => {
   const r = params.data?.role;
   const rawName = r?.name;
   const roleName = rawName
-    ? rawName.includes("-")
+    ? rawName.includes('-')
       ? rawName
-          .split("-")
+          .split('-')
           .map((s: string) => s.charAt(0).toUpperCase() + s.slice(1))
-          .join(" ")
+          .join(' ')
       : rawName
-    : "No Role";
+    : 'No Role';
   const isSystem = r?.isSystemRole;
 
   return (
@@ -72,73 +62,55 @@ export const AssignedRoleCellRenderer = (
 };
 
 // 4. Account Type Cell Renderer
-export const AccountTypeCellRenderer = (
-  params: ICellRendererParams<UserRoleAssignment>,
-) => {
-  const type = params.data?.user?.accountType || "admin";
+export const AccountTypeCellRenderer = (params: ICellRendererParams<UserRoleAssignment>) => {
+  const type = params.data?.user?.accountType || 'admin';
   const formattedType =
-    type === "system_admin"
-      ? "System Admin"
-      : type === "admin"
-        ? "Admin"
-        : "Customer";
+    type === 'system_admin' ? 'System Admin' : type === 'admin' ? 'Admin' : 'Customer';
   const colorStyle =
-    type === "system_admin"
-      ? "text-purple-700 dark:text-purple-300"
-      : type === "admin"
-        ? "text-blue-700 dark:text-blue-300"
-        : "text-slate-700 dark:text-slate-300";
+    type === 'system_admin'
+      ? 'text-purple-700 dark:text-purple-300'
+      : type === 'admin'
+        ? 'text-blue-700 dark:text-blue-300'
+        : 'text-slate-700 dark:text-slate-300';
 
   return (
     <div className="flex items-center h-full">
-      <span className={`text-[11px] font-semibold capitalize ${colorStyle}`}>
-        {formattedType}
-      </span>
+      <span className={`text-[11px] font-semibold capitalize ${colorStyle}`}>{formattedType}</span>
     </div>
   );
 };
 
 // 5. Status Cell Renderer
-export const StatusCellRenderer = (
-  params: ICellRendererParams<UserRoleAssignment>,
-) => {
+export const StatusCellRenderer = (params: ICellRendererParams<UserRoleAssignment>) => {
   const expiresAt = params.data?.expiresAt;
   const isExpired = expiresAt && new Date(expiresAt).getTime() <= Date.now();
-  const status = (
-    params.data?.status || (isExpired ? "EXPIRED" : "ACTIVE")
-  ).toUpperCase();
+  const status = (params.data?.status || (isExpired ? 'EXPIRED' : 'ACTIVE')).toUpperCase();
 
-  let colorClass = "text-emerald-700 dark:text-emerald-400";
-  let dotClass = "bg-emerald-500";
-  let label = "ACTIVE";
+  let colorClass = 'text-emerald-700 dark:text-emerald-400';
+  let dotClass = 'bg-emerald-500';
+  let label = 'ACTIVE';
 
-  if (isExpired || status === "EXPIRED") {
-    colorClass = "text-rose-700 dark:text-rose-400";
-    dotClass = "bg-rose-500";
-    label = "EXPIRED";
-  } else if (status === "DRAFT") {
-    colorClass = "text-amber-700 dark:text-amber-400";
-    dotClass = "bg-amber-500";
-    label = "DRAFT";
-  } else if (
-    status === "SUBMITTED" ||
-    status === "PENDING_APPROVAL" ||
-    status === "IN_REVIEW"
-  ) {
-    colorClass = "text-indigo-700 dark:text-indigo-400";
-    dotClass = "bg-indigo-500";
-    label = "IN REVIEW";
-  } else if (status === "REJECTED") {
-    colorClass = "text-rose-700 dark:text-rose-400";
-    dotClass = "bg-rose-500";
-    label = "REJECTED";
+  if (isExpired || status === 'EXPIRED') {
+    colorClass = 'text-rose-700 dark:text-rose-400';
+    dotClass = 'bg-rose-500';
+    label = 'EXPIRED';
+  } else if (status === 'DRAFT') {
+    colorClass = 'text-amber-700 dark:text-amber-400';
+    dotClass = 'bg-amber-500';
+    label = 'DRAFT';
+  } else if (status === 'SUBMITTED' || status === 'PENDING_APPROVAL' || status === 'IN_REVIEW') {
+    colorClass = 'text-indigo-700 dark:text-indigo-400';
+    dotClass = 'bg-indigo-500';
+    label = 'IN REVIEW';
+  } else if (status === 'REJECTED') {
+    colorClass = 'text-rose-700 dark:text-rose-400';
+    dotClass = 'bg-rose-500';
+    label = 'REJECTED';
   }
 
   return (
     <div className="flex items-center h-full">
-      <span
-        className={`inline-flex items-center gap-1.5 text-[11px] font-bold ${colorClass}`}
-      >
+      <span className={`inline-flex items-center gap-1.5 text-[11px] font-bold ${colorClass}`}>
         <span className={`h-1.5 w-1.5 rounded-full ${dotClass}`} />
         {label}
       </span>
@@ -147,9 +119,7 @@ export const StatusCellRenderer = (
 };
 
 // 6. Is Verified Cell Renderer
-export const IsVerifiedCellRenderer = (
-  params: ICellRendererParams<UserRoleAssignment>,
-) => {
+export const IsVerifiedCellRenderer = (params: ICellRendererParams<UserRoleAssignment>) => {
   const u = params.data?.user;
   const isVerified = u?.emailVerified !== false && u?.isVerified !== false;
 
@@ -169,24 +139,15 @@ export const IsVerifiedCellRenderer = (
 };
 
 // 7. Expire Date Cell Renderer
-export const ExpireDateCellRenderer = (
-  params: ICellRendererParams<UserRoleAssignment>,
-) => {
+export const ExpireDateCellRenderer = (params: ICellRendererParams<UserRoleAssignment>) => {
   const expiresAt = params.data?.expiresAt;
-  const text = expiresAt
-    ? dayjs(expiresAt).format("DD MMM YYYY, hh:mm A")
-    : "Permanent Access";
+  const text = expiresAt ? dayjs(expiresAt).format('DD MMM YYYY, hh:mm A') : 'Permanent Access';
 
-  return (
-    <div className="flex items-center h-full text-xs font-medium text-text">
-      {text}
-    </div>
-  );
+  return <div className="flex items-center h-full text-xs font-medium text-text">{text}</div>;
 };
 
 // 8. Actions Cell Renderer
-export interface ActionsCellRendererProps
-  extends ICellRendererParams<UserRoleAssignment> {
+export interface ActionsCellRendererProps extends ICellRendererParams<UserRoleAssignment> {
   currentUserId?: string;
   onViewDetails?: (assignment: UserRoleAssignment) => void;
   onSubmitForReview?: (assignment: UserRoleAssignment) => void;
@@ -199,15 +160,11 @@ export const ActionsCellRenderer = (params: ActionsCellRendererProps) => {
   const assignment = params.data;
   if (!assignment) return null;
 
-  const status = (assignment.status || "ACTIVE").toUpperCase();
-  const isDraft = status === "DRAFT";
+  const status = (assignment.status || 'ACTIVE').toUpperCase();
+  const isDraft = status === 'DRAFT';
   const isPending =
-    status === "SUBMITTED" ||
-    status === "PENDING_APPROVAL" ||
-    status === "IN_REVIEW";
-  const isOwnRole = Boolean(
-    params.currentUserId && assignment.userId === params.currentUserId,
-  );
+    status === 'SUBMITTED' || status === 'PENDING_APPROVAL' || status === 'IN_REVIEW';
+  const isOwnRole = Boolean(params.currentUserId && assignment.userId === params.currentUserId);
 
   return (
     <div className="flex items-center gap-1.5 justify-center h-full">
@@ -267,13 +224,11 @@ export const ActionsCellRenderer = (params: ActionsCellRendererProps) => {
         }}
         className={`p-1.5 rounded-lg text-xs font-bold border transition ${
           isOwnRole
-            ? "opacity-30 cursor-not-allowed border-slate-200 text-slate-400"
-            : "text-red-600 hover:bg-red-50 border-red-200 cursor-pointer"
+            ? 'opacity-30 cursor-not-allowed border-slate-200 text-slate-400'
+            : 'text-red-600 hover:bg-red-50 border-red-200 cursor-pointer'
         }`}
         title={
-          isOwnRole
-            ? "You cannot revoke your own role assignment"
-            : "Revoke / Delete Assignment"
+          isOwnRole ? 'You cannot revoke your own role assignment' : 'Revoke / Delete Assignment'
         }
       >
         <Trash2 className="h-3.5 w-3.5" />

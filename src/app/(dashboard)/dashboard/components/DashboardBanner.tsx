@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import React from "react";
-import { AlertCircle, Settings2,Sparkles } from "lucide-react";
+import React from 'react';
+import { AlertCircle, Settings2, Sparkles } from 'lucide-react';
 
 interface DashboardBannerProps {
   greetingText: string;
@@ -34,10 +34,10 @@ export const DashboardBanner: React.FC<DashboardBannerProps> = ({
         <p className="text-xs text-text-light font-medium max-w-xl">
           {liveQueue?.pendingTenderReviews > 0
             ? `${liveQueue.pendingTenderReviews} Tenders require compliance reviews.`
-            : "All tender review queues are clear."}{" "}
+            : 'All tender review queues are clear.'}{' '}
           {liveAlerts?.securityAlerts > 0
             ? `${liveAlerts.securityAlerts} Security threats flagged today.`
-            : "No active security threats logged."}
+            : 'No active security threats logged.'}
         </p>
       </div>
 
@@ -62,12 +62,12 @@ export const DashboardBanner: React.FC<DashboardBannerProps> = ({
             onClick={onToggleEditMode}
             className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-xl border transition cursor-pointer ${
               isEditMode
-                ? "bg-primary border-primary text-white"
-                : "border-border bg-surface text-text hover:bg-border/30"
+                ? 'bg-primary border-primary text-white'
+                : 'border-border bg-surface text-text hover:bg-border/30'
             }`}
           >
             <Settings2 className="h-4 w-4" />
-            {isEditMode ? "Exit Customizer" : "Customize Grid"}
+            {isEditMode ? 'Exit Customizer' : 'Customize Grid'}
           </button>
         )}
       </div>

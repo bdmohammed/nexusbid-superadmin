@@ -1,13 +1,8 @@
-"use client";
+'use client';
 
-import {
-  AlertTriangle,
-  Clock,
-  ShieldCheck,
-  Users,
-} from "lucide-react";
+import { AlertTriangle, Clock, ShieldCheck, Users } from 'lucide-react';
 
-import type { UserRoleAssignment } from "@/features/rbac/types";
+import type { UserRoleAssignment } from '@/features/rbac/types';
 
 export interface RoleStatsProps {
   assignments?: UserRoleAssignment[];
@@ -29,38 +24,35 @@ export default function RoleStats({ assignments = [] }: RoleStatsProps) {
 
   const statsList = [
     {
-      title: "Total Assignments",
+      title: 'Total Assignments',
       value: total,
       change: `${active} Active`,
       icon: Users,
-      color:
-        "bg-indigo-100 text-primary dark:bg-indigo-950/40 dark:text-indigo-400",
+      color: 'bg-indigo-100 text-primary dark:bg-indigo-950/40 dark:text-indigo-400',
     },
     {
-      title: "Active Roles",
+      title: 'Active Roles',
       value: active,
-      change: "Live Access",
+      change: 'Live Access',
       icon: ShieldCheck,
-      color:
-        "bg-green-100 text-green-700 dark:bg-green-950/40 dark:text-green-400",
+      color: 'bg-green-100 text-green-700 dark:bg-green-950/40 dark:text-green-400',
     },
     {
-      title: "Time-Bound Access",
+      title: 'Time-Bound Access',
       value: timeBound,
-      change: "Scheduled Expiration",
+      change: 'Scheduled Expiration',
       icon: Clock,
-      color:
-        "bg-amber-100 text-amber-700 dark:bg-amber-950/40 dark:text-amber-400",
+      color: 'bg-amber-100 text-amber-700 dark:bg-amber-950/40 dark:text-amber-400',
     },
     {
-      title: "Expired Access",
+      title: 'Expired Access',
       value: expired,
-      change: expired > 0 ? "Requires Revocation" : "Clean Audit",
+      change: expired > 0 ? 'Requires Revocation' : 'Clean Audit',
       icon: AlertTriangle,
       color:
         expired > 0
-          ? "bg-red-100 text-red-700 dark:bg-red-950/40 dark:text-red-400"
-          : "bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300",
+          ? 'bg-red-100 text-red-700 dark:bg-red-950/40 dark:text-red-400'
+          : 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300',
     },
   ];
 

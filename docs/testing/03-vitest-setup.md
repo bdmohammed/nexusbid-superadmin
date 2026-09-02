@@ -30,17 +30,10 @@ interface AllTheProvidersProps {
 
 function AllTheProviders({ children }: AllTheProvidersProps) {
   const [queryClient] = React.useState(() => createTestQueryClient());
-  return (
-    <QueryClientProvider client={queryClient}>
-      {children}
-    </QueryClientProvider>
-  );
+  return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>;
 }
 
-function customRender(
-  ui: ReactElement,
-  options?: Omit<RenderOptions, 'wrapper'>
-) {
+function customRender(ui: ReactElement, options?: Omit<RenderOptions, 'wrapper'>) {
   return render(ui, { wrapper: AllTheProviders, ...options });
 }
 
@@ -52,6 +45,7 @@ export { customRender as render };
 ```
 
 ### Usage in Components/Feature Tests:
+
 ```tsx
 // Simple, clean import of custom render
 import { render, screen } from '@/testing/test-utils';

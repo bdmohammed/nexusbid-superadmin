@@ -1,7 +1,7 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery } from '@tanstack/react-query';
 
-import { notificationsApi } from "./api";
-import { notificationQueryKeys } from "./keys";
+import { notificationsApi } from './api';
+import { notificationQueryKeys } from './keys';
 
 export function useNotifications(filters?: any) {
   return useQuery({

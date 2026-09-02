@@ -1,26 +1,18 @@
-"use client";
+'use client';
 
-import React, { useEffect, useRef,useState } from "react";
-import Link from "next/link";
-import { useQueryClient } from "@tanstack/react-query";
-import {
-  AlertTriangle,
-  Bell,
-  Check,
-  Eye,
-  Info,
-  Settings,
-  ShieldAlert,
-} from "lucide-react";
+import React, { useEffect, useRef, useState } from 'react';
+import Link from 'next/link';
+import { useQueryClient } from '@tanstack/react-query';
+import { AlertTriangle, Bell, Check, Eye, Info, Settings, ShieldAlert } from 'lucide-react';
 
-import type { Notification } from "@/types";
-import { clientEnv } from "@/env/client";
+import type { Notification } from '@/types';
+import { clientEnv } from '@/env/client';
 import {
   notificationQueryKeys,
   useMarkAllRead,
   useNotifications,
   useNotificationStats,
-} from "@/features/notifications";
+} from '@/features/notifications';
 
 export default function NotificationDropdown() {
   const queryClient = useQueryClient();
@@ -29,25 +21,24 @@ export default function NotificationDropdown() {
 
   const { data: stats } = useNotificationStats();
   const { data: listData } = useNotifications({
-    status: "UNREAD",
+    status: 'UNREAD',
     page: 1,
     limit: 5,
   });
 
   const markAllReadMut = useMarkAllRead();
-  const unreadNotifications = (listData?.notifications ??
-    []) as unknown as Notification[];
+  const unreadNotifications = (listData?.notifications ?? []) as unknown as Notification[];
 
   // Live SSE listener for real-time unread updates
   useEffect(() => {
     const url = `${clientEnv.NEXT_PUBLIC_API_URL}/api/v1/notifications/stream`;
     const eventSource = new EventSource(url, { withCredentials: true });
 
-    eventSource.addEventListener("notification:new", () => {
+    eventSource.addEventListener('notification:new', () => {
       queryClient.invalidateQueries({ queryKey: notificationQueryKeys.all });
     });
 
-    eventSource.addEventListener("error", () => {
+    eventSource.addEventListener('error', () => {
       // Quiet fail to allow retries in background
     });
 
@@ -59,15 +50,12 @@ export default function NotificationDropdown() {
   // Click outside to close dropdown
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setIsOpen(false);
       }
     };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
   const severityIcons: Record<string, React.ReactNode> = {
@@ -90,7 +78,7 @@ export default function NotificationDropdown() {
         <Bell size={18} />
         {stats && stats.unread > 0 && (
           <span className="absolute -right-0.5 -top-0.5 flex h-4.5 min-w-[18px] items-center justify-center rounded-full bg-red-500 px-1 text-[9px] font-bold text-white ring-2 ring-surface">
-            {stats.unread > 99 ? "99+" : stats.unread}
+            {stats.unread > 99 ? '99+' : stats.unread}
           </span>
         )}
       </button>
@@ -119,17 +107,13 @@ export default function NotificationDropdown() {
           {/* Severity Stats Grid */}
           <div className="grid grid-cols-3 gap-2 py-2.5 my-2 rounded-xl bg-sidebar-hover/40 text-center text-xs">
             <div>
-              <p className="font-semibold text-red-500">
-                {stats?.critical ?? 0}
-              </p>
+              <p className="font-semibold text-red-500">{stats?.critical ?? 0}</p>
               <p className="text-[10px] text-text-light font-medium uppercase tracking-wider">
                 Critical
               </p>
             </div>
             <div className="border-x border-border">
-              <p className="font-semibold text-orange-500">
-                {stats?.warning ?? 0}
-              </p>
+              <p className="font-semibold text-orange-500">{stats?.warning ?? 0}</p>
               <p className="text-[10px] text-text-light font-medium uppercase tracking-wider">
                 Warnings
               </p>
@@ -150,7 +134,7 @@ export default function NotificationDropdown() {
               </div>
             ) : (
               unreadNotifications.map((notif) => {
-                const sevKey = (notif.severity || "info").toLowerCase();
+                const sevKey = (notif.severity || 'info').toLowerCase();
                 return (
                   <Link
                     key={notif.id}
@@ -170,8 +154,8 @@ export default function NotificationDropdown() {
                       </p>
                       <p className="text-[9px] text-text-light/80 mt-1">
                         {new Date(notif.createdAt).toLocaleTimeString([], {
-                          hour: "2-digit",
-                          minute: "2-digit",
+                          hour: '2-digit',
+                          minute: '2-digit',
                         })}
                       </p>
                     </div>

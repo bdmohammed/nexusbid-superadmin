@@ -1,34 +1,28 @@
 //@ts-nocheck
-"use client";
+'use client';
 
-import React from "react";
-import {
-  AlertTriangle,
-  CheckCircle2,
-  HelpCircle,
-  MessageSquare,
-  XCircle,
-} from "lucide-react";
-import Select from "react-select";
+import React from 'react';
+import { AlertTriangle, CheckCircle2, HelpCircle, MessageSquare, XCircle } from 'lucide-react';
+import Select from 'react-select';
 
-import type { Category } from "@/components/categories/CategoryFormDrawer";
-import Button from "@/components/ui/Button";
-import Modal from "@/components/ui/Modal";
+import type { Category } from '@/components/categories/CategoryFormDrawer';
+import Button from '@/components/ui/Button';
+import Modal from '@/components/ui/Modal';
 
 // Reusable Custom Styles for react-select matching theme CSS variables
 const customReactSelectStyles = {
   control: (base: any, state: any) => ({
     ...base,
-    backgroundColor: "var(--surface)",
-    borderColor: state.isFocused ? "var(--primary)" : "var(--border)",
-    boxShadow: state.isFocused ? "0 0 0 2px rgba(99, 102, 241, 0.2)" : "none",
-    borderRadius: "0.75rem",
-    minHeight: "42px",
-    fontSize: "0.75rem",
-    cursor: "pointer",
-    transition: "all 0.15s ease",
-    "&:hover": {
-      borderColor: "var(--border)",
+    backgroundColor: 'var(--surface)',
+    borderColor: state.isFocused ? 'var(--primary)' : 'var(--border)',
+    boxShadow: state.isFocused ? '0 0 0 2px rgba(99, 102, 241, 0.2)' : 'none',
+    borderRadius: '0.75rem',
+    minHeight: '42px',
+    fontSize: '0.75rem',
+    cursor: 'pointer',
+    transition: 'all 0.15s ease',
+    '&:hover': {
+      borderColor: 'var(--border)',
     },
   }),
   menuPortal: (base: any) => ({
@@ -37,73 +31,72 @@ const customReactSelectStyles = {
   }),
   menu: (base: any) => ({
     ...base,
-    backgroundColor: "var(--surface)",
-    border: "1px solid var(--border)",
-    borderRadius: "0.75rem",
-    boxShadow:
-      "0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 8px 10px -6px rgba(0, 0, 0, 0.1)",
-    overflow: "hidden",
+    backgroundColor: 'var(--surface)',
+    border: '1px solid var(--border)',
+    borderRadius: '0.75rem',
+    boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 8px 10px -6px rgba(0, 0, 0, 0.1)',
+    overflow: 'hidden',
   }),
   menuList: (base: any) => ({
     ...base,
-    padding: "6px",
-    maxHeight: "220px",
+    padding: '6px',
+    maxHeight: '220px',
   }),
   option: (base: any, state: any) => ({
     ...base,
     backgroundColor: state.isSelected
-      ? "var(--primary)"
+      ? 'var(--primary)'
       : state.isFocused
-        ? "var(--background)"
-        : "transparent",
-    color: state.isSelected ? "#ffffff" : "var(--text)",
-    fontSize: "0.75rem",
-    borderRadius: "0.5rem",
-    cursor: state.isDisabled ? "not-allowed" : "pointer",
-    padding: "8px 12px",
-    fontWeight: state.isSelected ? "600" : "500",
-    "&:active": {
-      backgroundColor: "var(--background)",
+        ? 'var(--background)'
+        : 'transparent',
+    color: state.isSelected ? '#ffffff' : 'var(--text)',
+    fontSize: '0.75rem',
+    borderRadius: '0.5rem',
+    cursor: state.isDisabled ? 'not-allowed' : 'pointer',
+    padding: '8px 12px',
+    fontWeight: state.isSelected ? '600' : '500',
+    '&:active': {
+      backgroundColor: 'var(--background)',
     },
   }),
   singleValue: (base: any) => ({
     ...base,
-    color: "var(--text)",
-    fontSize: "0.75rem",
-    fontWeight: "500",
+    color: 'var(--text)',
+    fontSize: '0.75rem',
+    fontWeight: '500',
   }),
   multiValue: (base: any) => ({
     ...base,
-    backgroundColor: "var(--background)",
-    border: "1px solid var(--border)",
-    borderRadius: "0.5rem",
-    padding: "1px 4px",
+    backgroundColor: 'var(--background)',
+    border: '1px solid var(--border)',
+    borderRadius: '0.5rem',
+    padding: '1px 4px',
   }),
   multiValueLabel: (base: any) => ({
     ...base,
-    color: "var(--text)",
-    fontSize: "0.75rem",
-    fontWeight: "500",
+    color: 'var(--text)',
+    fontSize: '0.75rem',
+    fontWeight: '500',
   }),
   multiValueRemove: (base: any) => ({
     ...base,
-    color: "var(--text-light)",
-    borderRadius: "0.25rem",
-    cursor: "pointer",
-    "&:hover": {
-      backgroundColor: "rgba(239, 68, 68, 0.15)",
-      color: "#ef4444",
+    color: 'var(--text-light)',
+    borderRadius: '0.25rem',
+    cursor: 'pointer',
+    '&:hover': {
+      backgroundColor: 'rgba(239, 68, 68, 0.15)',
+      color: '#ef4444',
     },
   }),
   input: (base: any) => ({
     ...base,
-    color: "var(--text)",
-    fontSize: "0.75rem",
+    color: 'var(--text)',
+    fontSize: '0.75rem',
   }),
   placeholder: (base: any) => ({
     ...base,
-    color: "var(--text-light)",
-    fontSize: "0.75rem",
+    color: 'var(--text-light)',
+    fontSize: '0.75rem',
   }),
 };
 
@@ -122,9 +115,7 @@ interface SubmitCategoryReviewModalProps {
   currentUserId?: string;
 }
 
-export const SubmitCategoryReviewModal: React.FC<
-  SubmitCategoryReviewModalProps
-> = ({
+export const SubmitCategoryReviewModal: React.FC<SubmitCategoryReviewModalProps> = ({
   isOpen,
   onClose,
   category,
@@ -157,33 +148,26 @@ export const SubmitCategoryReviewModal: React.FC<
           <p className="font-semibold text-text flex items-center justify-between">
             <span>Target Category: {category.name}</span>
             <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-primary/10 text-primary border border-primary/20">
-              Code: {category.code || "Auto-Gen"}
+              Code: {category.code || 'Auto-Gen'}
             </span>
           </p>
           <p className="text-text-light text-[11px]">
-            Assign at least one administrator with category management
-            permissions to evaluate and approve this category version.
+            Assign at least one administrator with category management permissions to evaluate and
+            approve this category version.
           </p>
         </div>
 
         <div className="space-y-1.5">
           <label className="text-xs font-semibold text-text uppercase tracking-wider block">
-            Select Governance Reviewer(s){" "}
-            <span className="text-red-500">*</span>
+            Select Governance Reviewer(s) <span className="text-red-500">*</span>
           </label>
           <Select
             isMulti
             options={reviewerOptions}
-            value={reviewerOptions.filter((opt) =>
-              selectedReviewers.includes(opt.value),
-            )}
-            onChange={(selected) =>
-              setSelectedReviewers(selected.map((s) => s.value))
-            }
+            value={reviewerOptions.filter((opt) => selectedReviewers.includes(opt.value))}
+            onChange={(selected) => setSelectedReviewers(selected.map((s) => s.value))}
             placeholder="Search and select reviewer..."
-            menuPortalTarget={
-              typeof window !== "undefined" ? document.body : undefined
-            }
+            menuPortalTarget={typeof window !== 'undefined' ? document.body : undefined}
             menuPosition="fixed"
             styles={customReactSelectStyles}
           />
@@ -206,11 +190,8 @@ export const SubmitCategoryReviewModal: React.FC<
           <Button variant="outline" onClick={onClose} disabled={submitting}>
             Cancel
           </Button>
-          <Button
-            onClick={onSendForReview}
-            disabled={selectedReviewers.length === 0 || submitting}
-          >
-            {submitting ? "Submitting..." : "Send to Reviewers"}
+          <Button onClick={onSendForReview} disabled={selectedReviewers.length === 0 || submitting}>
+            {submitting ? 'Submitting...' : 'Send to Reviewers'}
           </Button>
         </div>
       </div>
@@ -223,8 +204,8 @@ interface CategoryReviewDecisionModalProps {
   isOpen: boolean;
   onClose: () => void;
   category: Category | null;
-  reviewDecision: "APPROVE" | "REJECT" | "REQUEST_CHANGES";
-  setReviewDecision: (val: "APPROVE" | "REJECT" | "REQUEST_CHANGES") => void;
+  reviewDecision: 'APPROVE' | 'REJECT' | 'REQUEST_CHANGES';
+  setReviewDecision: (val: 'APPROVE' | 'REJECT' | 'REQUEST_CHANGES') => void;
   decisionComment: string;
   setDecisionComment: (val: string) => void;
   submitting: boolean;
@@ -235,9 +216,7 @@ interface CategoryReviewDecisionModalProps {
   assignableUsers?: any[];
 }
 
-export const CategoryReviewDecisionModal: React.FC<
-  CategoryReviewDecisionModalProps
-> = ({
+export const CategoryReviewDecisionModal: React.FC<CategoryReviewDecisionModalProps> = ({
   isOpen,
   onClose,
   category,
@@ -255,18 +234,14 @@ export const CategoryReviewDecisionModal: React.FC<
   if (!isOpen || !category) return null;
 
   // 1. Check if current user is an assigned reviewer
-  const assignments =
-    reviewDetails?.categoryReviewAssignments ||
-    reviewDetails?.assignments ||
-    [];
+  const assignments = reviewDetails?.categoryReviewAssignments || reviewDetails?.assignments || [];
 
   const reviewerIds: string[] = assignments
     .map((a: any) => a.reviewerId || a.reviewer?.id)
     .filter(Boolean);
 
   const isAssignedReviewer =
-    reviewerIds.length === 0 ||
-    (Boolean(currentUserId) && reviewerIds.includes(currentUserId!));
+    reviewerIds.length === 0 || (Boolean(currentUserId) && reviewerIds.includes(currentUserId!));
 
   // 2. Check Maker-Checker creator self-approval rule
   const creatorId =
@@ -275,9 +250,7 @@ export const CategoryReviewDecisionModal: React.FC<
     (category as any)?.createdBy ||
     reviewDetails?.createdByUserId;
 
-  const isCreator = Boolean(
-    currentUserId && creatorId && currentUserId === creatorId,
-  );
+  const isCreator = Boolean(currentUserId && creatorId && currentUserId === creatorId);
   const otherAdmins = assignableUsers.filter((u) => u.id !== currentUserId);
   const hasOtherAdmins = otherAdmins.length > 0;
   const isSelfApprovalBlocked = isCreator && hasOtherAdmins;
@@ -289,8 +262,7 @@ export const CategoryReviewDecisionModal: React.FC<
     onSubmitReview(e);
   };
 
-  const commentsHistory =
-    reviewDetails?.comments || (category as any)?.comments || [];
+  const commentsHistory = reviewDetails?.comments || (category as any)?.comments || [];
 
   return (
     <Modal
@@ -306,9 +278,8 @@ export const CategoryReviewDecisionModal: React.FC<
             <div>
               <p className="font-bold">Not an Assigned Reviewer</p>
               <p className="text-[11px] opacity-90 mt-0.5">
-                You are not an assigned reviewer for this category draft. Only
-                designated assigned reviewers can execute a review decision on
-                this draft.
+                You are not an assigned reviewer for this category draft. Only designated assigned
+                reviewers can execute a review decision on this draft.
               </p>
             </div>
           </div>
@@ -320,10 +291,9 @@ export const CategoryReviewDecisionModal: React.FC<
             <div>
               <p className="font-bold">Maker-Checker Self-Approval Blocked</p>
               <p className="text-[11px] opacity-90 mt-0.5">
-                You created this category draft. Maker-Checker policy prevents
-                self-approval when another administrator with category
-                management permission exists in the system. Another
-                administrator must review and approve this draft.
+                You created this category draft. Maker-Checker policy prevents self-approval when
+                another administrator with category management permission exists in the system.
+                Another administrator must review and approve this draft.
               </p>
             </div>
           </div>
@@ -344,7 +314,7 @@ export const CategoryReviewDecisionModal: React.FC<
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center justify-between">
                       <p className="font-semibold text-text">
-                        {c.user?.name || c.userName || "Governance Reviewer"}
+                        {c.user?.name || c.userName || 'Governance Reviewer'}
                       </p>
                       {c.createdAt && (
                         <span className="text-[10px] text-text-light">
@@ -352,9 +322,7 @@ export const CategoryReviewDecisionModal: React.FC<
                         </span>
                       )}
                     </div>
-                    <p className="text-text-light italic mt-0.5">
-                      "{c.comment}"
-                    </p>
+                    <p className="text-text-light italic mt-0.5">"{c.comment}"</p>
                   </div>
                 </div>
               ))}
@@ -370,20 +338,20 @@ export const CategoryReviewDecisionModal: React.FC<
             <label
               className={`flex items-center gap-2.5 p-3 border rounded-xl transition-all ${
                 isApproveDisabled
-                  ? "border-border bg-surface/50 text-text-light opacity-60 cursor-not-allowed"
-                  : reviewDecision === "APPROVE"
-                    ? "border-emerald-500 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold shadow-xs cursor-pointer"
-                    : "border-border bg-surface text-text-light hover:text-text hover:border-emerald-500/50 cursor-pointer"
+                  ? 'border-border bg-surface/50 text-text-light opacity-60 cursor-not-allowed'
+                  : reviewDecision === 'APPROVE'
+                    ? 'border-emerald-500 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold shadow-xs cursor-pointer'
+                    : 'border-border bg-surface text-text-light hover:text-text hover:border-emerald-500/50 cursor-pointer'
               }`}
             >
               <input
                 type="radio"
                 name="decision"
                 className="accent-emerald-600 h-4 w-4 cursor-pointer"
-                checked={reviewDecision === "APPROVE"}
+                checked={reviewDecision === 'APPROVE'}
                 disabled={isApproveDisabled}
                 onChange={() => {
-                  if (!isApproveDisabled) setReviewDecision("APPROVE");
+                  if (!isApproveDisabled) setReviewDecision('APPROVE');
                 }}
               />
               <CheckCircle2 size={16} className="text-emerald-500 shrink-0" />
@@ -393,20 +361,20 @@ export const CategoryReviewDecisionModal: React.FC<
             <label
               className={`flex items-center gap-2.5 p-3 border rounded-xl transition-all ${
                 !isAssignedReviewer
-                  ? "border-border bg-surface/50 text-text-light opacity-60 cursor-not-allowed"
-                  : reviewDecision === "REJECT"
-                    ? "border-rose-500 bg-rose-500/10 text-rose-600 dark:text-rose-400 font-bold shadow-xs cursor-pointer"
-                    : "border-border bg-surface text-text-light hover:text-text hover:border-rose-500/50 cursor-pointer"
+                  ? 'border-border bg-surface/50 text-text-light opacity-60 cursor-not-allowed'
+                  : reviewDecision === 'REJECT'
+                    ? 'border-rose-500 bg-rose-500/10 text-rose-600 dark:text-rose-400 font-bold shadow-xs cursor-pointer'
+                    : 'border-border bg-surface text-text-light hover:text-text hover:border-rose-500/50 cursor-pointer'
               }`}
             >
               <input
                 type="radio"
                 name="decision"
                 className="accent-rose-600 h-4 w-4 cursor-pointer"
-                checked={reviewDecision === "REJECT"}
+                checked={reviewDecision === 'REJECT'}
                 disabled={!isAssignedReviewer}
                 onChange={() => {
-                  if (isAssignedReviewer) setReviewDecision("REJECT");
+                  if (isAssignedReviewer) setReviewDecision('REJECT');
                 }}
               />
               <XCircle size={16} className="text-rose-500 shrink-0" />
@@ -416,20 +384,20 @@ export const CategoryReviewDecisionModal: React.FC<
             <label
               className={`flex items-center gap-2.5 p-3 border rounded-xl transition-all ${
                 !isAssignedReviewer
-                  ? "border-border bg-surface/50 text-text-light opacity-60 cursor-not-allowed"
-                  : reviewDecision === "REQUEST_CHANGES"
-                    ? "border-amber-500 bg-amber-500/10 text-amber-600 dark:text-amber-400 font-bold shadow-xs cursor-pointer"
-                    : "border-border bg-surface text-text-light hover:text-text hover:border-amber-500/50 cursor-pointer"
+                  ? 'border-border bg-surface/50 text-text-light opacity-60 cursor-not-allowed'
+                  : reviewDecision === 'REQUEST_CHANGES'
+                    ? 'border-amber-500 bg-amber-500/10 text-amber-600 dark:text-amber-400 font-bold shadow-xs cursor-pointer'
+                    : 'border-border bg-surface text-text-light hover:text-text hover:border-amber-500/50 cursor-pointer'
               }`}
             >
               <input
                 type="radio"
                 name="decision"
                 className="accent-amber-600 h-4 w-4 cursor-pointer"
-                checked={reviewDecision === "REQUEST_CHANGES"}
+                checked={reviewDecision === 'REQUEST_CHANGES'}
                 disabled={!isAssignedReviewer}
                 onChange={() => {
-                  if (isAssignedReviewer) setReviewDecision("REQUEST_CHANGES");
+                  if (isAssignedReviewer) setReviewDecision('REQUEST_CHANGES');
                 }}
               />
               <HelpCircle size={16} className="text-amber-500 shrink-0" />
@@ -440,10 +408,8 @@ export const CategoryReviewDecisionModal: React.FC<
 
         <div className="space-y-2">
           <label className="font-semibold text-text block uppercase tracking-wider text-[11px]">
-            Review Rationale / Feedback{" "}
-            {reviewDecision !== "APPROVE" && (
-              <span className="text-red-500">*</span>
-            )}
+            Review Rationale / Feedback{' '}
+            {reviewDecision !== 'APPROVE' && <span className="text-red-500">*</span>}
           </label>
           <textarea
             rows={3}
@@ -451,7 +417,7 @@ export const CategoryReviewDecisionModal: React.FC<
             onChange={(e) => setDecisionComment(e.target.value)}
             placeholder="Enter governance feedback or decision rationale..."
             className="w-full rounded-xl border border-border bg-surface px-3 py-2 text-xs text-text focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 resize-none transition"
-            required={reviewDecision !== "APPROVE"}
+            required={reviewDecision !== 'APPROVE'}
           />
         </div>
 
@@ -464,11 +430,11 @@ export const CategoryReviewDecisionModal: React.FC<
             disabled={
               submitting ||
               !isAssignedReviewer ||
-              (reviewDecision === "APPROVE" && isSelfApprovalBlocked) ||
-              (reviewDecision !== "APPROVE" && !decisionComment.trim())
+              (reviewDecision === 'APPROVE' && isSelfApprovalBlocked) ||
+              (reviewDecision !== 'APPROVE' && !decisionComment.trim())
             }
           >
-            {submitting ? "Submitting..." : "Submit Governance Decision"}
+            {submitting ? 'Submitting...' : 'Submit Governance Decision'}
           </Button>
         </div>
       </form>

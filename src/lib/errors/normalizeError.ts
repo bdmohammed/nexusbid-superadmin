@@ -1,5 +1,3 @@
-// src/lib/errors/normalize-error.ts
-
 import { AppError } from "./AppError";
 import { ValidationError } from "./ValidationError";
 import { AuthenticationError } from "./AuthenticationError";

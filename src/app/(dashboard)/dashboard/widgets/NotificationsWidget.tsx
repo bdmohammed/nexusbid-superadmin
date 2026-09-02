@@ -1,18 +1,18 @@
-"use client";
+'use client';
 
-import { Bell, Info } from "lucide-react";
+import { Bell, Info } from 'lucide-react';
 
 export default function NotificationsWidget() {
   const notifications = [
-    { text: "Security Role 'Auditor' requires approval", type: "ROLE" },
-    { text: "Tender ID #1105 closing deadline is tomorrow", type: "TENDER" },
+    { text: "Security Role 'Auditor' requires approval", type: 'ROLE' },
+    { text: 'Tender ID #1105 closing deadline is tomorrow', type: 'TENDER' },
     {
       text: "Tenant subscription 'Standard' expires in 3 days",
-      type: "SUBSCRIPTION",
+      type: 'SUBSCRIPTION',
     },
     {
-      text: "Payment transaction failure reported for Tenant #88",
-      type: "PAYMENT",
+      text: 'Payment transaction failure reported for Tenant #88',
+      type: 'PAYMENT',
     },
   ];
 

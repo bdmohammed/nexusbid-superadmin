@@ -1,10 +1,10 @@
 //@ts-nocheck
-"use client";
+'use client';
 
-import React, { memo,useMemo, useRef } from "react";
-import { useRouter } from "next/navigation";
-import { AgChartsEnterpriseModule } from "ag-charts-enterprise";
-import { type ColDef, themeQuartz } from "ag-grid-community";
+import React, { memo, useMemo, useRef } from 'react';
+import { useRouter } from 'next/navigation';
+import { AgChartsEnterpriseModule } from 'ag-charts-enterprise';
+import { type ColDef, themeQuartz } from 'ag-grid-community';
 import {
   AllCommunityModule,
   CellSelectionModule,
@@ -27,14 +27,14 @@ import {
   SparklinesModule,
   StatusBarModule,
   TreeDataModule,
-} from "ag-grid-enterprise";
-import { AgGridReact } from "ag-grid-react";
-import dayjs from "dayjs";
+} from 'ag-grid-enterprise';
+import { AgGridReact } from 'ag-grid-react';
+import dayjs from 'dayjs';
 
-import type { BackendSubscription } from "@/types";
-import StatusBadge from "@/components/common/StatusBadge";
-import Button from "@/components/ui/Button";
-import { useThemeStore } from "@/store/theme.store";
+import type { BackendSubscription } from '@/types';
+import StatusBadge from '@/components/common/StatusBadge';
+import Button from '@/components/ui/Button';
+import { useThemeStore } from '@/store/theme.store';
 
 const CommunityModule = [
   AllCommunityModule,
@@ -86,11 +86,11 @@ export default function PaymentHistoryTable({
   const themeMode = useMemo(
     () =>
       themeQuartz.withParams({
-        backgroundColor: theme === "dark" ? "#0F172A" : "#FFFFFF",
-        foregroundColor: theme === "dark" ? "#F8FAFC" : "#0F172A",
-        headerBackgroundColor: theme === "dark" ? "#1E293B" : "#F8FAFC",
-        rowHoverColor: theme === "dark" ? "#1E293B80" : "#F1F5F980",
-        borderColor: theme === "dark" ? "#334155" : "#E2E8F0",
+        backgroundColor: theme === 'dark' ? '#0F172A' : '#FFFFFF',
+        foregroundColor: theme === 'dark' ? '#F8FAFC' : '#0F172A',
+        headerBackgroundColor: theme === 'dark' ? '#1E293B' : '#F8FAFC',
+        rowHoverColor: theme === 'dark' ? '#1E293B80' : '#F1F5F980',
+        borderColor: theme === 'dark' ? '#334155' : '#E2E8F0',
       }),
     [theme],
   );
@@ -98,42 +98,38 @@ export default function PaymentHistoryTable({
   const columnDefs = useMemo<ColDef<BackendSubscription>[]>(
     () => [
       {
-        headerName: "Invoice / ID",
-        field: "id",
+        headerName: 'Invoice / ID',
+        field: 'id',
         minWidth: 160,
         cellRenderer: (params: any) => {
           if (!params.data?.id) return null;
           const invoice = `SUB-${params.data.id.slice(0, 8).toUpperCase()}`;
           return (
             <div className="flex flex-col justify-center h-full">
-              <span className="font-bold text-xs text-primary font-mono">
-                {invoice}
-              </span>
-              <span className="text-[10px] text-text-light truncate">
-                {params.data.id}
-              </span>
+              <span className="font-bold text-xs text-primary font-mono">{invoice}</span>
+              <span className="text-[10px] text-text-light truncate">{params.data.id}</span>
             </div>
           );
         },
       },
       {
-        headerName: "Company / Customer",
-        field: "user.name",
+        headerName: 'Company / Customer',
+        field: 'user.name',
         minWidth: 220,
         flex: 1,
         cellRenderer: (params: any) => {
           const sub = params.data as BackendSubscription;
           if (!sub) return null;
-          const name = sub.user?.name || "Customer";
-          const email = sub.user?.email || "N/A";
+          const name = sub.user?.name || 'Customer';
+          const email = sub.user?.email || 'N/A';
           const company = sub.user?.companyName || name;
           const companyShort =
             company
-              .split(" ")
+              .split(' ')
               .map((w) => w[0])
-              .join("")
+              .join('')
               .slice(0, 2)
-              .toUpperCase() || "PE";
+              .toUpperCase() || 'PE';
 
           return (
             <div className="flex items-center gap-3 py-1">
@@ -141,62 +137,49 @@ export default function PaymentHistoryTable({
                 {companyShort}
               </div>
               <div className="flex flex-col truncate">
-                <span className="font-semibold text-xs text-text truncate">
-                  {company}
-                </span>
-                <span className="text-[11px] text-text-light truncate">
-                  {email}
-                </span>
+                <span className="font-semibold text-xs text-text truncate">{company}</span>
+                <span className="text-[11px] text-text-light truncate">{email}</span>
               </div>
             </div>
           );
         },
       },
       {
-        headerName: "Plan Tier",
-        field: "planVersion.name",
+        headerName: 'Plan Tier',
+        field: 'planVersion.name',
         minWidth: 160,
         cellRenderer: (params: any) => {
           const sub = params.data as BackendSubscription;
           if (!sub) return null;
           const planName =
-            sub.planVersion?.name ||
-            sub.plan?.activeVersion?.name ||
-            "Standard Plan";
-          return (
-            <span className="font-medium text-xs text-text">{planName}</span>
-          );
+            sub.planVersion?.name || sub.plan?.activeVersion?.name || 'Standard Plan';
+          return <span className="font-medium text-xs text-text">{planName}</span>;
         },
       },
       {
-        headerName: "Amount",
-        field: "planVersion.priceCents",
+        headerName: 'Amount',
+        field: 'planVersion.priceCents',
         minWidth: 120,
         cellRenderer: (params: any) => {
           const sub = params.data as BackendSubscription;
-          if (!sub) return "$0.00";
-          const cents =
-            sub.planVersion?.priceCents ||
-            sub.plan?.activeVersion?.priceCents ||
-            0;
+          if (!sub) return '$0.00';
+          const cents = sub.planVersion?.priceCents || sub.plan?.activeVersion?.priceCents || 0;
           return (
-            <span className="font-bold text-xs text-text">
-              {`$${(cents / 100).toFixed(2)}`}
-            </span>
+            <span className="font-bold text-xs text-text">{`$${(cents / 100).toFixed(2)}`}</span>
           );
         },
       },
       {
-        headerName: "Status",
-        field: "status",
+        headerName: 'Status',
+        field: 'status',
         minWidth: 130,
         cellRenderer: (params: any) => {
-          const status = params.value || "inactive";
-          let badgeStatus = "Inactive";
-          if (status === "active") badgeStatus = "Active";
-          else if (status === "pending") badgeStatus = "Pending";
-          else if (status === "cancelled") badgeStatus = "Closed";
-          else if (status === "past_due") badgeStatus = "Warning";
+          const status = params.value || 'inactive';
+          let badgeStatus = 'Inactive';
+          if (status === 'active') badgeStatus = 'Active';
+          else if (status === 'pending') badgeStatus = 'Pending';
+          else if (status === 'cancelled') badgeStatus = 'Closed';
+          else if (status === 'past_due') badgeStatus = 'Warning';
 
           return (
             <div className="flex items-center h-full">
@@ -206,23 +189,23 @@ export default function PaymentHistoryTable({
         },
       },
       {
-        headerName: "Start Date",
-        field: "startDate",
+        headerName: 'Start Date',
+        field: 'startDate',
         minWidth: 140,
         cellRenderer: (params: any) => {
-          if (!params.value) return "N/A";
+          if (!params.value) return 'N/A';
           return (
             <span className="text-xs text-text-light">
-              {dayjs(params.value).format("MMM DD, YYYY")}
+              {dayjs(params.value).format('MMM DD, YYYY')}
             </span>
           );
         },
       },
       {
-        headerName: "Actions",
-        colId: "actions",
+        headerName: 'Actions',
+        colId: 'actions',
         minWidth: 110,
-        pinned: "right",
+        pinned: 'right',
         cellRenderer: (params: any) => {
           const sub = params.data as BackendSubscription;
           if (!sub) return null;
@@ -269,11 +252,7 @@ export default function PaymentHistoryTable({
         {loading && (
           <div className="absolute inset-0 z-20 bg-surface/80 backdrop-blur-xs flex items-center justify-center">
             <div className="flex items-center gap-2 text-sm font-semibold text-primary">
-              <svg
-                className="animate-spin h-5 w-5 text-primary"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
+              <svg className="animate-spin h-5 w-5 text-primary" fill="none" viewBox="0 0 24 24">
                 <circle
                   className="opacity-25"
                   cx="12"
@@ -310,7 +289,7 @@ export default function PaymentHistoryTable({
       {/* Pagination Footer */}
       <div className="flex items-center justify-between text-xs text-text-light pt-2">
         <span>
-          Showing <strong className="text-text">{data.length}</strong> of{" "}
+          Showing <strong className="text-text">{data.length}</strong> of{' '}
           <strong className="text-text">{totalCount}</strong> records
         </span>
 

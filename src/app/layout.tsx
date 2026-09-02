@@ -1,11 +1,11 @@
-import "./globals.css";
+import './globals.css';
 
-import type { ReactNode } from "react";
-import Providers from "@/providers";
+import type { ReactNode } from 'react';
+import Providers from '@/providers';
 
 export const metadata = {
-  title: "TenderPro",
-  description: "Tender Marketplace",
+  title: 'TenderPro',
+  description: 'Tender Marketplace',
 };
 
 interface RootLayoutProps {

@@ -62,10 +62,10 @@ e2e/                                       # Cross-feature Playwright Specs
 
 ## 2. Browser Support & Execution Policy
 
-| Execution Context | Target Browsers | Strategy |
-| :--- | :--- | :--- |
-| **Pull Request (PR CI)** | **Desktop Chromium** | Required fast pass blocking merge. Ensures maximum velocity. |
-| **Main Branch & Nightly** | **Chromium, Firefox, WebKit, Mobile Chrome** | Full cross-browser matrix validation before release tags. |
+| Execution Context         | Target Browsers                              | Strategy                                                     |
+| :------------------------ | :------------------------------------------- | :----------------------------------------------------------- |
+| **Pull Request (PR CI)**  | **Desktop Chromium**                         | Required fast pass blocking merge. Ensures maximum velocity. |
+| **Main Branch & Nightly** | **Chromium, Firefox, WebKit, Mobile Chrome** | Full cross-browser matrix validation before release tags.    |
 
 ---
 
@@ -87,7 +87,7 @@ describe('AuthProvider Composition', () => {
     render(
       <AuthProvider>
         <TestConsumer />
-      </AuthProvider>
+      </AuthProvider>,
     );
 
     expect(screen.getByText('User: Guest')).toBeInTheDocument();
@@ -99,13 +99,13 @@ describe('AuthProvider Composition', () => {
 
 ## 4. Code Coverage Expectations
 
-| Area / Module | Minimum Target | Rationale |
-| :--- | :---: | :--- |
-| **Utilities & Helpers (`src/lib/*`)** | **100%** | Pure utility functions must have zero regressions. |
-| **Zustand Stores (`src/stores/*`)** | **100%** | Global state mutations impact the whole application. |
-| **Custom Hooks (`src/hooks/*`)** | **95%** | Reusable hook logic requires near-complete branch coverage. |
-| **API Clients & Services (`src/services/*`)** | **95%** | Protects data parsing, headers, and error handling. |
-| **UI Components (`src/components/*`)** | **90%** | Verifies props, roles, and interactions. |
-| **Feature Modules (`src/features/*`)** | **90%** | Verifies critical multi-component interaction flows. |
-| **App Pages (`src/app/**/page.tsx`)** | **Don't Enforce** | Page wrappers are verified via Playwright E2E. |
-| **E2E Journeys (`e2e/*`)** | **Critical Flows** | Covers primary business journeys. |
+| Area / Module                                 |   Minimum Target   | Rationale                                                   |
+| :-------------------------------------------- | :----------------: | :---------------------------------------------------------- |
+| **Utilities & Helpers (`src/lib/*`)**         |      **100%**      | Pure utility functions must have zero regressions.          |
+| **Zustand Stores (`src/stores/*`)**           |      **100%**      | Global state mutations impact the whole application.        |
+| **Custom Hooks (`src/hooks/*`)**              |      **95%**       | Reusable hook logic requires near-complete branch coverage. |
+| **API Clients & Services (`src/services/*`)** |      **95%**       | Protects data parsing, headers, and error handling.         |
+| **UI Components (`src/components/*`)**        |      **90%**       | Verifies props, roles, and interactions.                    |
+| **Feature Modules (`src/features/*`)**        |      **90%**       | Verifies critical multi-component interaction flows.        |
+| **App Pages (`src/app/**/page.tsx`)**         | **Don't Enforce**  | Page wrappers are verified via Playwright E2E.              |
+| **E2E Journeys (`e2e/*`)**                    | **Critical Flows** | Covers primary business journeys.                           |

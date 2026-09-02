@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import { AlertTriangle,EyeOff } from "lucide-react";
+import { useEffect, useState } from 'react';
+import { AlertTriangle, EyeOff } from 'lucide-react';
 
 export default function ImpersonationBanner() {
   const [impersonated, setImpersonated] = useState<{
@@ -12,7 +12,7 @@ export default function ImpersonationBanner() {
   useEffect(() => {
     // Check localStorage for active impersonation session
     const checkImpersonation = () => {
-      const stored = localStorage.getItem("impersonatedUser");
+      const stored = localStorage.getItem('impersonatedUser');
       if (stored) {
         try {
           const user = JSON.parse(stored);
@@ -30,22 +30,22 @@ export default function ImpersonationBanner() {
     checkImpersonation();
 
     // Listen to local storage changes (in case impersonation starts/ends in other tabs)
-    window.addEventListener("storage", checkImpersonation);
+    window.addEventListener('storage', checkImpersonation);
     // Custom event to trigger re-checks on the same window
-    window.addEventListener("impersonationChange", checkImpersonation);
+    window.addEventListener('impersonationChange', checkImpersonation);
 
     return () => {
-      window.removeEventListener("storage", checkImpersonation);
-      window.removeEventListener("impersonationChange", checkImpersonation);
+      window.removeEventListener('storage', checkImpersonation);
+      window.removeEventListener('impersonationChange', checkImpersonation);
     };
   }, []);
 
   const handleEndSession = () => {
-    localStorage.removeItem("impersonatedUser");
-    localStorage.removeItem("impersonatedToken");
+    localStorage.removeItem('impersonatedUser');
+    localStorage.removeItem('impersonatedToken');
 
     // Dispatch event to notify listeners
-    window.dispatchEvent(new Event("impersonationChange"));
+    window.dispatchEvent(new Event('impersonationChange'));
 
     // Optionally redirect back or refresh the page to update the context
     window.location.reload();
@@ -58,9 +58,9 @@ export default function ImpersonationBanner() {
       <div className="flex items-center gap-2 mx-auto">
         <AlertTriangle size={16} className="text-amber-100 animate-pulse" />
         <span className="font-medium">
-          You are impersonating{" "}
-          <strong className="text-white underline">{impersonated.name}</strong>{" "}
-          ({impersonated.email})
+          You are impersonating{' '}
+          <strong className="text-white underline">{impersonated.name}</strong> (
+          {impersonated.email})
         </span>
         <span className="hidden md:inline text-xs text-amber-100 ml-1">
           (Actions perform as this user, recorded in audit log)

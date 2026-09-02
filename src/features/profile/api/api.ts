@@ -12,33 +12,33 @@ import type {
   UserPreferences,
   UserProfile,
   UserSession,
-} from "../types";
-import type { ApiResponse } from "@/types";
-import { apiClient } from "@/lib/http";
+} from '../types';
+import type { ApiResponse } from '@/types';
+import { apiClient } from '@/lib/http';
 
 export const profileApi = {
   getProfile() {
-    return apiClient.get<ApiResponse<UserProfile>>("/profile");
+    return apiClient.get<ApiResponse<UserProfile>>('/profile');
   },
 
   updateProfile(input: UpdateProfileInput) {
-    return apiClient.patch<ApiResponse<UserProfile>>("/profile", input);
+    return apiClient.patch<ApiResponse<UserProfile>>('/profile', input);
   },
 
   updateAvatar(input: UpdateAvatarInput) {
-    return apiClient.post<ApiResponse<UserProfile>>("/profile/avatar", input);
+    return apiClient.post<ApiResponse<UserProfile>>('/profile/avatar', input);
   },
 
   removeAvatar() {
-    return apiClient.delete<ApiResponse<UserProfile>>("/profile/avatar");
+    return apiClient.delete<ApiResponse<UserProfile>>('/profile/avatar');
   },
 
   changePassword(input: ChangePasswordInput) {
-    return apiClient.post<ApiResponse<any>>("/profile/change-password", input);
+    return apiClient.post<ApiResponse<any>>('/profile/change-password', input);
   },
 
   getSessions() {
-    return apiClient.get<ApiResponse<UserSession[]>>("/profile/sessions");
+    return apiClient.get<ApiResponse<UserSession[]>>('/profile/sessions');
   },
 
   revokeSession(sessionId: string) {
@@ -46,70 +46,60 @@ export const profileApi = {
   },
 
   revokeAllSessions() {
-    return apiClient.delete<ApiResponse<any>>("/profile/sessions");
+    return apiClient.delete<ApiResponse<any>>('/profile/sessions');
   },
 
   getDevices() {
-    return apiClient.get<ApiResponse<UserDevice[]>>("/profile/devices");
+    return apiClient.get<ApiResponse<UserDevice[]>>('/profile/devices');
   },
 
   getActivity(query?: PageLimitQuery) {
-    return apiClient.get<ApiResponse<ProfileActivity[]>>("/profile/activity", {
+    return apiClient.get<ApiResponse<ProfileActivity[]>>('/profile/activity', {
       params: query,
     });
   },
 
   getSecurityHistory(query?: PageLimitQuery) {
-    return apiClient.get<ApiResponse<ProfileActivity[]>>(
-      "/profile/security-history",
-      {
-        params: query,
-      },
-    );
+    return apiClient.get<ApiResponse<ProfileActivity[]>>('/profile/security-history', {
+      params: query,
+    });
   },
 
   getTimeline() {
-    return apiClient.get<ApiResponse<ProfileTimelineEvent[]>>(
-      "/profile/timeline",
-    );
+    return apiClient.get<ApiResponse<ProfileTimelineEvent[]>>('/profile/timeline');
   },
 
   getSubscription() {
-    return apiClient.get<ApiResponse<ProfileSubscriptionDetail>>(
-      "/profile/subscription",
-    );
+    return apiClient.get<ApiResponse<ProfileSubscriptionDetail>>('/profile/subscription');
   },
 
   getPreferences() {
-    return apiClient.get<ApiResponse<UserPreferences>>("/profile/preferences");
+    return apiClient.get<ApiResponse<UserPreferences>>('/profile/preferences');
   },
 
   updatePreferences(input: UpdatePreferencesInput) {
-    return apiClient.patch<ApiResponse<UserPreferences>>(
-      "/profile/preferences",
-      input,
-    );
+    return apiClient.patch<ApiResponse<UserPreferences>>('/profile/preferences', input);
   },
 
   requestChange(input: RequestChangeInput) {
-    return apiClient.post<ApiResponse<any>>("/profile/request-change", input);
+    return apiClient.post<ApiResponse<any>>('/profile/request-change', input);
   },
 
   deactivateAccount() {
-    return apiClient.post<ApiResponse<any>>("/profile/deactivate");
+    return apiClient.post<ApiResponse<any>>('/profile/deactivate');
   },
 
   reactivateAccount() {
-    return apiClient.post<ApiResponse<any>>("/profile/reactivate");
+    return apiClient.post<ApiResponse<any>>('/profile/reactivate');
   },
 
   deleteRequest() {
-    return apiClient.post<ApiResponse<any>>("/profile/delete-request");
+    return apiClient.post<ApiResponse<any>>('/profile/delete-request');
   },
 
   exportData() {
-    return apiClient.get<any>("/profile/export", {
-      responseType: "blob",
+    return apiClient.get<any>('/profile/export', {
+      responseType: 'blob',
     });
   },
 };

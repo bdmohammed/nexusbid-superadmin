@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import {
   AlertTriangle,
   CheckCircle2,
@@ -13,7 +13,7 @@ import {
   Shield,
   User,
   XCircle,
-} from "lucide-react";
+} from 'lucide-react';
 
 export interface ActivityItem {
   id: string;
@@ -21,7 +21,7 @@ export interface ActivityItem {
   stateId?: string | null;
   requestId?: string | null;
   actorId?: string | null;
-  actorType: "SYSTEM" | "USER" | "JOB" | "API";
+  actorType: 'SYSTEM' | 'USER' | 'JOB' | 'API';
   eventType: string;
   title: string;
   description?: string | null;
@@ -50,28 +50,26 @@ export const CountryActivityTimeline: React.FC<TimelineProps> = ({
   activities,
   onClose,
 }) => {
-  const [activeTimeline, setActiveTimeline] = useState<"lifecycle" | "request">(
-    "lifecycle",
-  );
+  const [activeTimeline, setActiveTimeline] = useState<'lifecycle' | 'request'>('lifecycle');
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
   const getEventIcon = (type: string) => {
     switch (type) {
-      case "SEEDED":
+      case 'SEEDED':
         return <Layers className="w-4 h-4 text-blue-400" />;
-      case "ACTIVATED":
-      case "APPROVED":
+      case 'ACTIVATED':
+      case 'APPROVED':
         return <CheckCircle2 className="w-4 h-4 text-emerald-400" />;
-      case "DEACTIVATED":
-      case "REJECTED":
+      case 'DEACTIVATED':
+      case 'REJECTED':
         return <XCircle className="w-4 h-4 text-rose-400" />;
-      case "REQUEST_CREATED":
+      case 'REQUEST_CREATED':
         return <FileText className="w-4 h-4 text-amber-400" />;
-      case "REVIEWER_ASSIGNED":
+      case 'REVIEWER_ASSIGNED':
         return <User className="w-4 h-4 text-purple-400" />;
-      case "COMMENT_ADDED":
+      case 'COMMENT_ADDED':
         return <MessageSquare className="w-4 h-4 text-sky-400" />;
-      case "CASCADE_EXECUTED":
+      case 'CASCADE_EXECUTED':
         return <AlertTriangle className="w-4 h-4 text-orange-400" />;
       default:
         return <Clock className="w-4 h-4 text-slate-400" />;
@@ -79,7 +77,7 @@ export const CountryActivityTimeline: React.FC<TimelineProps> = ({
   };
 
   const filteredActivities = activities.filter((act) => {
-    if (activeTimeline === "request") {
+    if (activeTimeline === 'request') {
       return !!act.requestId;
     }
     return true;
@@ -91,7 +89,7 @@ export const CountryActivityTimeline: React.FC<TimelineProps> = ({
         <div>
           <h2 className="text-xl font-bold tracking-tight text-white flex items-center gap-2">
             <Shield className="w-5 h-5 text-indigo-400" />
-            {countryName} {stateName ? `→ ${stateName}` : ""} Audit Timeline
+            {countryName} {stateName ? `→ ${stateName}` : ''} Audit Timeline
           </h2>
           <p className="text-sm text-slate-400 mt-1">
             Immutable chronological record of changes, reviews, and cascades
@@ -110,21 +108,21 @@ export const CountryActivityTimeline: React.FC<TimelineProps> = ({
       {/* Timeline Switcher Tabs */}
       <div className="flex gap-2 p-1 bg-slate-950 rounded-lg border border-slate-800 mb-6">
         <button
-          onClick={() => setActiveTimeline("lifecycle")}
+          onClick={() => setActiveTimeline('lifecycle')}
           className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all ${
-            activeTimeline === "lifecycle"
-              ? "bg-indigo-600 text-white shadow-md"
-              : "text-slate-400 hover:text-slate-200 hover:bg-slate-900"
+            activeTimeline === 'lifecycle'
+              ? 'bg-indigo-600 text-white shadow-md'
+              : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900'
           }`}
         >
           Country Lifecycle
         </button>
         <button
-          onClick={() => setActiveTimeline("request")}
+          onClick={() => setActiveTimeline('request')}
           className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all ${
-            activeTimeline === "request"
-              ? "bg-indigo-600 text-white shadow-md"
-              : "text-slate-400 hover:text-slate-200 hover:bg-slate-900"
+            activeTimeline === 'request'
+              ? 'bg-indigo-600 text-white shadow-md'
+              : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900'
           }`}
         >
           Workflow Tickets
@@ -152,14 +150,12 @@ export const CountryActivityTimeline: React.FC<TimelineProps> = ({
                   <div className="flex items-start justify-between">
                     <div>
                       <div className="flex items-center gap-2">
-                        <span className="font-semibold text-white text-base">
-                          {act.title}
-                        </span>
+                        <span className="font-semibold text-white text-base">{act.title}</span>
                         <span
                           className={`text-[10px] uppercase tracking-wider px-2 py-0.5 rounded font-mono font-medium ${
-                            act.actorType === "SYSTEM"
-                              ? "bg-blue-500/10 text-blue-400 border border-blue-500/20"
-                              : "bg-purple-500/10 text-purple-400 border border-purple-500/20"
+                            act.actorType === 'SYSTEM'
+                              ? 'bg-blue-500/10 text-blue-400 border border-blue-500/20'
+                              : 'bg-purple-500/10 text-purple-400 border border-purple-500/20'
                           }`}
                         >
                           {act.actorType}
@@ -167,9 +163,7 @@ export const CountryActivityTimeline: React.FC<TimelineProps> = ({
                       </div>
                       <p className="text-xs text-slate-400 mt-1">
                         {act.actor?.fullName ||
-                          (act.actorType === "SYSTEM"
-                            ? "System Engine"
-                            : "Admin User")}{" "}
+                          (act.actorType === 'SYSTEM' ? 'System Engine' : 'Admin User')}{' '}
                         • {new Date(act.createdAt).toLocaleString()}
                       </p>
                     </div>
@@ -196,29 +190,21 @@ export const CountryActivityTimeline: React.FC<TimelineProps> = ({
                     <div className="mt-3 pt-3 border-t border-slate-850 text-xs space-y-2">
                       {act.metadata?.reason && (
                         <div>
-                          <span className="text-slate-500 font-medium">
-                            Reason:{" "}
-                          </span>
-                          <span className="text-amber-300">
-                            {act.metadata.reason}
-                          </span>
+                          <span className="text-slate-500 font-medium">Reason: </span>
+                          <span className="text-amber-300">{act.metadata.reason}</span>
                         </div>
                       )}
 
                       {act.oldValue && act.newValue && (
                         <div className="grid grid-cols-2 gap-2 mt-2 bg-slate-900 p-2 rounded border border-slate-800">
                           <div>
-                            <span className="text-rose-400 font-medium">
-                              Previous:
-                            </span>
+                            <span className="text-rose-400 font-medium">Previous:</span>
                             <pre className="text-[11px] text-slate-400 font-mono mt-1">
                               {JSON.stringify(act.oldValue, null, 2)}
                             </pre>
                           </div>
                           <div>
-                            <span className="text-emerald-400 font-medium">
-                              New:
-                            </span>
+                            <span className="text-emerald-400 font-medium">New:</span>
                             <pre className="text-[11px] text-slate-400 font-mono mt-1">
                               {JSON.stringify(act.newValue, null, 2)}
                             </pre>

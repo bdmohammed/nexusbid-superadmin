@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import React, { useEffect,useState } from "react";
-import { useQueryClient } from "@tanstack/react-query";
+import React, { useEffect, useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import {
   AlertCircle,
   Archive,
@@ -14,12 +14,12 @@ import {
   RefreshCw,
   Search,
   Trash2,
-} from "lucide-react";
+} from 'lucide-react';
 
-import NotificationDrawer from "./components/NotificationDrawer";
+import NotificationDrawer from './components/NotificationDrawer';
 
-import type { Notification } from "@/types";
-import { clientEnv } from "@/env/client";
+import type { Notification } from '@/types';
+import { clientEnv } from '@/env/client';
 import {
   notificationQueryKeys,
   useArchiveNotification,
@@ -29,17 +29,16 @@ import {
   useNotificationCategories,
   useNotifications,
   useNotificationStats,
-} from "@/features/notifications";
+} from '@/features/notifications';
 
 export default function NotificationsPage() {
   const queryClient = useQueryClient();
-  const [activeTab, setActiveTab] = useState<string>("UNREAD"); // UNREAD, READ, ARCHIVED
-  const [selectedCategory, setSelectedCategory] = useState<string>("");
-  const [selectedSeverity, setSelectedSeverity] = useState<string>("");
-  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [activeTab, setActiveTab] = useState<string>('UNREAD'); // UNREAD, READ, ARCHIVED
+  const [selectedCategory, setSelectedCategory] = useState<string>('');
+  const [selectedSeverity, setSelectedSeverity] = useState<string>('');
+  const [searchQuery, setSearchQuery] = useState<string>('');
   const [page, setPage] = useState<number>(1);
-  const [selectedNotification, setSelectedNotification] =
-    useState<Notification | null>(null);
+  const [selectedNotification, setSelectedNotification] = useState<Notification | null>(null);
 
   const { data: categories = [] } = useNotificationCategories();
   const { data: stats } = useNotificationStats();
@@ -66,16 +65,13 @@ export default function NotificationsPage() {
     const url = `${clientEnv.NEXT_PUBLIC_API_URL}/api/v1/notifications/stream`;
     const eventSource = new EventSource(url, { withCredentials: true });
 
-    eventSource.addEventListener("notification:new", () => {
+    eventSource.addEventListener('notification:new', () => {
       // Invalidate the cache when a new notification arrives
       queryClient.invalidateQueries({ queryKey: notificationQueryKeys.all });
     });
 
-    eventSource.addEventListener("error", (e) => {
-      console.warn(
-        "SSE Connection closed or failed. Retrying in background...",
-        e,
-      );
+    eventSource.addEventListener('error', (e) => {
+      console.warn('SSE Connection closed or failed. Retrying in background...', e);
     });
 
     return () => {
@@ -84,15 +80,14 @@ export default function NotificationsPage() {
   }, [queryClient]);
 
   const severityStyles: Record<string, string> = {
-    critical: "border-red-500/30 bg-red-500/5 text-red-500",
-    high: "border-orange-500/30 bg-orange-500/5 text-orange-500",
-    medium: "border-yellow-500/30 bg-yellow-500/5 text-yellow-500",
-    low: "border-blue-500/30 bg-blue-500/5 text-blue-500",
-    info: "border-green-500/30 bg-green-500/5 text-green-500",
+    critical: 'border-red-500/30 bg-red-500/5 text-red-500',
+    high: 'border-orange-500/30 bg-orange-500/5 text-orange-500',
+    medium: 'border-yellow-500/30 bg-yellow-500/5 text-yellow-500',
+    low: 'border-blue-500/30 bg-blue-500/5 text-blue-500',
+    info: 'border-green-500/30 bg-green-500/5 text-green-500',
   };
 
-  const notificationList = (listData?.notifications ??
-    []) as unknown as Notification[];
+  const notificationList = (listData?.notifications ?? []) as unknown as Notification[];
   const total = listData?.total ?? 0;
   const totalPages = Math.ceil(total / 10) || 1;
 
@@ -108,16 +103,13 @@ export default function NotificationsPage() {
       {/* Page Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-text">
-            Notifications
-          </h1>
+          <h1 className="text-2xl font-bold tracking-tight text-text">Notifications</h1>
           <p className="mt-1 text-sm text-text-light">
-            Manage your security notifications, review workflows, and platform
-            events.
+            Manage your security notifications, review workflows, and platform events.
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
-          {activeTab === "UNREAD" && (
+          {activeTab === 'UNREAD' && (
             <button
               onClick={() => markAllReadMut.mutate()}
               disabled={markAllReadMut.isPending}
@@ -143,33 +135,23 @@ export default function NotificationsPage() {
           <p className="text-xs font-semibold uppercase tracking-wider text-text-light">
             Unread Events
           </p>
-          <p className="mt-2 text-2xl font-bold text-text">
-            {stats?.unread ?? 0}
-          </p>
+          <p className="mt-2 text-2xl font-bold text-text">{stats?.unread ?? 0}</p>
         </div>
         <div className="rounded-2xl border border-border bg-surface p-4 shadow-sm">
           <p className="text-xs font-semibold uppercase tracking-wider text-red-500">
             Critical Alerts
           </p>
-          <p className="mt-2 text-2xl font-bold text-red-500">
-            {stats?.critical ?? 0}
-          </p>
+          <p className="mt-2 text-2xl font-bold text-red-500">{stats?.critical ?? 0}</p>
         </div>
         <div className="rounded-2xl border border-border bg-surface p-4 shadow-sm">
-          <p className="text-xs font-semibold uppercase tracking-wider text-orange-500">
-            Warnings
-          </p>
-          <p className="mt-2 text-2xl font-bold text-orange-500">
-            {stats?.warning ?? 0}
-          </p>
+          <p className="text-xs font-semibold uppercase tracking-wider text-orange-500">Warnings</p>
+          <p className="mt-2 text-2xl font-bold text-orange-500">{stats?.warning ?? 0}</p>
         </div>
         <div className="rounded-2xl border border-border bg-surface p-4 shadow-sm">
           <p className="text-xs font-semibold uppercase tracking-wider text-green-500">
             System Info
           </p>
-          <p className="mt-2 text-2xl font-bold text-green-500">
-            {stats?.info ?? 0}
-          </p>
+          <p className="mt-2 text-2xl font-bold text-green-500">{stats?.info ?? 0}</p>
         </div>
       </div>
 
@@ -178,7 +160,7 @@ export default function NotificationsPage() {
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between border-b border-border pb-4">
           {/* Tabs */}
           <div className="flex gap-1 overflow-x-auto">
-            {["UNREAD", "READ", "ARCHIVED"].map((tab) => (
+            {['UNREAD', 'READ', 'ARCHIVED'].map((tab) => (
               <button
                 key={tab}
                 onClick={() => {
@@ -187,15 +169,11 @@ export default function NotificationsPage() {
                 }}
                 className={`rounded-xl px-4 py-2 text-sm font-semibold transition-all whitespace-nowrap cursor-pointer ${
                   activeTab === tab
-                    ? "bg-sidebar-hover text-primary"
-                    : "text-text-light hover:text-text"
+                    ? 'bg-sidebar-hover text-primary'
+                    : 'text-text-light hover:text-text'
                 }`}
               >
-                {tab === "UNREAD"
-                  ? "Unread"
-                  : tab === "READ"
-                    ? "Read"
-                    : "Archived"}
+                {tab === 'UNREAD' ? 'Unread' : tab === 'READ' ? 'Read' : 'Archived'}
               </button>
             ))}
           </div>
@@ -217,9 +195,7 @@ export default function NotificationsPage() {
         <div className="mt-4 flex flex-wrap gap-3">
           <div className="flex items-center gap-2">
             <Filter size={14} className="text-text-light" />
-            <span className="text-xs font-medium text-text-light">
-              Category:
-            </span>
+            <span className="text-xs font-medium text-text-light">Category:</span>
           </div>
           <select
             value={selectedCategory}
@@ -238,9 +214,7 @@ export default function NotificationsPage() {
           </select>
 
           <div className="flex items-center gap-2 ml-2">
-            <span className="text-xs font-medium text-text-light">
-              Severity:
-            </span>
+            <span className="text-xs font-medium text-text-light">Severity:</span>
           </div>
           <select
             value={selectedSeverity}
@@ -268,9 +242,7 @@ export default function NotificationsPage() {
         ) : filteredNotifications.length === 0 ? (
           <div className="flex flex-col items-center justify-center p-12 text-center">
             <Bell size={40} className="text-text-light mb-3" />
-            <h3 className="text-base font-semibold text-text">
-              No notifications found
-            </h3>
+            <h3 className="text-base font-semibold text-text">No notifications found</h3>
             <p className="mt-1 text-sm text-text-light">
               You are completely caught up! Enjoy your day.
             </p>
@@ -278,7 +250,7 @@ export default function NotificationsPage() {
         ) : (
           <div className="divide-y divide-border">
             {filteredNotifications.map((notif) => {
-              const sevKey = (notif.severity || "info").toLowerCase();
+              const sevKey = (notif.severity || 'info').toLowerCase();
               return (
                 <div
                   key={notif.id}
@@ -290,7 +262,7 @@ export default function NotificationsPage() {
                       <span
                         className={`inline-flex items-center justify-center rounded-xl border p-2 ${severityStyles[sevKey] || severityStyles.info}`}
                       >
-                        {sevKey === "critical" || sevKey === "high" ? (
+                        {sevKey === 'critical' || sevKey === 'high' ? (
                           <AlertCircle size={16} />
                         ) : (
                           <Info size={16} />
@@ -361,7 +333,7 @@ export default function NotificationsPage() {
         {totalPages > 1 && (
           <div className="flex items-center justify-between border-t border-border bg-sidebar-hover/40 px-6 py-4">
             <span className="text-xs text-text-light">
-              Showing page <strong className="text-text">{page}</strong> of{" "}
+              Showing page <strong className="text-text">{page}</strong> of{' '}
               <strong className="text-text">{totalPages}</strong>
             </span>
             <div className="flex items-center gap-1">

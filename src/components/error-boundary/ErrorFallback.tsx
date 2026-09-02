@@ -1,23 +1,20 @@
-// src/components/error-boundary/ErrorFallback.tsx
-"use client";
+'use client';
 
-import React, { useState } from "react";
-import { AlertTriangle, Check,Copy, Home, RefreshCw } from "lucide-react";
+import React, { useState } from 'react';
+import Link from 'next/link';
+import { AlertTriangle, Check, Copy, Home, RefreshCw } from 'lucide-react';
 
-import { serializeError } from "@/lib/errors/serialize-error";
+import { serializeError } from '@/lib/errors/serializeError';
 
 export interface ErrorFallbackProps {
   error: Error;
   reset?: () => void;
 }
 
-export const ErrorFallback: React.FC<ErrorFallbackProps> = ({
-  error,
-  reset,
-}) => {
+export const ErrorFallback: React.FC<ErrorFallbackProps> = ({ error, reset }) => {
   const [copied, setCopied] = useState(false);
   const [isResetting, setIsResetting] = useState(false);
-  const isDevelopment = process.env.NODE_ENV === "development";
+  const isDevelopment = process.env.NODE_ENV === 'development';
 
   // Normalize error properties for UI display (safe in prod, detailed in dev)
   const serialized = serializeError(error);
@@ -41,7 +38,7 @@ export const ErrorFallback: React.FC<ErrorFallbackProps> = ({
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
-      console.error("Failed to copy diagnostics:", err);
+      console.error('Failed to copy diagnostics:', err);
     }
   };
 
@@ -51,7 +48,7 @@ export const ErrorFallback: React.FC<ErrorFallbackProps> = ({
       try {
         reset();
       } catch (err) {
-        console.error("Failed to reset boundary:", err);
+        console.error('Failed to reset boundary:', err);
       } finally {
         setIsResetting(false);
       }
@@ -82,9 +79,7 @@ export const ErrorFallback: React.FC<ErrorFallbackProps> = ({
             Something Went Wrong
           </h1>
 
-          <p className="text-sm text-[var(--muted,#9ca3af)] max-w-md mb-3">
-            {serialized.message}
-          </p>
+          <p className="text-sm text-[var(--muted,#9ca3af)] max-w-md mb-3">{serialized.message}</p>
 
           <span className="text-[10px] uppercase font-mono tracking-widest text-[var(--muted,#9ca3af)] opacity-70 bg-white/5 px-2.5 py-1 rounded-md mb-6">
             Error ID: {serialized.errorId}
@@ -97,19 +92,17 @@ export const ErrorFallback: React.FC<ErrorFallbackProps> = ({
               disabled={isResetting}
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 text-sm font-semibold rounded-lg bg-red-600 hover:bg-red-500 disabled:opacity-50 text-white transition-all shadow-lg shadow-red-500/10 cursor-pointer"
             >
-              <RefreshCw
-                className={`w-4 h-4 ${isResetting ? "animate-spin" : ""}`}
-              />
-              {isResetting ? "Retrying..." : "Try Again"}
+              <RefreshCw className={`w-4 h-4 ${isResetting ? 'animate-spin' : ''}`} />
+              {isResetting ? 'Retrying...' : 'Try Again'}
             </button>
 
-            <a
+            <Link
               href="/"
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 text-sm font-semibold rounded-lg border border-[var(--border,rgba(255,255,255,0.05))] bg-white/5 hover:bg-white/10 transition-all cursor-pointer"
             >
               <Home className="w-4 h-4" />
               Go Back Home
-            </a>
+            </Link>
           </div>
 
           {/* Diagnostics Section (Development Only) */}
@@ -144,8 +137,7 @@ export const ErrorFallback: React.FC<ErrorFallbackProps> = ({
                   <span className="text-neutral-500">Name:</span> {error.name}
                 </div>
                 <div>
-                  <span className="text-neutral-500">Message:</span>{" "}
-                  {error.message}
+                  <span className="text-neutral-500">Message:</span> {error.message}
                 </div>
                 {error.stack && (
                   <div>

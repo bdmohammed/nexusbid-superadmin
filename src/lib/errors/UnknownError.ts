@@ -1,5 +1,3 @@
-// src/lib/errors/UnknownError.ts
-
 import { AppError } from "./AppError";
 import { ERROR_CODES } from "./constants";
 

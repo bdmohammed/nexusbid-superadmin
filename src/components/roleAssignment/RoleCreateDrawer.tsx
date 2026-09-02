@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { useEffect, useMemo,useState } from "react";
-import dayjs from "dayjs";
+import { useEffect, useMemo, useState } from 'react';
+import dayjs from 'dayjs';
 import {
   AlertCircle,
   ChevronDown,
@@ -15,18 +15,14 @@ import {
   ShieldCheck,
   UserCheck,
   X,
-} from "lucide-react";
-import ReactSelect from "react-select";
+} from 'lucide-react';
+import ReactSelect from 'react-select';
 
-import type {
-  CreateAssignmentDto,
-  PermissionModule,
-  Role,
-} from "@/features/rbac/types";
-import type { SingleValue } from "react-select";
-import Button from "@/components/ui/Button";
-import { rbacApi } from "@/features/rbac/api/api";
-import { useThemeStore } from "@/store/theme.store";
+import type { CreateAssignmentDto, PermissionModule, Role } from '@/features/rbac/types';
+import type { SingleValue } from 'react-select';
+import Button from '@/components/ui/Button';
+import { rbacApi } from '@/features/rbac/api/api';
+import { useThemeStore } from '@/store/theme.store';
 
 export interface RoleCreateDrawerProps {
   open: boolean;
@@ -44,35 +40,31 @@ interface FormattedPermission {
   key: string;
   label: string;
   description: string;
-  category: "basic" | "admin" | "dangerous";
+  category: 'basic' | 'admin' | 'dangerous';
   dependencies: string[];
 }
 
-function getPermissionMetadata(
-  key: string,
-  desc?: string,
-): FormattedPermission {
-  const normKey = key.toUpperCase().replace(/\./g, "_");
+function getPermissionMetadata(key: string, desc?: string): FormattedPermission {
+  const normKey = key.toUpperCase().replace(/\./g, '_');
   const lowerKey = normKey.toLowerCase();
 
   let label = key;
-  if (normKey === "USER_VIEW") label = "View Users";
-  else if (normKey === "USER_CREATE") label = "Create Users";
-  else if (normKey === "USER_UPDATE") label = "Update Users";
-  else if (normKey === "USER_DELETE") label = "Delete Users";
-  else if (normKey === "USER_IMPERSONATE") label = "Impersonate Users";
-  else if (normKey === "USER_ASSIGN_ROLE") label = "Assign Role to User";
-  else if (normKey === "USER_REMOVE_ROLE") label = "Remove Role from User";
-  else if (normKey === "USER_RESET_PASSWORD") label = "Reset User Password";
-  else if (normKey === "NOTIFICATION_PREFERENCE_MANAGE")
-    label = "Manage Notification Preferences";
-  else if (normKey === "SYSTEM_CACHE_MANAGE") label = "Manage Cache";
-  else if (normKey === "TENDER_VIEW") label = "View Tenders";
-  else if (normKey === "TENDER_CREATE") label = "Create Tenders";
-  else if (normKey === "TENDER_UPDATE") label = "Update Tenders";
-  else if (normKey === "TENDER_DELETE") label = "Delete Tenders";
+  if (normKey === 'USER_VIEW') label = 'View Users';
+  else if (normKey === 'USER_CREATE') label = 'Create Users';
+  else if (normKey === 'USER_UPDATE') label = 'Update Users';
+  else if (normKey === 'USER_DELETE') label = 'Delete Users';
+  else if (normKey === 'USER_IMPERSONATE') label = 'Impersonate Users';
+  else if (normKey === 'USER_ASSIGN_ROLE') label = 'Assign Role to User';
+  else if (normKey === 'USER_REMOVE_ROLE') label = 'Remove Role from User';
+  else if (normKey === 'USER_RESET_PASSWORD') label = 'Reset User Password';
+  else if (normKey === 'NOTIFICATION_PREFERENCE_MANAGE') label = 'Manage Notification Preferences';
+  else if (normKey === 'SYSTEM_CACHE_MANAGE') label = 'Manage Cache';
+  else if (normKey === 'TENDER_VIEW') label = 'View Tenders';
+  else if (normKey === 'TENDER_CREATE') label = 'Create Tenders';
+  else if (normKey === 'TENDER_UPDATE') label = 'Update Tenders';
+  else if (normKey === 'TENDER_DELETE') label = 'Delete Tenders';
   else {
-    const parts = normKey.split("_");
+    const parts = normKey.split('_');
     if (parts.length >= 2) {
       const act =
         parts[parts.length - 1]!.charAt(0).toUpperCase() +
@@ -80,80 +72,72 @@ function getPermissionMetadata(
       const mod = parts
         .slice(0, parts.length - 1)
         .map((p) => p.charAt(0).toUpperCase() + p.slice(1).toLowerCase())
-        .join(" ");
+        .join(' ');
       label = `${act} ${mod}`;
     } else {
-      label = key
-        .replace(/[_\.]/g, " ")
-        .replace(/\b\w/g, (c) => c.toUpperCase());
+      label = key.replace(/[_\.]/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
     }
   }
 
-  let category: "basic" | "admin" | "dangerous" = "admin";
+  let category: 'basic' | 'admin' | 'dangerous' = 'admin';
   if (
-    lowerKey.includes("delete") ||
-    lowerKey.includes("impersonate") ||
-    lowerKey.includes("archive") ||
-    lowerKey.includes("security") ||
-    lowerKey.includes("backup") ||
-    lowerKey.includes("purge") ||
-    lowerKey.includes("force")
+    lowerKey.includes('delete') ||
+    lowerKey.includes('impersonate') ||
+    lowerKey.includes('archive') ||
+    lowerKey.includes('security') ||
+    lowerKey.includes('backup') ||
+    lowerKey.includes('purge') ||
+    lowerKey.includes('force')
   ) {
-    category = "dangerous";
+    category = 'dangerous';
   } else if (
-    lowerKey.includes("view") ||
-    lowerKey.includes("read") ||
-    lowerKey.includes("list") ||
-    lowerKey.includes("search") ||
-    lowerKey.includes("get")
+    lowerKey.includes('view') ||
+    lowerKey.includes('read') ||
+    lowerKey.includes('list') ||
+    lowerKey.includes('search') ||
+    lowerKey.includes('get')
   ) {
-    category = "basic";
+    category = 'basic';
   }
 
   return {
     id: key,
     key,
     label,
-    description:
-      desc || `Grants permission to perform ${label.toLowerCase()} operations.`,
+    description: desc || `Grants permission to perform ${label.toLowerCase()} operations.`,
     category,
     dependencies: [],
   };
 }
 
-export default function RoleCreateDrawer({
-  open,
-  onClose,
-  onSubmit,
-}: RoleCreateDrawerProps) {
+export default function RoleCreateDrawer({ open, onClose, onSubmit }: RoleCreateDrawerProps) {
   const currentTheme = useThemeStore((state) => state.theme);
-  const isDark = currentTheme === "dark";
+  const isDark = currentTheme === 'dark';
 
   const [assignableUsers, setAssignableUsers] = useState<any[]>([]);
   const [loadingUsers, setLoadingUsers] = useState(true);
-  const [selectedUserId, setSelectedUserId] = useState("");
+  const [selectedUserId, setSelectedUserId] = useState('');
 
   const [roles, setRoles] = useState<Role[]>([]);
-  const [selectedRoleId, setSelectedRoleId] = useState("");
+  const [selectedRoleId, setSelectedRoleId] = useState('');
 
   // Configuration Fields
-  const [effectiveDate, setEffectiveDate] = useState(
-    dayjs().format("YYYY-MM-DDTHH:mm"),
-  );
+  const [effectiveDate, setEffectiveDate] = useState(dayjs().format('YYYY-MM-DDTHH:mm'));
   const [hasExpiry, setHasExpiry] = useState(false);
-  const [expiryDate, setExpiryDate] = useState("");
-  const [reason, setReason] = useState("");
-  const [comment, setComment] = useState("");
+  const [expiryDate, setExpiryDate] = useState('');
+  const [reason, setReason] = useState('');
+  const [comment, setComment] = useState('');
 
   // Reviewer Selection
-  const [reviewerId, setReviewerId] = useState("");
+  const [reviewerId, setReviewerId] = useState('');
 
   // Permissions View States
   const [modules, setModules] = useState<PermissionModule[]>([]);
-  const [permSearch, setPermSearch] = useState("");
+  const [permSearch, setPermSearch] = useState('');
   const [expandedModules, setExpandedModules] = useState<string[]>([]);
-  const [activePermissionDetail, setActivePermissionDetail] =
-    useState<FormattedPermission | null>(null);
+  const [activePermissionDetail, setActivePermissionDetail] = useState<FormattedPermission | null>(
+    null,
+  );
 
   const [previewPermissions, setPreviewPermissions] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -166,9 +150,9 @@ export default function RoleCreateDrawer({
         const [rolesRes, usersRes, permsRes] = await Promise.all([
           rbacApi.getRoles(),
           rbacApi.getAssignableUsers({
-            accountType: "admin",
-            status: "active",
-            permission: "role.view",
+            accountType: 'admin',
+            status: 'active',
+            permission: 'role.view',
             limit: 100,
           }),
           rbacApi.getPermissions(),
@@ -180,9 +164,7 @@ export default function RoleCreateDrawer({
             ? rolesRes.data.data
             : [];
 
-        const activeRoles = rawRoles.filter(
-          (r: any) => !r.status || r.status === "ACTIVE",
-        );
+        const activeRoles = rawRoles.filter((r: any) => !r.status || r.status === 'ACTIVE');
 
         const usersData = Array.isArray(usersRes.data)
           ? usersRes.data
@@ -215,8 +197,8 @@ export default function RoleCreateDrawer({
           setExpandedModules(modulesData.map((m: any) => m.id || m.name));
         }
       } catch (err: any) {
-        console.error("Failed to load roles/users/permissions:", err);
-        setError("Failed to fetch available users or roles. Please try again.");
+        console.error('Failed to load roles/users/permissions:', err);
+        setError('Failed to fetch available users or roles. Please try again.');
       } finally {
         setLoadingUsers(false);
       }
@@ -247,7 +229,7 @@ export default function RoleCreateDrawer({
   const roleOptions: SelectOption[] = useMemo(() => {
     return roles.map((role) => ({
       value: role.id,
-      label: `${role.name} ${role.description ? `- ${role.description}` : ""}`,
+      label: `${role.name} ${role.description ? `- ${role.description}` : ''}`,
     }));
   }, [roles]);
 
@@ -267,56 +249,54 @@ export default function RoleCreateDrawer({
     () => ({
       control: (base: any, state: any) => ({
         ...base,
-        backgroundColor: isDark ? "#1f2937" : "#ffffff",
+        backgroundColor: isDark ? '#1f2937' : '#ffffff',
         borderColor: state.isFocused
-          ? "var(--color-primary, #6366f1)"
+          ? 'var(--color-primary, #6366f1)'
           : isDark
-            ? "#374151"
-            : "#e5e7eb",
-        borderRadius: "0.75rem",
-        padding: "2px 4px",
-        boxShadow: state.isFocused
-          ? "0 0 0 2px rgba(99, 102, 241, 0.2)"
-          : "none",
-        "&:hover": {
-          borderColor: "var(--color-primary, #6366f1)",
+            ? '#374151'
+            : '#e5e7eb',
+        borderRadius: '0.75rem',
+        padding: '2px 4px',
+        boxShadow: state.isFocused ? '0 0 0 2px rgba(99, 102, 241, 0.2)' : 'none',
+        '&:hover': {
+          borderColor: 'var(--color-primary, #6366f1)',
         },
       }),
       menu: (base: any) => ({
         ...base,
-        backgroundColor: isDark ? "#111827" : "#ffffff",
-        borderRadius: "0.75rem",
-        border: isDark ? "1px solid #374151" : "1px solid #e5e7eb",
-        boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.15)",
+        backgroundColor: isDark ? '#111827' : '#ffffff',
+        borderRadius: '0.75rem',
+        border: isDark ? '1px solid #374151' : '1px solid #e5e7eb',
+        boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.15)',
         zIndex: 9999,
       }),
       option: (base: any, state: any) => ({
         ...base,
         backgroundColor: state.isSelected
-          ? "var(--color-primary, #6366f1)"
+          ? 'var(--color-primary, #6366f1)'
           : state.isFocused
             ? isDark
-              ? "#1f2937"
-              : "rgba(99, 102, 241, 0.08)"
-            : "transparent",
-        color: state.isSelected ? "#ffffff" : isDark ? "#f3f4f6" : "#1f2937",
-        cursor: "pointer",
-        fontSize: "0.75rem",
+              ? '#1f2937'
+              : 'rgba(99, 102, 241, 0.08)'
+            : 'transparent',
+        color: state.isSelected ? '#ffffff' : isDark ? '#f3f4f6' : '#1f2937',
+        cursor: 'pointer',
+        fontSize: '0.75rem',
       }),
       singleValue: (base: any) => ({
         ...base,
-        color: isDark ? "#f3f4f6" : "#1f2937",
-        fontSize: "0.75rem",
+        color: isDark ? '#f3f4f6' : '#1f2937',
+        fontSize: '0.75rem',
       }),
       input: (base: any) => ({
         ...base,
-        color: isDark ? "#f3f4f6" : "#1f2937",
-        fontSize: "0.75rem",
+        color: isDark ? '#f3f4f6' : '#1f2937',
+        fontSize: '0.75rem',
       }),
       placeholder: (base: any) => ({
         ...base,
-        color: isDark ? "#9ca3af" : "#6b7280",
-        fontSize: "0.75rem",
+        color: isDark ? '#9ca3af' : '#6b7280',
+        fontSize: '0.75rem',
       }),
     }),
     [isDark],
@@ -345,10 +325,10 @@ export default function RoleCreateDrawer({
       modules.forEach((mod) => {
         const modPerms: FormattedPermission[] = [];
         (mod.permissions || []).forEach((p: any) => {
-          const pKey = typeof p === "string" ? p : p.key;
+          const pKey = typeof p === 'string' ? p : p.key;
           if (assignedSet.has(pKey)) {
             processedKeys.add(pKey);
-            const desc = typeof p === "object" ? p.description : undefined;
+            const desc = typeof p === 'object' ? p.description : undefined;
             modPerms.push(getPermissionMetadata(pKey, desc));
           }
         });
@@ -371,9 +351,7 @@ export default function RoleCreateDrawer({
       });
 
       // Leftover permissions not explicitly in module definitions
-      const leftoverKeys = previewPermissions.filter(
-        (k) => !processedKeys.has(k),
-      );
+      const leftoverKeys = previewPermissions.filter((k) => !processedKeys.has(k));
       if (leftoverKeys.length > 0) {
         const leftoverPerms = leftoverKeys.map((k) => getPermissionMetadata(k));
         const matches = leftoverPerms.filter(
@@ -384,8 +362,8 @@ export default function RoleCreateDrawer({
         );
         if (matches.length > 0) {
           result.push({
-            id: "system-other",
-            name: "System & Core Operations",
+            id: 'system-other',
+            name: 'System & Core Operations',
             matchedPermissions: matches,
           });
         }
@@ -404,8 +382,8 @@ export default function RoleCreateDrawer({
       return matches.length > 0
         ? [
             {
-              id: "all-permissions",
-              name: "Role Effective Permissions",
+              id: 'all-permissions',
+              name: 'Role Effective Permissions',
               matchedPermissions: matches,
             },
           ]
@@ -413,41 +391,34 @@ export default function RoleCreateDrawer({
     }
   }, [previewPermissions, modules, permSearch]);
 
-  function handleFormSubmit(status: "DRAFT" | "SUBMITTED") {
+  function handleFormSubmit(status: 'DRAFT' | 'SUBMITTED') {
     setError(null);
 
     if (!selectedUserId) {
-      setError("Please select a target administrator for role assignment.");
+      setError('Please select a target administrator for role assignment.');
       return;
     }
 
     if (!selectedRoleId) {
-      setError("Please select an active role to assign.");
+      setError('Please select an active role to assign.');
       return;
     }
 
     if (hasExpiry && !expiryDate) {
-      setError(
-        "Please specify an expiration date & time for temporary access.",
-      );
+      setError('Please specify an expiration date & time for temporary access.');
       return;
     }
 
-    if (status === "SUBMITTED" && !reviewerId) {
-      setError(
-        "Please select an eligible administrator reviewer for Maker-Checker approval.",
-      );
+    if (status === 'SUBMITTED' && !reviewerId) {
+      setError('Please select an eligible administrator reviewer for Maker-Checker approval.');
       return;
     }
 
     const payload: CreateAssignmentDto = {
       userId: selectedUserId,
       roleId: selectedRoleId,
-      effectiveAt: effectiveDate
-        ? new Date(effectiveDate).toISOString()
-        : new Date().toISOString(),
-      expiresAt:
-        hasExpiry && expiryDate ? new Date(expiryDate).toISOString() : null,
+      effectiveAt: effectiveDate ? new Date(effectiveDate).toISOString() : new Date().toISOString(),
+      expiresAt: hasExpiry && expiryDate ? new Date(expiryDate).toISOString() : null,
       reason: reason.trim(),
       comment: comment.trim(),
       reviewerId,
@@ -460,20 +431,14 @@ export default function RoleCreateDrawer({
 
   if (!open) return null;
 
-  const selectedUserOption =
-    userOptions.find((o) => o.value === selectedUserId) || null;
-  const selectedRoleOption =
-    roleOptions.find((o) => o.value === selectedRoleId) || null;
-  const selectedReviewerOption =
-    reviewerOptions.find((o) => o.value === reviewerId) || null;
+  const selectedUserOption = userOptions.find((o) => o.value === selectedUserId) || null;
+  const selectedRoleOption = roleOptions.find((o) => o.value === selectedRoleId) || null;
+  const selectedReviewerOption = reviewerOptions.find((o) => o.value === reviewerId) || null;
 
   return (
     <>
       {/* Overlay */}
-      <div
-        onClick={onClose}
-        className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm"
-      />
+      <div onClick={onClose} className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm" />
 
       {/* Drawer */}
       <div className="fixed right-0 top-0 z-50 flex h-screen w-full max-w-2xl flex-col bg-surface shadow-2xl transition-all duration-300">
@@ -485,8 +450,8 @@ export default function RoleCreateDrawer({
               <h2 className="text-2xl font-bold">Configure Role Assignment</h2>
             </div>
             <p className="mt-1.5 text-xs text-text-light">
-              Maker-Checker Governance Flow — Select user, role, effective
-              dates, reason, and assign an administrator reviewer.
+              Maker-Checker Governance Flow — Select user, role, effective dates, reason, and assign
+              an administrator reviewer.
             </p>
           </div>
 
@@ -516,16 +481,14 @@ export default function RoleCreateDrawer({
 
             {loadingUsers ? (
               <div className="h-10 rounded-xl border border-border bg-surface animate-pulse flex items-center px-4">
-                <span className="text-xs text-text-light">
-                  Loading administrators...
-                </span>
+                <span className="text-xs text-text-light">Loading administrators...</span>
               </div>
             ) : (
               <ReactSelect
                 options={userOptions}
                 value={selectedUserOption}
                 onChange={(option: SingleValue<SelectOption>) =>
-                  setSelectedUserId(option?.value || "")
+                  setSelectedUserId(option?.value || '')
                 }
                 placeholder="Search administrator by name or email..."
                 styles={selectStyles}
@@ -545,7 +508,7 @@ export default function RoleCreateDrawer({
               options={roleOptions}
               value={selectedRoleOption}
               onChange={(option: SingleValue<SelectOption>) =>
-                setSelectedRoleId(option?.value || "")
+                setSelectedRoleId(option?.value || '')
               }
               placeholder="Search or select role..."
               styles={selectStyles}
@@ -561,9 +524,7 @@ export default function RoleCreateDrawer({
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-1.5">
-                <label className="block text-xs font-medium text-text">
-                  Effective Date
-                </label>
+                <label className="block text-xs font-medium text-text">Effective Date</label>
                 <input
                   type="datetime-local"
                   value={effectiveDate}
@@ -598,9 +559,7 @@ export default function RoleCreateDrawer({
             </div>
 
             <div className="space-y-1.5">
-              <label className="block text-xs font-medium text-text">
-                Reason (Optional)
-              </label>
+              <label className="block text-xs font-medium text-text">Reason (Optional)</label>
               <input
                 type="text"
                 placeholder="e.g. Project Onboarding, Temporary Coverage, Emergency Escalation"
@@ -611,9 +570,7 @@ export default function RoleCreateDrawer({
             </div>
 
             <div className="space-y-1.5">
-              <label className="block text-xs font-medium text-text">
-                Governance Comment
-              </label>
+              <label className="block text-xs font-medium text-text">Governance Comment</label>
               <textarea
                 rows={2}
                 placeholder="Provide governance justification notes for review record..."
@@ -627,16 +584,13 @@ export default function RoleCreateDrawer({
           {/* Step 4: Assign Reviewer with react-select */}
           <div className="space-y-2 rounded-2xl border border-border p-5 bg-background">
             <label className="text-xs font-bold uppercase tracking-wider text-primary flex items-center gap-2">
-              <UserCheck className="h-4 w-4" /> 4. Assign Reviewer
-              (Maker-Checker)
+              <UserCheck className="h-4 w-4" /> 4. Assign Reviewer (Maker-Checker)
             </label>
 
             <ReactSelect
               options={reviewerOptions}
               value={selectedReviewerOption}
-              onChange={(option: SingleValue<SelectOption>) =>
-                setReviewerId(option?.value || "")
-              }
+              onChange={(option: SingleValue<SelectOption>) => setReviewerId(option?.value || '')}
               placeholder="Search or select reviewer..."
               styles={selectStyles}
               isSearchable
@@ -674,17 +628,12 @@ export default function RoleCreateDrawer({
             ) : (
               <div className="space-y-3">
                 {categorizedModules.map((mod) => {
-                  const isExpanded =
-                    permSearch.length > 0 || expandedModules.includes(mod.id);
+                  const isExpanded = permSearch.length > 0 || expandedModules.includes(mod.id);
 
-                  const basicPerms = mod.matchedPermissions.filter(
-                    (p) => p.category === "basic",
-                  );
-                  const adminPerms = mod.matchedPermissions.filter(
-                    (p) => p.category === "admin",
-                  );
+                  const basicPerms = mod.matchedPermissions.filter((p) => p.category === 'basic');
+                  const adminPerms = mod.matchedPermissions.filter((p) => p.category === 'admin');
                   const dangerousPerms = mod.matchedPermissions.filter(
-                    (p) => p.category === "dangerous",
+                    (p) => p.category === 'dangerous',
                   );
 
                   return (
@@ -744,9 +693,7 @@ export default function RoleCreateDrawer({
 
                                     <button
                                       type="button"
-                                      onClick={() =>
-                                        setActivePermissionDetail(perm)
-                                      }
+                                      onClick={() => setActivePermissionDetail(perm)}
                                       className="text-text-light hover:text-primary p-1 shrink-0 cursor-pointer"
                                       title="View Description"
                                     >
@@ -781,9 +728,7 @@ export default function RoleCreateDrawer({
 
                                     <button
                                       type="button"
-                                      onClick={() =>
-                                        setActivePermissionDetail(perm)
-                                      }
+                                      onClick={() => setActivePermissionDetail(perm)}
                                       className="text-text-light hover:text-primary p-1 shrink-0 cursor-pointer"
                                       title="View Description"
                                     >
@@ -818,9 +763,7 @@ export default function RoleCreateDrawer({
 
                                     <button
                                       type="button"
-                                      onClick={() =>
-                                        setActivePermissionDetail(perm)
-                                      }
+                                      onClick={() => setActivePermissionDetail(perm)}
                                       className="text-text-light hover:text-red-500 p-1 shrink-0 cursor-pointer"
                                       title="View Description"
                                     >
@@ -857,17 +800,12 @@ export default function RoleCreateDrawer({
                   <X size={16} />
                 </button>
               </div>
-              <h4 className="text-sm font-bold text-text">
-                {activePermissionDetail.label}
-              </h4>
+              <h4 className="text-sm font-bold text-text">{activePermissionDetail.label}</h4>
               <p className="text-xs text-text-light leading-relaxed">
                 {activePermissionDetail.description}
               </p>
               <div className="pt-2 text-right">
-                <Button
-                  size="sm"
-                  onClick={() => setActivePermissionDetail(null)}
-                >
+                <Button size="sm" onClick={() => setActivePermissionDetail(null)}>
                   Close
                 </Button>
               </div>
@@ -886,16 +824,12 @@ export default function RoleCreateDrawer({
               type="button"
               variant="outline"
               leftIcon={Save}
-              onClick={() => handleFormSubmit("DRAFT")}
+              onClick={() => handleFormSubmit('DRAFT')}
             >
               Create Draft
             </Button>
 
-            <Button
-              type="button"
-              leftIcon={Send}
-              onClick={() => handleFormSubmit("SUBMITTED")}
-            >
+            <Button type="button" leftIcon={Send} onClick={() => handleFormSubmit('SUBMITTED')}>
               Submit For Review
             </Button>
           </div>

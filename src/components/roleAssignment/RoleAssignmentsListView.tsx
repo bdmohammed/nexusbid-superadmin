@@ -1,13 +1,15 @@
 //@ts-nocheck
-"use client";
+'use client';
 
-import { memo, useCallback, useMemo, useRef, useState } from "react";
-import { AgChartsEnterpriseModule } from "ag-charts-enterprise";
+import { memo, useCallback, useMemo, useRef, useState } from 'react';
+import { AgChartsEnterpriseModule } from 'ag-charts-enterprise';
+import type {
+  GridOptions,
+  GridReadyEvent,
+  SideBarDef} from 'ag-grid-community';
 import {
   AllCommunityModule,
-  type ColDef,themeQuartz,GridOptions,
-  GridReadyEvent,
-  SideBarDef} from "ag-grid-community";
+  type ColDef,  themeQuartz} from 'ag-grid-community';
 import {
   CellSelectionModule,
   ClipboardModule,
@@ -28,16 +30,16 @@ import {
   SideBarModule,
   SparklinesModule,
   StatusBarModule,
-} from "ag-grid-enterprise";
-import { AgGridReact } from "ag-grid-react";
-import dayjs from "dayjs";
-import { Plus } from "lucide-react";
+} from 'ag-grid-enterprise';
+import { AgGridReact } from 'ag-grid-react';
+import dayjs from 'dayjs';
+import { Plus } from 'lucide-react';
 
-import type { UserRoleAssignment } from "@/features/rbac/types";
-import { getRoleAssignmentColumnDefs } from "@/components/roleAssignment/columnDefs";
-import Button from "@/components/ui/Button";
-import { Toolbar } from "@/components/ui/Toolbar";
-import { useThemeStore } from "@/store/theme.store";
+import type { UserRoleAssignment } from '@/features/rbac/types';
+import { getRoleAssignmentColumnDefs } from '@/components/roleAssignment/columnDefs';
+import Button from '@/components/ui/Button';
+import { Toolbar } from '@/components/ui/Toolbar';
+import { useThemeStore } from '@/store/theme.store';
 
 const CommunityModule = [
   AllCommunityModule,
@@ -62,33 +64,32 @@ const CommunityModule = [
   SparklinesModule.with(AgChartsEnterpriseModule),
 ];
 
-const IS_SSR = typeof window === "undefined";
+const IS_SSR = typeof window === 'undefined';
 
 const staticGridOptions: GridOptions = {
   columnTypes: {
     date: {
       width: 200,
       enableRowGroup: true,
-      cellClass: "v-align",
-      valueFormatter: ({ value }) =>
-        value ? dayjs(value).format("DD MMM YYYY, hh:mm A") : "—",
+      cellClass: 'v-align',
+      valueFormatter: ({ value }) => (value ? dayjs(value).format('DD MMM YYYY, hh:mm A') : '—'),
     },
   },
   statusBar: {
     statusPanels: [
       {
-        statusPanel: "agTotalAndFilteredRowCountComponent",
-        key: "totalAndFilter",
-        align: "left",
+        statusPanel: 'agTotalAndFilteredRowCountComponent',
+        key: 'totalAndFilter',
+        align: 'left',
       },
-      { statusPanel: "agSelectedRowCountComponent", align: "left" },
-      { statusPanel: "agAggregationComponent", align: "right" },
+      { statusPanel: 'agSelectedRowCountComponent', align: 'left' },
+      { statusPanel: 'agAggregationComponent', align: 'right' },
     ],
   },
   cellSelection: {
     enableHeaderHighlight: true,
     handle: {
-      mode: "fill",
+      mode: 'fill',
     },
   },
 };
@@ -119,8 +120,7 @@ export default function RoleAssignmentsListView({
   currentUserId,
 }: RoleAssignmentsListViewProps) {
   const { theme } = useThemeStore();
-  const themeClass =
-    theme === "dark" ? "ag-theme-alpine-dark" : "ag-theme-alpine";
+  const themeClass = theme === 'dark' ? 'ag-theme-alpine-dark' : 'ag-theme-alpine';
   const gridRef = useRef<AgGridReact<any>>(null);
 
   // AG Grid Column Definitions
@@ -153,15 +153,14 @@ export default function RoleAssignmentsListView({
   const [isSmall] = useState(() =>
     IS_SSR
       ? false
-      : document.documentElement.clientHeight <= 415 ||
-        document.documentElement.clientWidth < 768,
+      : document.documentElement.clientHeight <= 415 || document.documentElement.clientWidth < 768,
   );
 
   const sideBar = useMemo<SideBarDef>(
     () => ({
-      toolPanels: ["columns", "filters"],
-      position: "right",
-      defaultToolPanel: "columns",
+      toolPanels: ['columns', 'filters'],
+      position: 'right',
+      defaultToolPanel: 'columns',
       hiddenByDefault: isSmall,
     }),
     [isSmall],
@@ -206,7 +205,7 @@ export default function RoleAssignmentsListView({
               loading={loading}
               defaultColDef={defaultColDef}
               sideBar={sideBar}
-              rowGroupPanelShow={isSmall ? undefined : "always"}
+              rowGroupPanelShow={isSmall ? undefined : 'always'}
               onGridReady={onGridReady}
               pagination
               paginationPageSize={20}

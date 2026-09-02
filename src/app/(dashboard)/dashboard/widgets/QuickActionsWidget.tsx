@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import { ArrowUpRight,Plus, Zap } from "lucide-react";
+import Link from 'next/link';
+import { ArrowUpRight, Plus, Zap } from 'lucide-react';
 
-import { useDashboardQuickActions } from "@/features/dashboard/api/queries";
+import { useDashboardQuickActions } from '@/features/dashboard/api/queries';
 
 export default function QuickActionsWidget() {
   const { data: actions = [], isLoading } = useDashboardQuickActions();

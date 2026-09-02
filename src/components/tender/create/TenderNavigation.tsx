@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import Button from "@/components/ui/Button";
+import Button from '@/components/ui/Button';
 
 export interface TenderNavigationProps {
   currentStep: number;
@@ -26,7 +26,7 @@ export default function TenderNavigation({
         variant="ghost"
         onClick={() => {
           // TODO: Save Draft API
-          console.log("Draft Saved");
+          console.log('Draft Saved');
         }}
       >
         Save as Draft

@@ -1,34 +1,22 @@
-"use client";
+'use client';
 
-import React from "react";
-import {
-  AlertCircle,
-  AlertTriangle,
-  Archive,
-  Check,
-  Info,
-  Link2,
-  Trash2,
-  X,
-} from "lucide-react";
+import React from 'react';
+import { AlertCircle, AlertTriangle, Archive, Check, Info, Link2, Trash2, X } from 'lucide-react';
 
-import type { Notification } from "@/types";
+import type { Notification } from '@/types';
 import {
   useArchiveNotification,
   useDismissNotification,
   useExecuteAction,
   useMarkRead,
-} from "@/features/notifications";
+} from '@/features/notifications';
 
 interface NotificationDrawerProps {
   notification: Notification | null;
   onClose: () => void;
 }
 
-export default function NotificationDrawer({
-  notification,
-  onClose,
-}: NotificationDrawerProps) {
+export default function NotificationDrawer({ notification, onClose }: NotificationDrawerProps) {
   const markReadMut = useMarkRead();
   const archiveMut = useArchiveNotification();
   const dismissMut = useDismissNotification();
@@ -36,14 +24,14 @@ export default function NotificationDrawer({
 
   if (!notification) return null;
 
-  const sevKey = (notification.severity || "info").toLowerCase();
+  const sevKey = (notification.severity || 'info').toLowerCase();
 
   const severityColors: Record<string, string> = {
-    critical: "bg-red-500/10 text-red-500 border-red-500/20",
-    high: "bg-orange-500/10 text-orange-500 border-orange-500/20",
-    medium: "bg-yellow-500/10 text-yellow-500 border-yellow-500/20",
-    low: "bg-blue-500/10 text-blue-500 border-blue-500/20",
-    info: "bg-green-500/10 text-green-500 border-green-500/20",
+    critical: 'bg-red-500/10 text-red-500 border-red-500/20',
+    high: 'bg-orange-500/10 text-orange-500 border-orange-500/20',
+    medium: 'bg-yellow-500/10 text-yellow-500 border-yellow-500/20',
+    low: 'bg-blue-500/10 text-blue-500 border-blue-500/20',
+    info: 'bg-green-500/10 text-green-500 border-green-500/20',
   };
 
   const severityIcons: Record<string, React.ReactNode> = {
@@ -59,7 +47,7 @@ export default function NotificationDrawer({
       await executeMut.mutateAsync({ id: notification.id, actionId });
       onClose();
     } catch (err) {
-      console.error("Action execution failed", err);
+      console.error('Action execution failed', err);
     }
   };
 
@@ -82,9 +70,7 @@ export default function NotificationDrawer({
               >
                 {notification.severity}
               </span>
-              <span className="text-xs text-text-light capitalize">
-                {notification.category}
-              </span>
+              <span className="text-xs text-text-light capitalize">{notification.category}</span>
             </div>
             <button
               onClick={onClose}
@@ -105,29 +91,26 @@ export default function NotificationDrawer({
               {notification.message}
             </p>
 
-            {notification.metadata &&
-              typeof notification.metadata === "object" && (
-                <div className="mt-6 rounded-xl border border-border bg-sidebar-hover/40 p-4">
-                  <h4 className="text-xs font-semibold uppercase tracking-wider text-text-light">
-                    Contextual Info & Metadata
-                  </h4>
-                  <div className="mt-2 space-y-2 text-xs">
-                    {Object.entries(notification.metadata).map(([key, val]) => (
-                      <div
-                        key={key}
-                        className="flex justify-between py-1 border-b border-border/40 last:border-0"
-                      >
-                        <span className="font-medium text-text-light capitalize">
-                          {key}
-                        </span>
-                        <span className="text-text font-mono truncate max-w-[200px]">
-                          {JSON.stringify(val)}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
+            {notification.metadata && typeof notification.metadata === 'object' && (
+              <div className="mt-6 rounded-xl border border-border bg-sidebar-hover/40 p-4">
+                <h4 className="text-xs font-semibold uppercase tracking-wider text-text-light">
+                  Contextual Info & Metadata
+                </h4>
+                <div className="mt-2 space-y-2 text-xs">
+                  {Object.entries(notification.metadata).map(([key, val]) => (
+                    <div
+                      key={key}
+                      className="flex justify-between py-1 border-b border-border/40 last:border-0"
+                    >
+                      <span className="font-medium text-text-light capitalize">{key}</span>
+                      <span className="text-text font-mono truncate max-w-[200px]">
+                        {JSON.stringify(val)}
+                      </span>
+                    </div>
+                  ))}
                 </div>
-              )}
+              </div>
+            )}
           </div>
         </div>
 
@@ -200,7 +183,7 @@ export default function NotificationDrawer({
               className="mt-4 flex items-center justify-center gap-2 rounded-xl bg-sidebar-hover border border-border py-2 text-center text-xs font-semibold text-primary hover:text-primary-hover transition-colors"
             >
               <Link2 size={14} />
-              {notification.actionLabel || "View Details"}
+              {notification.actionLabel || 'View Details'}
             </a>
           )}
         </div>

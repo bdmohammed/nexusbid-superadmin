@@ -10,23 +10,24 @@ This document outlines the testing strategy, decision-making tree, and architect
 
 ## 1. App Router Special Files Testing Matrix
 
-| Next.js App Router File | Primary Test Strategy | Recommended Tooling |
-| :--- | :--- | :--- |
-| **`page.tsx`** | End-to-End & Layout Verification | **Playwright** |
-| **`layout.tsx`** | Component & Provider Composition | **Vitest + RTL** |
-| **`template.tsx`** | Remount & State Reset Verification | **Vitest + RTL** |
-| **`loading.tsx`** | Skeleton Rendering & Suspense Fallback | **Vitest + RTL** |
-| **`error.tsx`** | Error Boundary Rendering & Reset Trigger | **Vitest + RTL** |
-| **`not-found.tsx`** | 404 Status & Navigation Action | **Vitest + Playwright** |
-| **`route.ts`** | Route Handler HTTP Methods & Status Codes | **Vitest** |
-| **`middleware.ts`** | Request Guards & Token Redirect Logic | **Vitest (Logic) + Playwright (E2E)** |
+| Next.js App Router File | Primary Test Strategy                     | Recommended Tooling                   |
+| :---------------------- | :---------------------------------------- | :------------------------------------ |
+| **`page.tsx`**          | End-to-End & Layout Verification          | **Playwright**                        |
+| **`layout.tsx`**        | Component & Provider Composition          | **Vitest + RTL**                      |
+| **`template.tsx`**      | Remount & State Reset Verification        | **Vitest + RTL**                      |
+| **`loading.tsx`**       | Skeleton Rendering & Suspense Fallback    | **Vitest + RTL**                      |
+| **`error.tsx`**         | Error Boundary Rendering & Reset Trigger  | **Vitest + RTL**                      |
+| **`not-found.tsx`**     | 404 Status & Navigation Action            | **Vitest + Playwright**               |
+| **`route.ts`**          | Route Handler HTTP Methods & Status Codes | **Vitest**                            |
+| **`middleware.ts`**     | Request Guards & Token Redirect Logic     | **Vitest (Logic) + Playwright (E2E)** |
 
 ---
 
 ## 2. Feature vs. Integration Tests (Concrete Examples)
 
 ### Feature Test Example
-*Flow:* `LoginForm` → Field Validation → MSW Network Request → Toast Notification → Router Push.
+
+_Flow:_ `LoginForm` → Field Validation → MSW Network Request → Toast Notification → Router Push.
 
 ```tsx
 // src/features/auth/__tests__/LoginForm.feature.test.tsx
@@ -37,9 +38,7 @@ import { server } from '@/testing/msw/server';
 import { LoginForm } from '../components/LoginForm';
 
 it('completes login flow, displays toast notification, and navigates', async () => {
-  server.use(
-    http.post('/api/v1/auth/login', () => HttpResponse.json({ token: 'jwt-123' }))
-  );
+  server.use(http.post('/api/v1/auth/login', () => HttpResponse.json({ token: 'jwt-123' })));
 
   render(<LoginForm />);
 
@@ -54,7 +53,8 @@ it('completes login flow, displays toast notification, and navigates', async () 
 ```
 
 ### Integration Test Example
-*Orchestration:* `DashboardLayout` → `Sidebar` → `Header` → `PermissionProvider` → `ThemeProvider`.
+
+_Orchestration:_ `DashboardLayout` → `Sidebar` → `Header` → `PermissionProvider` → `ThemeProvider`.
 
 ```tsx
 // src/components/layouts/__tests__/DashboardLayout.integration.test.tsx
@@ -68,7 +68,7 @@ it('integrates layout elements with user permission provider state', () => {
       <DashboardLayout>
         <div>Dashboard Main View</div>
       </DashboardLayout>
-    </PermissionProvider>
+    </PermissionProvider>,
   );
 
   expect(screen.getByRole('navigation')).toBeInTheDocument(); // Sidebar
@@ -123,7 +123,9 @@ import { http, HttpResponse } from 'msw';
 describe('useUpdateRfpMutation', () => {
   it('performs optimistic update and rolls back on failure', async () => {
     server.use(
-      http.patch('/api/v1/rfp/1', () => HttpResponse.json({ error: 'Server Error' }, { status: 500 }))
+      http.patch('/api/v1/rfp/1', () =>
+        HttpResponse.json({ error: 'Server Error' }, { status: 500 }),
+      ),
     );
 
     const { result } = renderHook(() => useUpdateRfpMutation());

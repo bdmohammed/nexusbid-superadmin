@@ -20,22 +20,15 @@ interface AllTheProvidersProps {
 
 function AllTheProviders({ children }: AllTheProvidersProps) {
   const [queryClient] = React.useState(() => createTestQueryClient());
-  return (
-    <QueryClientProvider client={queryClient}>
-      {children}
-    </QueryClientProvider>
-  );
+  return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>;
 }
 
-function customRender(
-  ui: ReactElement,
-  options?: Omit<RenderOptions, 'wrapper'>
-) {
+function customRender(ui: ReactElement, options?: Omit<RenderOptions, 'wrapper'>) {
   return render(ui, { wrapper: AllTheProviders, ...options });
 }
 
-// Re-export everything from @testing-library/react
+// Re-export everything from Testing Library
 export * from '@testing-library/react';
 
-// Override default render method
+// Override only render
 export { customRender as render };

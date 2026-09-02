@@ -6,17 +6,17 @@ import type {
   Role,
   UpdateRoleDto,
   UserRoleAssignment,
-} from "../types";
-import type { ApiResponse } from "@/types";
-import { apiClient } from "@/lib/http";
+} from '../types';
+import type { ApiResponse } from '@/types';
+import { apiClient } from '@/lib/http';
 
 export const rbacApi = {
   getRoles() {
-    return apiClient.get<ApiResponse<Role[]>>("/rbac/roles");
+    return apiClient.get<ApiResponse<Role[]>>('/rbac/roles');
   },
 
   getCategorizedRoles() {
-    return apiClient.get<ApiResponse<Role[]>>("/rbac/roles/categorized");
+    return apiClient.get<ApiResponse<Role[]>>('/rbac/roles/categorized');
   },
 
   getRoleById(id: string) {
@@ -24,7 +24,7 @@ export const rbacApi = {
   },
 
   createRole(data: CreateRoleDto) {
-    return apiClient.post<ApiResponse<Role>>("/rbac/roles", {
+    return apiClient.post<ApiResponse<Role>>('/rbac/roles', {
       name: data.name,
       description: data.description || null,
       permissionKeys: data.permissions,
@@ -45,13 +45,11 @@ export const rbacApi = {
   },
 
   getAssignments() {
-    return apiClient.get<ApiResponse<UserRoleAssignment[]>>(
-      "/rbac/assignments",
-    );
+    return apiClient.get<ApiResponse<UserRoleAssignment[]>>('/rbac/assignments');
   },
 
   createAssignment(data: CreateAssignmentDto) {
-    return apiClient.post<ApiResponse<any>>("/rbac/assignments", data);
+    return apiClient.post<ApiResponse<any>>('/rbac/assignments', data);
   },
 
   deleteAssignment(id: string) {
@@ -66,61 +64,53 @@ export const rbacApi = {
   },
 
   getAuditLogs() {
-    return apiClient.get<ApiResponse<AuditLog[]>>("/rbac/audit-logs");
+    return apiClient.get<ApiResponse<AuditLog[]>>('/rbac/audit-logs');
   },
 
   getForensicLogs(params?: any) {
-    return apiClient.get<ApiResponse<{ logs: any[]; total: number }>>(
-      "/audit-logs",
-      { params },
-    );
+    return apiClient.get<ApiResponse<{ logs: any[]; total: number }>>('/audit-logs', { params });
   },
 
   getAuditStats() {
-    return apiClient.get<ApiResponse<any>>("/audit-logs/statistics");
+    return apiClient.get<ApiResponse<any>>('/audit-logs/statistics');
   },
 
   getSecurityEvents(params?: any) {
-    return apiClient.get<ApiResponse<{ logs: any[]; total: number }>>(
-      "/audit-logs/security",
-      { params },
-    );
+    return apiClient.get<ApiResponse<{ logs: any[]; total: number }>>('/audit-logs/security', {
+      params,
+    });
   },
 
   getRetentionPolicies() {
-    return apiClient.get<ApiResponse<any[]>>("/audit-logs/retention");
+    return apiClient.get<ApiResponse<any[]>>('/audit-logs/retention');
   },
 
   updateRetentionPolicy(data: any) {
-    return apiClient.patch<ApiResponse<any>>("/audit-logs/retention", data);
+    return apiClient.patch<ApiResponse<any>>('/audit-logs/retention', data);
   },
 
   exportAuditLogs(data: any) {
-    return apiClient.post<ApiResponse<any>>("/audit-logs/export", data);
+    return apiClient.post<ApiResponse<any>>('/audit-logs/export', data);
   },
 
   getCorrelationTimeline(correlationId: string) {
-    return apiClient.get<ApiResponse<any[]>>(
-      `/audit-logs/correlation/${correlationId}`,
-    );
+    return apiClient.get<ApiResponse<any[]>>(`/audit-logs/correlation/${correlationId}`);
   },
 
   getRequestTimeline(requestId: string) {
-    return apiClient.get<ApiResponse<any[]>>(
-      `/audit-logs/request/${requestId}`,
-    );
+    return apiClient.get<ApiResponse<any[]>>(`/audit-logs/request/${requestId}`);
   },
 
   getPermissions() {
-    return apiClient.get<ApiResponse<any[]>>("/rbac/permissions");
+    return apiClient.get<ApiResponse<any[]>>('/rbac/permissions');
   },
 
   getModules() {
-    return apiClient.get<ApiResponse<PermissionModule[]>>("/rbac/modules");
+    return apiClient.get<ApiResponse<PermissionModule[]>>('/rbac/modules');
   },
 
   getAssignableUsers(params?: Record<string, any>) {
-    return apiClient.get<ApiResponse<any[]>>("/admin/users", {
+    return apiClient.get<ApiResponse<any[]>>('/admin/users', {
       params,
     });
   },
@@ -134,33 +124,26 @@ export const rbacApi = {
   },
 
   unlockVersion(versionId: string) {
-    return apiClient.post<ApiResponse<any>>(
-      `/rbac/versions/${versionId}/unlock`,
-    );
+    return apiClient.post<ApiResponse<any>>(`/rbac/versions/${versionId}/unlock`);
   },
 
   compareVersions(roleId: string, v1: number, v2: number) {
-    return apiClient.get<ApiResponse<any>>(
-      `/rbac/roles/${roleId}/versions/${v1}/compare/${v2}`,
-    );
+    return apiClient.get<ApiResponse<any>>(`/rbac/roles/${roleId}/versions/${v1}/compare/${v2}`);
   },
 
   submitVersion(versionId: string, reviewerIds: string[]) {
-    return apiClient.post<ApiResponse<any>>(
-      `/rbac/versions/${versionId}/submit`,
-      { reviewerIds },
-    );
+    return apiClient.post<ApiResponse<any>>(`/rbac/versions/${versionId}/submit`, { reviewerIds });
   },
 
   submitReview(
     reviewId: string,
-    status: "APPROVED" | "REJECTED" | "CHANGES_REQUESTED",
-    comment = "",
+    status: 'APPROVED' | 'REJECTED' | 'CHANGES_REQUESTED',
+    comment = '',
   ) {
-    return apiClient.post<ApiResponse<any>>(
-      `/rbac/reviews/${reviewId}/action`,
-      { status, comment },
-    );
+    return apiClient.post<ApiResponse<any>>(`/rbac/reviews/${reviewId}/action`, {
+      status,
+      comment,
+    });
   },
 
   getReviewDetails(reviewId: string) {
@@ -168,10 +151,10 @@ export const rbacApi = {
   },
 
   getStats() {
-    return apiClient.get<ApiResponse<any>>("/rbac/statistics");
+    return apiClient.get<ApiResponse<any>>('/rbac/statistics');
   },
 
   exportData() {
-    return apiClient.get<ApiResponse<any>>("/rbac/exports");
+    return apiClient.get<ApiResponse<any>>('/rbac/exports');
   },
 };

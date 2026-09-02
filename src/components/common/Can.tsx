@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import type { ReactNode } from "react";
-import { usePermissions } from "@/hooks/usePermissions";
+import type { ReactNode } from 'react';
+import { usePermissions } from '@/hooks/usePermissions';
 
 interface CanProps {
   permission?: string;
@@ -11,15 +11,8 @@ interface CanProps {
   children: ReactNode;
 }
 
-export function Can({
-  permission,
-  any,
-  all,
-  fallback = null,
-  children,
-}: CanProps) {
-  const { hasPermission, hasAnyPermission, hasAllPermissions, isInitializing } =
-    usePermissions();
+export function Can({ permission, any, all, fallback = null, children }: CanProps) {
+  const { hasPermission, hasAnyPermission, hasAllPermissions, isInitializing } = usePermissions();
 
   if (isInitializing) {
     return null;

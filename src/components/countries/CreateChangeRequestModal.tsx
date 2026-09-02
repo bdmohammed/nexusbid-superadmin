@@ -1,23 +1,15 @@
-"use client";
+'use client';
 
-import React, { useEffect, useMemo,useState } from "react";
-import {
-  AlertCircle,
-  CheckCircle2,
-  Info,
-  RefreshCw,
-  Send,
-  Shield,
-  XCircle,
-} from "lucide-react";
-import ReactSelect from "react-select";
-import { toast } from "sonner";
+import React, { useEffect, useMemo, useState } from 'react';
+import { AlertCircle, CheckCircle2, Info, RefreshCw, Send, Shield, XCircle } from 'lucide-react';
+import ReactSelect from 'react-select';
+import { toast } from 'sonner';
 
-import type { SingleValue } from "react-select";
-import Button from "@/components/ui/Button";
-import Modal from "@/components/ui/Modal";
-import { apiClient } from "@/lib/http";
-import { useThemeStore } from "@/store/theme.store";
+import type { SingleValue } from 'react-select';
+import Button from '@/components/ui/Button';
+import Modal from '@/components/ui/Modal';
+import { apiClient } from '@/lib/http';
+import { useThemeStore } from '@/store/theme.store';
 
 interface Reviewer {
   id: string;
@@ -37,10 +29,10 @@ interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSuccess: () => void;
-  initialTargetType?: "COUNTRY" | "STATE";
+  initialTargetType?: 'COUNTRY' | 'STATE';
   initialCountryId?: string;
   initialStateId?: string;
-  initialAction?: "ACTIVATE" | "DEACTIVATE";
+  initialAction?: 'ACTIVATE' | 'DEACTIVATE';
   countryName?: string;
   stateName?: string;
 }
@@ -49,30 +41,26 @@ export const CreateChangeRequestModal: React.FC<ModalProps> = ({
   isOpen,
   onClose,
   onSuccess,
-  initialTargetType = "COUNTRY",
-  initialCountryId = "",
-  initialStateId = "",
-  initialAction = "DEACTIVATE",
-  countryName = "",
-  stateName = "",
+  initialTargetType = 'COUNTRY',
+  initialCountryId = '',
+  initialStateId = '',
+  initialAction = 'DEACTIVATE',
+  countryName = '',
+  stateName = '',
 }) => {
-  const [targetType, setTargetType] = useState<"COUNTRY" | "STATE">(
-    initialTargetType,
-  );
+  const [targetType, setTargetType] = useState<'COUNTRY' | 'STATE'>(initialTargetType);
   const [countryId, setCountryId] = useState(initialCountryId);
   const [stateId, setStateId] = useState(initialStateId);
-  const [action, setAction] = useState<"ACTIVATE" | "DEACTIVATE">(
-    initialAction,
-  );
-  const [reason, setReason] = useState("");
-  const [reviewerId, setReviewerId] = useState("");
+  const [action, setAction] = useState<'ACTIVATE' | 'DEACTIVATE'>(initialAction);
+  const [reason, setReason] = useState('');
+  const [reviewerId, setReviewerId] = useState('');
   const [reviewers, setReviewers] = useState<Reviewer[]>([]);
   const [loadingReviewers, setLoadingReviewers] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   // Cascade Policy Options
-  const [cascadePolicy, setCascadePolicy] = useState({
+  const [cascadePolicy] = useState({
     disableStates: true,
     disableTenders: true,
     disableCategories: false,
@@ -89,24 +77,18 @@ export const CreateChangeRequestModal: React.FC<ModalProps> = ({
       setError(null);
       fetchEligibleReviewers();
     }
-  }, [
-    isOpen,
-    initialTargetType,
-    initialCountryId,
-    initialStateId,
-    initialAction,
-  ]);
+  }, [isOpen, initialTargetType, initialCountryId, initialStateId, initialAction]);
 
   const currentTheme = useThemeStore((state) => state.theme);
-  const isDark = currentTheme === "dark";
+  const isDark = currentTheme === 'dark';
 
   const reviewerOptions = useMemo<SelectOption[]>(() => {
     return reviewers.map((r) => {
-      let suffix = "";
+      let suffix = '';
       if (r.isSelf) {
         suffix = r.canBeAssigned
-          ? " — (Self-Assign — Sole Country Admin)"
-          : " — (Self - Disabled by Rule 1)";
+          ? ' — (Self-Assign — Sole Country Admin)'
+          : ' — (Self - Disabled by Rule 1)';
       }
       return {
         value: r.id,
@@ -116,64 +98,61 @@ export const CreateChangeRequestModal: React.FC<ModalProps> = ({
     });
   }, [reviewers]);
 
-  const selectedReviewerOption =
-    reviewerOptions.find((o) => o.value === reviewerId) || null;
+  const selectedReviewerOption = reviewerOptions.find((o) => o.value === reviewerId) ?? null;
 
   const selectStyles = useMemo(
     () => ({
       control: (base: any, state: any) => ({
         ...base,
-        backgroundColor: isDark ? "#1f2937" : "#ffffff",
+        backgroundColor: isDark ? '#1f2937' : '#ffffff',
         borderColor: state.isFocused
-          ? "var(--color-primary, #6366f1)"
+          ? 'var(--color-primary, #6366f1)'
           : isDark
-            ? "#374151"
-            : "#e5e7eb",
-        borderRadius: "0.75rem",
-        padding: "2px 4px",
-        boxShadow: state.isFocused
-          ? "0 0 0 2px rgba(99, 102, 241, 0.2)"
-          : "none",
-        "&:hover": {
-          borderColor: "var(--color-primary, #6366f1)",
+            ? '#374151'
+            : '#e5e7eb',
+        borderRadius: '0.75rem',
+        padding: '2px 4px',
+        boxShadow: state.isFocused ? '0 0 0 2px rgba(99, 102, 241, 0.2)' : 'none',
+        '&:hover': {
+          borderColor: 'var(--color-primary, #6366f1)',
         },
       }),
       menu: (base: any) => ({
         ...base,
-        backgroundColor: isDark ? "#111827" : "#ffffff",
-        borderRadius: "0.75rem",
-        border: isDark ? "1px solid #374151" : "1px solid #e5e7eb",
-        boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.15)",
+        backgroundColor: isDark ? '#111827' : '#ffffff',
+        borderRadius: '0.75rem',
+        border: isDark ? '1px solid #374151' : '1px solid #e5e7eb',
+        boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.15)',
         zIndex: 9999,
       }),
       option: (base: any, state: any) => ({
         ...base,
         backgroundColor: state.isSelected
-          ? "var(--color-primary, #6366f1)"
+          ? 'var(--color-primary, #6366f1)'
           : state.isFocused
             ? isDark
-              ? "#1f2937"
-              : "rgba(99, 102, 241, 0.08)"
-            : "transparent",
-        color: state.isSelected ? "#ffffff" : isDark ? "#f3f4f6" : "#1f2937",
-        cursor: state.isDisabled ? "not-allowed" : "pointer",
+              ? '#1f2937'
+              : 'rgba(99, 102, 241, 0.08)'
+            : 'transparent',
+        color: state.isSelected ? '#ffffff' : isDark ? '#f3f4f6' : '#1f2937',
+        cursor: state.isDisabled ? 'not-allowed' : 'pointer',
         opacity: state.isDisabled ? 0.5 : 1,
-        fontSize: "0.75rem",
+        fontSize: '0.75rem',
       }),
       singleValue: (base: any) => ({
         ...base,
-        color: isDark ? "#f3f4f6" : "#1f2937",
-        fontSize: "0.75rem",
+        color: isDark ? '#f3f4f6' : '#1f2937',
+        fontSize: '0.75rem',
       }),
       input: (base: any) => ({
         ...base,
-        color: isDark ? "#f3f4f6" : "#1f2937",
-        fontSize: "0.75rem",
+        color: isDark ? '#f3f4f6' : '#1f2937',
+        fontSize: '0.75rem',
       }),
       placeholder: (base: any) => ({
         ...base,
-        color: isDark ? "#9ca3af" : "#6b7280",
-        fontSize: "0.75rem",
+        color: isDark ? '#9ca3af' : '#6b7280',
+        fontSize: '0.75rem',
       }),
     }),
     [isDark],
@@ -182,14 +161,14 @@ export const CreateChangeRequestModal: React.FC<ModalProps> = ({
   const fetchEligibleReviewers = async () => {
     setLoadingReviewers(true);
     try {
-      const res = await apiClient.get<any>("/countries/eligible-reviewers");
+      const res = await apiClient.get<any>('/countries/eligible-reviewers');
       if (res.data?.success) {
         setReviewers(res.data.data);
         const autoSelect = res.data.data.find((r: Reviewer) => r.canBeAssigned);
         if (autoSelect) setReviewerId(autoSelect.id);
       }
     } catch (err: any) {
-      console.error("Failed to load eligible reviewers", err);
+      console.error('Failed to load eligible reviewers', err);
     } finally {
       setLoadingReviewers(false);
     }
@@ -198,9 +177,7 @@ export const CreateChangeRequestModal: React.FC<ModalProps> = ({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!reason || reason.trim().length < 10) {
-      setError(
-        "Please provide a business justification (at least 10 characters).",
-      );
+      setError('Please provide a business justification (at least 10 characters).');
       return;
     }
 
@@ -208,22 +185,17 @@ export const CreateChangeRequestModal: React.FC<ModalProps> = ({
     setSubmitting(true);
 
     try {
-      const createRes = await apiClient.post<any>(
-        "/countries/change-requests",
-        {
-          targetType,
-          countryId,
-          stateId: targetType === "STATE" ? stateId : undefined,
-          action,
-          reason,
-          cascadePolicy,
-        },
-      );
+      const createRes = await apiClient.post<any>('/countries/change-requests', {
+        targetType,
+        countryId,
+        stateId: targetType === 'STATE' ? stateId : undefined,
+        action,
+        reason,
+        cascadePolicy,
+      });
 
       if (!createRes.data?.success) {
-        throw new Error(
-          createRes.data?.message || "Failed to create change request ticket",
-        );
+        throw new Error(createRes.data?.message ?? 'Failed to create change request ticket');
       }
 
       const requestId = createRes.data.data.id;
@@ -234,21 +206,19 @@ export const CreateChangeRequestModal: React.FC<ModalProps> = ({
         });
       }
 
-      toast.success("Governance change request submitted successfully.");
+      toast.success('Governance change request submitted successfully.');
       onSuccess();
       onClose();
     } catch (err: any) {
       setError(
-        err.response?.data?.message ||
-          err.message ||
-          "An error occurred during submission.",
+        err.response?.data?.message ?? err.message ?? 'An error occurred during submission.',
       );
     } finally {
       setSubmitting(false);
     }
   };
 
-  const title = `Propose ${action === "ACTIVATE" ? "Activation" : "Deactivation"} Request`;
+  const title = `Propose ${action === 'ACTIVATE' ? 'Activation' : 'Deactivation'} Request`;
 
   const footer = (
     <div className="flex items-center justify-end gap-3">
@@ -261,19 +231,13 @@ export const CreateChangeRequestModal: React.FC<ModalProps> = ({
         disabled={submitting}
         leftIcon={submitting ? RefreshCw : Send}
       >
-        {submitting ? "Submitting Ticket..." : "Submit Proposal"}
+        {submitting ? 'Submitting Ticket...' : 'Submit Proposal'}
       </Button>
     </div>
   );
 
   return (
-    <Modal
-      open={isOpen}
-      title={title}
-      onClose={onClose}
-      width="max-w-xl"
-      footer={footer}
-    >
+    <Modal open={isOpen} title={title} onClose={onClose} width="max-w-xl" footer={footer}>
       <div className="space-y-5">
         {/* Target Summary Banner */}
         <div className="p-4 rounded-2xl bg-background border border-border flex items-center gap-3">
@@ -285,7 +249,7 @@ export const CreateChangeRequestModal: React.FC<ModalProps> = ({
               Governance Target Entity
             </h4>
             <p className="text-sm font-bold text-text mt-0.5">
-              {countryName} {stateName ? `→ ${stateName}` : ""}
+              {countryName} {stateName ? `→ ${stateName}` : ''}
             </p>
           </div>
         </div>
@@ -303,7 +267,7 @@ export const CreateChangeRequestModal: React.FC<ModalProps> = ({
             <label className="text-xs font-bold text-text uppercase tracking-wider block">
               Proposed Operation
             </label>
-            {action === "DEACTIVATE" ? (
+            {action === 'DEACTIVATE' ? (
               <div className="p-4 rounded-xl border border-rose-500/30 bg-rose-500/10 flex items-center justify-between gap-3">
                 <div className="flex items-center gap-3">
                   <div className="p-2 rounded-lg bg-rose-500/20 text-rose-500 shrink-0">
@@ -311,14 +275,12 @@ export const CreateChangeRequestModal: React.FC<ModalProps> = ({
                   </div>
                   <div>
                     <h5 className="text-sm font-semibold text-text">
-                      Deactivate {targetType === "STATE" ? "State" : "Country"}
+                      Deactivate {targetType === 'STATE' ? 'State' : 'Country'}
                     </h5>
                     <p className="text-xs text-text-light mt-0.5">
-                      Do you want to deactivate{" "}
-                      <span className="font-semibold text-text">
-                        {stateName || countryName}
-                      </span>
-                      ? This will restrict operational availability.
+                      Do you want to deactivate{' '}
+                      <span className="font-semibold text-text">{stateName || countryName}</span>?
+                      This will restrict operational availability.
                     </p>
                   </div>
                 </div>
@@ -334,14 +296,12 @@ export const CreateChangeRequestModal: React.FC<ModalProps> = ({
                   </div>
                   <div>
                     <h5 className="text-sm font-semibold text-text">
-                      Activate {targetType === "STATE" ? "State" : "Country"}
+                      Activate {targetType === 'STATE' ? 'State' : 'Country'}
                     </h5>
                     <p className="text-xs text-text-light mt-0.5">
-                      Do you want to activate{" "}
-                      <span className="font-semibold text-text">
-                        {stateName || countryName}
-                      </span>
-                      ? This will enable entity for production tenders.
+                      Do you want to activate{' '}
+                      <span className="font-semibold text-text">{stateName || countryName}</span>?
+                      This will enable entity for production tenders.
                     </p>
                   </div>
                 </div>
@@ -355,7 +315,7 @@ export const CreateChangeRequestModal: React.FC<ModalProps> = ({
           {/* Assign Reviewer */}
           <div className="space-y-2">
             <label className="text-xs font-bold text-text uppercase tracking-wider block">
-              Assign Reviewer{" "}
+              Assign Reviewer{' '}
               <span className="text-text-light font-normal text-[11px] lowercase">
                 (maker-checker enforced)
               </span>
@@ -369,9 +329,7 @@ export const CreateChangeRequestModal: React.FC<ModalProps> = ({
               <ReactSelect
                 options={reviewerOptions}
                 value={selectedReviewerOption}
-                onChange={(option: SingleValue<SelectOption>) =>
-                  setReviewerId(option?.value || "")
-                }
+                onChange={(option: SingleValue<SelectOption>) => setReviewerId(option?.value ?? '')}
                 placeholder="Search or select an assigned reviewer..."
                 styles={selectStyles}
                 isSearchable
@@ -383,8 +341,7 @@ export const CreateChangeRequestModal: React.FC<ModalProps> = ({
           {/* Business Reason */}
           <div className="space-y-2">
             <label className="text-xs font-bold text-text uppercase tracking-wider block">
-              Business Justification / Rationale{" "}
-              <span className="text-red-500">*</span>
+              Business Justification / Rationale <span className="text-red-500">*</span>
             </label>
             <textarea
               required
@@ -397,16 +354,16 @@ export const CreateChangeRequestModal: React.FC<ModalProps> = ({
           </div>
 
           {/* Cascading Impact System Note */}
-          {action === "DEACTIVATE" && (
+          {action === 'DEACTIVATE' && (
             <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-800 dark:text-amber-300 space-y-1.5">
               <div className="flex items-center gap-2 font-bold uppercase tracking-wider text-xs text-amber-700 dark:text-amber-400">
                 <Info className="w-4 h-4 shrink-0 text-amber-500" />
                 <span>Cascading System Impact</span>
               </div>
               <p className="text-xs text-text-light leading-relaxed">
-                {targetType === "COUNTRY"
-                  ? "Deactivating this country will automatically disable all child states/territories and associated active tenders. They will be hidden from customer search filters while remaining visible on the admin portal."
-                  : "Deactivating this state/territory/federal region will automatically disable associated active tenders. State-level items will be hidden from customer search filters while remaining visible on the admin portal."}
+                {targetType === 'COUNTRY'
+                  ? 'Deactivating this country will automatically disable all child states/territories and associated active tenders. They will be hidden from customer search filters while remaining visible on the admin portal.'
+                  : 'Deactivating this state/territory/federal region will automatically disable associated active tenders. State-level items will be hidden from customer search filters while remaining visible on the admin portal.'}
               </p>
             </div>
           )}

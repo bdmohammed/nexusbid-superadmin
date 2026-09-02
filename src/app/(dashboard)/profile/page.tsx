@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import {
   AlertTriangle,
   CheckCircle,
@@ -12,9 +12,9 @@ import {
   Smartphone,
   Trash2,
   User,
-} from "lucide-react";
+} from 'lucide-react';
 
-import { apiClient } from "@/lib/http";
+import { apiClient } from '@/lib/http';
 
 // Interface definitions
 interface UserProfile {
@@ -99,23 +99,21 @@ export default function PersonalProfilePage() {
 
   // Active sub-tab
   const [activeTab, setActiveTab] = useState<
-    | "overview"
-    | "security"
-    | "sessions"
-    | "preferences"
-    | "subscription"
-    | "activity"
-    | "privacy"
-    | "timeline"
-  >("overview");
+    | 'overview'
+    | 'security'
+    | 'sessions'
+    | 'preferences'
+    | 'subscription'
+    | 'activity'
+    | 'privacy'
+    | 'timeline'
+  >('overview');
 
   // Sub-resource states
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [sessions, setSessions] = useState<UserSession[]>([]);
   const [devices, setDevices] = useState<UserDevice[]>([]);
-  const [subscription, setSubscription] = useState<UserSubscriptionInfo | null>(
-    null,
-  );
+  const [subscription, setSubscription] = useState<UserSubscriptionInfo | null>(null);
   const [activities, setActivities] = useState<ActivityLog[]>([]);
   const [securityLogs, setSecurityLogs] = useState<SecurityLog[]>([]);
   const [timeline, setTimeline] = useState<TimelineEvent[]>([]);
@@ -131,27 +129,27 @@ export default function PersonalProfilePage() {
 
   // Edit / Input States
   const [isEditingProfile, setIsEditingProfile] = useState(false);
-  const [profileForm, setProfileForm] = useState({ name: "", country: "" });
+  const [profileForm, setProfileForm] = useState({ name: '', country: '' });
   const [isEditingAvatar, setIsEditingAvatar] = useState(false);
-  const [avatarFormUrl, setAvatarFormUrl] = useState("");
+  const [avatarFormUrl, setAvatarFormUrl] = useState('');
 
   const [passwordForm, setPasswordForm] = useState({
-    currentPassword: "",
-    newPassword: "",
-    confirmPassword: "",
+    currentPassword: '',
+    newPassword: '',
+    confirmPassword: '',
   });
 
   // Change request state
-  const [changeRequestField, setChangeRequestField] = useState("companyName");
-  const [changeRequestValue, setChangeRequestValue] = useState("");
-  const [changeRequestReason, setChangeRequestReason] = useState("");
+  const [changeRequestField, setChangeRequestField] = useState('companyName');
+  const [changeRequestValue, setChangeRequestValue] = useState('');
+  const [changeRequestReason, setChangeRequestReason] = useState('');
 
   // Loading and action state
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(false);
   const [toast, setToast] = useState<{
     message: string;
-    type: "success" | "error" | "info";
+    type: 'success' | 'error' | 'info';
   } | null>(null);
   const [confirmAction, setConfirmAction] = useState<{
     title: string;
@@ -172,28 +170,22 @@ export default function PersonalProfilePage() {
     return () => clearTimeout(timer);
   }, [toast]);
 
-  const showToast = (
-    message: string,
-    type: "success" | "error" | "info" = "success",
-  ) => {
+  const showToast = (message: string, type: 'success' | 'error' | 'info' = 'success') => {
     setToast({ message, type });
   };
 
   // Fetch initial profile metadata
   const fetchProfileCore = async () => {
     try {
-      const res = await apiClient.get("/profile");
-      const {data} = res.data;
+      const res = await apiClient.get('/profile');
+      const { data } = res.data;
       setProfile(data);
       setProfileForm({
-        name: data.name || "",
-        country: data.country || "",
+        name: data.name || '',
+        country: data.country || '',
       });
     } catch (err: any) {
-      showToast(
-        err.response?.data?.message || "Failed to load profile details",
-        "error",
-      );
+      showToast(err.response?.data?.message || 'Failed to load profile details', 'error');
     }
   };
 
@@ -201,43 +193,40 @@ export default function PersonalProfilePage() {
   const fetchSubResource = async () => {
     try {
       setLoading(true);
-      if (activeTab === "overview") {
+      if (activeTab === 'overview') {
         await fetchProfileCore();
-      } else if (activeTab === "security") {
+      } else if (activeTab === 'security') {
         await fetchProfileCore();
-      } else if (activeTab === "sessions") {
+      } else if (activeTab === 'sessions') {
         const [sessRes, devRes] = await Promise.all([
-          apiClient.get("/profile/sessions"),
-          apiClient.get("/profile/devices"),
+          apiClient.get('/profile/sessions'),
+          apiClient.get('/profile/devices'),
         ]);
         setSessions(sessRes.data.data || []);
         setDevices(devRes.data.data || []);
-      } else if (activeTab === "preferences") {
-        const res = await apiClient.get("/profile/preferences");
+      } else if (activeTab === 'preferences') {
+        const res = await apiClient.get('/profile/preferences');
         if (res.data.data) {
           setPreferences(res.data.data);
         }
-      } else if (activeTab === "subscription") {
-        if (profile?.accountType !== "admin") {
-          const res = await apiClient.get("/profile/subscription");
+      } else if (activeTab === 'subscription') {
+        if (profile?.accountType !== 'admin') {
+          const res = await apiClient.get('/profile/subscription');
           setSubscription(res.data.data);
         }
-      } else if (activeTab === "activity") {
+      } else if (activeTab === 'activity') {
         const [actRes, secRes] = await Promise.all([
-          apiClient.get("/profile/activity?limit=15"),
-          apiClient.get("/profile/security-history?limit=15"),
+          apiClient.get('/profile/activity?limit=15'),
+          apiClient.get('/profile/security-history?limit=15'),
         ]);
         setActivities(actRes.data.data?.activities || []);
         setSecurityLogs(secRes.data.data?.logs || []);
-      } else if (activeTab === "timeline") {
-        const res = await apiClient.get("/profile/timeline");
+      } else if (activeTab === 'timeline') {
+        const res = await apiClient.get('/profile/timeline');
         setTimeline(res.data.data || []);
       }
     } catch (err: any) {
-      showToast(
-        err.response?.data?.message || "Failed to load tab data",
-        "error",
-      );
+      showToast(err.response?.data?.message || 'Failed to load tab data', 'error');
     } finally {
       setLoading(false);
     }
@@ -256,15 +245,12 @@ export default function PersonalProfilePage() {
     e.preventDefault();
     setActionLoading(true);
     try {
-      const res = await apiClient.patch("/profile", profileForm);
+      const res = await apiClient.patch('/profile', profileForm);
       setProfile(res.data.data);
-      showToast("Profile details updated successfully", "success");
+      showToast('Profile details updated successfully', 'success');
       setIsEditingProfile(false);
     } catch (err: any) {
-      showToast(
-        err.response?.data?.message || "Failed to update profile",
-        "error",
-      );
+      showToast(err.response?.data?.message || 'Failed to update profile', 'error');
     } finally {
       setActionLoading(false);
     }
@@ -276,18 +262,15 @@ export default function PersonalProfilePage() {
     if (!avatarFormUrl.trim()) return;
     setActionLoading(true);
     try {
-      const res = await apiClient.post("/profile/avatar", {
+      const res = await apiClient.post('/profile/avatar', {
         avatarUrl: avatarFormUrl,
       });
       setProfile(res.data.data);
-      showToast("Avatar image updated successfully", "success");
+      showToast('Avatar image updated successfully', 'success');
       setIsEditingAvatar(false);
-      setAvatarFormUrl("");
+      setAvatarFormUrl('');
     } catch (err: any) {
-      showToast(
-        err.response?.data?.message || "Failed to update avatar",
-        "error",
-      );
+      showToast(err.response?.data?.message || 'Failed to update avatar', 'error');
     } finally {
       setActionLoading(false);
     }
@@ -296,18 +279,15 @@ export default function PersonalProfilePage() {
   // Remove Avatar
   const handleRemoveAvatar = async () => {
     setConfirmAction({
-      title: "Remove Avatar",
-      message: "Are you sure you want to remove your profile picture?",
+      title: 'Remove Avatar',
+      message: 'Are you sure you want to remove your profile picture?',
       onConfirm: async () => {
         try {
-          const res = await apiClient.delete("/profile/avatar");
+          const res = await apiClient.delete('/profile/avatar');
           setProfile(res.data.data);
-          showToast("Avatar removed successfully", "success");
+          showToast('Avatar removed successfully', 'success');
         } catch (err: any) {
-          showToast(
-            err.response?.data?.message || "Failed to remove avatar",
-            "error",
-          );
+          showToast(err.response?.data?.message || 'Failed to remove avatar', 'error');
         } finally {
           setConfirmAction(null);
         }
@@ -319,70 +299,58 @@ export default function PersonalProfilePage() {
   const handleChangePassword = async (e: React.FormEvent) => {
     e.preventDefault();
     if (passwordForm.newPassword !== passwordForm.confirmPassword) {
-      showToast("New passwords do not match", "error");
+      showToast('New passwords do not match', 'error');
       return;
     }
     setActionLoading(true);
     try {
-      await apiClient.post("/profile/change-password", {
+      await apiClient.post('/profile/change-password', {
         currentPassword: passwordForm.currentPassword,
         newPassword: passwordForm.newPassword,
       });
       showToast(
-        "Password updated successfully. You have been logged out of all devices. Redirecting to login...",
-        "success",
+        'Password updated successfully. You have been logged out of all devices. Redirecting to login...',
+        'success',
       );
       setPasswordForm({
-        currentPassword: "",
-        newPassword: "",
-        confirmPassword: "",
+        currentPassword: '',
+        newPassword: '',
+        confirmPassword: '',
       });
       setTimeout(() => {
-        router.push("/login");
+        router.push('/login');
       }, 2000);
     } catch (err: any) {
-      showToast(
-        err.response?.data?.message || "Password update failed",
-        "error",
-      );
+      showToast(err.response?.data?.message || 'Password update failed', 'error');
     } finally {
       setActionLoading(false);
     }
   };
 
   // Update Notification preferences
-  const handlePreferenceChange = async (
-    key: keyof NotificationPreferences,
-    value: boolean,
-  ) => {
+  const handlePreferenceChange = async (key: keyof NotificationPreferences, value: boolean) => {
     const updated = { ...preferences, [key]: value };
     setPreferences(updated);
     try {
-      await apiClient.patch("/profile/preferences", updated);
-      showToast("Notification preferences updated", "success");
+      await apiClient.patch('/profile/preferences', updated);
+      showToast('Notification preferences updated', 'success');
     } catch (err: any) {
-      showToast(
-        err.response?.data?.message || "Failed to update preferences",
-        "error",
-      );
+      showToast(err.response?.data?.message || 'Failed to update preferences', 'error');
     }
   };
 
   // Revoke Specific Session
   const handleRevokeSession = (sessionId: string) => {
     setConfirmAction({
-      title: "Revoke Active Session",
-      message: "Are you sure you want to log out this device session?",
+      title: 'Revoke Active Session',
+      message: 'Are you sure you want to log out this device session?',
       onConfirm: async () => {
         try {
           await apiClient.delete(`/profile/sessions/${sessionId}`);
-          showToast("Session terminated", "success");
+          showToast('Session terminated', 'success');
           fetchSubResource();
         } catch (err: any) {
-          showToast(
-            err.response?.data?.message || "Revocation failed",
-            "error",
-          );
+          showToast(err.response?.data?.message || 'Revocation failed', 'error');
         } finally {
           setConfirmAction(null);
         }
@@ -393,24 +361,18 @@ export default function PersonalProfilePage() {
   // Revoke All Sessions
   const handleRevokeAllSessions = () => {
     setConfirmAction({
-      title: "Revoke All Sessions",
+      title: 'Revoke All Sessions',
       message:
-        "Terminate all device connections? This will log you out of your current session as well.",
+        'Terminate all device connections? This will log you out of your current session as well.',
       onConfirm: async () => {
         try {
-          await apiClient.delete("/profile/sessions");
-          showToast(
-            "All sessions invalidated. Redirecting to login...",
-            "success",
-          );
+          await apiClient.delete('/profile/sessions');
+          showToast('All sessions invalidated. Redirecting to login...', 'success');
           setTimeout(() => {
-            router.push("/login");
+            router.push('/login');
           }, 2000);
         } catch (err: any) {
-          showToast(
-            err.response?.data?.message || "Revocation failed",
-            "error",
-          );
+          showToast(err.response?.data?.message || 'Revocation failed', 'error');
         } finally {
           setConfirmAction(null);
         }
@@ -424,19 +386,16 @@ export default function PersonalProfilePage() {
     if (!changeRequestValue.trim() || !changeRequestReason.trim()) return;
     setActionLoading(true);
     try {
-      await apiClient.post("/profile/request-change", {
+      await apiClient.post('/profile/request-change', {
         field: changeRequestField,
         value: changeRequestValue,
         reason: changeRequestReason,
       });
-      showToast("Change request ticket submitted to administration", "success");
-      setChangeRequestValue("");
-      setChangeRequestReason("");
+      showToast('Change request ticket submitted to administration', 'success');
+      setChangeRequestValue('');
+      setChangeRequestReason('');
     } catch (err: any) {
-      showToast(
-        err.response?.data?.message || "Failed to submit request",
-        "error",
-      );
+      showToast(err.response?.data?.message || 'Failed to submit request', 'error');
     } finally {
       setActionLoading(false);
     }
@@ -445,18 +404,18 @@ export default function PersonalProfilePage() {
   // Account Deactivation
   const handleDeactivateAccount = () => {
     setConfirmAction({
-      title: "Deactivate Account",
+      title: 'Deactivate Account',
       message:
-        "Deactivating your account will block login access immediately. You can contact support to reactivate. Proceed?",
+        'Deactivating your account will block login access immediately. You can contact support to reactivate. Proceed?',
       onConfirm: async () => {
         try {
-          await apiClient.post("/profile/deactivate");
-          showToast("Account deactivated. Logging out...", "success");
+          await apiClient.post('/profile/deactivate');
+          showToast('Account deactivated. Logging out...', 'success');
           setTimeout(() => {
-            router.push("/login");
+            router.push('/login');
           }, 2000);
         } catch (err: any) {
-          showToast(err.response?.data?.message || "Action failed", "error");
+          showToast(err.response?.data?.message || 'Action failed', 'error');
         } finally {
           setConfirmAction(null);
         }
@@ -467,15 +426,15 @@ export default function PersonalProfilePage() {
   // Account Deletion request
   const handleDeleteRequest = () => {
     setConfirmAction({
-      title: "Request Account Deletion",
+      title: 'Request Account Deletion',
       message:
-        "This will submit a ticket to delete your personal data permanently. This action is irreversible. Proceed?",
+        'This will submit a ticket to delete your personal data permanently. This action is irreversible. Proceed?',
       onConfirm: async () => {
         try {
-          await apiClient.post("/profile/delete-request");
-          showToast("Deletion request submitted to admin review.", "success");
+          await apiClient.post('/profile/delete-request');
+          showToast('Deletion request submitted to admin review.', 'success');
         } catch (err: any) {
-          showToast(err.response?.data?.message || "Action failed", "error");
+          showToast(err.response?.data?.message || 'Action failed', 'error');
         } finally {
           setConfirmAction(null);
         }
@@ -486,13 +445,10 @@ export default function PersonalProfilePage() {
   // Data export trigger
   const handleExportData = async () => {
     try {
-      showToast(
-        "Data aggregation started. Download beginning shortly...",
-        "info",
-      );
-      window.open(`${apiClient.defaults.baseURL}/profile/export`, "_blank");
+      showToast('Data aggregation started. Download beginning shortly...', 'info');
+      window.open(`${apiClient.defaults.baseURL}/profile/export`, '_blank');
     } catch (err) {
-      showToast("Failed to initiate profile data export", "error");
+      showToast('Failed to initiate profile data export', 'error');
     }
   };
 
@@ -502,18 +458,14 @@ export default function PersonalProfilePage() {
       {toast && (
         <div
           className={`fixed top-5 right-5 z-50 flex items-center gap-3 px-4 py-3 rounded-2xl border shadow-lg transition duration-300 animate-slide-in ${
-            toast.type === "success"
-              ? "bg-emerald-50 text-emerald-800 border-emerald-200"
-              : toast.type === "error"
-                ? "bg-rose-50 text-rose-800 border-rose-200"
-                : "bg-indigo-50 text-indigo-800 border-indigo-200"
+            toast.type === 'success'
+              ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
+              : toast.type === 'error'
+                ? 'bg-rose-50 text-rose-800 border-rose-200'
+                : 'bg-indigo-50 text-indigo-800 border-indigo-200'
           }`}
         >
-          {toast.type === "success" ? (
-            <CheckCircle size={18} />
-          ) : (
-            <AlertTriangle size={18} />
-          )}
+          {toast.type === 'success' ? <CheckCircle size={18} /> : <AlertTriangle size={18} />}
           <span className="text-sm font-semibold">{toast.message}</span>
         </div>
       )}
@@ -558,7 +510,7 @@ export default function PersonalProfilePage() {
                     className="h-full w-full object-cover"
                   />
                 ) : (
-                  profile?.name?.substring(0, 2).toUpperCase() || "US"
+                  profile?.name?.substring(0, 2).toUpperCase() || 'US'
                 )}
               </div>
               <div
@@ -571,10 +523,10 @@ export default function PersonalProfilePage() {
             <div>
               <div className="flex items-center gap-3">
                 <h2 className="text-2xl font-bold tracking-tight text-text">
-                  {profile?.name || "Account Profile"}
+                  {profile?.name || 'Account Profile'}
                 </h2>
                 <span className="px-2 py-0.5 rounded-full text-xs font-bold bg-emerald-50 text-emerald-600 border border-emerald-100 uppercase">
-                  {profile?.status || "Active"}
+                  {profile?.status || 'Active'}
                 </span>
               </div>
               <p className="mt-1 text-sm text-text-light">{profile?.email}</p>
@@ -588,10 +540,8 @@ export default function PersonalProfilePage() {
                   </span>
                 ))}
                 <span className="bg-muted text-text-light px-2.5 py-0.5 rounded-full font-semibold">
-                  Member since:{" "}
-                  {profile?.createdAt
-                    ? new Date(profile.createdAt).toLocaleDateString()
-                    : ""}
+                  Member since:{' '}
+                  {profile?.createdAt ? new Date(profile.createdAt).toLocaleDateString() : ''}
                 </span>
               </div>
             </div>
@@ -678,9 +628,7 @@ export default function PersonalProfilePage() {
                   type="text"
                   required
                   value={profileForm.name}
-                  onChange={(e) =>
-                    setProfileForm({ ...profileForm, name: e.target.value })
-                  }
+                  onChange={(e) => setProfileForm({ ...profileForm, name: e.target.value })}
                   className="w-full px-3.5 py-2 border border-border rounded-xl bg-background text-sm outline-none"
                 />
               </div>
@@ -691,9 +639,7 @@ export default function PersonalProfilePage() {
                 <input
                   type="text"
                   value={profileForm.country}
-                  onChange={(e) =>
-                    setProfileForm({ ...profileForm, country: e.target.value })
-                  }
+                  onChange={(e) => setProfileForm({ ...profileForm, country: e.target.value })}
                   placeholder="e.g. Canada"
                   className="w-full px-3.5 py-2 border border-border rounded-xl bg-background text-sm outline-none"
                 />
@@ -705,9 +651,7 @@ export default function PersonalProfilePage() {
                 disabled={actionLoading}
                 className="px-4 py-2 bg-primary hover:bg-primary-dark text-white rounded-xl text-xs font-bold cursor-pointer transition flex items-center gap-1"
               >
-                {actionLoading && (
-                  <RotateCw className="animate-spin" size={12} />
-                )}
+                {actionLoading && <RotateCw className="animate-spin" size={12} />}
                 Save Details
               </button>
               <button
@@ -765,12 +709,10 @@ export default function PersonalProfilePage() {
         ) : (
           <>
             {/* 1. Overview */}
-            {activeTab === "overview" && profile && (
+            {activeTab === 'overview' && profile && (
               <div className="space-y-6">
                 <div>
-                  <h3 className="text-lg font-bold text-text">
-                    Account Summary
-                  </h3>
+                  <h3 className="text-lg font-bold text-text">Account Summary</h3>
                   <p className="text-xs text-text-light">
                     Overview of your registered personal and corporate data.
                   </p>
@@ -778,10 +720,10 @@ export default function PersonalProfilePage() {
                 <div className="grid gap-6 md:grid-cols-2">
                   <div className="space-y-4">
                     {[
-                      { label: "Full Name", value: profile.name },
-                      { label: "Email Address", value: profile.email },
+                      { label: 'Full Name', value: profile.name },
+                      { label: 'Email Address', value: profile.email },
                       {
-                        label: "Account Type",
+                        label: 'Account Type',
                         value: profile.accountType.toUpperCase(),
                       },
                     ].map((item, idx) => (
@@ -798,21 +740,19 @@ export default function PersonalProfilePage() {
                   <div className="space-y-4">
                     {[
                       {
-                        label: "Company Name",
-                        value: profile.companyName || "N/A",
+                        label: 'Company Name',
+                        value: profile.companyName || 'N/A',
                       },
                       {
-                        label: "Country Origin",
+                        label: 'Country Origin',
                         value:
-                          typeof profile.country === "object"
+                          typeof profile.country === 'object'
                             ? (profile.country as any)?.name
-                            : profile.country || "N/A",
+                            : profile.country || 'N/A',
                       },
                       {
-                        label: "Email Verified",
-                        value: profile.emailVerified
-                          ? "Verified ✅"
-                          : "Unverified ⚠️",
+                        label: 'Email Verified',
+                        value: profile.emailVerified ? 'Verified ✅' : 'Unverified ⚠️',
                       },
                     ].map((item, idx) => (
                       <div key={idx} className="border-b border-border/60 pb-3">
@@ -830,14 +770,12 @@ export default function PersonalProfilePage() {
             )}
 
             {/* 2. Security */}
-            {activeTab === "security" && profile && (
+            {activeTab === 'security' && profile && (
               <div className="space-y-8">
                 {/* Password Change form */}
                 <div className="space-y-4 max-w-xl">
                   <div>
-                    <h3 className="text-lg font-bold text-text">
-                      Change Password
-                    </h3>
+                    <h3 className="text-lg font-bold text-text">Change Password</h3>
                     <p className="text-xs text-text-light font-medium">
                       Update your account access credentials regularly.
                     </p>
@@ -901,9 +839,7 @@ export default function PersonalProfilePage() {
                       disabled={actionLoading}
                       className="px-4 py-2 bg-primary hover:bg-primary-dark text-white rounded-xl text-xs font-bold transition flex items-center gap-1 cursor-pointer"
                     >
-                      {actionLoading && (
-                        <RotateCw className="animate-spin" size={12} />
-                      )}
+                      {actionLoading && <RotateCw className="animate-spin" size={12} />}
                       Update Password
                     </button>
                   </form>
@@ -912,13 +848,11 @@ export default function PersonalProfilePage() {
             )}
 
             {/* 3. Sessions & Devices */}
-            {activeTab === "sessions" && (
+            {activeTab === 'sessions' && (
               <div className="space-y-6">
                 <div className="flex items-center justify-between border-b border-border pb-4">
                   <div>
-                    <h3 className="text-lg font-bold text-text">
-                      Active Login Sessions
-                    </h3>
+                    <h3 className="text-lg font-bold text-text">Active Login Sessions</h3>
                     <p className="text-xs text-text-light">
                       Current login access keys active for your account.
                     </p>
@@ -942,7 +876,7 @@ export default function PersonalProfilePage() {
                       <div>
                         <div className="flex items-center justify-between">
                           <span className="font-bold text-sm text-text leading-snug">
-                            {s.userAgent || "Web Browser"}
+                            {s.userAgent || 'Web Browser'}
                           </span>
                           {s.isCurrent && (
                             <span className="px-1.5 py-0.5 rounded-full text-[9px] font-bold bg-emerald-100 text-emerald-600">
@@ -996,7 +930,7 @@ export default function PersonalProfilePage() {
                             <Smartphone size={18} className="text-text-light" />
                             <div>
                               <span className="font-bold text-text block">
-                                {d.deviceName || "Personal Device"}
+                                {d.deviceName || 'Personal Device'}
                               </span>
                               <span className="text-text-light block">
                                 OS: {d.osName} • Browser: {d.browserName}
@@ -1004,12 +938,9 @@ export default function PersonalProfilePage() {
                             </div>
                           </div>
                           <div className="text-right">
-                            <span className="text-text-light block">
-                              IP: {d.lastIpAddress}
-                            </span>
+                            <span className="text-text-light block">IP: {d.lastIpAddress}</span>
                             <span className="text-[10px] text-text-light block">
-                              Last Active:{" "}
-                              {new Date(d.lastActiveAt).toLocaleDateString()}
+                              Last Active: {new Date(d.lastActiveAt).toLocaleDateString()}
                             </span>
                           </div>
                         </div>
@@ -1021,12 +952,10 @@ export default function PersonalProfilePage() {
             )}
 
             {/* 4. Preferences */}
-            {activeTab === "preferences" && (
+            {activeTab === 'preferences' && (
               <div className="space-y-6 max-w-xl">
                 <div>
-                  <h3 className="text-lg font-bold text-text">
-                    Notification Preferences
-                  </h3>
+                  <h3 className="text-lg font-bold text-text">Notification Preferences</h3>
                   <p className="text-xs text-text-light">
                     Configure notifications for different channel updates.
                   </p>
@@ -1035,46 +964,40 @@ export default function PersonalProfilePage() {
                 <div className="space-y-3">
                   {[
                     {
-                      key: "email",
-                      label: "Email Alerts",
+                      key: 'email',
+                      label: 'Email Alerts',
                       description:
-                        "Receive transaction alerts and account confirmations in your inbox.",
+                        'Receive transaction alerts and account confirmations in your inbox.',
                     },
                     {
-                      key: "push",
-                      label: "Push Notifications",
-                      description:
-                        "Get real-time browser action alerts immediately.",
+                      key: 'push',
+                      label: 'Push Notifications',
+                      description: 'Get real-time browser action alerts immediately.',
                     },
                     {
-                      key: "sms",
-                      label: "SMS Messages",
-                      description:
-                        "Deliver urgent alerts directly to your phone.",
+                      key: 'sms',
+                      label: 'SMS Messages',
+                      description: 'Deliver urgent alerts directly to your phone.',
                     },
                     {
-                      key: "marketing",
-                      label: "Marketing Emails",
-                      description:
-                        "Weekly campaigns, offers, and platform enhancements.",
+                      key: 'marketing',
+                      label: 'Marketing Emails',
+                      description: 'Weekly campaigns, offers, and platform enhancements.',
                     },
                     {
-                      key: "security",
-                      label: "Security & Login Alerts",
-                      description:
-                        "Crucial sign-in logs, password updates, and login alerts.",
+                      key: 'security',
+                      label: 'Security & Login Alerts',
+                      description: 'Crucial sign-in logs, password updates, and login alerts.',
                     },
                     {
-                      key: "tender",
-                      label: "RFP / Tender Updates",
-                      description:
-                        "New match alerts, invitations, and bidding activity updates.",
+                      key: 'tender',
+                      label: 'RFP / Tender Updates',
+                      description: 'New match alerts, invitations, and bidding activity updates.',
                     },
                     {
-                      key: "newsletter",
-                      label: "Monthly Newsletter",
-                      description:
-                        "Monthly insights and bid statistics analysis digests.",
+                      key: 'newsletter',
+                      label: 'Monthly Newsletter',
+                      description: 'Monthly insights and bid statistics analysis digests.',
                     },
                   ].map((pref) => (
                     <div
@@ -1082,9 +1005,7 @@ export default function PersonalProfilePage() {
                       className="flex items-start justify-between p-3 border border-border/60 rounded-xl bg-background/20"
                     >
                       <div className="space-y-0.5">
-                        <span className="font-bold text-sm text-text block">
-                          {pref.label}
-                        </span>
+                        <span className="font-bold text-sm text-text block">{pref.label}</span>
                         <span className="text-xs text-text-light block leading-normal">
                           {pref.description}
                         </span>
@@ -1092,11 +1013,7 @@ export default function PersonalProfilePage() {
                       <label className="relative inline-flex items-center cursor-pointer mt-1">
                         <input
                           type="checkbox"
-                          checked={
-                            preferences[
-                              pref.key as keyof NotificationPreferences
-                            ]
-                          }
+                          checked={preferences[pref.key as keyof NotificationPreferences]}
                           onChange={(e) =>
                             handlePreferenceChange(
                               pref.key as keyof NotificationPreferences,
@@ -1114,12 +1031,10 @@ export default function PersonalProfilePage() {
             )}
 
             {/* 5. Subscription */}
-            {activeTab === "subscription" && subscription && (
+            {activeTab === 'subscription' && subscription && (
               <div className="space-y-6">
                 <div>
-                  <h3 className="text-lg font-bold text-text">
-                    Subscription Plan
-                  </h3>
+                  <h3 className="text-lg font-bold text-text">Subscription Plan</h3>
                   <p className="text-xs text-text-light">
                     Current tier subscription and billing range.
                   </p>
@@ -1131,27 +1046,23 @@ export default function PersonalProfilePage() {
                       Current Plan
                     </span>
                     <h4 className="text-2xl font-bold text-indigo-600 dark:text-indigo-400 mt-1">
-                      {subscription.plan?.name || "Trial Account"}
+                      {subscription.plan?.name || 'Trial Account'}
                     </h4>
                     {subscription.plan && (
                       <p className="text-xs text-text-light mt-1 font-semibold">
-                        Rate: ${subscription.plan.price} /{" "}
-                        {subscription.plan.billingInterval}
+                        Rate: ${subscription.plan.price} / {subscription.plan.billingInterval}
                       </p>
                     )}
                   </div>
                   <div className="text-xs font-semibold text-text-light space-y-1 sm:text-right">
                     <div>
-                      Status:{" "}
+                      Status:{' '}
                       <span className="text-emerald-500 font-bold uppercase">
                         {subscription.status}
                       </span>
                     </div>
                     {subscription.expiresAt && (
-                      <div>
-                        Expires:{" "}
-                        {new Date(subscription.expiresAt).toLocaleDateString()}
-                      </div>
+                      <div>Expires: {new Date(subscription.expiresAt).toLocaleDateString()}</div>
                     )}
                   </div>
                 </div>
@@ -1159,12 +1070,10 @@ export default function PersonalProfilePage() {
             )}
 
             {/* 6. Activity & Audits */}
-            {activeTab === "activity" && (
+            {activeTab === 'activity' && (
               <div className="space-y-6">
                 <div>
-                  <h3 className="text-lg font-bold text-text">
-                    Personal Log Audit History
-                  </h3>
+                  <h3 className="text-lg font-bold text-text">Personal Log Audit History</h3>
                   <p className="text-xs text-text-light">
                     Access audit logs to review logins and profile interactions.
                   </p>
@@ -1176,9 +1085,7 @@ export default function PersonalProfilePage() {
                       Activity Events
                     </h4>
                     {activities.length === 0 ? (
-                      <p className="text-xs text-text-light italic">
-                        No active events logged.
-                      </p>
+                      <p className="text-xs text-text-light italic">No active events logged.</p>
                     ) : (
                       activities.map((a) => (
                         <div
@@ -1206,9 +1113,7 @@ export default function PersonalProfilePage() {
                       Security Audit History
                     </h4>
                     {securityLogs.length === 0 ? (
-                      <p className="text-xs text-text-light italic">
-                        No security history logs.
-                      </p>
+                      <p className="text-xs text-text-light italic">No security history logs.</p>
                     ) : (
                       securityLogs.map((s) => (
                         <div
@@ -1222,8 +1127,7 @@ export default function PersonalProfilePage() {
                             </span>
                           </div>
                           <span className="text-[10px] text-text-light block">
-                            IP: {s.ipAddress || "Internal"} • Agent:{" "}
-                            {s.userAgent || "Unknown"}
+                            IP: {s.ipAddress || 'Internal'} • Agent: {s.userAgent || 'Unknown'}
                           </span>
                         </div>
                       ))
@@ -1234,17 +1138,15 @@ export default function PersonalProfilePage() {
             )}
 
             {/* 7. Privacy & Account Controls */}
-            {activeTab === "privacy" && (
+            {activeTab === 'privacy' && (
               <div className="space-y-8">
                 {/* Data Change Request */}
                 <div className="space-y-4 max-w-xl">
                   <div>
-                    <h3 className="text-lg font-bold text-text">
-                      Request Data Correction
-                    </h3>
+                    <h3 className="text-lg font-bold text-text">Request Data Correction</h3>
                     <p className="text-xs text-text-light font-medium">
-                      To modify locked attributes (e.g. Email, Company
-                      Registration, Tax ID), submit a change request ticket.
+                      To modify locked attributes (e.g. Email, Company Registration, Tax ID), submit
+                      a change request ticket.
                     </p>
                   </div>
                   <form
@@ -1258,15 +1160,11 @@ export default function PersonalProfilePage() {
                         </label>
                         <select
                           value={changeRequestField}
-                          onChange={(e) =>
-                            setChangeRequestField(e.target.value)
-                          }
+                          onChange={(e) => setChangeRequestField(e.target.value)}
                           className="w-full px-3 py-1.5 border border-border rounded-lg bg-background text-xs font-semibold outline-none"
                         >
                           <option value="email">Email Address</option>
-                          <option value="companyName">
-                            Company Legal Name
-                          </option>
+                          <option value="companyName">Company Legal Name</option>
                           <option value="taxId">Government ID / Tax ID</option>
                         </select>
                       </div>
@@ -1278,9 +1176,7 @@ export default function PersonalProfilePage() {
                           type="text"
                           required
                           value={changeRequestValue}
-                          onChange={(e) =>
-                            setChangeRequestValue(e.target.value)
-                          }
+                          onChange={(e) => setChangeRequestValue(e.target.value)}
                           className="w-full px-3 py-1.5 border border-border rounded-lg bg-background text-xs outline-none"
                         />
                       </div>
@@ -1315,23 +1211,22 @@ export default function PersonalProfilePage() {
                       Connected Accounts & OAuth
                     </h3>
                     <p className="text-xs text-text-light">
-                      Manage sign-in integrations with external OAuth
-                      authentication providers.
+                      Manage sign-in integrations with external OAuth authentication providers.
                     </p>
                   </div>
                   <div className="space-y-2">
                     {[
                       {
-                        provider: "Google",
-                        desc: "Sign in with your Google Workspace profile.",
+                        provider: 'Google',
+                        desc: 'Sign in with your Google Workspace profile.',
                       },
                       {
-                        provider: "Microsoft",
-                        desc: "Connect Azure Active Directory profile.",
+                        provider: 'Microsoft',
+                        desc: 'Connect Azure Active Directory profile.',
                       },
                       {
-                        provider: "GitHub",
-                        desc: "Enable developer account sign-in mapping.",
+                        provider: 'GitHub',
+                        desc: 'Enable developer account sign-in mapping.',
                       },
                     ].map((app) => (
                       <div
@@ -1364,8 +1259,7 @@ export default function PersonalProfilePage() {
                       Danger Zone
                     </h3>
                     <p className="text-xs text-text-light">
-                      Deactivate or request permanent erasure of your personal
-                      account.
+                      Deactivate or request permanent erasure of your personal account.
                     </p>
                   </div>
                   <div className="flex flex-wrap gap-3">
@@ -1387,23 +1281,18 @@ export default function PersonalProfilePage() {
             )}
 
             {/* 8. Timelines */}
-            {activeTab === "timeline" && (
+            {activeTab === 'timeline' && (
               <div className="space-y-6">
                 <div>
-                  <h3 className="text-lg font-bold text-text">
-                    Account Progress Timeline
-                  </h3>
+                  <h3 className="text-lg font-bold text-text">Account Progress Timeline</h3>
                   <p className="text-xs text-text-light">
-                    Personal account progress checkpoints and security
-                    milestones.
+                    Personal account progress checkpoints and security milestones.
                   </p>
                 </div>
 
                 <div className="relative pl-6 border-l-2 border-primary/20 space-y-6 max-w-xl">
                   {timeline.length === 0 ? (
-                    <p className="text-xs text-text-light italic pl-2">
-                      No timeline events found.
-                    </p>
+                    <p className="text-xs text-text-light italic pl-2">No timeline events found.</p>
                   ) : (
                     timeline.map((t, idx) => (
                       <div key={idx} className="relative space-y-1">
@@ -1414,9 +1303,7 @@ export default function PersonalProfilePage() {
                           <span className="text-xs text-text-light font-bold block">
                             {new Date(t.timestamp).toLocaleString()}
                           </span>
-                          <span className="text-sm font-bold text-text block">
-                            {t.title}
-                          </span>
+                          <span className="text-sm font-bold text-text block">{t.title}</span>
                           <p className="text-xs text-text-light leading-relaxed mt-0.5">
                             {t.description}
                           </p>

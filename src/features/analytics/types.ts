@@ -1,13 +1,7 @@
 export interface AnalyticsQuery {
   from?: string;
   to?: string;
-  granularity?:
-    | "hourly"
-    | "daily"
-    | "weekly"
-    | "monthly"
-    | "quarterly"
-    | "yearly";
+  granularity?: 'hourly' | 'daily' | 'weekly' | 'monthly' | 'quarterly' | 'yearly';
   country?: string;
   categoryId?: string;
   planId?: string;
@@ -43,7 +37,7 @@ export interface ScheduledReportFilters {
 
 export interface CreateScheduledReportInput {
   reportName: string;
-  frequency: "DAILY" | "WEEKLY" | "MONTHLY";
+  frequency: 'DAILY' | 'WEEKLY' | 'MONTHLY';
   timezone?: string;
   filters?: ScheduledReportFilters;
   recipients: {
@@ -56,14 +50,7 @@ export interface CreateScheduledReportInput {
 
 export interface RequestExportInput {
   exportType:
-    | "tenders"
-    | "bids"
-    | "financial"
-    | "users"
-    | "vendors"
-    | "traffic"
-    | "categories"
-    | "system";
+    'tenders' | 'bids' | 'financial' | 'users' | 'vendors' | 'traffic' | 'categories' | 'system';
   filters?: Record<string, any>;
 }
 
@@ -129,7 +116,7 @@ export interface DashboardLayout {
 
 export interface ActiveAlert {
   id: string;
-  severity: "info" | "warning" | "critical";
+  severity: 'info' | 'warning' | 'critical';
   title: string;
   description: string;
   triggeredAt: string;
@@ -140,7 +127,7 @@ export interface ExportJob {
   id: string;
   userId: string;
   exportType: string;
-  status: "PENDING" | "PROCESSING" | "COMPLETED" | "FAILED";
+  status: 'PENDING' | 'PROCESSING' | 'COMPLETED' | 'FAILED';
   downloadUrl?: string | null;
   createdAt: string;
   completedAt?: string | null;
@@ -149,7 +136,7 @@ export interface ExportJob {
 export interface ScheduledReport {
   id: string;
   reportName: string;
-  frequency: "DAILY" | "WEEKLY" | "MONTHLY";
+  frequency: 'DAILY' | 'WEEKLY' | 'MONTHLY';
   timezone: string;
   filters: ScheduledReportFilters;
   recipients: {

@@ -1,7 +1,7 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { categoryApi } from "./api";
-import { categoryQueryKeys } from "./keys";
+import { categoryApi } from './api';
+import { categoryQueryKeys } from './keys';
 
 import type {
   BatchCategoryItem,
@@ -10,9 +10,9 @@ import type {
   CreateCategoryInput,
   SubmitCategoryReviewInput,
   UpdateCategoryInput,
-} from "../types";
-import type { ErrorCode } from "@/lib/errors/constants";
-import { AppError } from "@/lib/errors/AppError";
+} from '../types';
+import type { ErrorCode } from '@/lib/errors/constants';
+import { AppError } from '@/lib/errors/AppError';
 
 // ─── Query Hooks ─────────────────────────────────────────────────────────────
 
@@ -141,13 +141,7 @@ export function useUpdateCategory() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({
-      id,
-      input,
-    }: {
-      id: string;
-      input: UpdateCategoryInput;
-    }) => {
+    mutationFn: async ({ id, input }: { id: string; input: UpdateCategoryInput }) => {
       const { data } = await categoryApi.updateCategory(id, input);
       if (!data.success) {
         throw new AppError(data.message, 400, data.error as ErrorCode);
@@ -187,13 +181,7 @@ export function useSubmitCategoryReview() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({
-      id,
-      input,
-    }: {
-      id: string;
-      input: SubmitCategoryReviewInput;
-    }) => {
+    mutationFn: async ({ id, input }: { id: string; input: SubmitCategoryReviewInput }) => {
       const { data } = await categoryApi.submitCategoryReview(id, input);
       if (!data.success) {
         throw new AppError(data.message, 400, data.error as ErrorCode);
@@ -212,17 +200,8 @@ export function useAssignCategoryReviewer() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({
-      id,
-      reviewerIds,
-    }: {
-      id: string;
-      reviewerIds: string[];
-    }) => {
-      const { data } = await categoryApi.assignCategoryReviewer(
-        id,
-        reviewerIds,
-      );
+    mutationFn: async ({ id, reviewerIds }: { id: string; reviewerIds: string[] }) => {
+      const { data } = await categoryApi.assignCategoryReviewer(id, reviewerIds);
       if (!data.success) {
         throw new AppError(data.message, 400, data.error as ErrorCode);
       }
@@ -240,13 +219,7 @@ export function useReviewCategoryDecision() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({
-      id,
-      input,
-    }: {
-      id: string;
-      input: CategoryDecisionInput;
-    }) => {
+    mutationFn: async ({ id, input }: { id: string; input: CategoryDecisionInput }) => {
       const { data } = await categoryApi.reviewCategoryDecision(id, input);
       if (!data.success) {
         throw new AppError(data.message, 400, data.error as ErrorCode);

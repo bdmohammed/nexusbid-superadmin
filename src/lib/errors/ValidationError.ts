@@ -1,5 +1,3 @@
-// src/lib/errors/ValidationError.ts
-
 import { AppError } from "./AppError";
 import { ERROR_CODES } from "./constants";
 

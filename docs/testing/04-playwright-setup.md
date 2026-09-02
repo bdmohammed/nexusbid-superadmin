@@ -10,8 +10,8 @@ This guide details the setup for **Playwright** in **`rfpnexa-admin`** for End-t
 
 To maintain fast CI pipeline turnaround times on PRs while guaranteeing cross-browser compliance:
 
-* **PR Gate (Fast Pass):** Executes exclusively against **Chromium**. Required to pass before PR merge.
-* **Nightly & Main Branch:** Executes across **Chromium, Firefox, WebKit (Safari), and Mobile Chrome**.
+- **PR Gate (Fast Pass):** Executes exclusively against **Chromium**. Required to pass before PR merge.
+- **Nightly & Main Branch:** Executes across **Chromium, Firefox, WebKit (Safari), and Mobile Chrome**.
 
 ```bash
 # PR Fast Run (Chromium only)

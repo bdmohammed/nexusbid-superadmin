@@ -1,24 +1,24 @@
-import { create } from "zustand";
+import { create } from 'zustand';
 
 export type ModalType =
-  | "create-user"
-  | "edit-user"
-  | "delete-user"
-  | "create-role"
-  | "edit-role"
-  | "delete-role"
-  | "assign-role"
-  | "confirm"
-  | "custom";
+  | 'create-user'
+  | 'edit-user'
+  | 'delete-user'
+  | 'create-role'
+  | 'edit-role'
+  | 'delete-role'
+  | 'assign-role'
+  | 'confirm'
+  | 'custom';
 
 interface ModalPayloadMap {
-  "create-user": undefined;
-  "edit-user": { id: string };
-  "delete-user": { id: string };
-  "create-role": undefined;
-  "edit-role": { id: string };
-  "delete-role": { id: string };
-  "assign-role": { userId: string };
+  'create-user': undefined;
+  'edit-user': { id: string };
+  'delete-user': { id: string };
+  'create-role': undefined;
+  'edit-role': { id: string };
+  'delete-role': { id: string };
+  'assign-role': { userId: string };
   confirm: {
     title: string;
     description: string;
@@ -46,10 +46,7 @@ interface ModalStore {
   /**
    * Open a modal.
    */
-  open: <TModal extends ModalType>(
-    modal: TModal,
-    data?: ModalPayloadMap[TModal],
-  ) => void;
+  open: <TModal extends ModalType>(modal: TModal, data?: ModalPayloadMap[TModal]) => void;
 
   /**
    * Close the modal.

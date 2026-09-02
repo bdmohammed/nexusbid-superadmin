@@ -1,4 +1,4 @@
-import type { Tender } from "@/types";
+import type { Tender } from '@/types';
 
 export interface TenderQueryDto {
   page?: number;
@@ -8,7 +8,7 @@ export interface TenderQueryDto {
   stateId?: string;
   minPriceCents?: number;
   maxPriceCents?: number;
-  submissionType?: "digital" | "physical" | "both";
+  submissionType?: 'digital' | 'physical' | 'both';
 }
 
 export interface TenderDetailsResponse {
@@ -32,8 +32,8 @@ export interface TenderSearchQueryDto {
   budgetMax?: number;
   page?: number;
   limit?: number;
-  sort?: "createdAt" | "closingDate" | "estimatedBudget";
-  order?: "ASC" | "DESC";
+  sort?: 'createdAt' | 'closingDate' | 'estimatedBudget';
+  order?: 'ASC' | 'DESC';
 }
 
 export interface CreateTenderDto {
@@ -135,11 +135,11 @@ export interface SubmitReviewCommentDto {
 
 export interface TenderCommitteeDto {
   userId: string;
-  role: "Chairperson" | "Evaluator" | "Observer";
+  role: 'Chairperson' | 'Evaluator' | 'Observer';
 }
 
 export interface SubmitEvaluationDto {
-  evaluationType: "technical" | "financial" | "overall";
+  evaluationType: 'technical' | 'financial' | 'overall';
   criteriaName: string;
   weight: number;
   score: number;
@@ -160,7 +160,7 @@ export interface TenderInvitationDto {
 }
 
 export interface TenderTemplateDto {
-  templateScope: "department" | "organization" | "personal";
+  templateScope: 'department' | 'organization' | 'personal';
   departmentId?: string;
   title: string;
   description?: string;

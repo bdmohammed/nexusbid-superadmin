@@ -1,34 +1,32 @@
-"use client";
+'use client';
 
-import { Suspense, useCallback,useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { BarChart2, Plus, TableProperties } from "lucide-react";
+import { Suspense, useCallback, useEffect, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { BarChart2, Plus, TableProperties } from 'lucide-react';
 
-import type { Tender } from "@/types";
-import { TendersListView } from "@/components/tender/TendersListView";
-import { TendersStatsView } from "@/components/tender/TendersStatsView";
-import Button from "@/components/ui/Button";
-import { tenderApi } from "@/features/tenders";
+import type { Tender } from '@/types';
+import { TendersListView } from '@/components/tender/TendersListView';
+import { TendersStatsView } from '@/components/tender/TendersStatsView';
+import Button from '@/components/ui/Button';
+import { tenderApi } from '@/features/tenders';
 
 function TendersPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const viewParam = searchParams.get("view");
+  const viewParam = searchParams.get('view');
 
   // Tab State: "stats" | "list"
-  const [activeTab, setActiveTab] = useState<"stats" | "list">(
-    viewParam && ["stats", "list"].includes(viewParam)
-      ? (viewParam as any)
-      : "stats",
+  const [activeTab, setActiveTab] = useState<'stats' | 'list'>(
+    viewParam && ['stats', 'list'].includes(viewParam) ? (viewParam as any) : 'stats',
   );
 
   useEffect(() => {
-    if (viewParam && ["stats", "list"].includes(viewParam)) {
+    if (viewParam && ['stats', 'list'].includes(viewParam)) {
       setActiveTab(viewParam as any);
     }
   }, [viewParam]);
 
-  const handleTabChange = (tab: "stats" | "list") => {
+  const handleTabChange = (tab: 'stats' | 'list') => {
     setActiveTab(tab);
     router.push(`/tenders?view=${tab}`, { scroll: false });
   };
@@ -46,9 +44,7 @@ function TendersPageContent() {
         setTenders(res.data.data);
       }
     } catch (err) {
-      console.warn(
-        "Failed to connect to local database engine, using rich memory seed.",
-      );
+      console.warn('Failed to connect to local database engine, using rich memory seed.');
     } finally {
       setLoading(false);
     }
@@ -74,16 +70,13 @@ function TendersPageContent() {
       {/* Header Navigation Bar */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-3xl font-extrabold tracking-tight">
-            Procurement Tenders
-          </h1>
+          <h1 className="text-3xl font-extrabold tracking-tight">Procurement Tenders</h1>
           <p className="mt-1 text-text-light">
-            Central Command for tender creation, approvals, versions comparator,
-            and evaluations.
+            Central Command for tender creation, approvals, versions comparator, and evaluations.
           </p>
         </div>
 
-        <Button leftIcon={Plus} onClick={() => router.push("/tenders/create")}>
+        <Button leftIcon={Plus} onClick={() => router.push('/tenders/create')}>
           Create Tender Wizard
         </Button>
       </div>
@@ -91,22 +84,22 @@ function TendersPageContent() {
       {/* Main View Tabs (Stats / List) */}
       <div className="flex items-center gap-2 border-b border-border pb-3">
         <button
-          onClick={() => handleTabChange("stats")}
+          onClick={() => handleTabChange('stats')}
           className={`flex items-center gap-2 px-4 py-2 text-sm font-semibold rounded-xl transition duration-200 ${
-            activeTab === "stats"
-              ? "bg-primary text-white shadow-sm"
-              : "text-text-light hover:bg-surface hover:text-text"
+            activeTab === 'stats'
+              ? 'bg-primary text-white shadow-sm'
+              : 'text-text-light hover:bg-surface hover:text-text'
           }`}
         >
           <BarChart2 size={18} />
           <span>Tenders Stats</span>
         </button>
         <button
-          onClick={() => handleTabChange("list")}
+          onClick={() => handleTabChange('list')}
           className={`flex items-center gap-2 px-4 py-2 text-sm font-semibold rounded-xl transition duration-200 ${
-            activeTab === "list"
-              ? "bg-primary text-white shadow-sm"
-              : "text-text-light hover:bg-surface hover:text-text"
+            activeTab === 'list'
+              ? 'bg-primary text-white shadow-sm'
+              : 'text-text-light hover:bg-surface hover:text-text'
           }`}
         >
           <TableProperties size={18} />
@@ -118,12 +111,12 @@ function TendersPageContent() {
       </div>
 
       {/* Part 1: Stats View */}
-      {activeTab === "stats" && (
+      {activeTab === 'stats' && (
         <TendersStatsView tenders={tenders} totalBudgetSum={totalBudgetSum} />
       )}
 
       {/* Part 2: List View (AG Grid) */}
-      {activeTab === "list" && (
+      {activeTab === 'list' && (
         <TendersListView
           tenders={tenders}
           loading={loading}
@@ -137,11 +130,7 @@ function TendersPageContent() {
 
 export default function TendersPage() {
   return (
-    <Suspense
-      fallback={
-        <div className="p-6 text-sm text-text-light">Loading tenders...</div>
-      }
-    >
+    <Suspense fallback={<div className="p-6 text-sm text-text-light">Loading tenders...</div>}>
       <TendersPageContent />
     </Suspense>
   );

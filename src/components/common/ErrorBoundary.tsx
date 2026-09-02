@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { Component } from "react";
-import { AlertCircle, RefreshCw } from "lucide-react";
+import { Component } from 'react';
+import { AlertCircle, RefreshCw } from 'lucide-react';
 
-import type { ErrorInfo, ReactNode } from "react";
+import type { ErrorInfo, ReactNode } from 'react';
 
 interface Props {
   children?: ReactNode;
@@ -28,7 +28,7 @@ export default class ErrorBoundary extends Component<Props, State> {
   }
 
   public override componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error("ErrorBoundary caught an error:", error, errorInfo);
+    console.error('ErrorBoundary caught an error:', error, errorInfo);
     if (this.props.onError) {
       this.props.onError(error, errorInfo);
     }
@@ -54,9 +54,7 @@ export default class ErrorBoundary extends Component<Props, State> {
             </div>
 
             <div className="flex-1 min-w-0">
-              <h3 className="text-lg font-bold text-[var(--foreground)]">
-                Failed to load section
-              </h3>
+              <h3 className="text-lg font-bold text-[var(--foreground)]">Failed to load section</h3>
 
               <p className="mt-1 text-sm text-[var(--muted)]">
                 An error occurred while loading this part of the page.

@@ -1,7 +1,7 @@
-import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 
-export type ThemeMode = "light" | "dark" | "system";
+export type ThemeMode = 'light' | 'dark' | 'system';
 
 interface ThemeStore {
   theme: ThemeMode;
@@ -14,11 +14,11 @@ interface ThemeStore {
 }
 
 const applyTheme = (theme: ThemeMode) => {
-  document.documentElement.classList.toggle("dark", theme === "dark");
+  document.documentElement.classList.toggle('dark', theme === 'dark');
 };
 
 const initialState = {
-  theme: "system" as ThemeMode,
+  theme: 'system' as ThemeMode,
   mounted: false,
 };
 
@@ -28,15 +28,13 @@ export const useThemeStore = create<ThemeStore>()(
       ...initialState,
 
       initialize: () => {
-        const {theme} = get();
+        const { theme } = get();
 
         // First load: if nothing persisted yet, use system preference
-        if (!localStorage.getItem("theme-storage")) {
-          const prefersDark = window.matchMedia(
-            "(prefers-color-scheme: dark)",
-          ).matches;
+        if (!localStorage.getItem('theme-storage')) {
+          const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
 
-          const systemTheme: ThemeMode = prefersDark ? "dark" : "light";
+          const systemTheme: ThemeMode = prefersDark ? 'dark' : 'light';
 
           applyTheme(systemTheme);
 
@@ -61,7 +59,7 @@ export const useThemeStore = create<ThemeStore>()(
       },
 
       toggleTheme: () => {
-        const next = get().theme === "dark" ? "light" : "dark";
+        const next = get().theme === 'dark' ? 'light' : 'dark';
 
         applyTheme(next);
 
@@ -73,7 +71,7 @@ export const useThemeStore = create<ThemeStore>()(
       reset: () => set(initialState),
     }),
     {
-      name: "theme-storage",
+      name: 'theme-storage',
       partialize: (state) => ({
         theme: state.theme,
       }),

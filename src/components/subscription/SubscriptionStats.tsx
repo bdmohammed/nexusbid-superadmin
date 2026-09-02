@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useMemo } from "react";
+import { useMemo } from 'react';
 import {
   Activity,
   AlertCircle,
@@ -11,14 +11,14 @@ import {
   TrendingDown,
   TrendingUp,
   Users,
-} from "lucide-react";
-import { Area, AreaChart, ResponsiveContainer } from "recharts";
+} from 'lucide-react';
+import { Area, AreaChart, ResponsiveContainer } from 'recharts';
 
 interface StatCardProps {
   title: string;
   value: string;
   trend: string;
-  trendType: "success" | "danger";
+  trendType: 'success' | 'danger';
   subText: string;
   icon: any;
   chartData: { value: number }[];
@@ -33,7 +33,7 @@ function StatCard({
   icon: Icon,
   chartData,
 }: StatCardProps) {
-  const isSuccess = trendType === "success";
+  const isSuccess = trendType === 'success';
 
   return (
     <div className="relative overflow-hidden rounded-2xl border border-border bg-surface p-5 shadow-sm transition hover:shadow-md">
@@ -43,9 +43,7 @@ function StatCard({
         </div>
         <div
           className={`flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-semibold ${
-            isSuccess
-              ? "bg-emerald-500/10 text-emerald-500"
-              : "bg-red-500/10 text-red-500"
+            isSuccess ? 'bg-emerald-500/10 text-emerald-500' : 'bg-red-500/10 text-red-500'
           }`}
         >
           {isSuccess ? <TrendingUp size={12} /> : <TrendingDown size={12} />}
@@ -56,9 +54,7 @@ function StatCard({
       <div className="mt-4">
         <h3 className="text-sm font-semibold text-text-light">{title}</h3>
         <div className="mt-1 flex items-baseline gap-2">
-          <span className="text-2xl font-bold tracking-tight text-text">
-            {value}
-          </span>
+          <span className="text-2xl font-bold tracking-tight text-text">{value}</span>
         </div>
         <p className="mt-1 text-xs text-text-light">{subText}</p>
       </div>
@@ -66,26 +62,13 @@ function StatCard({
       {/* Sparkline overlay */}
       <div className="absolute bottom-0 left-0 right-0 h-10 w-full overflow-hidden opacity-60">
         <ResponsiveContainer width="100%" height="100%">
-          <AreaChart
-            data={chartData}
-            margin={{ top: 0, right: 0, left: 0, bottom: 0 }}
-          >
+          <AreaChart data={chartData} margin={{ top: 0, right: 0, left: 0, bottom: 0 }}>
             <defs>
-              <linearGradient
-                id={`grad-${title.replace(/\s+/g, "")}`}
-                x1="0"
-                y1="0"
-                x2="0"
-                y2="1"
-              >
-                <stop
-                  offset="0%"
-                  stopColor={isSuccess ? "#10b981" : "#ef4444"}
-                  stopOpacity={0.4}
-                />
+              <linearGradient id={`grad-${title.replace(/\s+/g, '')}`} x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor={isSuccess ? '#10b981' : '#ef4444'} stopOpacity={0.4} />
                 <stop
                   offset="100%"
-                  stopColor={isSuccess ? "#10b981" : "#ef4444"}
+                  stopColor={isSuccess ? '#10b981' : '#ef4444'}
                   stopOpacity={0.0}
                 />
               </linearGradient>
@@ -93,9 +76,9 @@ function StatCard({
             <Area
               type="monotone"
               dataKey="value"
-              stroke={isSuccess ? "#10b981" : "#ef4444"}
+              stroke={isSuccess ? '#10b981' : '#ef4444'}
               strokeWidth={1.5}
-              fill={`url(#grad-${title.replace(/\s+/g, "")})`}
+              fill={`url(#grad-${title.replace(/\s+/g, '')})`}
             />
           </AreaChart>
         </ResponsiveContainer>
@@ -104,7 +87,7 @@ function StatCard({
   );
 }
 
-import type { AdminUserStats } from "@/types";
+import type { AdminUserStats } from '@/types';
 
 interface SubscriptionStatsProps {
   userStats: AdminUserStats | undefined;
@@ -122,7 +105,7 @@ export default function SubscriptionStats({
       return [{ value: 0 }, { value: 0 }];
     }
     return revenueStats.map((item: any) => ({
-      value: parseInt(item.totalCents || "0", 10) / 100,
+      value: parseInt(item.totalCents || '0', 10) / 100,
     }));
   }, [revenueStats]);
 
@@ -131,7 +114,7 @@ export default function SubscriptionStats({
       return [{ value: 0 }, { value: 0 }];
     }
     return revenueStats.map((item: any) => ({
-      value: parseInt(item.count || "0", 10),
+      value: parseInt(item.count || '0', 10),
     }));
   }, [revenueStats]);
 
@@ -139,20 +122,20 @@ export default function SubscriptionStats({
     // 1. Total Revenue
     const totalCents =
       revenueStats?.reduce(
-        (acc: number, item: any) => acc + parseInt(item.totalCents || "0", 10),
+        (acc: number, item: any) => acc + parseInt(item.totalCents || '0', 10),
         0,
       ) || 0;
-    const totalRevenueStr = `$${(totalCents / 100).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    const totalRevenueStr = `$${(totalCents / 100).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
     // 2. Latest Month Revenue (for MRR estimate)
     const latestMonthRevenueCents =
       revenueStats && revenueStats.length > 0
-        ? parseInt(revenueStats[revenueStats.length - 1]?.totalCents || "0", 10)
+        ? parseInt(revenueStats[revenueStats.length - 1]?.totalCents || '0', 10)
         : 0;
-    const mrrStr = `$${(latestMonthRevenueCents / 100).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    const mrrStr = `$${(latestMonthRevenueCents / 100).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
     // 3. ARR estimate
-    const arrStr = `$${((latestMonthRevenueCents * 12) / 100).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    const arrStr = `$${((latestMonthRevenueCents * 12) / 100).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
     // 4. Active Subscriptions
     const activeSubscribers = userStats?.subscribed || 0;
@@ -169,67 +152,65 @@ export default function SubscriptionStats({
     // 8. ARPU (Average Revenue Per User)
     const activeSubsDiv = activeSubscribers || 1;
     const arpu =
-      latestMonthRevenueCents > 0
-        ? latestMonthRevenueCents / 100 / activeSubsDiv
-        : 114.46;
+      latestMonthRevenueCents > 0 ? latestMonthRevenueCents / 100 / activeSubsDiv : 114.46;
     const arpuStr = `$${arpu.toFixed(2)}`;
 
     // 9. LTV (Lifetime Value)
     const ltv = arpu / 0.024;
-    const ltvStr = `$${ltv.toLocaleString("en-US", { maximumFractionDigits: 2 })}`;
+    const ltvStr = `$${ltv.toLocaleString('en-US', { maximumFractionDigits: 2 })}`;
 
     return [
       {
-        title: "Total Revenue",
+        title: 'Total Revenue',
         value: totalRevenueStr,
-        trend: "+14.3%",
-        trendType: "success" as const,
-        subText: "Aggregate success transactions",
+        trend: '+14.3%',
+        trendType: 'success' as const,
+        subText: 'Aggregate success transactions',
         icon: DollarSign,
         chartData: revenueChartData,
       },
       {
-        title: "MRR",
+        title: 'MRR',
         value: mrrStr,
-        trend: "+8.2%",
-        trendType: "success" as const,
-        subText: "Latest period revenue",
+        trend: '+8.2%',
+        trendType: 'success' as const,
+        subText: 'Latest period revenue',
         icon: Activity,
         chartData: revenueChartData,
       },
       {
-        title: "ARR",
+        title: 'ARR',
         value: arrStr,
-        trend: "+15.6%",
-        trendType: "success" as const,
-        subText: "Projected annual run rate",
+        trend: '+15.6%',
+        trendType: 'success' as const,
+        subText: 'Projected annual run rate',
         icon: DollarSign,
         chartData: revenueChartData,
       },
       {
-        title: "Active Subscriptions",
+        title: 'Active Subscriptions',
         value: activeSubscribers.toLocaleString(),
-        trend: "+12.1%",
-        trendType: "success" as const,
+        trend: '+12.1%',
+        trendType: 'success' as const,
         subText: `${newThisMonth} new joins this month`,
         icon: Users,
         chartData: countChartData,
       },
       {
-        title: "New This Month",
+        title: 'New This Month',
         value: newThisMonth.toLocaleString(),
-        trend: "+24.0%",
-        trendType: "success" as const,
+        trend: '+24.0%',
+        trendType: 'success' as const,
         subText: `Registered in current billing period`,
         icon: Calendar,
         chartData: countChartData,
       },
       {
-        title: "Renewals This Month",
-        value: "92%",
-        trend: "+1.2%",
-        trendType: "success" as const,
-        subText: "Target rate: > 90%",
+        title: 'Renewals This Month',
+        value: '92%',
+        trend: '+1.2%',
+        trendType: 'success' as const,
+        subText: 'Target rate: > 90%',
         icon: Clock,
         chartData: [
           { value: 88 },
@@ -241,11 +222,11 @@ export default function SubscriptionStats({
         ],
       },
       {
-        title: "Expired",
+        title: 'Expired',
         value: expiredCount.toString(),
-        trend: "-4.2%",
-        trendType: "success" as const,
-        subText: "Suspended or expired plans",
+        trend: '-4.2%',
+        trendType: 'success' as const,
+        subText: 'Suspended or expired plans',
         icon: AlertCircle,
         chartData: [
           { value: 50 },
@@ -257,11 +238,11 @@ export default function SubscriptionStats({
         ],
       },
       {
-        title: "Trial Users",
+        title: 'Trial Users',
         value: trialUsers.toString(),
-        trend: "+18.5%",
-        trendType: "success" as const,
-        subText: "Pending subscription activation",
+        trend: '+18.5%',
+        trendType: 'success' as const,
+        subText: 'Pending subscription activation',
         icon: Users,
         chartData: [
           { value: 320 },
@@ -273,11 +254,11 @@ export default function SubscriptionStats({
         ],
       },
       {
-        title: "Churn Rate",
-        value: "2.4%",
-        trend: "-0.8%",
-        trendType: "success" as const,
-        subText: "Target benchmark: < 3.0%",
+        title: 'Churn Rate',
+        value: '2.4%',
+        trend: '-0.8%',
+        trendType: 'success' as const,
+        subText: 'Target benchmark: < 3.0%',
         icon: TrendingDown,
         chartData: [
           { value: 3.5 },
@@ -289,11 +270,11 @@ export default function SubscriptionStats({
         ],
       },
       {
-        title: "ARPU",
+        title: 'ARPU',
         value: arpuStr,
-        trend: "+3.2%",
-        trendType: "success" as const,
-        subText: "Avg revenue per subscriber",
+        trend: '+3.2%',
+        trendType: 'success' as const,
+        subText: 'Avg revenue per subscriber',
         icon: DollarSign,
         chartData: [
           { value: 108 },
@@ -305,11 +286,11 @@ export default function SubscriptionStats({
         ],
       },
       {
-        title: "Lifetime Value (LTV)",
+        title: 'Lifetime Value (LTV)',
         value: ltvStr,
-        trend: "+4.5%",
-        trendType: "success" as const,
-        subText: "Estimated subscriber LTV",
+        trend: '+4.5%',
+        trendType: 'success' as const,
+        subText: 'Estimated subscriber LTV',
         icon: Award,
         chartData: [
           { value: 1900 },
@@ -321,11 +302,11 @@ export default function SubscriptionStats({
         ],
       },
       {
-        title: "Failed Payments",
-        value: "0",
-        trend: "0.0%",
-        trendType: "success" as const,
-        subText: "Requires active dunning action",
+        title: 'Failed Payments',
+        value: '0',
+        trend: '0.0%',
+        trendType: 'success' as const,
+        subText: 'Requires active dunning action',
         icon: AlertCircle,
         chartData: [
           { value: 0 },

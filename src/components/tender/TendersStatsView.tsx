@@ -1,16 +1,9 @@
-"use client";
+'use client';
 
-import React from "react";
-import {
-  Briefcase,
-  CheckCircle,
-  Clock,
-  FileText,
-  Layers,
-  Users,
-} from "lucide-react";
+import React from 'react';
+import { Briefcase, CheckCircle, Clock, FileText, Layers, Users } from 'lucide-react';
 
-import type { Tender } from "@/types";
+import type { Tender } from '@/types';
 
 interface TendersStatsViewProps {
   tenders: Tender[];
@@ -22,35 +15,28 @@ function resolveTenderRow(raw: any) {
   if (raw.tender || raw.version !== undefined || raw.title) {
     const parentTender = raw.tender || {};
     return {
-      status: raw.status || "DRAFT",
-      publicationStatus:
-        parentTender.publicationStatus ||
-        raw.publicationStatus ||
-        "UNPUBLISHED",
+      status: raw.status || 'DRAFT',
+      publicationStatus: parentTender.publicationStatus || raw.publicationStatus || 'UNPUBLISHED',
       estimatedBudget: raw.estimatedBudget ?? 0,
     };
   }
   const ver = raw.activeVersion || {};
   return {
-    status: ver.status || "DRAFT",
-    publicationStatus: raw.publicationStatus || "UNPUBLISHED",
+    status: ver.status || 'DRAFT',
+    publicationStatus: raw.publicationStatus || 'UNPUBLISHED',
     estimatedBudget: ver.estimatedBudget ?? 0,
   };
 }
 
-export const TendersStatsView: React.FC<TendersStatsViewProps> = ({
-  tenders,
-  totalBudgetSum,
-}) => {
+export const TendersStatsView: React.FC<TendersStatsViewProps> = ({ tenders, totalBudgetSum }) => {
   const rows = tenders.map((t) => resolveTenderRow(t)).filter(Boolean);
 
-  const draftCount = rows.filter((r) => r?.status === "DRAFT").length;
+  const draftCount = rows.filter((r) => r?.status === 'DRAFT').length;
   const reviewCount = rows.filter(
-    (r) => r?.status === "UNDER_REVIEW" || r?.status === "REVIEW_ASSIGNED",
+    (r) => r?.status === 'UNDER_REVIEW' || r?.status === 'REVIEW_ASSIGNED',
   ).length;
   const publishedCount = rows.filter(
-    (r) =>
-      r?.publicationStatus === "PUBLISHED" || r?.publicationStatus === "OPEN",
+    (r) => r?.publicationStatus === 'PUBLISHED' || r?.publicationStatus === 'OPEN',
   ).length;
 
   return (
@@ -63,9 +49,7 @@ export const TendersStatsView: React.FC<TendersStatsViewProps> = ({
               <Briefcase size={20} />
             </div>
             <div>
-              <p className="text-xs font-medium text-text-light">
-                Total Tenders
-              </p>
+              <p className="text-xs font-medium text-text-light">Total Tenders</p>
               <h3 className="text-lg font-bold">{tenders.length}</h3>
             </div>
           </div>
@@ -89,9 +73,7 @@ export const TendersStatsView: React.FC<TendersStatsViewProps> = ({
               <Clock size={20} />
             </div>
             <div>
-              <p className="text-xs font-medium text-text-light">
-                Under Review
-              </p>
+              <p className="text-xs font-medium text-text-light">Under Review</p>
               <h3 className="text-lg font-bold">{reviewCount}</h3>
             </div>
           </div>
@@ -115,12 +97,8 @@ export const TendersStatsView: React.FC<TendersStatsViewProps> = ({
               <Layers size={20} />
             </div>
             <div>
-              <p className="text-xs font-medium text-text-light">
-                Total Budget
-              </p>
-              <h3 className="text-lg font-bold">
-                ${(totalBudgetSum / 1000000).toFixed(1)}M
-              </h3>
+              <p className="text-xs font-medium text-text-light">Total Budget</p>
+              <h3 className="text-lg font-bold">${(totalBudgetSum / 1000000).toFixed(1)}M</h3>
             </div>
           </div>
         </div>
@@ -131,9 +109,7 @@ export const TendersStatsView: React.FC<TendersStatsViewProps> = ({
               <Users size={20} />
             </div>
             <div>
-              <p className="text-xs font-medium text-text-light">
-                Total Bidders
-              </p>
+              <p className="text-xs font-medium text-text-light">Total Bidders</p>
               <h3 className="text-lg font-bold">12</h3>
             </div>
           </div>
@@ -149,25 +125,22 @@ export const TendersStatsView: React.FC<TendersStatsViewProps> = ({
           <div className="space-y-4">
             {[
               {
-                label: "Published & Active Bids",
+                label: 'Published & Active Bids',
                 count: publishedCount,
-                color: "bg-green-500",
+                color: 'bg-green-500',
               },
               {
-                label: "Draft & In Preparation",
+                label: 'Draft & In Preparation',
                 count: draftCount,
-                color: "bg-yellow-500",
+                color: 'bg-yellow-500',
               },
               {
-                label: "Governance Review & Submission",
+                label: 'Governance Review & Submission',
                 count: reviewCount,
-                color: "bg-orange-500",
+                color: 'bg-orange-500',
               },
             ].map((item) => {
-              const pct =
-                tenders.length > 0
-                  ? Math.round((item.count / tenders.length) * 100)
-                  : 0;
+              const pct = tenders.length > 0 ? Math.round((item.count / tenders.length) * 100) : 0;
               return (
                 <div key={item.label}>
                   <div className="flex justify-between text-xs font-semibold text-text-light mb-1.5">
@@ -194,23 +167,17 @@ export const TendersStatsView: React.FC<TendersStatsViewProps> = ({
           </h3>
           <div className="grid grid-cols-2 gap-4">
             <div className="p-4 rounded-xl bg-background border border-border space-y-1">
-              <p className="text-xs text-text-light font-medium">
-                Average Tender Value
-              </p>
+              <p className="text-xs text-text-light font-medium">Average Tender Value</p>
               <p className="text-xl font-bold text-text">
                 $
                 {tenders.length > 0
                   ? Math.round(totalBudgetSum / tenders.length).toLocaleString()
-                  : "0"}
+                  : '0'}
               </p>
             </div>
             <div className="p-4 rounded-xl bg-background border border-border space-y-1">
-              <p className="text-xs text-text-light font-medium">
-                Active Bidding Windows
-              </p>
-              <p className="text-xl font-bold text-green-600">
-                {publishedCount} Active
-              </p>
+              <p className="text-xs text-text-light font-medium">Active Bidding Windows</p>
+              <p className="text-xl font-bold text-green-600">{publishedCount} Active</p>
             </div>
           </div>
         </div>

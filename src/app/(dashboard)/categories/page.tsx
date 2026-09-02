@@ -1,23 +1,15 @@
 //@ts-nocheck
-"use client";
+'use client';
 
-import {
-  memo,
-  Suspense,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
-import { useRouter,useSearchParams } from "next/navigation";
-import { AgChartsEnterpriseModule } from "ag-charts-enterprise";
+import { memo, Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { AgChartsEnterpriseModule } from 'ag-charts-enterprise';
 import {
   AllCommunityModule,
   type ColDef,
   type GetContextMenuItemsParams,
   themeQuartz,
-} from "ag-grid-community";
+} from 'ag-grid-community';
 import {
   CellSelectionModule,
   ClipboardModule,
@@ -39,9 +31,9 @@ import {
   SparklinesModule,
   StatusBarModule,
   TreeDataModule,
-} from "ag-grid-enterprise";
-import { AgGridReact } from "ag-grid-react";
-import dayjs from "dayjs";
+} from 'ag-grid-enterprise';
+import { AgGridReact } from 'ag-grid-react';
+import dayjs from 'dayjs';
 import {
   CheckCircle2,
   FolderKanban,
@@ -50,20 +42,20 @@ import {
   RotateCw,
   Trash2,
   XCircle,
-} from "lucide-react";
-import { toast } from "sonner";
+} from 'lucide-react';
+import { toast } from 'sonner';
 
-import { CategoryFormDrawer } from "@/components/categories/CategoryFormDrawer";
+import { CategoryFormDrawer } from '@/components/categories/CategoryFormDrawer';
 import {
   CategoryReviewDecisionModal,
   SubmitCategoryReviewModal,
-} from "@/components/categories/CategoryGovernanceModals";
-import Button from "@/components/ui/Button";
-import { Toolbar } from "@/components/ui/Toolbar";
-import { useAuthStore } from "@/features/auth/store/store";
-import { categoryApi } from "@/features/categories/api/api";
-import { rbacApi } from "@/features/rbac/api/api";
-import { useThemeStore } from "@/store/theme.store";
+} from '@/components/categories/CategoryGovernanceModals';
+import Button from '@/components/ui/Button';
+import { Toolbar } from '@/components/ui/Toolbar';
+import { useAuthStore } from '@/features/auth/store/store';
+import { categoryApi } from '@/features/categories/api/api';
+import { rbacApi } from '@/features/rbac/api/api';
+import { useThemeStore } from '@/store/theme.store';
 
 const CommunityModule = [
   AllCommunityModule,
@@ -98,7 +90,7 @@ interface Category {
   name: string;
   slug: string;
   description: string | null;
-  status: "DRAFT" | "IN_REVIEW" | "APPROVED" | "PUBLISHED" | "ARCHIVED";
+  status: 'DRAFT' | 'IN_REVIEW' | 'APPROVED' | 'PUBLISHED' | 'ARCHIVED';
   parentId?: string | null;
   parentCategory?: { id: string; code: string; name: string } | null;
   activeVersionId?: string | null;
@@ -174,38 +166,29 @@ interface AdminUser {
 }
 
 type DrawerTab =
-  | "general"
-  | "hierarchy"
-  | "review"
-  | "comments"
-  | "versions"
-  | "activity"
-  | "usage";
+  'general' | 'hierarchy' | 'review' | 'comments' | 'versions' | 'activity' | 'usage';
 
 function CategoriesPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const viewParam = searchParams.get("view");
+  const viewParam = searchParams.get('view');
 
   const { theme } = useThemeStore();
-  const themeClass =
-    theme === "dark" ? "ag-theme-alpine-dark" : "ag-theme-alpine";
+  const themeClass = theme === 'dark' ? 'ag-theme-alpine-dark' : 'ag-theme-alpine';
   const gridRef = useRef<AgGridReact>(null as any);
 
   // Tab State: "stats" | "list"
-  const [activeTab, setActiveTab] = useState<"stats" | "list">(
-    viewParam && ["stats", "list"].includes(viewParam)
-      ? (viewParam as any)
-      : "stats",
+  const [activeTab, setActiveTab] = useState<'stats' | 'list'>(
+    viewParam && ['stats', 'list'].includes(viewParam) ? (viewParam as any) : 'stats',
   );
 
   useEffect(() => {
-    if (viewParam && ["stats", "list"].includes(viewParam)) {
+    if (viewParam && ['stats', 'list'].includes(viewParam)) {
       setActiveTab(viewParam as any);
     }
   }, [viewParam]);
 
-  const handleTabChange = (tab: "stats" | "list") => {
+  const handleTabChange = (tab: 'stats' | 'list') => {
     setActiveTab(tab);
     router.push(`/categories?view=${tab}`, { scroll: false });
   };
@@ -223,16 +206,10 @@ function CategoriesPageContent() {
 
   // Governance Drawer States
   const [drawerOpen, setDrawerOpen] = useState<boolean>(false);
-  const [drawerMode, setDrawerMode] = useState<"create" | "edit" | "view">(
-    "create",
-  );
-  const [drawerTab, setDrawerTab] = useState<DrawerTab>("general");
-  const [selectedCategory, setSelectedCategory] = useState<Category | null>(
-    null,
-  );
-  const [currentCategoryForm, setCurrentCategoryForm] = useState<
-    Partial<Category>
-  >({});
+  const [drawerMode, setDrawerMode] = useState<'create' | 'edit' | 'view'>('create');
+  const [drawerTab, setDrawerTab] = useState<DrawerTab>('general');
+  const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
+  const [currentCategoryForm, setCurrentCategoryForm] = useState<Partial<Category>>({});
 
   // Governance Details Data
   const [versions, setVersions] = useState<CategoryVersionItem[]>([]);
@@ -251,22 +228,18 @@ function CategoriesPageContent() {
   // Action States inside Drawer
   const [adminUsers, setAdminUsers] = useState<AdminUser[]>([]);
   const [selectedReviewerIds, setSelectedReviewerIds] = useState<string[]>([]);
-  const [reviewComment, setReviewComment] = useState<string>("");
-  const [decisionComment, setDecisionComment] = useState<string>("");
+  const [reviewComment, setReviewComment] = useState<string>('');
+  const [decisionComment, setDecisionComment] = useState<string>('');
   const [submitReviewOpen, setSubmitReviewOpen] = useState<boolean>(false);
   const [reviewActionOpen, setReviewActionOpen] = useState<boolean>(false);
-  const [reviewDecision, setReviewDecision] = useState<
-    "APPROVE" | "REJECT" | "CHANGES_REQUESTED"
-  >("APPROVE");
+  const [reviewDecision, setReviewDecision] = useState<'APPROVE' | 'REJECT' | 'CHANGES_REQUESTED'>(
+    'APPROVE',
+  );
   const currentUser = useAuthStore((state) => state.user);
-  const [submittingReviewAction, setSubmittingReviewAction] =
-    useState<boolean>(false);
+  const [submittingReviewAction, setSubmittingReviewAction] = useState<boolean>(false);
 
-  const showToast = (
-    message: string,
-    type: "success" | "error" = "success",
-  ) => {
-    if (type === "success") {
+  const showToast = (message: string, type: 'success' | 'error' = 'success') => {
+    if (type === 'success') {
       toast.success(message);
     } else {
       toast.error(message);
@@ -279,9 +252,9 @@ function CategoriesPageContent() {
     try {
       await fetchCategories();
       await fetchStats();
-      showToast("Category list refreshed successfully");
+      showToast('Category list refreshed successfully');
     } catch {
-      showToast("Failed to refresh category list", "error");
+      showToast('Failed to refresh category list', 'error');
     } finally {
       setTimeout(() => setRefreshing(false), 400);
     }
@@ -294,8 +267,7 @@ function CategoriesPageContent() {
       const res = await categoryApi.getCategories({ limit: 100 });
       const body = res.data;
       if (body?.success && body?.data) {
-        const rawList =
-          body.data.categories || (Array.isArray(body.data) ? body.data : []);
+        const rawList = body.data.categories || (Array.isArray(body.data) ? body.data : []);
         setCategories(rawList);
         if (body.data.stats) {
           setStats(body.data.stats);
@@ -303,10 +275,8 @@ function CategoriesPageContent() {
       }
     } catch (err: any) {
       showToast(
-        err?.response?.data?.message ||
-          err?.message ||
-          "Failed to load categories",
-        "error",
+        err?.response?.data?.message || err?.message || 'Failed to load categories',
+        'error',
       );
     } finally {
       setLoading(false);
@@ -328,15 +298,14 @@ function CategoriesPageContent() {
   const fetchAdminUsers = async () => {
     try {
       const res = await rbacApi.getAssignableUsers({
-        accountType: "admin",
-        status: "active",
-        permission: "category.manage",
+        accountType: 'admin',
+        status: 'active',
+        permission: 'category.manage',
         limit: 100,
       });
       const body = res.data;
       if (body?.success && body?.data) {
-        const uList =
-          body.data.users || (Array.isArray(body.data) ? body.data : []);
+        const uList = body.data.users || (Array.isArray(body.data) ? body.data : []);
         setAdminUsers(uList);
       }
     } catch {
@@ -373,16 +342,16 @@ function CategoriesPageContent() {
       showToast(
         err?.response?.data?.message ||
           err?.message ||
-          "Failed to load category governance details",
-        "error",
+          'Failed to load category governance details',
+        'error',
       );
     }
   };
 
   const openDrawer = (
-    mode: "create" | "edit" | "view",
+    mode: 'create' | 'edit' | 'view',
     category?: Category,
-    tab: DrawerTab = "general",
+    tab: DrawerTab = 'general',
   ) => {
     setDrawerMode(mode);
     setDrawerTab(tab);
@@ -393,9 +362,9 @@ function CategoriesPageContent() {
     } else {
       setSelectedCategory(null);
       setCurrentCategoryForm({
-        name: "",
-        code: "",
-        description: "",
+        name: '',
+        code: '',
+        description: '',
         displayOrder: 0,
       });
       setVersions([]);
@@ -406,26 +375,17 @@ function CategoriesPageContent() {
   };
 
   // Lifecycle Actions
-  const handleCreateOrUpdateCategory = async (
-    e?: React.FormEvent | React.MouseEvent,
-  ) => {
+  const handleCreateOrUpdateCategory = async (e?: React.FormEvent | React.MouseEvent) => {
     if (e) e.preventDefault();
-    const isCreate = drawerMode === "create";
+    const isCreate = drawerMode === 'create';
 
-    if (
-      !currentCategoryForm.name?.trim() ||
-      !currentCategoryForm.description?.trim()
-    ) {
-      showToast("Please fill Name and Description.", "error");
+    if (!currentCategoryForm.name?.trim() || !currentCategoryForm.description?.trim()) {
+      showToast('Please fill Name and Description.', 'error');
       return;
     }
 
-    if (
-      !isCreate &&
-      currentCategoryForm.code &&
-      !/^\d{3}$/.test(currentCategoryForm.code)
-    ) {
-      showToast("Category Code must be exactly 3 digits (e.g. 080).", "error");
+    if (!isCreate && currentCategoryForm.code && !/^\d{3}$/.test(currentCategoryForm.code)) {
+      showToast('Category Code must be exactly 3 digits (e.g. 080).', 'error');
       return;
     }
 
@@ -434,14 +394,12 @@ function CategoriesPageContent() {
         const payload = {
           ...currentCategoryForm,
           parentCategoryId:
-            currentCategoryForm.parentCategoryId ||
-            (currentCategoryForm as any).parentId ||
-            null,
+            currentCategoryForm.parentCategoryId || (currentCategoryForm as any).parentId || null,
         };
         if (!payload.code) delete payload.code;
         const res = await categoryApi.createCategory(payload as any);
         if (res.data?.success) {
-          showToast("Category draft created successfully");
+          showToast('Category draft created successfully');
           setDrawerOpen(false);
           fetchCategories();
         }
@@ -449,25 +407,17 @@ function CategoriesPageContent() {
         const payload = {
           ...currentCategoryForm,
           parentCategoryId:
-            currentCategoryForm.parentCategoryId ||
-            (currentCategoryForm as any).parentId ||
-            null,
+            currentCategoryForm.parentCategoryId || (currentCategoryForm as any).parentId || null,
         };
-        const res = await categoryApi.updateCategory(
-          selectedCategory.id,
-          payload,
-        );
+        const res = await categoryApi.updateCategory(selectedCategory.id, payload);
         if (res.data?.success) {
-          showToast("Category updated successfully");
+          showToast('Category updated successfully');
           fetchCategoryGovernance(selectedCategory.id);
           fetchCategories();
         }
       }
     } catch (err: any) {
-      showToast(
-        err?.response?.data?.message || err?.message || "Operation failed",
-        "error",
-      );
+      showToast(err?.response?.data?.message || err?.message || 'Operation failed', 'error');
     }
   };
 
@@ -480,19 +430,17 @@ function CategoriesPageContent() {
         comment: reviewComment,
       });
       if (res.data?.success) {
-        showToast("Category submitted for review");
+        showToast('Category submitted for review');
         fetchCategoryGovernance(selectedCategory.id);
         fetchCategories();
         setSubmitReviewOpen(false);
         setSelectedReviewerIds([]);
-        setReviewComment("");
+        setReviewComment('');
       }
     } catch (err: any) {
       showToast(
-        err?.response?.data?.message ||
-          err?.message ||
-          "Submit for review failed",
-        "error",
+        err?.response?.data?.message || err?.message || 'Submit for review failed',
+        'error',
       );
     } finally {
       setSubmittingReviewAction(false);
@@ -503,27 +451,19 @@ function CategoriesPageContent() {
     if (!selectedCategory) return;
     try {
       setSubmittingReviewAction(true);
-      const res = await categoryApi.reviewCategoryDecision(
-        selectedCategory.id,
-        {
-          action: reviewDecision,
-          comment: decisionComment,
-        },
-      );
+      const res = await categoryApi.reviewCategoryDecision(selectedCategory.id, {
+        action: reviewDecision,
+        comment: decisionComment,
+      });
       if (res.data?.success) {
         showToast(`Category review outcome recorded`);
         fetchCategoryGovernance(selectedCategory.id);
         fetchCategories();
         setReviewActionOpen(false);
-        setDecisionComment("");
+        setDecisionComment('');
       }
     } catch (err: any) {
-      showToast(
-        err?.response?.data?.message ||
-          err?.message ||
-          "Review decision failed",
-        "error",
-      );
+      showToast(err?.response?.data?.message || err?.message || 'Review decision failed', 'error');
     } finally {
       setSubmittingReviewAction(false);
     }
@@ -533,15 +473,12 @@ function CategoriesPageContent() {
     try {
       const res = await categoryApi.createCategoryDraftVersion(categoryId);
       if (res.data?.success) {
-        showToast("New category draft created (v1.1)");
+        showToast('New category draft created (v1.1)');
         fetchCategoryGovernance(categoryId);
         fetchCategories();
       }
     } catch (err: any) {
-      showToast(
-        err?.response?.data?.message || err?.message || "Create draft failed",
-        "error",
-      );
+      showToast(err?.response?.data?.message || err?.message || 'Create draft failed', 'error');
     }
   };
 
@@ -549,15 +486,12 @@ function CategoriesPageContent() {
     try {
       const res = await categoryApi.archiveCategory(categoryId);
       if (res.data?.success) {
-        showToast("Category archived");
+        showToast('Category archived');
         fetchCategoryGovernance(categoryId);
         fetchCategories();
       }
     } catch (err: any) {
-      showToast(
-        err?.response?.data?.message || err?.message || "Archive failed",
-        "error",
-      );
+      showToast(err?.response?.data?.message || err?.message || 'Archive failed', 'error');
     }
   };
 
@@ -565,15 +499,12 @@ function CategoriesPageContent() {
     try {
       const res = await categoryApi.restoreCategory(categoryId);
       if (res.data?.success) {
-        showToast("Category restored to Published");
+        showToast('Category restored to Published');
         fetchCategoryGovernance(categoryId);
         fetchCategories();
       }
     } catch (err: any) {
-      showToast(
-        err?.response?.data?.message || err?.message || "Restore failed",
-        "error",
-      );
+      showToast(err?.response?.data?.message || err?.message || 'Restore failed', 'error');
     }
   };
 
@@ -581,33 +512,33 @@ function CategoriesPageContent() {
   const columnDefs: ColDef<Category>[] = useMemo(
     () => [
       {
-        headerName: "Status State",
-        field: "status",
+        headerName: 'Status State',
+        field: 'status',
         width: 150,
         cellRenderer: (params: any) => {
-          const val = params.value || "PUBLISHED";
+          const val = params.value || 'PUBLISHED';
           const styles: Record<string, string> = {
-            DRAFT: "text-amber-700 bg-amber-50 border-amber-200",
-            IN_REVIEW: "text-blue-700 bg-blue-50 border-blue-200",
-            APPROVED: "text-indigo-700 bg-indigo-50 border-indigo-200",
-            PUBLISHED: "text-emerald-700 bg-emerald-50 border-emerald-200",
-            ARCHIVED: "text-gray-700 bg-gray-50 border-gray-200",
+            DRAFT: 'text-amber-700 bg-amber-50 border-amber-200',
+            IN_REVIEW: 'text-blue-700 bg-blue-50 border-blue-200',
+            APPROVED: 'text-indigo-700 bg-indigo-50 border-indigo-200',
+            PUBLISHED: 'text-emerald-700 bg-emerald-50 border-emerald-200',
+            ARCHIVED: 'text-gray-700 bg-gray-50 border-gray-200',
           };
           return (
             <span
               className={`text-[10px] uppercase font-bold tracking-wider px-2.5 py-1 rounded-full border ${styles[val] || styles.PUBLISHED}`}
             >
-              {val.replace("_", " ")}
+              {val.replace('_', ' ')}
             </span>
           );
         },
       },
       {
-        headerName: "Version",
-        field: "activeVersion",
+        headerName: 'Version',
+        field: 'activeVersion',
         width: 110,
         cellRenderer: (params: any) => {
-          const ver = params.value?.versionNumber || "1.0";
+          const ver = params.value?.versionNumber || '1.0';
           return (
             <span className="font-mono text-xs font-semibold text-primary bg-primary/10 px-2 py-0.5 rounded-full border border-primary/20">
               v{ver}
@@ -616,8 +547,8 @@ function CategoriesPageContent() {
         },
       },
       {
-        headerName: "Usage",
-        field: "tenderCount",
+        headerName: 'Usage',
+        field: 'tenderCount',
         width: 130,
         cellRenderer: (params: any) => (
           <span className="text-xs font-semibold text-text-light bg-background px-2.5 py-1 rounded-full border border-border">
@@ -626,11 +557,10 @@ function CategoriesPageContent() {
         ),
       },
       {
-        headerName: "Updated At",
-        field: "updatedAt",
+        headerName: 'Updated At',
+        field: 'updatedAt',
         width: 170,
-        valueFormatter: ({ value }) =>
-          value ? dayjs(value).format("DD MMM YYYY, hh:mm A") : "—",
+        valueFormatter: ({ value }) => (value ? dayjs(value).format('DD MMM YYYY, hh:mm A') : '—'),
       },
     ],
     [],
@@ -639,24 +569,24 @@ function CategoriesPageContent() {
   const getContextMenuItems = useCallback(
     (params: GetContextMenuItemsParams) => {
       const category = params.node?.data as Category;
-      if (!category) return ["copy", "copyWithHeaders", "separator", "export"];
+      if (!category) return ['copy', 'copyWithHeaders', 'separator', 'export'];
 
       return [
         {
-          name: "View Category",
+          name: 'View Category',
           icon: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>',
-          action: () => openDrawer("view", category, "general"),
+          action: () => openDrawer('view', category, 'general'),
         },
         {
-          name: "Edit Category",
+          name: 'Edit Category',
           icon: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>',
-          action: () => openDrawer("edit", category, "general"),
+          action: () => openDrawer('edit', category, 'general'),
         },
-        "separator",
-        "copy",
-        "copyWithHeaders",
-        "separator",
-        "export",
+        'separator',
+        'copy',
+        'copyWithHeaders',
+        'separator',
+        'export',
       ];
     },
     [openDrawer],
@@ -665,38 +595,38 @@ function CategoriesPageContent() {
   return (
     <div className="space-y-6">
       {/* Tab Contents: Stats Overview */}
-      {activeTab === "stats" && (
+      {activeTab === 'stats' && (
         <div className="grid gap-6 md:grid-cols-2">
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-5 md:col-span-2">
             {[
               {
-                title: "Total Categories",
+                title: 'Total Categories',
                 value: stats.total,
-                color: "bg-blue-100 text-blue-600",
+                color: 'bg-blue-100 text-blue-600',
                 icon: FolderKanban,
               },
               {
-                title: "Active Categories",
+                title: 'Active Categories',
                 value: stats.active,
-                color: "bg-green-100 text-green-600",
+                color: 'bg-green-100 text-green-600',
                 icon: CheckCircle2,
               },
               {
-                title: "Unused / Idle",
+                title: 'Unused / Idle',
                 value: stats.inactive,
-                color: "bg-yellow-100 text-yellow-600",
+                color: 'bg-yellow-100 text-yellow-600',
                 icon: XCircle,
               },
               {
-                title: "Archived",
+                title: 'Archived',
                 value: stats.archived,
-                color: "bg-red-100 text-red-600",
+                color: 'bg-red-100 text-red-600',
                 icon: Trash2,
               },
               {
-                title: "Tenders Active",
+                title: 'Tenders Active',
                 value: stats.tendersCount,
-                color: "bg-indigo-100 text-indigo-600",
+                color: 'bg-indigo-100 text-indigo-600',
                 icon: FolderOpen,
               },
             ].map((card) => {
@@ -714,9 +644,7 @@ function CategoriesPageContent() {
                     </div>
                   </div>
                   <p className="mt-5 text-sm text-text-light">{card.title}</p>
-                  <h3 className="mt-1 text-3xl font-bold text-text">
-                    {card.value}
-                  </h3>
+                  <h3 className="mt-1 text-3xl font-bold text-text">{card.value}</h3>
                 </div>
               );
             })}
@@ -731,10 +659,7 @@ function CategoriesPageContent() {
                 <div className="flex justify-between text-xs font-semibold text-text-light mb-1">
                   <span>Active Ratio</span>
                   <span>
-                    {stats.total > 0
-                      ? Math.round((stats.active / stats.total) * 100)
-                      : 0}
-                    %
+                    {stats.total > 0 ? Math.round((stats.active / stats.total) * 100) : 0}%
                   </span>
                 </div>
                 <div className="w-full bg-background rounded-full h-2.5 overflow-hidden">
@@ -752,25 +677,16 @@ function CategoriesPageContent() {
           <div className="rounded-2xl border border-border bg-surface p-6 shadow-sm space-y-4">
             <div className="flex items-center justify-between border-b border-border pb-3">
               <h3 className="text-base font-bold text-text">Top Categories</h3>
-              <Button
-                size="sm"
-                variant="secondary"
-                onClick={() => handleTabChange("list")}
-              >
+              <Button size="sm" variant="secondary" onClick={() => handleTabChange('list')}>
                 View AG Grid List
               </Button>
             </div>
             <div className="divide-y divide-border/30">
               {categories.slice(0, 5).map((cat) => (
-                <div
-                  key={cat.id}
-                  className="py-2.5 flex items-center justify-between text-sm"
-                >
+                <div key={cat.id} className="py-2.5 flex items-center justify-between text-sm">
                   <div>
                     <span className="font-semibold text-text">{cat.name}</span>
-                    <span className="text-xs text-text-light block font-mono">
-                      {cat.code}
-                    </span>
+                    <span className="text-xs text-text-light block font-mono">{cat.code}</span>
                   </div>
                   <span className="text-xs font-medium text-primary bg-primary/10 px-2.5 py-1 rounded-full">
                     {cat.tenderCount || 0} Tenders
@@ -783,7 +699,7 @@ function CategoriesPageContent() {
       )}
 
       {/* Tab Contents: List (AG Grid) */}
-      {activeTab === "list" && (
+      {activeTab === 'list' && (
         <div className="space-y-4">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex-1 min-w-0">
@@ -795,11 +711,11 @@ function CategoriesPageContent() {
                 leftIcon={RotateCw}
                 onClick={handleRefreshList}
                 disabled={refreshing || loading}
-                className={`shrink-0 text-xs ${refreshing ? "opacity-75" : ""}`}
+                className={`shrink-0 text-xs ${refreshing ? 'opacity-75' : ''}`}
               >
-                {refreshing ? "Refreshing..." : "Refresh"}
+                {refreshing ? 'Refreshing...' : 'Refresh'}
               </Button>
-              <Button leftIcon={Plus} onClick={() => openDrawer("create")}>
+              <Button leftIcon={Plus} onClick={() => openDrawer('create')}>
                 Create Category Draft
               </Button>
             </div>
@@ -817,8 +733,8 @@ function CategoriesPageContent() {
               columnDefs={columnDefs as any}
               loading={loading}
               sideBar={{
-                toolPanels: ["columns", "filters"],
-                defaultToolPanel: "",
+                toolPanels: ['columns', 'filters'],
+                defaultToolPanel: '',
               }}
               getContextMenuItems={getContextMenuItems}
               treeData={true}
@@ -831,19 +747,17 @@ function CategoriesPageContent() {
               }}
               getRowId={(params) => params.data.id}
               autoGroupColumnDef={{
-                headerName: "Category",
+                headerName: 'Category',
                 minWidth: 350,
                 cellRendererParams: {
                   suppressCount: true,
                   innerRenderer: (params: any) => {
-                    const {data} = params;
-                    const val = params.value || data?.name || "";
+                    const { data } = params;
+                    const val = params.value || data?.name || '';
                     if (!data && !val) return null;
 
                     const isChild = Boolean(
-                      data?.parentId ||
-                        data?.parentCategoryId ||
-                        data?.parentCategory,
+                      data?.parentId || data?.parentCategoryId || data?.parentCategory,
                     );
                     const isRoot = !isChild;
 
@@ -864,8 +778,8 @@ function CategoriesPageContent() {
                         <span
                           className={
                             isChild
-                              ? "text-xs font-semibold text-text"
-                              : "text-sm font-bold text-text"
+                              ? 'text-xs font-semibold text-text'
+                              : 'text-sm font-bold text-text'
                           }
                         >
                           {data?.name || val}
@@ -899,9 +813,7 @@ function CategoriesPageContent() {
         usageStats={usageStats}
         currentUserId={currentUser?.id}
         onSave={handleCreateOrUpdateCategory}
-        onStartNewDraft={() =>
-          selectedCategory && handleCreateNewDraft(selectedCategory.id)
-        }
+        onStartNewDraft={() => selectedCategory && handleCreateNewDraft(selectedCategory.id)}
         onOpenSubmitReviewModal={() => {
           fetchAdminUsers();
           setSubmitReviewOpen(true);
@@ -943,11 +855,7 @@ function CategoriesPageContent() {
 
 export default function CategoriesPage() {
   return (
-    <Suspense
-      fallback={
-        <div className="p-6 text-sm text-text-light">Loading Categories...</div>
-      }
-    >
+    <Suspense fallback={<div className="p-6 text-sm text-text-light">Loading Categories...</div>}>
       <CategoriesPageContent />
     </Suspense>
   );

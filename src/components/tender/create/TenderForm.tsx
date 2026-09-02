@@ -1,26 +1,26 @@
 //@ts-nocheck
-"use client";
+'use client';
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { FormProvider, useForm } from "react-hook-form";
-import { toast } from "sonner";
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { FormProvider, useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 
-import { TenderSubmitReviewModal } from "../TenderGovernanceModals";
+import { TenderSubmitReviewModal } from '../TenderGovernanceModals';
 
-import BasicInfoStep from "./steps/BasicInfoStep";
-import DetailsStep from "./steps/DetailsStep";
-import DocumentsStep from "./steps/DocumentsStep";
-import LocationStep from "./steps/LocationStep";
-import ReviewStep from "./steps/ReviewStep";
-import TenderNavigation from "./TenderNavigation";
-import TenderStepper from "./TenderStepper";
+import BasicInfoStep from './steps/BasicInfoStep';
+import DetailsStep from './steps/DetailsStep';
+import DocumentsStep from './steps/DocumentsStep';
+import LocationStep from './steps/LocationStep';
+import ReviewStep from './steps/ReviewStep';
+import TenderNavigation from './TenderNavigation';
+import TenderStepper from './TenderStepper';
 
-import { useCategories } from "@/features/categories/api/queries";
-import { useStates } from "@/features/country/api/queries";
-import { tenderApi } from "@/features/tenders";
+import { useCategories } from '@/features/categories/api/queries';
+import { useStates } from '@/features/country/api/queries';
+import { tenderApi } from '@/features/tenders';
 
-const steps = ["Basic Info", "Location", "Details", "Documents", "Review"];
+const steps = ['Basic Info', 'Location', 'Details', 'Documents', 'Review'];
 
 interface TenderFormInput {
   title: string;
@@ -58,13 +58,7 @@ interface TenderFormInput {
   publishNow: boolean;
 }
 
-const StepComponents = [
-  BasicInfoStep,
-  LocationStep,
-  DetailsStep,
-  DocumentsStep,
-  ReviewStep,
-];
+const StepComponents = [BasicInfoStep, LocationStep, DetailsStep, DocumentsStep, ReviewStep];
 
 export default function TenderForm() {
   const router = useRouter();
@@ -76,51 +70,51 @@ export default function TenderForm() {
   const [uploadedDocs, setUploadedDocs] = useState<any[]>([]);
 
   const methods = useForm<TenderFormInput>({
-    mode: "onChange",
+    mode: 'onChange',
     defaultValues: {
-      title: "",
-      referenceNumber: "Auto-generated on draft creation",
-      tenderType: "",
-      category: "",
-      currency: "",
-      budgetMin: "",
-      budgetMax: "",
-      description: "",
-      country: "",
-      state: "",
-      city: "",
-      pinCode: "",
-      address: "",
-      contactPerson: "",
-      contactNumber: "",
-      siteVisit: "",
-      mapLink: "",
-      placeId: "",
-      formattedAddress: "",
-      openingDate: "",
-      closingDate: "",
-      projectDuration: "",
-      bidValidity: "",
-      emdAmount: "",
-      securityDeposit: "",
-      paymentTerms: "",
-      priority: "",
-      evaluationMethod: "",
-      visibility: "",
-      eligibility: "",
-      specialConditions: "",
-      internalNotes: "",
+      title: '',
+      referenceNumber: 'Auto-generated on draft creation',
+      tenderType: '',
+      category: '',
+      currency: '',
+      budgetMin: '',
+      budgetMax: '',
+      description: '',
+      country: '',
+      state: '',
+      city: '',
+      pinCode: '',
+      address: '',
+      contactPerson: '',
+      contactNumber: '',
+      siteVisit: '',
+      mapLink: '',
+      placeId: '',
+      formattedAddress: '',
+      openingDate: '',
+      closingDate: '',
+      projectDuration: '',
+      bidValidity: '',
+      emdAmount: '',
+      securityDeposit: '',
+      paymentTerms: '',
+      priority: '',
+      evaluationMethod: '',
+      visibility: '',
+      eligibility: '',
+      specialConditions: '',
+      internalNotes: '',
       publishNow: false,
     },
   });
 
   const { data: categoryData } = useCategories({
-    status: "PUBLISHED",
+    status: 'PUBLISHED',
     limit: 100,
   });
   const rawCategories = categoryData?.categories || [];
-  const categories = rawCategories.filter((c: any) => c.status === "PUBLISHED");
-  const selectedCountry = methods.watch("country");
+  const categories = rawCategories.filter((c: any) => c.status === 'PUBLISHED');
+  const selectedCountry = methods.watch('country');
   const [tenderId, setTenderId] = useState<string | null>(null);
   const { data: states = [] } = useStates(
     //@ts-ignore
@@ -132,18 +126,15 @@ export default function TenderForm() {
     if (draftTenderId) return draftTenderId;
 
     const values = methods.getValues();
-    const selectedCategoryObj = categories.find(
-      (c: any) => c.id === values.category,
-    );
+    const selectedCategoryObj = categories.find((c: any) => c.id === values.category);
 
     const payload = {
-      title: values.title?.trim() || "Untitled Procurement Tender Draft",
-      description:
-        values.description?.trim() || "Draft procurement tender description.",
-      procurementType: values.tenderType || "Services",
-      priority: values.priority || "Medium",
-      currency: values.currency || "USD",
-      visibility: "public",
+      title: values.title?.trim() || 'Untitled Procurement Tender Draft',
+      description: values.description?.trim() || 'Draft procurement tender description.',
+      procurementType: values.tenderType || 'Services',
+      priority: values.priority || 'Medium',
+      currency: values.currency || 'USD',
+      visibility: 'public',
       department: selectedCategoryObj?.name || undefined,
       categoryId: values.category || undefined,
       stateId: values.state ? parseInt(values.state, 10) : undefined,
@@ -152,7 +143,7 @@ export default function TenderForm() {
     const res = await tenderApi.adminCreate(payload as any);
 
     if (!res.data.success || !res.data.data) {
-      throw new Error(res.data.message || "Draft tender initialization failed");
+      throw new Error(res.data.message || 'Draft tender initialization failed');
     }
 
     const createdTender = res.data.data;
@@ -160,7 +151,7 @@ export default function TenderForm() {
     setDraftTenderId(createdTender.id);
     setTenderId(createdTender.id);
     if (createdTender.referenceNo) {
-      methods.setValue("referenceNumber", createdTender.referenceNo);
+      methods.setValue('referenceNumber', createdTender.referenceNo);
     }
     toast.success(`Draft Tender Initialized (${createdTender.referenceNo})`);
 
@@ -174,13 +165,13 @@ export default function TenderForm() {
 
     switch (step) {
       case 0:
-        fields = ["title", "category", "description", "tenderType"];
+        fields = ['title', 'category', 'description', 'tenderType'];
         break;
       case 1:
-        fields = ["country", "state", "address"];
+        fields = ['country', 'state', 'address'];
         break;
       case 2:
-        fields = ["openingDate", "closingDate"];
+        fields = ['openingDate', 'closingDate'];
         break;
       default:
         fields = [];
@@ -194,16 +185,14 @@ export default function TenderForm() {
       const tenderId = await ensureDraftCreated();
       setTenderId(tenderId);
       const values = methods.getValues();
-      const selectedCategoryObj = categories.find(
-        (c: any) => c.id === values.category,
-      );
+      const selectedCategoryObj = categories.find((c: any) => c.id === values.category);
       const selectedStateObj = states.find((s: any) => s.id === values.state);
 
       if (step === 0) {
         await tenderApi.updateBasicInfo(tenderId, {
           title: values.title,
           description: values.description,
-          procurementType: values.tenderType || "Services",
+          procurementType: values.tenderType || 'Services',
           priority: values.priority,
           currency: values.currency,
           department: selectedCategoryObj?.name || undefined,
@@ -214,33 +203,23 @@ export default function TenderForm() {
           placeId: values.placeId || undefined,
           formattedAddress:
             values.formattedAddress ||
-            `${values.address}, ${values.city || ""}, ${selectedStateObj?.name || values.state}, ${values.country}`,
-          siteVisitRequired: values.siteVisit === "Yes",
+            `${values.address}, ${values.city || ''}, ${selectedStateObj?.name || values.state}, ${values.country}`,
+          siteVisitRequired: values.siteVisit === 'Yes',
           contactPerson: values.contactPerson || undefined,
           contactPhone: values.contactNumber || undefined,
           stateId: values.state ? parseInt(values.state, 10) : undefined,
         } as any);
       } else if (step === 2) {
         await tenderApi.updateSchedule(tenderId, {
-          openingDate: values.openingDate
-            ? new Date(values.openingDate).toISOString()
-            : undefined,
-          closingDate: values.closingDate
-            ? new Date(values.closingDate).toISOString()
-            : undefined,
+          openingDate: values.openingDate ? new Date(values.openingDate).toISOString() : undefined,
+          closingDate: values.closingDate ? new Date(values.closingDate).toISOString() : undefined,
         } as any);
         await tenderApi.updateCommercial(tenderId, {
-          estimatedBudget: values.budgetMax
-            ? parseInt(values.budgetMax, 10)
-            : 0,
+          estimatedBudget: values.budgetMax ? parseInt(values.budgetMax, 10) : 0,
           currency: values.currency,
-          bidValidity: values.bidValidity
-            ? parseInt(values.bidValidity, 10)
-            : undefined,
+          bidValidity: values.bidValidity ? parseInt(values.bidValidity, 10) : undefined,
           projectDuration: values.projectDuration || undefined,
-          emdAmount: values.emdAmount
-            ? parseInt(values.emdAmount, 10)
-            : undefined,
+          emdAmount: values.emdAmount ? parseInt(values.emdAmount, 10) : undefined,
           securityDeposit: values.securityDeposit
             ? parseInt(values.securityDeposit, 10)
             : undefined,
@@ -251,7 +230,7 @@ export default function TenderForm() {
         } as any);
       }
     } catch (err) {
-      console.warn("Draft task-oriented save notice:", err);
+      console.warn('Draft task-oriented save notice:', err);
     }
 
     setStep((prev) => prev + 1);
@@ -266,7 +245,7 @@ export default function TenderForm() {
   const submitForm = () => {
     setIsSubmitModalOpen(true);
   };
-  console.log("isSubmitModalOpen", tenderId, isSubmitModalOpen);
+  console.log('isSubmitModalOpen', tenderId, isSubmitModalOpen);
   return (
     <FormProvider {...methods}>
       <form onSubmit={methods.handleSubmit(submitForm)} className="space-y-8">
@@ -274,8 +253,8 @@ export default function TenderForm() {
         <div>
           <h1 className="mt-2 text-4xl font-bold text-text">Create Tender</h1>
           <p className="mt-2 text-text-light text-sm">
-            Draft is created automatically. Files are uploaded directly to S3
-            via presigned URLs and stored as version metadata in PostgreSQL.
+            Draft is created automatically. Files are uploaded directly to S3 via presigned URLs and
+            stored as version metadata in PostgreSQL.
           </p>
         </div>
 

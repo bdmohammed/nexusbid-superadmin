@@ -3,15 +3,15 @@ export interface Role {
   name: string;
   slug: string;
   description: string;
-  status: "ACTIVE" | "DISABLED" | "ARCHIVED";
+  status: 'ACTIVE' | 'DISABLED' | 'ARCHIVED';
   versionStatus?:
-    | "DRAFT"
-    | "IN_REVIEW"
-    | "PENDING_REVIEW"
-    | "CHANGES_REQUESTED"
-    | "SUBMITTED"
-    | "APPROVED"
-    | "REJECTED";
+    | 'DRAFT'
+    | 'IN_REVIEW'
+    | 'PENDING_REVIEW'
+    | 'CHANGES_REQUESTED'
+    | 'SUBMITTED'
+    | 'APPROVED'
+    | 'REJECTED';
   isSystemRole: boolean;
   isDefaultRole?: boolean;
   activeVersionId?: string | null;
@@ -48,18 +48,18 @@ export interface RoleActivity {
     email: string;
   };
   activityType:
-    | "ROLE_CREATED"
-    | "ROLE_UPDATED"
-    | "PERMISSION_ADDED"
-    | "PERMISSION_REMOVED"
-    | "REVIEW_ASSIGNED"
-    | "COMMENT_ADDED"
-    | "SUBMITTED"
-    | "APPROVED"
-    | "REJECTED"
-    | "CHANGES_REQUESTED"
-    | "ARCHIVED"
-    | "RESTORED";
+    | 'ROLE_CREATED'
+    | 'ROLE_UPDATED'
+    | 'PERMISSION_ADDED'
+    | 'PERMISSION_REMOVED'
+    | 'REVIEW_ASSIGNED'
+    | 'COMMENT_ADDED'
+    | 'SUBMITTED'
+    | 'APPROVED'
+    | 'REJECTED'
+    | 'CHANGES_REQUESTED'
+    | 'ARCHIVED'
+    | 'RESTORED';
   oldValue?: any;
   newValue?: any;
   metadata?: any;
@@ -75,7 +75,7 @@ export interface RoleComment {
     name: string;
     email: string;
   };
-  action: "SUBMIT" | "APPROVE" | "REJECT" | "REQUEST_CHANGES" | "COMMENT";
+  action: 'SUBMIT' | 'APPROVE' | 'REJECT' | 'REQUEST_CHANGES' | 'COMMENT';
   comment: string;
   isInternal?: boolean;
   editedAt?: string | null;
@@ -166,5 +166,5 @@ export interface CreateAssignmentDto {
   reason?: string;
   comment?: string;
   reviewerId?: string;
-  status?: "DRAFT" | "SUBMITTED" | "APPROVED";
+  status?: 'DRAFT' | 'SUBMITTED' | 'APPROVED';
 }

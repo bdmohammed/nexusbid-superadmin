@@ -1,13 +1,6 @@
-"use client";
+'use client';
 
-import React, {
-  memo,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   AllCommunityModule,
   type ColDef,
@@ -17,7 +10,7 @@ import {
   ModuleRegistry,
   type SideBarDef,
   themeQuartz,
-} from "ag-grid-community";
+} from 'ag-grid-community';
 import {
   CellSelectionModule,
   ClipboardModule,
@@ -35,13 +28,13 @@ import {
   SideBarModule,
   StatusBarModule,
   TreeDataModule,
-} from "ag-grid-enterprise";
-import { AgGridReact } from "ag-grid-react";
-import { FileText,Globe, MapPin } from "lucide-react";
+} from 'ag-grid-enterprise';
+import { AgGridReact } from 'ag-grid-react';
+import { FileText, Globe, MapPin } from 'lucide-react';
 
-import { Toolbar } from "@/components/ui/Toolbar";
-import { apiClient } from "@/lib/http";
-import { useThemeStore } from "@/store/theme.store";
+import { Toolbar } from '@/components/ui/Toolbar';
+import { apiClient } from '@/lib/http';
+import { useThemeStore } from '@/store/theme.store';
 
 ModuleRegistry.registerModules([
   AllCommunityModule,
@@ -135,10 +128,10 @@ interface ListProps {
     stateName?: string,
   ) => void;
   onProposeAction: (
-    targetType: "COUNTRY" | "STATE",
+    targetType: 'COUNTRY' | 'STATE',
     countryId: string,
     stateId?: string,
-    action?: "ACTIVATE" | "DEACTIVATE",
+    action?: 'ACTIVATE' | 'DEACTIVATE',
     countryName?: string,
     stateName?: string,
   ) => void;
@@ -149,23 +142,23 @@ interface ListProps {
 const AgGridReactMemo = memo(AgGridReact);
 
 const formatUser = (user: any) => {
-  if (!user) return "System";
-  if (typeof user === "string") return user;
-  return user.fullName || user.name || user.email || "System";
+  if (!user) return 'System';
+  if (typeof user === 'string') return user;
+  return user.fullName || user.name || user.email || 'System';
 };
 
 const formatDate = (dateStr?: string | null) => {
-  if (!dateStr) return "—";
+  if (!dateStr) return '—';
   try {
     const d = new Date(dateStr);
-    if (isNaN(d.getTime())) return "—";
-    return d.toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
+    if (isNaN(d.getTime())) return '—';
+    return d.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
     });
   } catch {
-    return "—";
+    return '—';
   }
 };
 
@@ -180,8 +173,7 @@ export const CountriesListView: React.FC<ListProps> = ({
   const gridRef = useRef<any>(null);
 
   const themeMode = useThemeStore((state) => state.theme);
-  const themeClass =
-    themeMode === "dark" ? "ag-theme-quartz-dark" : "ag-theme-quartz";
+  const themeClass = themeMode === 'dark' ? 'ag-theme-quartz-dark' : 'ag-theme-quartz';
 
   useEffect(() => {
     fetchHierarchy();
@@ -190,12 +182,12 @@ export const CountriesListView: React.FC<ListProps> = ({
   const fetchHierarchy = async () => {
     setLoading(true);
     try {
-      const res = await apiClient.get<any>("/countries/hierarchy");
+      const res = await apiClient.get<any>('/countries/hierarchy');
       if (res.data?.success) {
         setCountries(res.data.data);
       }
     } catch (err) {
-      console.error("Failed to fetch countries hierarchy", err);
+      console.error('Failed to fetch countries hierarchy', err);
     } finally {
       setLoading(false);
     }
@@ -210,12 +202,11 @@ export const CountriesListView: React.FC<ListProps> = ({
         countryId: country.id,
         name: country.name,
         code: country.code,
-        type: country.type ? country.type.toUpperCase() : "COUNTRY",
+        type: country.type ? country.type.toUpperCase() : 'COUNTRY',
         isActive: country.isActive,
         version: country.version || 1,
         tenderCount: country.tenderCount || 0,
-        createdAt:
-          country.createdAt || country.updatedAt || new Date().toISOString(),
+        createdAt: country.createdAt || country.updatedAt || new Date().toISOString(),
         publishedAt: country.publishedAt || null,
         createdBy: formatUser(country.createdBy),
         approvedBy: formatUser(country.approvedBy),
@@ -232,12 +223,11 @@ export const CountriesListView: React.FC<ListProps> = ({
           stateId: state.id,
           name: state.name,
           code: state.code,
-          type: state.type ? state.type.toUpperCase() : "STATE",
+          type: state.type ? state.type.toUpperCase() : 'STATE',
           isActive: state.isActive,
           version: state.version || 1,
           tenderCount: state.tenderCount || 0,
-          createdAt:
-            state.createdAt || state.updatedAt || new Date().toISOString(),
+          createdAt: state.createdAt || state.updatedAt || new Date().toISOString(),
           publishedAt: state.publishedAt || null,
           createdBy: formatUser(state.createdBy),
           approvedBy: formatUser(state.approvedBy),
@@ -254,14 +244,14 @@ export const CountriesListView: React.FC<ListProps> = ({
 
   const autoGroupColumnDef = useMemo<ColDef>(() => {
     return {
-      headerName: "Geography",
+      headerName: 'Geography',
       minWidth: 260,
       flex: 1.5,
       cellRendererParams: {
         suppressCount: true,
         innerRenderer: (params: ICellRendererParams<FlatGeographyRow>) => {
           if (!params.data) return params.value;
-          const {isCountry} = params.data;
+          const { isCountry } = params.data;
           return (
             <span className="inline-flex items-center gap-2 text-xs">
               {isCountry ? (
@@ -269,13 +259,7 @@ export const CountriesListView: React.FC<ListProps> = ({
               ) : (
                 <MapPin className="w-3.5 h-3.5 text-text-light/70 shrink-0" />
               )}
-              <span
-                className={
-                  isCountry
-                    ? "font-semibold text-text"
-                    : "font-normal text-text"
-                }
-              >
+              <span className={isCountry ? 'font-semibold text-text' : 'font-normal text-text'}>
                 {params.data.name}
               </span>
             </span>
@@ -288,8 +272,8 @@ export const CountriesListView: React.FC<ListProps> = ({
   const columnDefs = useMemo<ColDef[]>(() => {
     return [
       {
-        field: "code",
-        headerName: "Code",
+        field: 'code',
+        headerName: 'Code',
         width: 100,
         cellRenderer: (params: ICellRendererParams<FlatGeographyRow>) => {
           if (!params.data) return null;
@@ -301,8 +285,8 @@ export const CountriesListView: React.FC<ListProps> = ({
         },
       },
       {
-        field: "type",
-        headerName: "Type",
+        field: 'type',
+        headerName: 'Type',
         width: 140,
         cellRenderer: (params: ICellRendererParams<FlatGeographyRow>) => {
           if (!params.data) return null;
@@ -314,21 +298,19 @@ export const CountriesListView: React.FC<ListProps> = ({
         },
       },
       {
-        field: "version",
-        headerName: "Version",
+        field: 'version',
+        headerName: 'Version',
         width: 100,
         cellRenderer: (params: ICellRendererParams<FlatGeographyRow>) => {
           if (!params.data) return null;
           return (
-            <span className="font-mono text-[11px] text-text-light">
-              v{params.data.version}
-            </span>
+            <span className="font-mono text-[11px] text-text-light">v{params.data.version}</span>
           );
         },
       },
       {
-        field: "tenderCount",
-        headerName: "Tender Usage",
+        field: 'tenderCount',
+        headerName: 'Tender Usage',
         width: 130,
         cellRenderer: (params: ICellRendererParams<FlatGeographyRow>) => {
           if (!params.data) return null;
@@ -340,33 +322,33 @@ export const CountriesListView: React.FC<ListProps> = ({
         },
       },
       {
-        field: "isActive",
-        headerName: "Status",
+        field: 'isActive',
+        headerName: 'Status',
         width: 130,
         cellRenderer: (params: ICellRendererParams<FlatGeographyRow>) => {
           if (!params.data) return null;
-          const {isActive} = params.data;
+          const { isActive } = params.data;
           return (
             <span
               className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium border transition-colors ${
                 isActive
-                  ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20"
-                  : "bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/20"
+                  ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20'
+                  : 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/20'
               }`}
             >
               <span
                 className={`w-1.5 h-1.5 rounded-full ${
-                  isActive ? "bg-emerald-500" : "bg-rose-500"
+                  isActive ? 'bg-emerald-500' : 'bg-rose-500'
                 }`}
               />
-              {isActive ? "Active" : "Inactive"}
+              {isActive ? 'Active' : 'Inactive'}
             </span>
           );
         },
       },
       {
-        field: "activeRequestNumber",
-        headerName: "Governance Ticket",
+        field: 'activeRequestNumber',
+        headerName: 'Governance Ticket',
         width: 170,
         cellRenderer: (params: ICellRendererParams<FlatGeographyRow>) => {
           if (!params.data) return null;
@@ -387,55 +369,43 @@ export const CountriesListView: React.FC<ListProps> = ({
         },
       },
       {
-        field: "createdAt",
-        headerName: "Created At",
+        field: 'createdAt',
+        headerName: 'Created At',
         width: 130,
         cellRenderer: (params: ICellRendererParams<FlatGeographyRow>) => {
           if (!params.data) return null;
           return (
-            <span className="text-xs text-text-light">
-              {formatDate(params.data.createdAt)}
-            </span>
+            <span className="text-xs text-text-light">{formatDate(params.data.createdAt)}</span>
           );
         },
       },
       {
-        field: "publishedAt",
-        headerName: "Published At",
+        field: 'publishedAt',
+        headerName: 'Published At',
         width: 130,
         cellRenderer: (params: ICellRendererParams<FlatGeographyRow>) => {
           if (!params.data) return null;
           return (
-            <span className="text-xs text-text-light">
-              {formatDate(params.data.publishedAt)}
-            </span>
+            <span className="text-xs text-text-light">{formatDate(params.data.publishedAt)}</span>
           );
         },
       },
       {
-        field: "createdBy",
-        headerName: "Created By",
+        field: 'createdBy',
+        headerName: 'Created By',
         width: 140,
         cellRenderer: (params: ICellRendererParams<FlatGeographyRow>) => {
           if (!params.data) return null;
-          return (
-            <span className="text-xs text-text font-medium">
-              {params.data.createdBy}
-            </span>
-          );
+          return <span className="text-xs text-text font-medium">{params.data.createdBy}</span>;
         },
       },
       {
-        field: "approvedBy",
-        headerName: "Approved By",
+        field: 'approvedBy',
+        headerName: 'Approved By',
         width: 140,
         cellRenderer: (params: ICellRendererParams<FlatGeographyRow>) => {
           if (!params.data) return null;
-          return (
-            <span className="text-xs text-text font-medium">
-              {params.data.approvedBy}
-            </span>
-          );
+          return <span className="text-xs text-text font-medium">{params.data.approvedBy}</span>;
         },
       },
     ];
@@ -455,18 +425,18 @@ export const CountriesListView: React.FC<ListProps> = ({
     return {
       toolPanels: [
         {
-          id: "columns",
-          labelDefault: "Columns",
-          labelKey: "columns",
-          iconKey: "columns",
-          toolPanel: "agColumnsToolPanel",
+          id: 'columns',
+          labelDefault: 'Columns',
+          labelKey: 'columns',
+          iconKey: 'columns',
+          toolPanel: 'agColumnsToolPanel',
         },
         {
-          id: "filters",
-          labelDefault: "Filters",
-          labelKey: "filters",
-          iconKey: "filter",
-          toolPanel: "agFiltersToolPanel",
+          id: 'filters',
+          labelDefault: 'Filters',
+          labelKey: 'filters',
+          iconKey: 'filter',
+          toolPanel: 'agFiltersToolPanel',
         },
       ],
     };
@@ -484,11 +454,11 @@ export const CountriesListView: React.FC<ListProps> = ({
       const items: any[] = [];
 
       if (row) {
-        const targetType = row.isCountry ? "COUNTRY" : "STATE";
-        const action = row.isActive ? "DEACTIVATE" : "ACTIVATE";
+        const targetType = row.isCountry ? 'COUNTRY' : 'STATE';
+        const action = row.isActive ? 'DEACTIVATE' : 'ACTIVATE';
 
         items.push({
-          name: `Propose ${action === "ACTIVATE" ? "Activation" : "Deactivation"} for "${row.name}"`,
+          name: `Propose ${action === 'ACTIVATE' ? 'Activation' : 'Deactivation'} for "${row.name}"`,
           action: () => {
             onProposeAction(
               targetType,
@@ -522,10 +492,10 @@ export const CountriesListView: React.FC<ListProps> = ({
           });
         }
 
-        items.push("separator");
+        items.push('separator');
       }
 
-      items.push("copy", "copyWithHeaders", "paste", "separator", "export");
+      items.push('copy', 'copyWithHeaders', 'paste', 'separator', 'export');
 
       return items;
     },

@@ -1,8 +1,8 @@
 //@ts-nocheck
-"use client";
+'use client';
 
-import React, { useEffect,useMemo, useState } from "react";
-import dayjs from "dayjs";
+import React, { useEffect, useMemo, useState } from 'react';
+import dayjs from 'dayjs';
 import {
   ArrowRight,
   CheckCircle,
@@ -22,44 +22,43 @@ import {
   Send,
   Users,
   X,
-} from "lucide-react";
-import { toast } from "sonner";
+} from 'lucide-react';
+import { toast } from 'sonner';
 
-import type { Role } from "@/features/rbac/types";
-import Badge from "@/components/ui/Badge";
-import Button from "@/components/ui/Button";
+import type { Role } from '@/features/rbac/types';
+import Badge from '@/components/ui/Badge';
+import Button from '@/components/ui/Button';
 
 interface FormattedPermission {
   id: string;
   key: string;
   label: string;
   description: string;
-  category: "basic" | "admin" | "dangerous";
+  category: 'basic' | 'admin' | 'dangerous';
   dependencies: string[];
 }
 
 function getPermissionMetadata(key: string, desc: string): FormattedPermission {
-  const normKey = key.toUpperCase().replace(/\./g, "_");
+  const normKey = key.toUpperCase().replace(/\./g, '_');
   const lowerKey = normKey.toLowerCase();
 
   let label = key;
-  if (normKey === "USER_VIEW") label = "View Users";
-  else if (normKey === "USER_CREATE") label = "Create Users";
-  else if (normKey === "USER_UPDATE") label = "Update Users";
-  else if (normKey === "USER_DELETE") label = "Delete Users";
-  else if (normKey === "USER_IMPERSONATE") label = "Impersonate Users";
-  else if (normKey === "USER_ASSIGN_ROLE") label = "Assign Role to User";
-  else if (normKey === "USER_REMOVE_ROLE") label = "Remove Role from User";
-  else if (normKey === "USER_RESET_PASSWORD") label = "Reset User Password";
-  else if (normKey === "NOTIFICATION_PREFERENCE_MANAGE")
-    label = "Manage Notification Preferences";
-  else if (normKey === "SYSTEM_CACHE_MANAGE") label = "Manage Cache";
-  else if (normKey === "TENDER_VIEW") label = "View Tenders";
-  else if (normKey === "TENDER_CREATE") label = "Create Tenders";
-  else if (normKey === "TENDER_UPDATE") label = "Update Tenders";
-  else if (normKey === "TENDER_DELETE") label = "Delete Tenders";
+  if (normKey === 'USER_VIEW') label = 'View Users';
+  else if (normKey === 'USER_CREATE') label = 'Create Users';
+  else if (normKey === 'USER_UPDATE') label = 'Update Users';
+  else if (normKey === 'USER_DELETE') label = 'Delete Users';
+  else if (normKey === 'USER_IMPERSONATE') label = 'Impersonate Users';
+  else if (normKey === 'USER_ASSIGN_ROLE') label = 'Assign Role to User';
+  else if (normKey === 'USER_REMOVE_ROLE') label = 'Remove Role from User';
+  else if (normKey === 'USER_RESET_PASSWORD') label = 'Reset User Password';
+  else if (normKey === 'NOTIFICATION_PREFERENCE_MANAGE') label = 'Manage Notification Preferences';
+  else if (normKey === 'SYSTEM_CACHE_MANAGE') label = 'Manage Cache';
+  else if (normKey === 'TENDER_VIEW') label = 'View Tenders';
+  else if (normKey === 'TENDER_CREATE') label = 'Create Tenders';
+  else if (normKey === 'TENDER_UPDATE') label = 'Update Tenders';
+  else if (normKey === 'TENDER_DELETE') label = 'Delete Tenders';
   else {
-    const parts = normKey.split("_");
+    const parts = normKey.split('_');
     if (parts.length >= 2) {
       const act =
         parts[parts.length - 1].charAt(0).toUpperCase() +
@@ -67,38 +66,36 @@ function getPermissionMetadata(key: string, desc: string): FormattedPermission {
       const mod = parts
         .slice(0, parts.length - 1)
         .map((p) => p.charAt(0).toUpperCase() + p.slice(1).toLowerCase())
-        .join(" ");
+        .join(' ');
       label = `${act} ${mod}`;
     } else {
-      label = key
-        .replace(/[_\.]/g, " ")
-        .replace(/\b\w/g, (c) => c.toUpperCase());
+      label = key.replace(/[_\.]/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
     }
   }
 
-  let category: "basic" | "admin" | "dangerous" = "admin";
+  let category: 'basic' | 'admin' | 'dangerous' = 'admin';
   if (
-    lowerKey.includes("delete") ||
-    lowerKey.includes("impersonate") ||
-    lowerKey.includes("archive") ||
-    lowerKey.includes("security") ||
-    lowerKey.includes("backup") ||
-    lowerKey.includes("purge") ||
-    lowerKey.includes("force")
+    lowerKey.includes('delete') ||
+    lowerKey.includes('impersonate') ||
+    lowerKey.includes('archive') ||
+    lowerKey.includes('security') ||
+    lowerKey.includes('backup') ||
+    lowerKey.includes('purge') ||
+    lowerKey.includes('force')
   ) {
-    category = "dangerous";
+    category = 'dangerous';
   } else if (
-    lowerKey.includes("view") ||
-    lowerKey.includes("read") ||
-    lowerKey.includes("list") ||
-    lowerKey.includes("search") ||
-    lowerKey.includes("get")
+    lowerKey.includes('view') ||
+    lowerKey.includes('read') ||
+    lowerKey.includes('list') ||
+    lowerKey.includes('search') ||
+    lowerKey.includes('get')
   ) {
-    category = "basic";
+    category = 'basic';
   }
 
   const dependencies: string[] = [];
-  const parts = normKey.split("_");
+  const parts = normKey.split('_');
   if (parts.length > 0) {
     const modPrefix = parts[0];
     const viewKey = `${modPrefix}_VIEW`;
@@ -172,17 +169,11 @@ export const RoleFormDrawer: React.FC<RoleFormDrawerProps> = ({
   onToggleLock,
 }) => {
   const [drawerTab, setDrawerTab] = useState<
-    | "general"
-    | "permissions"
-    | "review"
-    | "comments"
-    | "versions"
-    | "activity"
-    | "users"
-  >("general");
+    'general' | 'permissions' | 'review' | 'comments' | 'versions' | 'activity' | 'users'
+  >('general');
 
   const [starredPermissions, setStarredPermissions] = useState<string[]>([]);
-  const [permSearch, setPermSearch] = useState("");
+  const [permSearch, setPermSearch] = useState('');
   const [expandedModules, setExpandedModules] = useState<string[]>([]);
   const [isNewDraftMode, setIsNewDraftMode] = useState(false);
 
@@ -190,33 +181,28 @@ export const RoleFormDrawer: React.FC<RoleFormDrawerProps> = ({
 
   useEffect(() => {
     if (isOpen) {
-      setDrawerTab("general");
+      setDrawerTab('general');
       setIsNewDraftMode(false);
     }
   }, [isOpen, roleId]);
 
-  const initialName = editingRole?.name || "";
-  const initialDescription = (editingRole?.description || "")
-    .replace(/\[ReplacesRole:\s*([0-9a-fA-F-]+)\]/, "")
+  const initialName = editingRole?.name || '';
+  const initialDescription = (editingRole?.description || '')
+    .replace(/\[ReplacesRole:\s*([0-9a-fA-F-]+)\]/, '')
     .trim();
 
   const isPermsUnchanged = useMemo(() => {
     if (!editingRole) return false;
-    const rawOrig =
-      (editingRole as any)?.permissionKeys || editingRole?.permissions || [];
+    const rawOrig = (editingRole as any)?.permissionKeys || editingRole?.permissions || [];
     const origPerms = rawOrig
-      .map((p: any) =>
-        typeof p === "string" ? p : p?.permissionKey || p?.key || p?.slug || "",
-      )
+      .map((p: any) => (typeof p === 'string' ? p : p?.permissionKey || p?.key || p?.slug || ''))
       .filter(Boolean)
       .slice()
       .sort();
     const currPerms = selectedPermissions.slice().sort();
 
     if (origPerms.length !== currPerms.length) return false;
-    return origPerms.every(
-      (val: string, idx: number) => val === currPerms[idx],
-    );
+    return origPerms.every((val: string, idx: number) => val === currPerms[idx]);
   }, [editingRole, selectedPermissions]);
 
   if (!isOpen) return null;
@@ -228,32 +214,30 @@ export const RoleFormDrawer: React.FC<RoleFormDrawerProps> = ({
   const isReviewUnlocked = isGeneralFilled && hasPermissionsSelected;
 
   const isGovernanceSubmitted =
-    editingRole?.versionStatus === "PENDING_REVIEW" ||
-    editingRole?.versionStatus === "SUBMITTED" ||
-    editingRole?.versionStatus === "IN_REVIEW";
+    editingRole?.versionStatus === 'PENDING_REVIEW' ||
+    editingRole?.versionStatus === 'SUBMITTED' ||
+    editingRole?.versionStatus === 'IN_REVIEW';
 
-  const isApproved = editingRole?.versionStatus === "APPROVED";
+  const isApproved = editingRole?.versionStatus === 'APPROVED';
 
   const isCommentsUnlocked = isSavedInDb;
   const isVersionsUnlocked = isSavedInDb;
   const isActivityUnlocked = isSavedInDb;
-  const isUsersUnlocked =
-    isSavedInDb && (editingRole?.status === "ACTIVE" || isApproved);
+  const isUsersUnlocked = isSavedInDb && (editingRole?.status === 'ACTIVE' || isApproved);
 
   const hasFormChanges = Boolean(
     !editingRole ||
-      isNewDraftMode ||
-      roleName.trim() !== initialName.trim() ||
-      description.trim() !== initialDescription ||
-      !isPermsUnchanged,
+    isNewDraftMode ||
+    roleName.trim() !== initialName.trim() ||
+    description.trim() !== initialDescription ||
+    !isPermsUnchanged,
   );
 
-  const isFormReadOnly =
-    viewOnly || isGovernanceSubmitted || (isApproved && !isNewDraftMode);
+  const isFormReadOnly = viewOnly || isGovernanceSubmitted || (isApproved && !isNewDraftMode);
 
   const handleStartNewDraft = () => {
     setIsNewDraftMode(true);
-    setDrawerTab("general");
+    setDrawerTab('general');
     toast.info(
       "New draft mode activated! Modify role parameters and click 'Create New Draft Version'.",
     );
@@ -267,73 +251,63 @@ export const RoleFormDrawer: React.FC<RoleFormDrawerProps> = ({
 
   function toggleModuleFullAccess(mod: any) {
     const modPermKeys = mod.permissions.map((p: any) => p.key);
-    const allSelected = modPermKeys.every((k: string) =>
-      selectedPermissions.includes(k),
-    );
+    const allSelected = modPermKeys.every((k: string) => selectedPermissions.includes(k));
 
     if (allSelected) {
-      setSelectedPermissions((prev) =>
-        prev.filter((k) => !modPermKeys.includes(k)),
-      );
+      setSelectedPermissions((prev) => prev.filter((k) => !modPermKeys.includes(k)));
     } else {
-      const toAdd = modPermKeys.filter(
-        (k: string) => !selectedPermissions.includes(k),
-      );
+      const toAdd = modPermKeys.filter((k: string) => !selectedPermissions.includes(k));
       setSelectedPermissions((prev) => [...prev, ...toAdd]);
     }
   }
 
   function handlePresetChange(presetType: string) {
-    const allModuleKeys = modules.flatMap((m) =>
-      (m.permissions || []).map((p: any) => p.key),
-    );
+    const allModuleKeys = modules.flatMap((m) => (m.permissions || []).map((p: any) => p.key));
 
-    if (presetType === "super-admin") {
+    if (presetType === 'super-admin') {
       setSelectedPermissions(allModuleKeys);
-    } else if (presetType === "role-manager") {
+    } else if (presetType === 'role-manager') {
       const matched = allModuleKeys.filter((k: string) => {
-        const upper = k.toUpperCase().replace(/\./g, "_");
+        const upper = k.toUpperCase().replace(/\./g, '_');
         return (
-          upper.includes("ROLE") ||
-          upper.includes("RBAC") ||
-          upper.includes("USER") ||
-          upper.includes("PERMISSION")
+          upper.includes('ROLE') ||
+          upper.includes('RBAC') ||
+          upper.includes('USER') ||
+          upper.includes('PERMISSION')
         );
       });
       setSelectedPermissions(matched.length > 0 ? matched : allModuleKeys);
-    } else if (presetType === "audit-only") {
+    } else if (presetType === 'audit-only') {
       const matched = allModuleKeys.filter((k: string) => {
-        const upper = k.toUpperCase().replace(/\./g, "_");
+        const upper = k.toUpperCase().replace(/\./g, '_');
         return (
-          upper.includes("VIEW") ||
-          upper.includes("AUDIT") ||
-          upper.includes("READ") ||
-          upper.includes("LOG")
+          upper.includes('VIEW') ||
+          upper.includes('AUDIT') ||
+          upper.includes('READ') ||
+          upper.includes('LOG')
         );
       });
       setSelectedPermissions(matched.length > 0 ? matched : allModuleKeys);
-    } else if (presetType === "clear") {
+    } else if (presetType === 'clear') {
       setSelectedPermissions([]);
     }
   }
 
   function togglePermission(key: string) {
-    const meta = getPermissionMetadata(key, "");
+    const meta = getPermissionMetadata(key, '');
     const isCurrentlySelected = selectedPermissions.includes(key);
     let newSelected = [...selectedPermissions];
 
     if (isCurrentlySelected) {
       newSelected = newSelected.filter((k) => k !== key);
     } else {
-      if (meta.category === "dangerous") {
+      if (meta.category === 'dangerous') {
         const confirmMsg = `⚠️ WARNING: "${meta.label}" is a dangerous permission. Are you sure you want to enable this?`;
         if (!window.confirm(confirmMsg)) return;
       }
       newSelected.push(key);
       meta.dependencies.forEach((depKey) => {
-        const depExists = modules.some((m) =>
-          m.permissions.some((p: any) => p.key === depKey),
-        );
+        const depExists = modules.some((m) => m.permissions.some((p: any) => p.key === depKey));
         if (depExists && !newSelected.includes(depKey)) {
           newSelected.push(depKey);
         }
@@ -353,12 +327,12 @@ export const RoleFormDrawer: React.FC<RoleFormDrawerProps> = ({
                 ? `Role Details — ${roleName}`
                 : editingRole
                   ? `Edit Governance Role — ${editingRole.name}`
-                  : "Create New Governance Role Draft"}
+                  : 'Create New Governance Role Draft'}
             </h2>
             <p className="text-xs text-text-light mt-1">
               {viewOnly
-                ? "Viewing permissions, version logs, and assignment rules for this role."
-                : "Follow the step-by-step workspace tabs to define role metadata, permission keys, and submit for governance review."}
+                ? 'Viewing permissions, version logs, and assignment rules for this role.'
+                : 'Follow the step-by-step workspace tabs to define role metadata, permission keys, and submit for governance review.'}
             </p>
           </div>
           <button
@@ -373,11 +347,11 @@ export const RoleFormDrawer: React.FC<RoleFormDrawerProps> = ({
         <div className="flex items-center gap-1 border-b border-border bg-background/60 px-6 py-2 shrink-0 overflow-x-auto text-xs font-semibold">
           <button
             type="button"
-            onClick={() => setDrawerTab("general")}
+            onClick={() => setDrawerTab('general')}
             className={`px-3 py-2 rounded-xl flex items-center gap-1.5 transition cursor-pointer ${
-              drawerTab === "general"
-                ? "bg-primary text-white shadow-sm"
-                : "text-text-light hover:text-text hover:bg-surface"
+              drawerTab === 'general'
+                ? 'bg-primary text-white shadow-sm'
+                : 'text-text-light hover:text-text hover:bg-surface'
             }`}
           >
             <FileText className="h-3.5 w-3.5" /> General
@@ -385,132 +359,107 @@ export const RoleFormDrawer: React.FC<RoleFormDrawerProps> = ({
           <button
             type="button"
             disabled={!isPermissionsUnlocked}
-            onClick={() => isPermissionsUnlocked && setDrawerTab("permissions")}
+            onClick={() => isPermissionsUnlocked && setDrawerTab('permissions')}
             className={`px-3 py-2 rounded-xl flex items-center gap-1.5 transition ${
-              drawerTab === "permissions"
-                ? "bg-primary text-white shadow-sm cursor-pointer"
+              drawerTab === 'permissions'
+                ? 'bg-primary text-white shadow-sm cursor-pointer'
                 : isPermissionsUnlocked
-                  ? "text-text-light hover:text-text hover:bg-surface cursor-pointer"
-                  : "text-text-light/40 opacity-50 cursor-not-allowed bg-background/30"
+                  ? 'text-text-light hover:text-text hover:bg-surface cursor-pointer'
+                  : 'text-text-light/40 opacity-50 cursor-not-allowed bg-background/30'
             }`}
           >
-            <Key className="h-3.5 w-3.5" /> Permissions (
-            {selectedPermissions.length})
-            {!isPermissionsUnlocked && (
-              <Lock className="h-3 w-3 ml-0.5 text-text-light/50" />
-            )}
+            <Key className="h-3.5 w-3.5" /> Permissions ({selectedPermissions.length})
+            {!isPermissionsUnlocked && <Lock className="h-3 w-3 ml-0.5 text-text-light/50" />}
           </button>
           <button
             type="button"
             disabled={!isReviewUnlocked}
-            onClick={() => isReviewUnlocked && setDrawerTab("review")}
+            onClick={() => isReviewUnlocked && setDrawerTab('review')}
             className={`px-3 py-2 rounded-xl flex items-center gap-1.5 transition ${
-              drawerTab === "review"
-                ? "bg-primary text-white shadow-sm cursor-pointer"
+              drawerTab === 'review'
+                ? 'bg-primary text-white shadow-sm cursor-pointer'
                 : isReviewUnlocked
-                  ? "text-text-light hover:text-text hover:bg-surface cursor-pointer"
-                  : "text-text-light/40 opacity-50 cursor-not-allowed bg-background/30"
+                  ? 'text-text-light hover:text-text hover:bg-surface cursor-pointer'
+                  : 'text-text-light/40 opacity-50 cursor-not-allowed bg-background/30'
             }`}
           >
             <Eye className="h-3.5 w-3.5" /> Review
-            {!isReviewUnlocked && (
-              <Lock className="h-3 w-3 ml-0.5 text-text-light/50" />
-            )}
+            {!isReviewUnlocked && <Lock className="h-3 w-3 ml-0.5 text-text-light/50" />}
           </button>
           <button
             type="button"
             disabled={!isCommentsUnlocked}
-            onClick={() => isCommentsUnlocked && setDrawerTab("comments")}
-            title={
-              !isCommentsUnlocked
-                ? "Save role draft first to view or post notes"
-                : undefined
-            }
+            onClick={() => isCommentsUnlocked && setDrawerTab('comments')}
+            title={!isCommentsUnlocked ? 'Save role draft first to view or post notes' : undefined}
             className={`px-3 py-2 rounded-xl flex items-center gap-1.5 transition ${
-              drawerTab === "comments"
-                ? "bg-primary text-white shadow-sm cursor-pointer"
+              drawerTab === 'comments'
+                ? 'bg-primary text-white shadow-sm cursor-pointer'
                 : isCommentsUnlocked
-                  ? "text-text-light hover:text-text hover:bg-surface cursor-pointer"
-                  : "text-text-light/40 opacity-50 cursor-not-allowed bg-background/30"
+                  ? 'text-text-light hover:text-text hover:bg-surface cursor-pointer'
+                  : 'text-text-light/40 opacity-50 cursor-not-allowed bg-background/30'
             }`}
           >
             <MessageSquare className="h-3.5 w-3.5" /> Comments
-            {!isCommentsUnlocked && (
-              <Lock className="h-3 w-3 ml-0.5 text-text-light/50" />
-            )}
+            {!isCommentsUnlocked && <Lock className="h-3 w-3 ml-0.5 text-text-light/50" />}
           </button>
           <button
             type="button"
             disabled={!isVersionsUnlocked}
-            onClick={() => isVersionsUnlocked && setDrawerTab("versions")}
+            onClick={() => isVersionsUnlocked && setDrawerTab('versions')}
             title={
-              !isVersionsUnlocked
-                ? "Save role draft first to view version history"
-                : undefined
+              !isVersionsUnlocked ? 'Save role draft first to view version history' : undefined
             }
             className={`px-3 py-2 rounded-xl flex items-center gap-1.5 transition ${
-              drawerTab === "versions"
-                ? "bg-primary text-white shadow-sm cursor-pointer"
+              drawerTab === 'versions'
+                ? 'bg-primary text-white shadow-sm cursor-pointer'
                 : isVersionsUnlocked
-                  ? "text-text-light hover:text-text hover:bg-surface cursor-pointer"
-                  : "text-text-light/40 opacity-50 cursor-not-allowed bg-background/30"
+                  ? 'text-text-light hover:text-text hover:bg-surface cursor-pointer'
+                  : 'text-text-light/40 opacity-50 cursor-not-allowed bg-background/30'
             }`}
           >
             <History className="h-3.5 w-3.5" /> Versions
-            {!isVersionsUnlocked && (
-              <Lock className="h-3 w-3 ml-0.5 text-text-light/50" />
-            )}
+            {!isVersionsUnlocked && <Lock className="h-3 w-3 ml-0.5 text-text-light/50" />}
           </button>
           <button
             type="button"
             disabled={!isActivityUnlocked}
-            onClick={() => isActivityUnlocked && setDrawerTab("activity")}
-            title={
-              !isActivityUnlocked
-                ? "Save role draft first to view activity log"
-                : undefined
-            }
+            onClick={() => isActivityUnlocked && setDrawerTab('activity')}
+            title={!isActivityUnlocked ? 'Save role draft first to view activity log' : undefined}
             className={`px-3 py-2 rounded-xl flex items-center gap-1.5 transition ${
-              drawerTab === "activity"
-                ? "bg-primary text-white shadow-sm cursor-pointer"
+              drawerTab === 'activity'
+                ? 'bg-primary text-white shadow-sm cursor-pointer'
                 : isActivityUnlocked
-                  ? "text-text-light hover:text-text hover:bg-surface cursor-pointer"
-                  : "text-text-light/40 opacity-50 cursor-not-allowed bg-background/30"
+                  ? 'text-text-light hover:text-text hover:bg-surface cursor-pointer'
+                  : 'text-text-light/40 opacity-50 cursor-not-allowed bg-background/30'
             }`}
           >
             <Clock className="h-3.5 w-3.5" /> Activity Log
-            {!isActivityUnlocked && (
-              <Lock className="h-3 w-3 ml-0.5 text-text-light/50" />
-            )}
+            {!isActivityUnlocked && <Lock className="h-3 w-3 ml-0.5 text-text-light/50" />}
           </button>
           <button
             type="button"
             disabled={!isUsersUnlocked}
-            onClick={() => isUsersUnlocked && setDrawerTab("users")}
+            onClick={() => isUsersUnlocked && setDrawerTab('users')}
             title={
-              !isUsersUnlocked
-                ? "Role must be saved & APPROVED/ACTIVE to assign users"
-                : undefined
+              !isUsersUnlocked ? 'Role must be saved & APPROVED/ACTIVE to assign users' : undefined
             }
             className={`px-3 py-2 rounded-xl flex items-center gap-1.5 transition ${
-              drawerTab === "users"
-                ? "bg-primary text-white shadow-sm cursor-pointer"
+              drawerTab === 'users'
+                ? 'bg-primary text-white shadow-sm cursor-pointer'
                 : isUsersUnlocked
-                  ? "text-text-light hover:text-text hover:bg-surface cursor-pointer"
-                  : "text-text-light/40 opacity-50 cursor-not-allowed bg-background/30"
+                  ? 'text-text-light hover:text-text hover:bg-surface cursor-pointer'
+                  : 'text-text-light/40 opacity-50 cursor-not-allowed bg-background/30'
             }`}
           >
             <Users className="h-3.5 w-3.5" /> Assigned Users
-            {!isUsersUnlocked && (
-              <Lock className="h-3 w-3 ml-0.5 text-text-light/50" />
-            )}
+            {!isUsersUnlocked && <Lock className="h-3 w-3 ml-0.5 text-text-light/50" />}
           </button>
         </div>
 
         {/* Form Body */}
         <div className="flex flex-1 overflow-hidden">
           {/* Tab 1: General */}
-          {drawerTab === "general" && (
+          {drawerTab === 'general' && (
             <div className="flex-1 overflow-y-auto p-6 space-y-6">
               <div className="space-y-4 max-w-2xl">
                 <div className="space-y-2">
@@ -543,31 +492,18 @@ export const RoleFormDrawer: React.FC<RoleFormDrawerProps> = ({
                 {editingRole && (
                   <div className="p-4 bg-background border border-border rounded-2xl space-y-2 text-xs text-text-light">
                     <div className="flex justify-between">
-                      <span className="font-semibold text-text">
-                        Active Version:
-                      </span>
+                      <span className="font-semibold text-text">Active Version:</span>
                       <span className="font-bold text-primary">
-                        v
-                        {editingRole.versionNumber ||
-                          editingRole.version ||
-                          "0.1"}
+                        v{editingRole.versionNumber || editingRole.version || '0.1'}
                       </span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="font-semibold text-text">
-                        System Role:
-                      </span>
-                      <span>
-                        {editingRole.isSystemRole ? "Yes (Read-only)" : "No"}
-                      </span>
+                      <span className="font-semibold text-text">System Role:</span>
+                      <span>{editingRole.isSystemRole ? 'Yes (Read-only)' : 'No'}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="font-semibold text-text">Status:</span>
-                      <Badge
-                        color={
-                          editingRole.status === "ACTIVE" ? "green" : "yellow"
-                        }
-                      >
+                      <Badge color={editingRole.status === 'ACTIVE' ? 'green' : 'yellow'}>
                         {editingRole.status}
                       </Badge>
                     </div>
@@ -579,11 +515,10 @@ export const RoleFormDrawer: React.FC<RoleFormDrawerProps> = ({
                     <Button
                       type="button"
                       disabled={!isGeneralFilled}
-                      onClick={() => setDrawerTab("permissions")}
+                      onClick={() => setDrawerTab('permissions')}
                       className="flex items-center gap-2 text-xs"
                     >
-                      Next: Assign Permissions{" "}
-                      <ArrowRight className="h-4 w-4" />
+                      Next: Assign Permissions <ArrowRight className="h-4 w-4" />
                     </Button>
                   </div>
                 )}
@@ -592,40 +527,39 @@ export const RoleFormDrawer: React.FC<RoleFormDrawerProps> = ({
           )}
 
           {/* Tab 2: Permissions */}
-          {drawerTab === "permissions" && (
+          {drawerTab === 'permissions' && (
             <div className="flex flex-1 overflow-hidden">
               <div className="flex-1 overflow-y-auto p-6 space-y-6 border-r border-border">
                 {!isFormReadOnly && (
                   <div className="space-y-3 rounded-2xl border border-border p-4 bg-background/50">
                     <div className="flex items-center gap-2 text-sm font-semibold text-text">
-                      <HelpCircle className="h-4 w-4 text-primary" /> Quick
-                      Presets
+                      <HelpCircle className="h-4 w-4 text-primary" /> Quick Presets
                     </div>
                     <div className="flex flex-wrap gap-2">
                       <button
                         type="button"
-                        onClick={() => handlePresetChange("super-admin")}
+                        onClick={() => handlePresetChange('super-admin')}
                         className="text-xs px-3 py-1.5 rounded-lg border border-border bg-surface hover:border-primary transition font-medium cursor-pointer"
                       >
                         Super Admin (All)
                       </button>
                       <button
                         type="button"
-                        onClick={() => handlePresetChange("role-manager")}
+                        onClick={() => handlePresetChange('role-manager')}
                         className="text-xs px-3 py-1.5 rounded-lg border border-border bg-surface hover:border-primary transition font-medium cursor-pointer"
                       >
                         RBAC Manager
                       </button>
                       <button
                         type="button"
-                        onClick={() => handlePresetChange("audit-only")}
+                        onClick={() => handlePresetChange('audit-only')}
                         className="text-xs px-3 py-1.5 rounded-lg border border-border bg-surface hover:border-primary transition font-medium cursor-pointer"
                       >
                         Auditor
                       </button>
                       <button
                         type="button"
-                        onClick={() => handlePresetChange("clear")}
+                        onClick={() => handlePresetChange('clear')}
                         className="text-xs px-3 py-1.5 rounded-lg border border-border bg-surface hover:border-rose-400 hover:bg-rose-50 text-rose-500 transition font-medium cursor-pointer"
                       >
                         Clear All
@@ -646,25 +580,20 @@ export const RoleFormDrawer: React.FC<RoleFormDrawerProps> = ({
 
                 <div className="space-y-4">
                   {modules.map((mod) => {
-                    const formattedPerms = (mod.permissions || []).map(
-                      (p: any) => getPermissionMetadata(p.key, p.description),
+                    const formattedPerms = (mod.permissions || []).map((p: any) =>
+                      getPermissionMetadata(p.key, p.description),
                     );
                     const matches = formattedPerms.filter(
                       (p: any) =>
-                        p.key
-                          .toLowerCase()
-                          .includes(permSearch.toLowerCase()) ||
-                        p.label
-                          .toLowerCase()
-                          .includes(permSearch.toLowerCase()),
+                        p.key.toLowerCase().includes(permSearch.toLowerCase()) ||
+                        p.label.toLowerCase().includes(permSearch.toLowerCase()),
                     );
                     if (matches.length === 0) return null;
 
-                    const isExpanded =
-                      permSearch.length > 0 || expandedModules.includes(mod.id);
+                    const isExpanded = permSearch.length > 0 || expandedModules.includes(mod.id);
                     const modSelectedKeys = matches.map((p: any) => p.key);
-                    const modSelectedCount = modSelectedKeys.filter(
-                      (k: string) => selectedPermissions.includes(k),
+                    const modSelectedCount = modSelectedKeys.filter((k: string) =>
+                      selectedPermissions.includes(k),
                     ).length;
 
                     return (
@@ -720,9 +649,7 @@ export const RoleFormDrawer: React.FC<RoleFormDrawerProps> = ({
                                 <label className="flex items-center gap-2 cursor-pointer flex-1">
                                   <input
                                     type="checkbox"
-                                    checked={selectedPermissions.includes(
-                                      perm.key,
-                                    )}
+                                    checked={selectedPermissions.includes(perm.key)}
                                     onChange={() => togglePermission(perm.key)}
                                     disabled={isFormReadOnly}
                                     className="h-4 w-4 rounded accent-primary cursor-pointer"
@@ -749,12 +676,12 @@ export const RoleFormDrawer: React.FC<RoleFormDrawerProps> = ({
                   <div className="pt-4 flex items-center justify-between border-t border-border/40">
                     <span className="text-xs text-text-light">
                       {selectedPermissions.length} permission
-                      {selectedPermissions.length === 1 ? "" : "s"} selected
+                      {selectedPermissions.length === 1 ? '' : 's'} selected
                     </span>
                     <Button
                       type="button"
                       disabled={!isReviewUnlocked}
-                      onClick={() => setDrawerTab("review")}
+                      onClick={() => setDrawerTab('review')}
                       className="flex items-center gap-2 text-xs"
                     >
                       Next: Governance Review <ArrowRight className="h-4 w-4" />
@@ -766,7 +693,7 @@ export const RoleFormDrawer: React.FC<RoleFormDrawerProps> = ({
           )}
 
           {/* Tab 3: Review */}
-          {drawerTab === "review" && (
+          {drawerTab === 'review' && (
             <div className="flex-1 overflow-y-auto p-6 space-y-6 max-w-3xl">
               <div className="p-5 rounded-2xl bg-surface border border-border space-y-4">
                 <div className="flex items-center justify-between">
@@ -780,15 +707,14 @@ export const RoleFormDrawer: React.FC<RoleFormDrawerProps> = ({
                   </div>
                   <Badge
                     color={
-                      editingRole?.versionStatus === "APPROVED"
-                        ? "green"
+                      editingRole?.versionStatus === 'APPROVED'
+                        ? 'green'
                         : isGovernanceSubmitted
-                          ? "indigo"
-                          : "yellow"
+                          ? 'indigo'
+                          : 'yellow'
                     }
                   >
-                    {editingRole?.versionStatus ||
-                      (isGovernanceSubmitted ? "IN REVIEW" : "DRAFT")}
+                    {editingRole?.versionStatus || (isGovernanceSubmitted ? 'IN REVIEW' : 'DRAFT')}
                   </Badge>
                 </div>
 
@@ -800,8 +726,8 @@ export const RoleFormDrawer: React.FC<RoleFormDrawerProps> = ({
                           ● Status: Governance Approved & Released
                         </div>
                         <div className="text-text-light mt-0.5">
-                          This role version has passed Maker-Checker review and
-                          is active in production.
+                          This role version has passed Maker-Checker review and is active in
+                          production.
                         </div>
                       </div>
                       <div className="flex items-center gap-2">
@@ -825,7 +751,7 @@ export const RoleFormDrawer: React.FC<RoleFormDrawerProps> = ({
                             onOpenSubmitReviewModal(editingRole);
                           } else {
                             toast.error(
-                              "Please create and save draft role first before submitting for governance review.",
+                              'Please create and save draft role first before submitting for governance review.',
                             );
                           }
                         }}
@@ -834,8 +760,8 @@ export const RoleFormDrawer: React.FC<RoleFormDrawerProps> = ({
                       </Button>
                       {!isSavedInDb && (
                         <p className="text-[11px] text-amber-600 dark:text-amber-400 font-medium flex items-center gap-1">
-                          ⚠️ Please click "Create Draft" in the footer first
-                          before submitting for review.
+                          ⚠️ Please click "Create Draft" in the footer first before submitting for
+                          review.
                         </p>
                       )}
                     </div>
@@ -846,8 +772,7 @@ export const RoleFormDrawer: React.FC<RoleFormDrawerProps> = ({
                           ● Status: Pending Reviewer Decision
                         </div>
                         <div className="text-text-light mt-0.5">
-                          Assigned reviewers must approve or reject this role
-                          version.
+                          Assigned reviewers must approve or reject this role version.
                         </div>
                       </div>
                       <Button
@@ -870,13 +795,12 @@ export const RoleFormDrawer: React.FC<RoleFormDrawerProps> = ({
           )}
 
           {/* Tab 4: Comments */}
-          {drawerTab === "comments" && (
+          {drawerTab === 'comments' && (
             <div className="flex-1 overflow-y-auto p-6 space-y-6 max-w-3xl">
               <div className="flex items-center justify-between border-b border-border pb-4">
                 <div>
                   <h3 className="text-base font-bold text-text flex items-center gap-2">
-                    <MessageSquare className="h-5 w-5 text-primary" />{" "}
-                    Governance Discussion Thread
+                    <MessageSquare className="h-5 w-5 text-primary" /> Governance Discussion Thread
                   </h3>
                   <p className="text-xs text-text-light">
                     Post review notes, questions, or change rationales.
@@ -897,12 +821,7 @@ export const RoleFormDrawer: React.FC<RoleFormDrawerProps> = ({
                   className="w-full rounded-xl border border-border bg-background p-3 text-xs text-text focus:outline-none focus:border-primary resize-none"
                 />
                 <div className="flex justify-end">
-                  <Button
-                    type="submit"
-                    size="sm"
-                    leftIcon={Send}
-                    disabled={!newCommentText.trim()}
-                  >
+                  <Button type="submit" size="sm" leftIcon={Send} disabled={!newCommentText.trim()}>
                     Post Note
                   </Button>
                 </div>
@@ -911,8 +830,7 @@ export const RoleFormDrawer: React.FC<RoleFormDrawerProps> = ({
               <div className="space-y-3">
                 {loadingComments ? (
                   <div className="p-8 text-center text-xs text-text-light flex items-center justify-center gap-2">
-                    <RefreshCw className="h-4 w-4 animate-spin text-primary" />{" "}
-                    Loading comments...
+                    <RefreshCw className="h-4 w-4 animate-spin text-primary" /> Loading comments...
                   </div>
                 ) : commentsList.length === 0 ? (
                   <div className="p-6 border border-dashed border-border rounded-xl text-center text-xs text-text-light italic">
@@ -925,7 +843,7 @@ export const RoleFormDrawer: React.FC<RoleFormDrawerProps> = ({
                       className="p-3.5 bg-background border border-border rounded-xl text-xs space-y-1"
                     >
                       <div className="flex justify-between font-semibold text-text">
-                        <span>{c.user?.name || "Administrator"}</span>
+                        <span>{c.user?.name || 'Administrator'}</span>
                         <span className="text-[10px] text-text-light">
                           {new Date(c.createdAt).toLocaleString()}
                         </span>
@@ -939,13 +857,12 @@ export const RoleFormDrawer: React.FC<RoleFormDrawerProps> = ({
           )}
 
           {/* Tab 5: Versions */}
-          {drawerTab === "versions" && (
+          {drawerTab === 'versions' && (
             <div className="flex-1 overflow-y-auto p-6 space-y-6 max-w-3xl">
               <div className="flex items-center justify-between border-b border-border pb-4">
                 <div>
                   <h3 className="text-base font-bold text-text flex items-center gap-2">
-                    <History className="h-5 w-5 text-primary" /> Role Version
-                    History
+                    <History className="h-5 w-5 text-primary" /> Role Version History
                   </h3>
                   <p className="text-xs text-text-light">
                     Audit past version releases, statuses, and governance locks.
@@ -968,20 +885,20 @@ export const RoleFormDrawer: React.FC<RoleFormDrawerProps> = ({
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
                           <span className="font-bold text-sm text-text">
-                            v{v.versionNumber || v.version || "1.0"}
+                            v{v.versionNumber || v.version || '1.0'}
                           </span>
                           <Badge
                             color={
-                              v.status === "APPROVED"
-                                ? "green"
-                                : v.status === "DRAFT"
-                                  ? "yellow"
-                                  : v.status === "SUPERSEDED"
-                                    ? "gray"
-                                    : "indigo"
+                              v.status === 'APPROVED'
+                                ? 'green'
+                                : v.status === 'DRAFT'
+                                  ? 'yellow'
+                                  : v.status === 'SUPERSEDED'
+                                    ? 'gray'
+                                    : 'indigo'
                             }
                           >
-                            {v.status || "RELEASED"}
+                            {v.status || 'RELEASED'}
                           </Badge>
                           {v.isLocked && (
                             <span className="flex items-center gap-1 text-[10px] bg-rose-50 text-rose-600 px-2 py-0.5 rounded-full font-semibold border border-rose-200">
@@ -990,29 +907,25 @@ export const RoleFormDrawer: React.FC<RoleFormDrawerProps> = ({
                           )}
                         </div>
                         <span className="text-[10px] text-text-light font-mono">
-                          {v.createdAt
-                            ? dayjs(v.createdAt).format("MMM DD, YYYY HH:mm")
-                            : "N/A"}
+                          {v.createdAt ? dayjs(v.createdAt).format('MMM DD, YYYY HH:mm') : 'N/A'}
                         </span>
                       </div>
 
                       <p className="text-text-light text-xs">
-                        {v.description ||
-                          "Version snapshot updated during governance workflow."}
+                        {v.description || 'Version snapshot updated during governance workflow.'}
                       </p>
 
                       <div className="pt-2 border-t border-border/40 flex items-center justify-between text-[11px] text-text-light">
                         <span>
-                          Permissions:{" "}
+                          Permissions:{' '}
                           <strong className="text-text">
-                            {(v.permissionKeys || v.permissions || []).length}{" "}
-                            keys
+                            {(v.permissionKeys || v.permissions || []).length} keys
                           </strong>
                         </span>
                         <span>
-                          Author:{" "}
+                          Author:{' '}
                           <strong className="text-text">
-                            {v.createdByUser?.name || "Administrator"}
+                            {v.createdByUser?.name || 'Administrator'}
                           </strong>
                         </span>
                       </div>
@@ -1024,17 +937,15 @@ export const RoleFormDrawer: React.FC<RoleFormDrawerProps> = ({
           )}
 
           {/* Tab 6: Activity Log */}
-          {drawerTab === "activity" && (
+          {drawerTab === 'activity' && (
             <div className="flex-1 overflow-y-auto p-6 space-y-6 max-w-3xl">
               <div className="flex items-center justify-between border-b border-border pb-4">
                 <div>
                   <h3 className="text-base font-bold text-text flex items-center gap-2">
-                    <Clock className="h-5 w-5 text-primary" /> Role Activity Log
-                    & Audit Trail
+                    <Clock className="h-5 w-5 text-primary" /> Role Activity Log & Audit Trail
                   </h3>
                   <p className="text-xs text-text-light">
-                    Forensic timeline of role creations, permission
-                    modifications, and reviews.
+                    Forensic timeline of role creations, permission modifications, and reviews.
                   </p>
                 </div>
                 <Badge color="indigo">{activityLogsList.length} Events</Badge>
@@ -1043,8 +954,8 @@ export const RoleFormDrawer: React.FC<RoleFormDrawerProps> = ({
               <div className="space-y-3">
                 {loadingActivityLogs ? (
                   <div className="p-8 text-center text-xs text-text-light flex items-center justify-center gap-2">
-                    <RefreshCw className="h-4 w-4 animate-spin text-primary" />{" "}
-                    Loading activity log...
+                    <RefreshCw className="h-4 w-4 animate-spin text-primary" /> Loading activity
+                    log...
                   </div>
                 ) : activityLogsList.length === 0 ? (
                   <div className="p-6 border border-dashed border-border rounded-xl text-center text-xs text-text-light italic">
@@ -1058,18 +969,18 @@ export const RoleFormDrawer: React.FC<RoleFormDrawerProps> = ({
                     >
                       <div className="flex justify-between items-center font-semibold text-text">
                         <span className="font-bold text-primary">
-                          {log.action || "SYSTEM_EVENT"}
+                          {log.action || 'SYSTEM_EVENT'}
                         </span>
                         <span className="text-[10px] text-text-light">
                           {log.createdAt
-                            ? dayjs(log.createdAt).format("MMM DD, YYYY HH:mm")
-                            : "N/A"}
+                            ? dayjs(log.createdAt).format('MMM DD, YYYY HH:mm')
+                            : 'N/A'}
                         </span>
                       </div>
                       <p className="text-text text-xs">
-                        Actor:{" "}
+                        Actor:{' '}
                         <span className="font-medium">
-                          {log.actorEmail || log.user?.email || "System"}
+                          {log.actorEmail || log.user?.email || 'System'}
                         </span>
                       </p>
                       {log.metadata && (
@@ -1085,7 +996,7 @@ export const RoleFormDrawer: React.FC<RoleFormDrawerProps> = ({
           )}
 
           {/* Tab 7: Assigned Users */}
-          {drawerTab === "users" && (
+          {drawerTab === 'users' && (
             <div className="flex-1 overflow-y-auto p-6 space-y-6 max-w-3xl">
               <div className="flex items-center justify-between border-b border-border pb-4">
                 <div>
@@ -1093,8 +1004,7 @@ export const RoleFormDrawer: React.FC<RoleFormDrawerProps> = ({
                     <Users className="h-5 w-5 text-primary" /> Assigned Users
                   </h3>
                   <p className="text-xs text-text-light">
-                    Administrators currently holding this active governance
-                    role.
+                    Administrators currently holding this active governance role.
                   </p>
                 </div>
                 <Badge color="green">
@@ -1104,7 +1014,7 @@ export const RoleFormDrawer: React.FC<RoleFormDrawerProps> = ({
                       (editingRole as any)?.assignedUsers ||
                       []
                     ).length
-                  }{" "}
+                  }{' '}
                   Users
                 </Badge>
               </div>
@@ -1130,7 +1040,7 @@ export const RoleFormDrawer: React.FC<RoleFormDrawerProps> = ({
                     >
                       <div>
                         <span className="font-semibold text-text block">
-                          {u.user?.name || u.name || "Administrator"}
+                          {u.user?.name || u.name || 'Administrator'}
                         </span>
                         <span className="text-[11px] text-text-light font-mono">
                           {u.user?.email || u.email}
@@ -1151,10 +1061,7 @@ export const RoleFormDrawer: React.FC<RoleFormDrawerProps> = ({
             <Button variant="outline" onClick={onClose}>
               Close
             </Button>
-            <Button
-              onClick={handleStartNewDraft}
-              className="flex items-center gap-2"
-            >
+            <Button onClick={handleStartNewDraft} className="flex items-center gap-2">
               <Plus className="h-4 w-4" /> Create New Draft Version (v
               {(editingRole?.version || 1) + 1})
             </Button>
@@ -1167,19 +1074,15 @@ export const RoleFormDrawer: React.FC<RoleFormDrawerProps> = ({
               </Button>
               <Button
                 onClick={onSubmit}
-                disabled={
-                  submitting ||
-                  !isGeneralFilled ||
-                  (!hasFormChanges && !isNewDraftMode)
-                }
+                disabled={submitting || !isGeneralFilled || (!hasFormChanges && !isNewDraftMode)}
               >
                 {submitting
-                  ? "Saving..."
+                  ? 'Saving...'
                   : isNewDraftMode
-                    ? "Create New Draft Version"
+                    ? 'Create New Draft Version'
                     : editingRole
-                      ? "Save Changes"
-                      : "Create Draft"}
+                      ? 'Save Changes'
+                      : 'Create Draft'}
               </Button>
             </div>
           )

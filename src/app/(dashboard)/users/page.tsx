@@ -1,23 +1,12 @@
 //@ts-nocheck
-"use client";
+'use client';
 
-import {
-  memo,
-  Suspense,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { AgChartsEnterpriseModule } from "ag-charts-enterprise";
+import { memo, Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { AgChartsEnterpriseModule } from 'ag-charts-enterprise';
 import {
   AllCommunityModule,
-  type ColDef,ColGroupDef,
-  GridOptions,  GridReadyEvent,
-  ICellRendererParams,
-  SideBarDef,themeQuartz} from "ag-grid-community";
+  type ColDef,  themeQuartz} from 'ag-grid-community';
 import {
   CellSelectionModule,
   ClipboardModule,
@@ -38,9 +27,9 @@ import {
   SideBarModule,
   SparklinesModule,
   StatusBarModule,
-} from "ag-grid-enterprise";
-import { AgGridReact } from "ag-grid-react";
-import dayjs from "dayjs";
+} from 'ag-grid-enterprise';
+import { AgGridReact } from 'ag-grid-react';
+import dayjs from 'dayjs';
 import {
   ArrowRight,
   Ban,
@@ -63,13 +52,18 @@ import {
   Users,
   UserX,
   XCircle,
-} from "lucide-react";
+} from 'lucide-react';
 
 import type {
-  ChangeEvent} from "react";
-import { Toolbar } from "@/components/ui/Toolbar";
-import { UserApprovalModal } from "@/components/users/UserApprovalModal";
-import { authApi } from "@/features/auth/api/api";
+  ColGroupDef,
+  GridOptions,
+  GridReadyEvent,
+  ICellRendererParams,
+  SideBarDef} from 'ag-grid-community';
+import type { ChangeEvent } from 'react';
+import { Toolbar } from '@/components/ui/Toolbar';
+import { UserApprovalModal } from '@/components/users/UserApprovalModal';
+import { authApi } from '@/features/auth/api/api';
 import {
   useActivateUser,
   useArchiveUser,
@@ -80,15 +74,15 @@ import {
   useSendUserVerification,
   useSuspendUser,
   useUpdateUserDetail,
-} from "@/features/auth/api/mutations";
-import { useUserStats } from "@/features/auth/api/queries";
-import { useThemeStore } from "@/store/theme.store";
+} from '@/features/auth/api/mutations';
+import { useUserStats } from '@/features/auth/api/queries';
+import { useThemeStore } from '@/store/theme.store';
 
 interface UserListItem {
   id: string;
   name: string;
   email: string;
-  accountType: "user" | "admin";
+  accountType: 'user' | 'admin';
   companyName: string | null;
   country: {
     id: string;
@@ -134,9 +128,9 @@ const CountryCellRenderer = (params: ICellRendererParams<UserListItem>) => {
   const u = params.data;
   if (!u) return null;
   const value = u.country.name;
-  const {code} = u.country;
-  if (value == null || value === "" || value === "(Select All)") {
-    return <span className="truncate">{value || ""}</span>;
+  const { code } = u.country;
+  if (value == null || value === '' || value === '(Select All)') {
+    return <span className="truncate">{value || ''}</span>;
   }
 
   return (
@@ -230,19 +224,14 @@ interface RowItem {
 // ];
 
 const getApprovalStatus = (user: UserListItem) => {
-  if (user.approvedAt) return "Approved";
-  if (
-    user.status === "approved" ||
-    user.status === "APPROVED" ||
-    user.status === "active"
-  )
-    return "Approved";
-  if (user.status === "pending_approval") return "Pending";
-  if (user.status === "pending_review") return "Pending Review";
-  if (user.status === "rejected" || user.status === "rejected_by_admin")
-    return "Rejected";
-  if (user.status === "pending_email_verification") return "Pending Email";
-  return "Not Required";
+  if (user.approvedAt) return 'Approved';
+  if (user.status === 'approved' || user.status === 'APPROVED' || user.status === 'active')
+    return 'Approved';
+  if (user.status === 'pending_approval') return 'Pending';
+  if (user.status === 'pending_review') return 'Pending Review';
+  if (user.status === 'rejected' || user.status === 'rejected_by_admin') return 'Rejected';
+  if (user.status === 'pending_email_verification') return 'Pending Email';
+  return 'Not Required';
 };
 
 const ApprovedStatusRenderer = (params: ICellRendererParams<UserListItem>) => {
@@ -252,108 +241,102 @@ const ApprovedStatusRenderer = (params: ICellRendererParams<UserListItem>) => {
 
   return (
     <div className="flex items-center h-full">
-      {approvalStatus === "Approved" && (
+      {approvalStatus === 'Approved' && (
         <span className="text-[11px] font-semibold text-emerald-600 dark:text-emerald-400">
           Approved
         </span>
       )}
-      {(approvalStatus === "Pending Approval" ||
-        approvalStatus === "Pending") && (
+      {(approvalStatus === 'Pending Approval' || approvalStatus === 'Pending') && (
         <span className="text-[11px] font-semibold text-amber-600 dark:text-amber-400">
           Pending Approval
         </span>
       )}
-      {approvalStatus === "Pending Review" && (
+      {approvalStatus === 'Pending Review' && (
         <span className="text-[11px] font-semibold text-purple-600 dark:text-purple-400">
           Pending Review
         </span>
       )}
-      {approvalStatus === "Rejected" && (
-        <span className="text-[11px] font-semibold text-rose-600 dark:text-rose-400">
-          Rejected
-        </span>
+      {approvalStatus === 'Rejected' && (
+        <span className="text-[11px] font-semibold text-rose-600 dark:text-rose-400">Rejected</span>
       )}
-      {approvalStatus === "Pending Email" && (
+      {approvalStatus === 'Pending Email' && (
         <span className="text-[11px] font-semibold text-amber-600 dark:text-amber-400">
           Pending Email
         </span>
       )}
-      {approvalStatus === "Not Required" && (
-        <span className="text-[11px] text-text-light">—</span>
-      )}
+      {approvalStatus === 'Not Required' && <span className="text-[11px] text-text-light">—</span>}
     </div>
   );
 };
 
 enum UserStatus {
-  PENDING_EMAIL_VERIFICATION = "pending_email_verification",
-  PENDING_APPROVAL = "pending_approval",
-  PENDING_REVIEW = "pending_review",
-  ACTIVE = "active",
-  REJECTED = "rejected",
-  SUSPENDED = "suspended",
-  DEACTIVATED = "deactivated",
-  ARCHIVED = "archived",
-  BLOCKED = "BLOCKED",
-  REJECTED_BY_ADMIN = "rejected_by_admin",
-  APPROVED = "APPROVED",
+  PENDING_EMAIL_VERIFICATION = 'pending_email_verification',
+  PENDING_APPROVAL = 'pending_approval',
+  PENDING_REVIEW = 'pending_review',
+  ACTIVE = 'active',
+  REJECTED = 'rejected',
+  SUSPENDED = 'suspended',
+  DEACTIVATED = 'deactivated',
+  ARCHIVED = 'archived',
+  BLOCKED = 'BLOCKED',
+  REJECTED_BY_ADMIN = 'rejected_by_admin',
+  APPROVED = 'APPROVED',
 }
 
-const STATUS_STYLES: Record<UserStatus, { label: string; className: string }> =
-  {
-    [UserStatus.ACTIVE]: {
-      label: "Active",
-      className: "text-emerald-600 dark:text-emerald-400",
-    },
-    [UserStatus.PENDING_EMAIL_VERIFICATION]: {
-      label: "Pending Email",
-      className: "text-amber-600 dark:text-amber-400",
-    },
-    [UserStatus.PENDING_APPROVAL]: {
-      label: "Pending Approval",
-      className: "text-blue-600 dark:text-blue-400",
-    },
-    [UserStatus.PENDING_REVIEW]: {
-      label: "Pending Review",
-      className: "text-purple-600 dark:text-purple-400",
-    },
-    [UserStatus.SUSPENDED]: {
-      label: "Suspended",
-      className: "text-orange-600 dark:text-orange-400",
-    },
-    [UserStatus.BLOCKED]: {
-      label: "Blocked",
-      className: "text-rose-600 dark:text-rose-400",
-    },
-    [UserStatus.REJECTED]: {
-      label: "Rejected",
-      className: "text-rose-600 dark:text-rose-400",
-    },
-    [UserStatus.REJECTED_BY_ADMIN]: {
-      label: "Rejected",
-      className: "text-rose-600 dark:text-rose-400",
-    },
-    [UserStatus.DEACTIVATED]: {
-      label: "Deactivated",
-      className: "text-slate-600 dark:text-slate-400",
-    },
-    [UserStatus.ARCHIVED]: {
-      label: "Archived",
-      className: "text-slate-600 dark:text-slate-400",
-    },
-    [UserStatus.APPROVED]: {
-      label: "Approved",
-      className: "text-emerald-600 dark:text-emerald-400",
-    },
-  };
+const STATUS_STYLES: Record<UserStatus, { label: string; className: string }> = {
+  [UserStatus.ACTIVE]: {
+    label: 'Active',
+    className: 'text-emerald-600 dark:text-emerald-400',
+  },
+  [UserStatus.PENDING_EMAIL_VERIFICATION]: {
+    label: 'Pending Email',
+    className: 'text-amber-600 dark:text-amber-400',
+  },
+  [UserStatus.PENDING_APPROVAL]: {
+    label: 'Pending Approval',
+    className: 'text-blue-600 dark:text-blue-400',
+  },
+  [UserStatus.PENDING_REVIEW]: {
+    label: 'Pending Review',
+    className: 'text-purple-600 dark:text-purple-400',
+  },
+  [UserStatus.SUSPENDED]: {
+    label: 'Suspended',
+    className: 'text-orange-600 dark:text-orange-400',
+  },
+  [UserStatus.BLOCKED]: {
+    label: 'Blocked',
+    className: 'text-rose-600 dark:text-rose-400',
+  },
+  [UserStatus.REJECTED]: {
+    label: 'Rejected',
+    className: 'text-rose-600 dark:text-rose-400',
+  },
+  [UserStatus.REJECTED_BY_ADMIN]: {
+    label: 'Rejected',
+    className: 'text-rose-600 dark:text-rose-400',
+  },
+  [UserStatus.DEACTIVATED]: {
+    label: 'Deactivated',
+    className: 'text-slate-600 dark:text-slate-400',
+  },
+  [UserStatus.ARCHIVED]: {
+    label: 'Archived',
+    className: 'text-slate-600 dark:text-slate-400',
+  },
+  [UserStatus.APPROVED]: {
+    label: 'Approved',
+    className: 'text-emerald-600 dark:text-emerald-400',
+  },
+};
 
 const ActionsRenderer = (params: any) => {
   const u = params.data;
   if (!u) return null;
-  const {router} = params;
-  const {handleOpenEdit} = params;
-  const {setImpersonateUser} = params;
-  const {setSelectedUserForActions} = params;
+  const { router } = params;
+  const { handleOpenEdit } = params;
+  const { setImpersonateUser } = params;
+  const { setSelectedUserForActions } = params;
 
   return (
     <div className="flex items-center justify-center gap-1 h-full">
@@ -415,7 +398,7 @@ const modules = [
   SparklinesModule.with(AgChartsEnterpriseModule),
 ];
 
-const IS_SSR = typeof window === "undefined";
+const IS_SSR = typeof window === 'undefined';
 
 // const excelStyles: ExcelStyle[] = [
 //   {
@@ -525,34 +508,33 @@ const staticGridOptions: GridOptions = {
     date: {
       width: 200,
       enableRowGroup: true,
-      cellClass: "v-align",
-      valueFormatter: ({ value }) =>
-        value ? dayjs(value).format("DD MMM YYYY, hh:mm A") : "—",
+      cellClass: 'v-align',
+      valueFormatter: ({ value }) => (value ? dayjs(value).format('DD MMM YYYY, hh:mm A') : '—'),
     },
   },
   statusBar: {
     statusPanels: [
       {
-        statusPanel: "agTotalAndFilteredRowCountComponent",
-        key: "totalAndFilter",
-        align: "left",
+        statusPanel: 'agTotalAndFilteredRowCountComponent',
+        key: 'totalAndFilter',
+        align: 'left',
       },
-      { statusPanel: "agSelectedRowCountComponent", align: "left" },
-      { statusPanel: "agAggregationComponent", align: "right" },
+      { statusPanel: 'agSelectedRowCountComponent', align: 'left' },
+      { statusPanel: 'agAggregationComponent', align: 'right' },
     ],
   },
   cellSelection: {
     enableHeaderHighlight: true,
     handle: {
-      mode: "fill",
+      mode: 'fill',
     },
   },
   rowSelection: {
-    mode: "multiRow",
+    mode: 'multiRow',
   },
   initialGroupOrderComparator: ({ nodeA, nodeB }) => {
-    const aKey = nodeA.key || "";
-    const bKey = nodeB.key || "";
+    const aKey = nodeA.key || '';
+    const bKey = nodeB.key || '';
     if (aKey < bKey) {
       return -1;
     }
@@ -562,7 +544,7 @@ const staticGridOptions: GridOptions = {
     return 0;
   },
   enableRtl: IS_SSR ? false : /[?&]rtl=true/.test(window.location.search),
-  pivotPanelShow: "always",
+  pivotPanelShow: 'always',
   enableCharts: true,
   undoRedoCellEditing: true,
   undoRedoCellEditingLimit: 50,
@@ -591,14 +573,14 @@ function UsersPageContent() {
 
   const currentTheme = useThemeStore((state) => state.theme);
   // Top-level main tabs: stats | list
-  const [activeMainTab, setActiveMainTab] = useState<"stats" | "list">("stats");
+  const [activeMainTab, setActiveMainTab] = useState<'stats' | 'list'>('stats');
 
   useEffect(() => {
-    const view = searchParams.get("view");
-    if (view === "list") {
-      setActiveMainTab("list");
+    const view = searchParams.get('view');
+    if (view === 'list') {
+      setActiveMainTab('list');
     } else {
-      setActiveMainTab("stats");
+      setActiveMainTab('stats');
     }
   }, [searchParams]);
 
@@ -606,11 +588,7 @@ function UsersPageContent() {
   const [users, setUsers] = useState<UserListItem[]>([]);
   console.log(users);
   const [total, setTotal] = useState(0);
-  const {
-    data: statsData,
-    isLoading: statsLoading,
-    refetch: refetchStats,
-  } = useUserStats();
+  const { data: statsData, isLoading: statsLoading, refetch: refetchStats } = useUserStats();
   const stats = (statsData as UserStats | undefined) || null;
   const [isLoading, setIsLoading] = useState(true);
 
@@ -631,24 +609,20 @@ function UsersPageContent() {
   // UI Modals
   const [toast, setToast] = useState<{
     message: string;
-    type: "success" | "error" | "info";
+    type: 'success' | 'error' | 'info';
   } | null>(null);
   const [editUser, setEditUser] = useState<UserListItem | null>(null);
   const [editForm, setEditForm] = useState({
-    name: "",
-    email: "",
-    companyName: "",
-    country: "",
+    name: '',
+    email: '',
+    companyName: '',
+    country: '',
   });
-  const [impersonateUser, setImpersonateUser] = useState<UserListItem | null>(
-    null,
-  );
-  const [impersonateReason, setImpersonateReason] = useState("");
-  const [selectedUserForActions, setSelectedUserForActions] =
-    useState<UserListItem | null>(null);
-  console.log("selectedUserForActions", selectedUserForActions);
-  const [userForApprovalModal, setUserForApprovalModal] =
-    useState<UserListItem | null>(null);
+  const [impersonateUser, setImpersonateUser] = useState<UserListItem | null>(null);
+  const [impersonateReason, setImpersonateReason] = useState('');
+  const [selectedUserForActions, setSelectedUserForActions] = useState<UserListItem | null>(null);
+  console.log('selectedUserForActions', selectedUserForActions);
+  const [userForApprovalModal, setUserForApprovalModal] = useState<UserListItem | null>(null);
 
   // Confirm actions
   const [confirmAction, setConfirmAction] = useState<{
@@ -665,10 +639,7 @@ function UsersPageContent() {
     }
   }, [toast]);
 
-  const showToast = (
-    message: string,
-    type: "success" | "error" | "info" = "success",
-  ) => {
+  const showToast = (message: string, type: 'success' | 'error' | 'info' = 'success') => {
     setToast({ message, type });
   };
 
@@ -707,10 +678,7 @@ function UsersPageContent() {
       setUsers(res.data.data);
       setTotal(res.data.meta?.total || res.data.data.length);
     } catch (err: any) {
-      showToast(
-        err.response?.data?.message || "Failed to fetch users list",
-        "error",
-      );
+      showToast(err.response?.data?.message || 'Failed to fetch users list', 'error');
     } finally {
       setIsLoading(false);
     }
@@ -729,15 +697,15 @@ function UsersPageContent() {
   const handleRefresh = () => {
     refetchStats();
     fetchUsers();
-    showToast("User list refreshed", "info");
+    showToast('User list refreshed', 'info');
   };
 
   // Actions
   const handleToggleBlock = (user: UserListItem) => {
     const nextBlocked = !user.isBlocked;
     setConfirmAction({
-      title: nextBlocked ? "Block User Account" : "Unblock User Account",
-      message: `Are you sure you want to ${nextBlocked ? "block" : "unblock"} the account of "${user.name}"?`,
+      title: nextBlocked ? 'Block User Account' : 'Unblock User Account',
+      message: `Are you sure you want to ${nextBlocked ? 'block' : 'unblock'} the account of "${user.name}"?`,
       onConfirm: async () => {
         try {
           await blockUserMutation.mutateAsync({
@@ -745,13 +713,13 @@ function UsersPageContent() {
             isBlocked: nextBlocked,
           });
           showToast(
-            `Account for ${user.name} is now ${nextBlocked ? "blocked" : "active"}`,
-            "success",
+            `Account for ${user.name} is now ${nextBlocked ? 'blocked' : 'active'}`,
+            'success',
           );
           fetchUsers();
           refetchStats();
         } catch (err: any) {
-          showToast(err.response?.data?.message || "Action failed", "error");
+          showToast(err.response?.data?.message || 'Action failed', 'error');
         } finally {
           setConfirmAction(null);
         }
@@ -760,23 +728,23 @@ function UsersPageContent() {
   };
 
   const handleToggleSuspend = (user: UserListItem) => {
-    const isSuspended = user.status === "suspended";
+    const isSuspended = user.status === 'suspended';
     setConfirmAction({
-      title: isSuspended ? "Activate User" : "Suspend User",
-      message: `Are you sure you want to ${isSuspended ? "activate" : "suspend"} "${user.name}"?`,
+      title: isSuspended ? 'Activate User' : 'Suspend User',
+      message: `Are you sure you want to ${isSuspended ? 'activate' : 'suspend'} "${user.name}"?`,
       onConfirm: async () => {
         try {
           if (isSuspended) {
             await activateUserMutation.mutateAsync(user.id);
-            showToast(`User ${user.name} activated successfully`, "success");
+            showToast(`User ${user.name} activated successfully`, 'success');
           } else {
             await suspendUserMutation.mutateAsync(user.id);
-            showToast(`User ${user.name} suspended successfully`, "success");
+            showToast(`User ${user.name} suspended successfully`, 'success');
           }
           fetchUsers();
           refetchStats();
         } catch (err: any) {
-          showToast(err.response?.data?.message || "Action failed", "error");
+          showToast(err.response?.data?.message || 'Action failed', 'error');
         } finally {
           setConfirmAction(null);
         }
@@ -786,16 +754,16 @@ function UsersPageContent() {
 
   const handleArchive = (user: UserListItem) => {
     setConfirmAction({
-      title: "Archive User Account",
+      title: 'Archive User Account',
       message: `Are you sure you want to archive "${user.name}"? This will restrict login and mark the user as archived.`,
       onConfirm: async () => {
         try {
           await archiveUserMutation.mutateAsync(user.id);
-          showToast(`User ${user.name} archived successfully`, "success");
+          showToast(`User ${user.name} archived successfully`, 'success');
           fetchUsers();
           refetchStats();
         } catch (err: any) {
-          showToast(err.response?.data?.message || "Action failed", "error");
+          showToast(err.response?.data?.message || 'Action failed', 'error');
         } finally {
           setConfirmAction(null);
         }
@@ -805,17 +773,14 @@ function UsersPageContent() {
 
   const handleSendResetPassword = (user: UserListItem) => {
     setConfirmAction({
-      title: "Send Password Reset Link",
+      title: 'Send Password Reset Link',
       message: `Send an email verification reset token link to "${user.email}"?`,
       onConfirm: async () => {
         try {
           await resetPasswordAdminMutation.mutateAsync(user.id);
-          showToast(`Password reset link sent to ${user.email}`, "success");
+          showToast(`Password reset link sent to ${user.email}`, 'success');
         } catch (err: any) {
-          showToast(
-            err.response?.data?.message || "Failed to send reset link",
-            "error",
-          );
+          showToast(err.response?.data?.message || 'Failed to send reset link', 'error');
         } finally {
           setConfirmAction(null);
         }
@@ -825,17 +790,14 @@ function UsersPageContent() {
 
   const handleSendVerification = (user: UserListItem) => {
     setConfirmAction({
-      title: "Resend Verification Email",
+      title: 'Resend Verification Email',
       message: `Resend account email verification link to "${user.email}"?`,
       onConfirm: async () => {
         try {
           await sendUserVerificationMutation.mutateAsync(user.id);
-          showToast(`Verification link sent to ${user.email}`, "success");
+          showToast(`Verification link sent to ${user.email}`, 'success');
         } catch (err: any) {
-          showToast(
-            err.response?.data?.message || "Failed to send verification",
-            "error",
-          );
+          showToast(err.response?.data?.message || 'Failed to send verification', 'error');
         } finally {
           setConfirmAction(null);
         }
@@ -849,17 +811,14 @@ function UsersPageContent() {
 
   const handleForcePasswordReset = (user: UserListItem) => {
     setConfirmAction({
-      title: "Force Password Change",
+      title: 'Force Password Change',
       message: `Force "${user.name}" to change their password on their next login attempt?`,
       onConfirm: async () => {
         try {
           await forcePasswordResetMutation.mutateAsync(user.id);
-          showToast(
-            `Forced password reset flag set for ${user.name}`,
-            "success",
-          );
+          showToast(`Forced password reset flag set for ${user.name}`, 'success');
         } catch (err: any) {
-          showToast(err.response?.data?.message || "Action failed", "error");
+          showToast(err.response?.data?.message || 'Action failed', 'error');
         } finally {
           setConfirmAction(null);
         }
@@ -879,34 +838,28 @@ function UsersPageContent() {
 
       // Store impersonation metadata locally
       localStorage.setItem(
-        "impersonatedUser",
+        'impersonatedUser',
         JSON.stringify({
           id: impersonateUser.id,
           name: impersonateUser.name,
           email: impersonateUser.email,
         }),
       );
-      localStorage.setItem("impersonatedToken", token);
+      localStorage.setItem('impersonatedToken', token);
 
       // Dispatch event to trigger banner
-      window.dispatchEvent(new Event("impersonationChange"));
+      window.dispatchEvent(new Event('impersonationChange'));
 
-      showToast(
-        `Impersonation session established for ${impersonateUser.name}!`,
-        "success",
-      );
+      showToast(`Impersonation session established for ${impersonateUser.name}!`, 'success');
       setImpersonateUser(null);
-      setImpersonateReason("");
+      setImpersonateReason('');
 
       // Refresh to update banner locally, or wait 1.5s
       setTimeout(() => {
         window.location.reload();
       }, 1000);
     } catch (err: any) {
-      showToast(
-        err.response?.data?.message || "Failed to initiate impersonation",
-        "error",
-      );
+      showToast(err.response?.data?.message || 'Failed to initiate impersonation', 'error');
     }
   };
 
@@ -916,8 +869,8 @@ function UsersPageContent() {
     setEditForm({
       name: user.name,
       email: user.email,
-      companyName: user.companyName || "",
-      country: user.country?.code || "",
+      companyName: user.companyName || '',
+      country: user.country?.code || '',
     });
   };
 
@@ -928,14 +881,11 @@ function UsersPageContent() {
         id: editUser.id,
         input: editForm,
       });
-      showToast("User details updated successfully", "success");
+      showToast('User details updated successfully', 'success');
       setEditUser(null);
       fetchUsers();
     } catch (err: any) {
-      showToast(
-        err.response?.data?.message || "Failed to update details",
-        "error",
-      );
+      showToast(err.response?.data?.message || 'Failed to update details', 'error');
     }
   };
 
@@ -977,9 +927,7 @@ function UsersPageContent() {
     setSelectedIds(next);
   };
 
-  const handleBulkStatus = async (
-    status: "active" | "suspended" | "archived",
-  ) => {
+  const handleBulkStatus = async (status: 'active' | 'suspended' | 'archived') => {
     if (selectedIds.size === 0) return;
     setConfirmAction({
       title: `Bulk Change to ${status.toUpperCase()}`,
@@ -988,26 +936,20 @@ function UsersPageContent() {
         try {
           // Call sequential API updates
           for (const id of Array.from(selectedIds)) {
-            if (status === "suspended") {
+            if (status === 'suspended') {
               await suspendUserMutation.mutateAsync(id);
-            } else if (status === "active") {
+            } else if (status === 'active') {
               await activateUserMutation.mutateAsync(id);
-            } else if (status === "archived") {
+            } else if (status === 'archived') {
               await archiveUserMutation.mutateAsync(id);
             }
           }
-          showToast(
-            `Successfully processed bulk action for ${selectedIds.size} users`,
-            "success",
-          );
+          showToast(`Successfully processed bulk action for ${selectedIds.size} users`, 'success');
           setSelectedIds(new Set());
           fetchUsers();
           refetchStats();
         } catch (err: any) {
-          showToast(
-            err.response?.data?.message || "Failed during bulk action updates",
-            "error",
-          );
+          showToast(err.response?.data?.message || 'Failed during bulk action updates', 'error');
         } finally {
           setConfirmAction(null);
         }
@@ -1018,73 +960,73 @@ function UsersPageContent() {
   const desktopDefaultCols: (ColDef<RowItem> | ColGroupDef<RowItem>)[] = [
     {
       rowDrag: true,
-      field: "name",
+      field: 'name',
       width: 200,
       enableRowGroup: true,
-      cellClass: "v-align",
+      cellClass: 'v-align',
     },
     {
-      field: "email",
+      field: 'email',
       width: 200,
       enableRowGroup: true,
-      cellClass: "v-align",
+      cellClass: 'v-align',
     },
     {
-      field: "country",
+      field: 'country',
       width: 150,
       cellRenderer: CountryCellRenderer,
-      cellClass: ["country-cell", "v-align"],
+      cellClass: ['country-cell', 'v-align'],
       enableRowGroup: true,
       enablePivot: true,
-      cellEditor: "agRichSelectCellEditor",
+      cellEditor: 'agRichSelectCellEditor',
       cellEditorParams: {
         cellRenderer: CountryCellRenderer,
       },
-      filter: "agSetColumnFilter",
+      filter: 'agSetColumnFilter',
       filterParams: {
         cellRenderer: CountryCellRenderer,
-        buttons: ["reset"],
+        buttons: ['reset'],
       },
     },
     {
-      field: "accountType",
-      headerName: "Account Type",
+      field: 'accountType',
+      headerName: 'Account Type',
       width: 200,
       enableRowGroup: true,
-      cellClass: "v-align",
+      cellClass: 'v-align',
     },
     {
-      field: "role",
-      headerName: "Role",
+      field: 'role',
+      headerName: 'Role',
       width: 200,
       enableRowGroup: true,
-      cellClass: "v-align",
+      cellClass: 'v-align',
       valueFormatter: (params) => {
         if (params.data) {
-          if (params.data.accountType === "admin") {
+          if (params.data.accountType === 'admin') {
             return params.data.roles;
           }
-          return "—";
+          return '—';
         }
         return params.value;
       },
     },
     {
-      field: "status",
-      headerName: "Status",
+      field: 'status',
+      headerName: 'Status',
       width: 200,
       enableRowGroup: true,
-      cellClass: "v-align",
+      cellClass: 'v-align',
       cellRenderer: ApprovedStatusRenderer,
     },
     {
-      field: "emailVerified",
-      headerName: "Email Verified",
+      field: 'emailVerified',
+      headerName: 'Email Verified',
       width: 200,
       enableRowGroup: true,
-      cellClass: "v-align",
+      cellClass: 'v-align',
       cellRenderer: (params: { value: boolean }) => {
-        const {value} = params;
+        const { value } = params;
         return value ? (
           <span className="inline-flex items-center gap-1 text-green-600">
             <CheckCircle2 size={16} />
@@ -1097,42 +1039,42 @@ function UsersPageContent() {
       },
     },
     {
-      field: "status",
-      headerName: "Account Status",
+      field: 'status',
+      headerName: 'Account Status',
       width: 200,
       enableRowGroup: true,
-      cellClass: "v-align",
+      cellClass: 'v-align',
       cellRenderer: ({ value }: { value: UserStatus }) => {
-        if (!value) return "-";
+        if (!value) return '-';
         const status = STATUS_STYLES[value];
 
         return (
           <span
-            className={`inline-flex items-center text-xs font-semibold ${status?.className ?? ""}`}
+            className={`inline-flex items-center text-xs font-semibold ${status?.className ?? ''}`}
           >
-            {status?.label ?? "-"}
+            {status?.label ?? '-'}
           </span>
         );
       },
     },
     {
-      field: "createdAt",
-      headerName: "Created Date",
+      field: 'createdAt',
+      headerName: 'Created Date',
       width: 200,
       enableRowGroup: true,
-      cellClass: "v-align",
-      type: "date",
+      cellClass: 'v-align',
+      type: 'date',
     },
     {
-      field: "lastLoginAt",
-      headerName: "Last Login",
+      field: 'lastLoginAt',
+      headerName: 'Last Login',
       width: 200,
       enableRowGroup: true,
-      cellClass: "v-align",
-      type: "date",
+      cellClass: 'v-align',
+      type: 'date',
     },
     {
-      headerName: "Actions",
+      headerName: 'Actions',
       cellRenderer: ActionsRenderer,
       cellRendererParams: {
         router,
@@ -1142,7 +1084,7 @@ function UsersPageContent() {
       },
       width: 120,
       minWidth: 120,
-      pinned: "right" as const,
+      pinned: 'right' as const,
       resizable: false,
       sortable: false,
       filter: false,
@@ -1154,14 +1096,13 @@ function UsersPageContent() {
   const largeDefaultCols = desktopDefaultCols;
   // const smallColCount = smallDefaultCols.length;
   // const largeColCount = 22;
-  const darkMode = currentTheme === "dark";
+  const darkMode = currentTheme === 'dark';
   const themeClass = darkMode ? `ag-theme-quartz-dark` : `ag-theme-quartz`;
 
   const [isSmall] = useState(() =>
     IS_SSR
       ? false
-      : document.documentElement.clientHeight <= 415 ||
-        document.documentElement.clientWidth < 768,
+      : document.documentElement.clientHeight <= 415 || document.documentElement.clientWidth < 768,
   );
   // const loadInstance = useRef(0);
   // const dataIntervalId = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -1187,9 +1128,9 @@ function UsersPageContent() {
   );
   const sideBar = useMemo<SideBarDef>(
     () => ({
-      toolPanels: ["columns", "filters"],
-      position: "right",
-      defaultToolPanel: "columns",
+      toolPanels: ['columns', 'filters'],
+      position: 'right',
+      defaultToolPanel: 'columns',
       hiddenByDefault: isSmall,
     }),
     [isSmall],
@@ -1433,14 +1374,14 @@ function UsersPageContent() {
   //   };
   // }, []);
 
-  console.log("userForApprovalModal", userForApprovalModal);
+  console.log('userForApprovalModal', userForApprovalModal);
 
   return (
     <div className="space-y-6">
       {/* Conditionally Render Active Main Tab */}
       <div className="animate-fade-in">
         {/* Tab 1: Stats & Overview */}
-        {activeMainTab === "stats" && (
+        {activeMainTab === 'stats' && (
           <div className="space-y-6">
             <div className="flex items-center gap-2">
               <button
@@ -1464,82 +1405,82 @@ function UsersPageContent() {
             <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
               {[
                 {
-                  title: "Total Users",
+                  title: 'Total Users',
                   val: stats?.total,
                   icon: Users,
-                  col: "text-indigo-500 bg-indigo-50 dark:bg-indigo-950/20",
+                  col: 'text-indigo-500 bg-indigo-50 dark:bg-indigo-950/20',
                 },
                 {
-                  title: "Active Accounts",
+                  title: 'Active Accounts',
                   val: stats?.active,
                   icon: UserCheck,
-                  col: "text-emerald-500 bg-emerald-50 dark:bg-emerald-950/20",
+                  col: 'text-emerald-500 bg-emerald-50 dark:bg-emerald-950/20',
                 },
                 {
-                  title: "Inactive Accounts",
+                  title: 'Inactive Accounts',
                   val: stats?.inactive,
                   icon: UserMinus,
-                  col: "text-gray-400 bg-gray-50 dark:bg-gray-950/20",
+                  col: 'text-gray-400 bg-gray-50 dark:bg-gray-950/20',
                 },
                 {
-                  title: "Suspended",
+                  title: 'Suspended',
                   val: stats?.suspended,
                   icon: UserX,
-                  col: "text-amber-500 bg-amber-50 dark:bg-amber-950/20",
+                  col: 'text-amber-500 bg-amber-50 dark:bg-amber-950/20',
                 },
                 {
-                  title: "Administrators",
+                  title: 'Administrators',
                   val: stats?.admins,
                   icon: Shield,
-                  col: "text-purple-500 bg-purple-50 dark:bg-purple-950/20",
+                  col: 'text-purple-500 bg-purple-50 dark:bg-purple-950/20',
                 },
                 {
-                  title: "Customers",
+                  title: 'Customers',
                   val: stats?.customers,
                   icon: Users,
-                  col: "text-blue-500 bg-blue-50 dark:bg-blue-950/20",
+                  col: 'text-blue-500 bg-blue-50 dark:bg-blue-950/20',
                 },
                 {
-                  title: "Pending Verification",
+                  title: 'Pending Verification',
                   val: stats?.pendingVerification,
                   icon: Clock,
-                  col: "text-amber-500 bg-amber-50 dark:bg-amber-950/20",
+                  col: 'text-amber-500 bg-amber-50 dark:bg-amber-950/20',
                 },
                 {
-                  title: "Pending Approval (Admins)",
+                  title: 'Pending Approval (Admins)',
                   val: stats?.pendingApprovalAdmins,
                   icon: ShieldAlert,
-                  col: "text-rose-500 bg-rose-50 dark:bg-rose-950/20",
+                  col: 'text-rose-500 bg-rose-50 dark:bg-rose-950/20',
                 },
                 {
-                  title: "Subscribed",
+                  title: 'Subscribed',
                   val: stats?.subscribed,
                   icon: CreditCard,
-                  col: "text-teal-500 bg-teal-50 dark:bg-teal-950/20",
+                  col: 'text-teal-500 bg-teal-50 dark:bg-teal-950/20',
                 },
                 {
-                  title: "Blocked Accounts",
+                  title: 'Blocked Accounts',
                   val: stats?.blocked,
                   icon: Ban,
-                  col: "text-rose-600 bg-rose-50 dark:bg-rose-950/20",
+                  col: 'text-rose-600 bg-rose-50 dark:bg-rose-950/20',
                 },
                 {
-                  title: "Online Now",
+                  title: 'Online Now',
                   val: stats?.onlineNow,
                   icon: Globe,
-                  col: "text-sky-500 bg-sky-50 dark:bg-sky-950/20",
+                  col: 'text-sky-500 bg-sky-50 dark:bg-sky-950/20',
                 },
                 {
-                  title: "New Today",
+                  title: 'New Today',
                   val: stats?.newToday,
                   icon: Clock,
-                  col: "text-orange-500 bg-orange-50 dark:bg-orange-950/20",
+                  col: 'text-orange-500 bg-orange-50 dark:bg-orange-950/20',
                 },
                 {
-                  title: "New This Month",
+                  title: 'New This Month',
                   val: stats?.newThisMonth,
                   icon: Calendar,
-                  col: "text-pink-500 bg-pink-50 dark:bg-pink-950/20",
+                  col: 'text-pink-500 bg-pink-50 dark:bg-pink-950/20',
                 },
               ].map((card, i) => {
                 const Icon = card.icon;
@@ -1549,9 +1490,7 @@ function UsersPageContent() {
                     className="rounded-2xl border border-border bg-surface p-6 shadow-xs hover:shadow-md transition-all duration-300"
                   >
                     <div className="flex items-center justify-between">
-                      <span className="text-xs font-semibold text-text-light">
-                        {card.title}
-                      </span>
+                      <span className="text-xs font-semibold text-text-light">{card.title}</span>
                       <div className={`p-2 rounded-xl ${card.col}`}>
                         <Icon size={16} />
                       </div>
@@ -1560,9 +1499,7 @@ function UsersPageContent() {
                       {statsLoading ? (
                         <div className="h-8 w-16 bg-border animate-pulse rounded-md" />
                       ) : (
-                        <h3 className="text-3xl font-bold tracking-tight">
-                          {card.val ?? 0}
-                        </h3>
+                        <h3 className="text-3xl font-bold tracking-tight">{card.val ?? 0}</h3>
                       )}
                     </div>
                   </div>
@@ -1573,7 +1510,7 @@ function UsersPageContent() {
         )}
 
         {/* Tab 2: User List */}
-        {activeMainTab === "list" && (
+        {activeMainTab === 'list' && (
           <div className="space-y-6">
             <div className="relative flex h-dvh min-h-[calc(100dvh-var(--layout-grid-header-height))] w-full flex-col">
               <div className="flex items-center justify-between gap-4 pb-2 shrink-0">
@@ -1585,10 +1522,7 @@ function UsersPageContent() {
                   disabled={isLoading}
                   className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl border border-border bg-surface text-xs font-semibold hover:bg-background disabled:opacity-50 transition cursor-pointer shadow-xs shrink-0"
                 >
-                  <RotateCw
-                    size={14}
-                    className={isLoading ? "animate-spin" : ""}
-                  />
+                  <RotateCw size={14} className={isLoading ? 'animate-spin' : ''} />
                   Refresh
                 </button>
               </div>
@@ -1611,7 +1545,7 @@ function UsersPageContent() {
                     loading={isLoading}
                     defaultColDef={defaultColDef}
                     sideBar={sideBar}
-                    rowGroupPanelShow={isSmall ? undefined : "always"}
+                    rowGroupPanelShow={isSmall ? undefined : 'always'}
                     onGridReady={onGridReady}
                     pagination
                     paginationPageSize={20}
@@ -1637,9 +1571,7 @@ function UsersPageContent() {
                 <input
                   type="text"
                   value={editForm.name}
-                  onChange={(e) =>
-                    setEditForm({ ...editForm, name: e.target.value })
-                  }
+                  onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
                   className="w-full px-3.5 py-2 border border-border rounded-xl bg-background text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none"
                 />
               </div>
@@ -1650,9 +1582,7 @@ function UsersPageContent() {
                 <input
                   type="email"
                   value={editForm.email}
-                  onChange={(e) =>
-                    setEditForm({ ...editForm, email: e.target.value })
-                  }
+                  onChange={(e) => setEditForm({ ...editForm, email: e.target.value })}
                   className="w-full px-3.5 py-2 border border-border rounded-xl bg-background text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none"
                 />
               </div>
@@ -1703,14 +1633,11 @@ function UsersPageContent() {
           <div className="bg-surface border border-border w-full max-w-md rounded-2xl shadow-2xl p-6 space-y-4 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center gap-2 text-amber-500">
               <ShieldAlert size={22} />
-              <h3 className="text-lg font-bold text-text">
-                Initialize Impersonation
-              </h3>
+              <h3 className="text-lg font-bold text-text">Initialize Impersonation</h3>
             </div>
             <p className="text-xs text-text-light leading-relaxed">
-              Impersonating <strong>{impersonateUser.name}</strong> will
-              authenticate your session as this user. This action is strictly
-              audited under your administrator account.
+              Impersonating <strong>{impersonateUser.name}</strong> will authenticate your session
+              as this user. This action is strictly audited under your administrator account.
             </p>
             <div>
               <label className="text-xs font-bold text-text block mb-1">
@@ -1727,7 +1654,7 @@ function UsersPageContent() {
               <button
                 onClick={() => {
                   setImpersonateUser(null);
-                  setImpersonateReason("");
+                  setImpersonateReason('');
                 }}
                 className="px-4 py-2 rounded-xl text-xs font-bold border border-border hover:bg-background cursor-pointer"
               >
@@ -1752,15 +1679,11 @@ function UsersPageContent() {
           <div className="bg-surface border border-border w-full max-w-lg rounded-2xl shadow-2xl p-6 space-y-4 max-h-[90vh] overflow-y-auto">
             <div className="flex items-start justify-between border-b border-border pb-3">
               <div>
-                <h3 className="text-lg font-bold text-text">
-                  Account Management
-                </h3>
+                <h3 className="text-lg font-bold text-text">Account Management</h3>
                 <p className="text-xs text-text-light mt-0.5">
-                  Admin actions for{" "}
-                  <span className="font-semibold text-text">
-                    {selectedUserForActions.name}
-                  </span>{" "}
-                  ({selectedUserForActions.email})
+                  Admin actions for{' '}
+                  <span className="font-semibold text-text">{selectedUserForActions.name}</span> (
+                  {selectedUserForActions.email})
                 </p>
               </div>
               <button
@@ -1773,10 +1696,9 @@ function UsersPageContent() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
               {selectedUserForActions.emailVerified &&
-                (selectedUserForActions.status === "pending_approval" ||
-                  selectedUserForActions.status === "pending_review" ||
-                  selectedUserForActions.status ===
-                    "pending_email_verification") && (
+                (selectedUserForActions.status === 'pending_approval' ||
+                  selectedUserForActions.status === 'pending_review' ||
+                  selectedUserForActions.status === 'pending_email_verification') && (
                   <button
                     onClick={() => {
                       handleApproveUser(selectedUserForActions);
@@ -1789,14 +1711,14 @@ function UsersPageContent() {
                     </div>
                     <div>
                       <span className="font-bold text-xs block text-emerald-700 dark:text-emerald-300">
-                        {selectedUserForActions.status === "pending_review"
-                          ? "Review & Evaluate Approval"
-                          : "Approve User Account"}
+                        {selectedUserForActions.status === 'pending_review'
+                          ? 'Review & Evaluate Approval'
+                          : 'Approve User Account'}
                       </span>
                       <span className="text-[10px] text-emerald-600/80 dark:text-emerald-400/80">
-                        {selectedUserForActions.status === "pending_review"
-                          ? "Evaluate Maker-Checker approval request details and decide"
-                          : "Authorize pending registration and assign roles"}
+                        {selectedUserForActions.status === 'pending_review'
+                          ? 'Evaluate Maker-Checker approval request details and decide'
+                          : 'Authorize pending registration and assign roles'}
                       </span>
                     </div>
                   </button>
@@ -1813,12 +1735,8 @@ function UsersPageContent() {
                   <Key size={16} />
                 </div>
                 <div>
-                  <span className="font-bold text-xs block">
-                    Reset Password
-                  </span>
-                  <span className="text-[10px] text-text-light">
-                    Send password reset link
-                  </span>
+                  <span className="font-bold text-xs block">Reset Password</span>
+                  <span className="text-[10px] text-text-light">Send password reset link</span>
                 </div>
               </button>
 
@@ -1833,12 +1751,8 @@ function UsersPageContent() {
                   <CheckCircle size={16} />
                 </div>
                 <div>
-                  <span className="font-bold text-xs block">
-                    Send Verification
-                  </span>
-                  <span className="text-[10px] text-text-light">
-                    Resend verification link
-                  </span>
+                  <span className="font-bold text-xs block">Send Verification</span>
+                  <span className="text-[10px] text-text-light">Resend verification link</span>
                 </div>
               </button>
 
@@ -1854,9 +1768,7 @@ function UsersPageContent() {
                 </div>
                 <div>
                   <span className="font-bold text-xs block">Force Reset</span>
-                  <span className="text-[10px] text-text-light">
-                    Force reset on next login
-                  </span>
+                  <span className="text-[10px] text-text-light">Force reset on next login</span>
                 </div>
               </button>
 
@@ -1868,20 +1780,18 @@ function UsersPageContent() {
                 className="flex items-center gap-3 p-3 rounded-xl border border-border bg-background/50 hover:bg-background transition text-left cursor-pointer"
               >
                 <div
-                  className={`p-2 rounded-lg ${selectedUserForActions.isBlocked ? "bg-emerald-500/10 text-emerald-500" : "bg-rose-500/10 text-rose-500"}`}
+                  className={`p-2 rounded-lg ${selectedUserForActions.isBlocked ? 'bg-emerald-500/10 text-emerald-500' : 'bg-rose-500/10 text-rose-500'}`}
                 >
                   <Ban size={16} />
                 </div>
                 <div>
                   <span className="font-bold text-xs block">
-                    {selectedUserForActions.isBlocked
-                      ? "Unblock Account"
-                      : "Block Account"}
+                    {selectedUserForActions.isBlocked ? 'Unblock Account' : 'Block Account'}
                   </span>
                   <span className="text-[10px] text-text-light">
                     {selectedUserForActions.isBlocked
-                      ? "Restore login privileges"
-                      : "Restrict all login access"}
+                      ? 'Restore login privileges'
+                      : 'Restrict all login access'}
                   </span>
                 </div>
               </button>
@@ -1898,14 +1808,14 @@ function UsersPageContent() {
                 </div>
                 <div>
                   <span className="font-bold text-xs block">
-                    {selectedUserForActions.status === "suspended"
-                      ? "Unsuspend User"
-                      : "Suspend User"}
+                    {selectedUserForActions.status === 'suspended'
+                      ? 'Unsuspend User'
+                      : 'Suspend User'}
                   </span>
                   <span className="text-[10px] text-text-light">
-                    {selectedUserForActions.status === "suspended"
-                      ? "Activate account status"
-                      : "Temporarily freeze account"}
+                    {selectedUserForActions.status === 'suspended'
+                      ? 'Activate account status'
+                      : 'Temporarily freeze account'}
                   </span>
                 </div>
               </button>
@@ -1921,12 +1831,8 @@ function UsersPageContent() {
                   <Download size={16} />
                 </div>
                 <div>
-                  <span className="font-bold text-xs block">
-                    Archive Account
-                  </span>
-                  <span className="text-[10px] text-text-light">
-                    Archive & restrict login
-                  </span>
+                  <span className="font-bold text-xs block">Archive Account</span>
+                  <span className="text-[10px] text-text-light">Archive & restrict login</span>
                 </div>
               </button>
             </div>
@@ -1947,12 +1853,8 @@ function UsersPageContent() {
       {confirmAction && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 z-50 animate-fade-in">
           <div className="bg-surface border border-border w-full max-w-md rounded-2xl shadow-2xl p-6 space-y-4 max-h-[90vh] overflow-y-auto">
-            <h3 className="text-lg font-bold text-text">
-              {confirmAction.title}
-            </h3>
-            <p className="text-sm text-text-light leading-relaxed">
-              {confirmAction.message}
-            </p>
+            <h3 className="text-lg font-bold text-text">{confirmAction.title}</h3>
+            <p className="text-sm text-text-light leading-relaxed">{confirmAction.message}</p>
             <div className="flex items-center justify-end gap-2 pt-2 border-t border-border">
               <button
                 onClick={() => setConfirmAction(null)}
@@ -1986,17 +1888,17 @@ function UsersPageContent() {
       {toast && (
         <div className="fixed bottom-4 right-4 z-50 flex items-center gap-3 bg-gray-950 text-white px-4 py-3.5 rounded-2xl shadow-2xl border border-white/10 max-w-sm animate-slide-up">
           <div
-            className={`p-2 rounded-xl bg-white/10 ${toast.type === "error" ? "text-red-400" : toast.type === "success" ? "text-green-400" : "text-sky-400"}`}
+            className={`p-2 rounded-xl bg-white/10 ${toast.type === 'error' ? 'text-red-400' : toast.type === 'success' ? 'text-green-400' : 'text-sky-400'}`}
           >
             <ShieldAlert size={18} />
           </div>
           <div className="flex flex-col flex-1">
             <span className="text-[11px] text-white/50 font-bold uppercase tracking-wider">
-              {toast.type === "error"
-                ? "Action Failed"
-                : toast.type === "success"
-                  ? "Completed"
-                  : "Notification"}
+              {toast.type === 'error'
+                ? 'Action Failed'
+                : toast.type === 'success'
+                  ? 'Completed'
+                  : 'Notification'}
             </span>
             <span className="text-xs text-white/90 leading-normal font-semibold">
               {toast.message}
@@ -2017,11 +1919,7 @@ function UsersPageContent() {
 export default function UsersPage() {
   return (
     <Suspense
-      fallback={
-        <div className="p-6 text-sm text-text-light">
-          Loading User Directory...
-        </div>
-      }
+      fallback={<div className="p-6 text-sm text-text-light">Loading User Directory...</div>}
     >
       <UsersPageContent />
     </Suspense>

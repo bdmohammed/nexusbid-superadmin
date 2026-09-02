@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import React from "react";
-import { ShieldCheck, Sparkles,Zap } from "lucide-react";
+import React from 'react';
+import { ShieldCheck, Sparkles, Zap } from 'lucide-react';
 
-import Button from "@/components/ui/Button";
+import Button from '@/components/ui/Button';
 
 interface PremiumFeatureUpsellProps {
   title: string;
@@ -38,9 +38,7 @@ export default function PremiumFeatureUpsell({
         </div>
       </div>
 
-      <h2 className="text-4xl font-extrabold tracking-tight text-text">
-        {title}
-      </h2>
+      <h2 className="text-4xl font-extrabold tracking-tight text-text">{title}</h2>
       <p className="mx-auto mt-4 max-w-xl text-base text-text-light leading-relaxed">
         {description}
       </p>
@@ -62,8 +60,7 @@ export default function PremiumFeatureUpsell({
           <div>
             <h4 className="font-bold text-sm text-text">Enterprise Controls</h4>
             <p className="text-xs text-text-light mt-1">
-              Strict RBAC verification, lock draft concurrency & auditable
-              actions.
+              Strict RBAC verification, lock draft concurrency & auditable actions.
             </p>
           </div>
         </div>
@@ -72,11 +69,7 @@ export default function PremiumFeatureUpsell({
       {/* Actions */}
       <div className="mt-10 flex flex-col sm:flex-row gap-4">
         <Button
-          onClick={() =>
-            alert(
-              "Access upgrade request submitted to your system administrator.",
-            )
-          }
+          onClick={() => alert('Access upgrade request submitted to your system administrator.')}
           className="px-8 py-3.5 font-bold text-sm bg-gradient-to-r from-primary to-indigo-600 hover:from-primary/95 hover:to-indigo-600/95 shadow-lg shadow-primary/20"
         >
           Request Access Upgrade
@@ -85,7 +78,7 @@ export default function PremiumFeatureUpsell({
           variant="outline"
           onClick={() =>
             (window.location.href =
-              "mailto:enterprise-sales@rfpnexa.local?subject=Request Access Upgrade")
+              'mailto:enterprise-sales@rfpnexa.local?subject=Request Access Upgrade')
           }
           className="px-8 py-3.5 font-semibold text-sm border-border/80 hover:bg-background"
         >

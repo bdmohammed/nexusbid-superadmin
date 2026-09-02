@@ -1,30 +1,30 @@
-"use client";
+'use client';
 
-import { useEffect, useRef,useState } from "react";
-import {RefreshCw } from "lucide-react";
+import { useEffect, useRef, useState } from 'react';
+import { RefreshCw } from 'lucide-react';
 
-import { CustomizerBar } from "./components/CustomizerBar";
+import { CustomizerBar } from './components/CustomizerBar';
 // Sub-components import
-import { DashboardBanner } from "./components/DashboardBanner";
-import { WidgetCard } from "./components/WidgetCard";
-import ActivityWidget from "./widgets/ActivityWidget";
-import AlertWidget from "./widgets/AlertWidget";
-import NotificationsWidget from "./widgets/NotificationsWidget";
-import QuickActionsWidget from "./widgets/QuickActionsWidget";
+import { DashboardBanner } from './components/DashboardBanner';
+import { WidgetCard } from './components/WidgetCard';
+import ActivityWidget from './widgets/ActivityWidget';
+import AlertWidget from './widgets/AlertWidget';
+import NotificationsWidget from './widgets/NotificationsWidget';
+import QuickActionsWidget from './widgets/QuickActionsWidget';
 // Widgets import
-import RevenueWidget from "./widgets/RevenueWidget";
-import ReviewQueueWidget from "./widgets/ReviewQueueWidget";
-import SystemHealthWidget from "./widgets/SystemHealthWidget";
-import TenderWorkflowWidget from "./widgets/TenderWorkflowWidget";
-import UsersWidget from "./widgets/UsersWidget";
+import RevenueWidget from './widgets/RevenueWidget';
+import ReviewQueueWidget from './widgets/ReviewQueueWidget';
+import SystemHealthWidget from './widgets/SystemHealthWidget';
+import TenderWorkflowWidget from './widgets/TenderWorkflowWidget';
+import UsersWidget from './widgets/UsersWidget';
 
 import {
   useDashboardConfig,
   useResetDashboardLayout,
   useUpdateDashboardLayout,
-} from "@/features/dashboard/api/queries";
-import { usePermissions } from "@/hooks/usePermissions";
-import { apiClient } from "@/lib/http";
+} from '@/features/dashboard/api/queries';
+import { usePermissions } from '@/hooks/usePermissions';
+import { apiClient } from '@/lib/http';
 
 export default function Dashboard() {
   const { isInitializing } = usePermissions();
@@ -76,7 +76,7 @@ export default function Dashboard() {
       setSseConnected(true);
     };
 
-    es.addEventListener("review_queue", (event: MessageEvent) => {
+    es.addEventListener('review_queue', (event: MessageEvent) => {
       try {
         setLiveQueue(JSON.parse(event.data));
       } catch (err) {
@@ -84,7 +84,7 @@ export default function Dashboard() {
       }
     });
 
-    es.addEventListener("alerts", (event: MessageEvent) => {
+    es.addEventListener('alerts', (event: MessageEvent) => {
       try {
         setLiveAlerts(JSON.parse(event.data));
       } catch (err) {
@@ -92,7 +92,7 @@ export default function Dashboard() {
       }
     });
 
-    es.addEventListener("health", (event: MessageEvent) => {
+    es.addEventListener('health', (event: MessageEvent) => {
       try {
         setLiveHealth(JSON.parse(event.data));
       } catch (err) {
@@ -122,7 +122,7 @@ export default function Dashboard() {
       setIsEditMode(false);
     } catch (err) {
       console.error(err);
-      alert("Failed to reset layout");
+      alert('Failed to reset layout');
     }
   };
 
@@ -136,14 +136,14 @@ export default function Dashboard() {
       setIsEditMode(false);
     } catch (err) {
       console.error(err);
-      alert("Failed to save layout configuration");
+      alert('Failed to save layout configuration');
     }
   };
 
   // Layout mutators in edit mode
-  const moveWidget = (index: number, direction: "up" | "down") => {
+  const moveWidget = (index: number, direction: 'up' | 'down') => {
     const nextLayout = [...layout];
-    const targetIndex = direction === "up" ? index - 1 : index + 1;
+    const targetIndex = direction === 'up' ? index - 1 : index + 1;
     if (targetIndex < 0 || targetIndex >= nextLayout.length) return;
 
     // Swap placement order values
@@ -197,7 +197,7 @@ export default function Dashboard() {
 
   const renderWidgetContent = (widgetId: string) => {
     switch (widgetId) {
-      case "mrr_arr":
+      case 'mrr_arr':
         // return hasPermission("subscription.view") ? (
         return <RevenueWidget />;
       // ) : (
@@ -207,21 +207,21 @@ export default function Dashboard() {
       //   )
       // );
 
-      case "tender_workflow":
+      case 'tender_workflow':
         // return hasPermission("tender.view") ? (
         return <TenderWorkflowWidget />;
       // ) : (
       //   renderRestrictedPlaceholder("Tender Workflow", "tender.view")
       // );
 
-      case "users":
+      case 'users':
         // return hasPermission("user.view") ? (
         return <UsersWidget />;
       // ) : (
       //   renderRestrictedPlaceholder("User Activity", "user.view")
       // );
 
-      case "review_queue":
+      case 'review_queue':
         // return hasPermission("tender.approve") ||
         // hasPermission("tender.view") ? (
         return <ReviewQueueWidget liveData={liveQueue} />;
@@ -229,61 +229,55 @@ export default function Dashboard() {
       //   renderRestrictedPlaceholder("Review Queue", "tender.approve")
       // );
 
-      case "system_health":
+      case 'system_health':
         // return hasPermission("analytics.view") ? (
         return <SystemHealthWidget liveData={liveHealth} />;
       // ) : (
       //   renderRestrictedPlaceholder("System Health", "analytics.view")
       // );
 
-      case "critical_alerts":
+      case 'critical_alerts':
         // return hasPermission("analytics.view") ? (
         return <AlertWidget liveData={liveAlerts} />;
       // ) : (
       //   renderRestrictedPlaceholder("Critical Alerts", "analytics.view")
       // );
 
-      case "recent_activity":
+      case 'recent_activity':
         // return hasPermission("analytics.view") || hasPermission("user.view") ? (
         return <ActivityWidget />;
       // ) : (
       //   renderRestrictedPlaceholder("Recent Activity", "analytics.view")
       // );
 
-      case "quick_actions":
+      case 'quick_actions':
         // return hasPermission("user.view") || hasPermission("tender.create") ? (
         return <QuickActionsWidget />;
       // ) : (
       //   renderRestrictedPlaceholder("Quick Actions", "user.view")
       // );
 
-      case "notifications":
+      case 'notifications':
         return <NotificationsWidget />;
 
       default:
-        return (
-          <div className="p-4 italic text-text-light">
-            Widget Not Configured
-          </div>
-        );
+        return <div className="p-4 italic text-text-light">Widget Not Configured</div>;
     }
   };
 
   // Compile greeting panel details
   const getGreetingText = () => {
     const hours = new Date().getHours();
-    if (hours < 12) return "Good Morning";
-    if (hours < 18) return "Good Afternoon";
-    return "Good Evening";
+    if (hours < 12) return 'Good Morning';
+    if (hours < 18) return 'Good Afternoon';
+    return 'Good Evening';
   };
 
   if (isInitializing || isConfigLoading) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[50vh] gap-3">
         <RefreshCw className="h-8 w-8 text-primary animate-spin" />
-        <p className="text-sm font-semibold text-text-light">
-          Loading cockpit...
-        </p>
+        <p className="text-sm font-semibold text-text-light">Loading cockpit...</p>
       </div>
     );
   }

@@ -1,5 +1,3 @@
-// src/lib/http/types.ts
-
 import {
   AxiosError,
   AxiosRequestConfig,

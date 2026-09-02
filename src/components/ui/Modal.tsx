@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { type ReactNode, useEffect } from "react";
-import { X } from "lucide-react";
+import { type ReactNode, useEffect } from 'react';
+import { X } from 'lucide-react';
 
 export interface ModalProps {
   open: boolean;
@@ -17,14 +17,14 @@ export default function Modal({
   title,
   children,
   footer,
-  width = "max-w-lg",
+  width = 'max-w-lg',
   onClose,
 }: ModalProps) {
   useEffect(() => {
     if (!open) return;
 
     const previous = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
+    document.body.style.overflow = 'hidden';
 
     return () => {
       document.body.style.overflow = previous;
@@ -33,15 +33,15 @@ export default function Modal({
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose?.();
+      if (e.key === 'Escape') onClose?.();
     };
 
     if (open) {
-      window.addEventListener("keydown", handler);
+      window.addEventListener('keydown', handler);
     }
 
     return () => {
-      window.removeEventListener("keydown", handler);
+      window.removeEventListener('keydown', handler);
     };
   }, [open, onClose]);
 
@@ -50,10 +50,7 @@ export default function Modal({
   return (
     <>
       {/* Overlay */}
-      <div
-        onClick={onClose}
-        className="fixed inset-0 z-[90] bg-black/40 backdrop-blur-sm"
-      />
+      <div onClick={onClose} className="fixed inset-0 z-[90] bg-black/40 backdrop-blur-sm" />
 
       {/* Modal */}
       <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
@@ -64,10 +61,7 @@ export default function Modal({
           <div className="flex items-center justify-between border-b border-border px-6 py-4">
             <h2 className="text-lg font-semibold text-text">{title}</h2>
 
-            <button
-              onClick={onClose}
-              className="rounded-lg p-2 transition hover:bg-sidebar-hover"
-            >
+            <button onClick={onClose} className="rounded-lg p-2 transition hover:bg-sidebar-hover">
               <X size={18} />
             </button>
           </div>

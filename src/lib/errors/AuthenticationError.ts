@@ -1,5 +1,3 @@
-// src/lib/errors/AuthenticationError.ts
-
 import { AppError } from "./AppError";
 import { ERROR_CODES } from "./constants";
 

@@ -1,0 +1,12 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`CountryOption > matches snapshot 1`] = `
+<button
+  aria-selected="true"
+  class="w-full text-left px-4 py-2.5 text-sm hover:bg-[var(--surface-secondary)] transition-colors bg-[#003EC7]/10 text-[#003EC7] font-semibold"
+  role="option"
+  type="button"
+>
+  India
+</button>
+`;

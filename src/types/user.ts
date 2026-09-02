@@ -1,11 +1,16 @@
 export enum UserStatus {
-  PENDING_EMAIL_VERIFICATION = "pending_email_verification",
-  PENDING_APPROVAL = "pending_approval",
-  ACTIVE = "active",
-  REJECTED = "rejected",
-  SUSPENDED = "suspended",
-  DEACTIVATED = "deactivated",
-  ARCHIVED = "archived",
+  PENDING_EMAIL_VERIFICATION = 'pending_email_verification',
+  PENDING_APPROVAL = 'pending_approval',
+  ACTIVE = 'active',
+  REJECTED = 'rejected',
+  SUSPENDED = 'suspended',
+  DEACTIVATED = 'deactivated',
+  ARCHIVED = 'archived',
+}
+
+export enum AccountType {
+  CUSTOMER = 'customer',
+  ADMIN = 'admin',
 }
 
 export interface User {
@@ -14,9 +19,9 @@ export interface User {
   email: string;
   companyName: string | null;
   country: string | null;
-  role: "customer" | "admin";
+  accountType: AccountType;
   status: UserStatus;
-  adminRole: "super_admin" | "manager" | "viewer" | null;
+  adminRole: string;
   emailVerified: boolean;
   isBlocked: boolean;
   createdAt: string;

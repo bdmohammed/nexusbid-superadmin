@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { Clock,History } from "lucide-react";
+import { Clock, History } from 'lucide-react';
 
-import { useDashboardRecentActivity } from "@/features/dashboard/api/queries";
+import { useDashboardRecentActivity } from '@/features/dashboard/api/queries';
 
 export default function ActivityWidget() {
   const { data: activities = [], isLoading } = useDashboardRecentActivity();
@@ -34,9 +34,7 @@ export default function ActivityWidget() {
               <Clock className="h-3 w-3" />
               <span>{new Date(act.timestamp).toLocaleTimeString()}</span>
             </div>
-            <p className="text-text font-medium leading-relaxed">
-              {act.description}
-            </p>
+            <p className="text-text font-medium leading-relaxed">{act.description}</p>
           </div>
         ))}
 

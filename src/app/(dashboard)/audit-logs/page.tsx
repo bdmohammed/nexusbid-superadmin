@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useCallback,useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from 'react';
 import {
   AlertTriangle,
   ArrowUpRight,
@@ -18,31 +18,29 @@ import {
   ShieldAlert,
   Terminal,
   XCircle,
-} from "lucide-react";
+} from 'lucide-react';
 
-import Pagination from "@/components/common/Pagination";
-import Select from "@/components/common/Select";
-import { rbacApi } from "@/features/rbac/api/api";
+import Pagination from '@/components/common/Pagination';
+import Select from '@/components/common/Select';
+import { rbacApi } from '@/features/rbac/api/api';
 
 export default function AuditLogsForensicPage() {
-  const [activeTab, setActiveTab] = useState<"logs" | "security" | "retention">(
-    "logs",
-  );
+  const [activeTab, setActiveTab] = useState<'logs' | 'security' | 'retention'>('logs');
   const [logs, setLogs] = useState<any[]>([]);
   const [totalLogs, setTotalLogs] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState("");
-  const [selectedSeverity, setSelectedSeverity] = useState("ALL");
-  const [selectedModule, setSelectedModule] = useState("ALL");
-  const [selectedStatus, setSelectedStatus] = useState("ALL");
+  const [search, setSearch] = useState('');
+  const [selectedSeverity, setSelectedSeverity] = useState('ALL');
+  const [selectedModule, setSelectedModule] = useState('ALL');
+  const [selectedStatus, setSelectedStatus] = useState('ALL');
   const [selectedLog, setSelectedLog] = useState<any>(null);
   const [correlationTimeline, setCorrelationTimeline] = useState<any[]>([]);
 
   // Advanced filters drawer states
   const [showAdvanced, setShowAdvanced] = useState(false);
-  const [filterCountry, setFilterCountry] = useState("");
-  const [filterIp, setFilterIp] = useState("");
-  const [filterCorrelationId, setFilterCorrelationId] = useState("");
+  const [filterCountry, setFilterCountry] = useState('');
+  const [filterIp, setFilterIp] = useState('');
+  const [filterCorrelationId, setFilterCorrelationId] = useState('');
 
   // Pagination
   const [currentPage, setCurrentPage] = useState(1);
@@ -67,29 +65,28 @@ export default function AuditLogsForensicPage() {
   // Retention Policies
   const [retentionPolicies, setRetentionPolicies] = useState<any[]>([
     {
-      category: "AUDIT",
-      label: "Audit Logs",
+      category: 'AUDIT',
+      label: 'Audit Logs',
       days: 2555,
-      description:
-        "Compliance records and administrative activities (7 Years).",
+      description: 'Compliance records and administrative activities (7 Years).',
     },
     {
-      category: "SECURITY",
-      label: "Security Events",
+      category: 'SECURITY',
+      label: 'Security Events',
       days: 3650,
-      description: "Logins, brute force alerts, password resets (10 Years).",
+      description: 'Logins, brute force alerts, password resets (10 Years).',
     },
     {
-      category: "API",
-      label: "API Requests",
+      category: 'API',
+      label: 'API Requests',
       days: 90,
-      description: "Raw incoming middleware request payloads (90 Days).",
+      description: 'Raw incoming middleware request payloads (90 Days).',
     },
   ]);
 
   // Export Progress simulation
   const [exportProgress, setExportProgress] = useState<number | null>(null);
-  const [exportStatus, setExportStatus] = useState("");
+  const [exportStatus, setExportStatus] = useState('');
 
   const loadStats = async () => {
     try {
@@ -98,7 +95,7 @@ export default function AuditLogsForensicPage() {
         setStats(res.data.data);
       }
     } catch (err) {
-      console.error("Failed to load audit statistics", err);
+      console.error('Failed to load audit statistics', err);
     }
   };
 
@@ -110,23 +107,23 @@ export default function AuditLogsForensicPage() {
           res.data.data.map((p: any) => ({
             category: p.category,
             label:
-              p.category === "AUDIT"
-                ? "Audit Logs"
-                : p.category === "SECURITY"
-                  ? "Security Events"
-                  : "API Requests",
+              p.category === 'AUDIT'
+                ? 'Audit Logs'
+                : p.category === 'SECURITY'
+                  ? 'Security Events'
+                  : 'API Requests',
             days: p.retentionDays,
             description:
-              p.category === "AUDIT"
-                ? "Compliance records and administrative activities (7 Years)."
-                : p.category === "SECURITY"
-                  ? "Logins, brute force alerts, password resets (10 Years)."
-                  : "Raw incoming middleware request payloads (90 Days).",
+              p.category === 'AUDIT'
+                ? 'Compliance records and administrative activities (7 Years).'
+                : p.category === 'SECURITY'
+                  ? 'Logins, brute force alerts, password resets (10 Years).'
+                  : 'Raw incoming middleware request payloads (90 Days).',
           })),
         );
       }
     } catch (err) {
-      console.error("Failed to load retention policies", err);
+      console.error('Failed to load retention policies', err);
     }
   };
 
@@ -138,9 +135,9 @@ export default function AuditLogsForensicPage() {
         limit: pageSize,
       };
       if (search) params.search = search;
-      if (selectedModule !== "ALL") params.module = selectedModule;
-      if (selectedSeverity !== "ALL") params.severity = selectedSeverity;
-      if (selectedStatus !== "ALL") params.status = selectedStatus;
+      if (selectedModule !== 'ALL') params.module = selectedModule;
+      if (selectedSeverity !== 'ALL') params.severity = selectedSeverity;
+      if (selectedStatus !== 'ALL') params.status = selectedStatus;
       if (filterCountry) params.country = filterCountry;
       if (filterIp) params.ipAddress = filterIp;
       if (filterCorrelationId) params.correlationId = filterCorrelationId;
@@ -151,7 +148,7 @@ export default function AuditLogsForensicPage() {
         setTotalLogs(res.data.data.total || 0);
       }
     } catch (err) {
-      console.error("Failed to load forensic logs", err);
+      console.error('Failed to load forensic logs', err);
     } finally {
       setLoading(false);
     }
@@ -185,7 +182,7 @@ export default function AuditLogsForensicPage() {
           setCorrelationTimeline(res.data.data);
         }
       } catch (err) {
-        console.error("Failed to fetch correlation timeline", err);
+        console.error('Failed to fetch correlation timeline', err);
       }
     }
   };
@@ -193,43 +190,43 @@ export default function AuditLogsForensicPage() {
   const handleSaveRetention = async (category: string, days: number) => {
     try {
       await rbacApi.updateRetentionPolicy({ category, retentionDays: days });
-      alert("Retention policy updated successfully.");
+      alert('Retention policy updated successfully.');
       loadRetention();
     } catch (err) {
-      console.error("Failed to update retention policy", err);
-      alert("Failed to update retention policy.");
+      console.error('Failed to update retention policy', err);
+      alert('Failed to update retention policy.');
     }
   };
 
   const triggerExport = async (format: string) => {
     setExportProgress(10);
-    setExportStatus("Requesting async export job...");
+    setExportStatus('Requesting async export job...');
     try {
       const res = await rbacApi.exportAuditLogs({
         exportType: format,
         filters: {
           search,
-          module: selectedModule !== "ALL" ? selectedModule : undefined,
-          severity: selectedSeverity !== "ALL" ? selectedSeverity : undefined,
-          status: selectedStatus !== "ALL" ? selectedStatus : undefined,
+          module: selectedModule !== 'ALL' ? selectedModule : undefined,
+          severity: selectedSeverity !== 'ALL' ? selectedSeverity : undefined,
+          status: selectedStatus !== 'ALL' ? selectedStatus : undefined,
         },
       });
 
       if (res.data.success && res.data.data) {
         setExportProgress(50);
-        setExportStatus("Export job queued. Generating file...");
+        setExportStatus('Export job queued. Generating file...');
         setTimeout(() => {
           setExportProgress(100);
           setExportStatus(
-            `Export file successfully queued. Job ID: ${res.data.success ? res.data.data.id : ""}`,
+            `Export file successfully queued. Job ID: ${res.data.success ? res.data.data.id : ''}`,
           );
         }, 1500);
       }
     } catch (err) {
-      console.error("Failed to trigger export", err);
+      console.error('Failed to trigger export', err);
       setExportProgress(null);
-      setExportStatus("");
-      alert("Failed to trigger export.");
+      setExportStatus('');
+      alert('Failed to trigger export.');
     }
   };
 
@@ -243,14 +240,14 @@ export default function AuditLogsForensicPage() {
             Forensic Audit & Compliance Console
           </h1>
           <p className="mt-1.5 text-text-light text-sm max-w-2xl">
-            Strictly immutable, append-only log vault tracking admin actions,
-            correlation graphs, and automated data archiving.
+            Strictly immutable, append-only log vault tracking admin actions, correlation graphs,
+            and automated data archiving.
           </p>
         </div>
 
         <div className="flex items-center gap-3">
           <button
-            onClick={() => triggerExport("CSV")}
+            onClick={() => triggerExport('CSV')}
             className="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold rounded-xl bg-primary text-white hover:bg-primary-dark transition shadow-sm"
           >
             <Download className="h-4.5 w-4.5" />
@@ -263,40 +260,40 @@ export default function AuditLogsForensicPage() {
       <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
         {[
           {
-            label: "Total Events",
+            label: 'Total Events',
             value: stats.totalEvents,
             icon: Layers,
-            color: "text-blue-500",
+            color: 'text-blue-500',
           },
           {
-            label: "Security Events",
+            label: 'Security Events',
             value: stats.securityEvents,
             icon: ShieldAlert,
-            color: "text-orange-500",
+            color: 'text-orange-500',
           },
           {
-            label: "Failed Logins",
+            label: 'Failed Logins',
             value: stats.failedLogins,
             icon: AlertTriangle,
-            color: "text-red-500",
+            color: 'text-red-500',
           },
           {
-            label: "Role Changes",
+            label: 'Role Changes',
             value: stats.roleChanges,
             icon: GitBranch,
-            color: "text-purple-500",
+            color: 'text-purple-500',
           },
           {
-            label: "Critical Alerts",
+            label: 'Critical Alerts',
             value: stats.criticalEvents,
             icon: ShieldAlert,
-            color: "text-red-600 animate-pulse",
+            color: 'text-red-600 animate-pulse',
           },
           {
-            label: "API Requests",
+            label: 'API Requests',
             value: stats.apiCalls,
             icon: Cpu,
-            color: "text-emerald-500",
+            color: 'text-emerald-500',
           },
         ].map((c, i) => {
           const Icon = c.icon;
@@ -306,9 +303,7 @@ export default function AuditLogsForensicPage() {
               className="rounded-2xl border border-border bg-surface p-4 shadow-sm hover:shadow transition flex flex-col justify-between"
             >
               <div className="flex items-center justify-between mb-2">
-                <span className="text-xs font-semibold text-text-light">
-                  {c.label}
-                </span>
+                <span className="text-xs font-semibold text-text-light">{c.label}</span>
                 <Icon className={`h-4.5 w-4.5 ${c.color}`} />
               </div>
               <div className="text-xl font-bold tracking-tight">
@@ -322,31 +317,31 @@ export default function AuditLogsForensicPage() {
       {/* Tabs panels bar */}
       <div className="flex items-center border-b border-border gap-2">
         <button
-          onClick={() => setActiveTab("logs")}
+          onClick={() => setActiveTab('logs')}
           className={`px-4 py-2.5 text-sm font-semibold border-b-2 transition ${
-            activeTab === "logs"
-              ? "border-primary text-primary"
-              : "border-transparent text-text-light hover:text-text"
+            activeTab === 'logs'
+              ? 'border-primary text-primary'
+              : 'border-transparent text-text-light hover:text-text'
           }`}
         >
           Audit Logs Stream
         </button>
         <button
-          onClick={() => setActiveTab("security")}
+          onClick={() => setActiveTab('security')}
           className={`px-4 py-2.5 text-sm font-semibold border-b-2 transition ${
-            activeTab === "security"
-              ? "border-primary text-primary"
-              : "border-transparent text-text-light hover:text-text"
+            activeTab === 'security'
+              ? 'border-primary text-primary'
+              : 'border-transparent text-text-light hover:text-text'
           }`}
         >
           Security Operations
         </button>
         <button
-          onClick={() => setActiveTab("retention")}
+          onClick={() => setActiveTab('retention')}
           className={`px-4 py-2.5 text-sm font-semibold border-b-2 transition ${
-            activeTab === "retention"
-              ? "border-primary text-primary"
-              : "border-transparent text-text-light hover:text-text"
+            activeTab === 'retention'
+              ? 'border-primary text-primary'
+              : 'border-transparent text-text-light hover:text-text'
           }`}
         >
           Retention & Archival
@@ -354,7 +349,7 @@ export default function AuditLogsForensicPage() {
       </div>
 
       {/* Active Tab: Audit Logs Stream */}
-      {activeTab === "logs" && (
+      {activeTab === 'logs' && (
         <div className="space-y-4">
           {/* Export Queue notification */}
           {exportProgress !== null && (
@@ -510,51 +505,40 @@ export default function AuditLogsForensicPage() {
                   </tr>
                 ) : logs.length === 0 ? (
                   <tr>
-                    <td
-                      colSpan={9}
-                      className="p-8 text-center text-text-light italic"
-                    >
-                      No compliance audit records found matching active query
-                      settings.
+                    <td colSpan={9} className="p-8 text-center text-text-light italic">
+                      No compliance audit records found matching active query settings.
                     </td>
                   </tr>
                 ) : (
                   logs.map((log) => (
-                    <tr
-                      key={log.id}
-                      className="hover:bg-background/40 transition"
-                    >
+                    <tr key={log.id} className="hover:bg-background/40 transition">
                       <td className="p-4 font-mono text-xs">
                         {new Date(log.createdAt).toLocaleString()}
                       </td>
                       <td className="p-4 text-xs font-semibold text-primary">
-                        {log.eventId || "N/A"}
+                        {log.eventId || 'N/A'}
                       </td>
                       <td className="p-4">
                         <span
                           className={`px-2 py-0.5 rounded-full text-xs font-bold ${
-                            log.severity === "CRITICAL"
-                              ? "bg-red-500/10 text-red-500"
-                              : log.severity === "HIGH"
-                                ? "bg-orange-500/10 text-orange-500"
-                                : log.severity === "MEDIUM"
-                                  ? "bg-yellow-500/10 text-yellow-500"
-                                  : "bg-blue-500/10 text-blue-500"
+                            log.severity === 'CRITICAL'
+                              ? 'bg-red-500/10 text-red-500'
+                              : log.severity === 'HIGH'
+                                ? 'bg-orange-500/10 text-orange-500'
+                                : log.severity === 'MEDIUM'
+                                  ? 'bg-yellow-500/10 text-yellow-500'
+                                  : 'bg-blue-500/10 text-blue-500'
                           }`}
                         >
-                          {log.severity || "INFO"}
+                          {log.severity || 'INFO'}
                         </span>
                       </td>
-                      <td className="p-4 font-mono text-xs font-bold text-text">
-                        {log.action}
-                      </td>
+                      <td className="p-4 font-mono text-xs font-bold text-text">{log.action}</td>
                       <td className="p-4 text-xs font-semibold text-text-light">
-                        {log.module || "SYSTEM"}
+                        {log.module || 'SYSTEM'}
                       </td>
                       <td className="p-4">
-                        <div className="text-xs font-semibold text-text">
-                          {log.actorEmail}
-                        </div>
+                        <div className="text-xs font-semibold text-text">{log.actorEmail}</div>
                         {log.ipAddress && (
                           <div className="text-[10px] text-text-light font-mono">
                             {log.ipAddress}
@@ -562,10 +546,10 @@ export default function AuditLogsForensicPage() {
                         )}
                       </td>
                       <td className="p-4 text-xs text-text-light">
-                        {log.metadata?.country || "Localhost"}
+                        {log.metadata?.country || 'Localhost'}
                       </td>
                       <td className="p-4">
-                        {log.status === "SUCCESS" || !log.status ? (
+                        {log.status === 'SUCCESS' || !log.status ? (
                           <CheckCircle className="h-4 w-4 text-emerald-500" />
                         ) : (
                           <XCircle className="h-4 w-4 text-red-500" />
@@ -608,15 +592,13 @@ export default function AuditLogsForensicPage() {
                   <div>
                     <div className="flex items-center gap-2">
                       <span className="text-xs font-bold px-2 py-0.5 bg-primary/10 text-primary rounded font-mono">
-                        {selectedLog.eventId || "EVENT"}
+                        {selectedLog.eventId || 'EVENT'}
                       </span>
                       <span className="text-xs text-text-light">
-                        Correlation: {selectedLog.correlationId || "None"}
+                        Correlation: {selectedLog.correlationId || 'None'}
                       </span>
                     </div>
-                    <h2 className="text-xl font-bold mt-1">
-                      Forensic Investigation Details
-                    </h2>
+                    <h2 className="text-xl font-bold mt-1">Forensic Investigation Details</h2>
                   </div>
                   <button
                     onClick={() => setSelectedLog(null)}
@@ -631,9 +613,7 @@ export default function AuditLogsForensicPage() {
                   {/* General Summary */}
                   <div className="grid grid-cols-2 gap-4 bg-background rounded-2xl p-4 border border-border/50">
                     <div>
-                      <span className="block text-xs font-semibold text-text-light">
-                        Actor
-                      </span>
+                      <span className="block text-xs font-semibold text-text-light">Actor</span>
                       <span className="text-sm font-semibold text-text">
                         {selectedLog.actorEmail}
                       </span>
@@ -643,7 +623,7 @@ export default function AuditLogsForensicPage() {
                         Target User ID
                       </span>
                       <span className="text-sm font-semibold text-text">
-                        {selectedLog.targetUserId || "None"}
+                        {selectedLog.targetUserId || 'None'}
                       </span>
                     </div>
                     <div>
@@ -659,7 +639,7 @@ export default function AuditLogsForensicPage() {
                         Request ID
                       </span>
                       <span className="text-sm font-mono text-xs text-text">
-                        {selectedLog.requestId || "None"}
+                        {selectedLog.requestId || 'None'}
                       </span>
                     </div>
                   </div>
@@ -678,24 +658,17 @@ export default function AuditLogsForensicPage() {
                           </div>
                         ) : (
                           correlationTimeline.map((item, idx) => (
-                            <div
-                              key={item.id}
-                              className="flex items-center gap-3 shrink-0"
-                            >
+                            <div key={item.id} className="flex items-center gap-3 shrink-0">
                               <div
                                 className={`px-3 py-2 rounded-lg text-xs text-center border ${
                                   item.id === selectedLog.id
-                                    ? "bg-primary/20 border-primary"
-                                    : "bg-background border-border"
+                                    ? 'bg-primary/20 border-primary'
+                                    : 'bg-background border-border'
                                 }`}
                               >
                                 <div className="font-bold">{item.action}</div>
                                 <div className="text-[9px] text-text-light font-mono">
-                                  {item.module} (
-                                  {new Date(
-                                    item.createdAt,
-                                  ).toLocaleTimeString()}
-                                  )
+                                  {item.module} ({new Date(item.createdAt).toLocaleTimeString()})
                                 </div>
                               </div>
                               {idx < correlationTimeline.length - 1 && (
@@ -743,28 +716,20 @@ export default function AuditLogsForensicPage() {
                       </h3>
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 font-mono text-xs">
                         <div className="p-3 bg-background rounded-xl border border-border/50">
-                          <span className="block text-[10px] text-text-light">
-                            Browser
-                          </span>
-                          {selectedLog.metadata.browser || "Unknown"}
+                          <span className="block text-[10px] text-text-light">Browser</span>
+                          {selectedLog.metadata.browser || 'Unknown'}
                         </div>
                         <div className="p-3 bg-background rounded-xl border border-border/50">
-                          <span className="block text-[10px] text-text-light">
-                            OS
-                          </span>
-                          {selectedLog.metadata.os || "Unknown"}
+                          <span className="block text-[10px] text-text-light">OS</span>
+                          {selectedLog.metadata.os || 'Unknown'}
                         </div>
                         <div className="p-3 bg-background rounded-xl border border-border/50">
-                          <span className="block text-[10px] text-text-light">
-                            HTTP Method
-                          </span>
-                          {selectedLog.metadata.method || "Unknown"}
+                          <span className="block text-[10px] text-text-light">HTTP Method</span>
+                          {selectedLog.metadata.method || 'Unknown'}
                         </div>
                         <div className="p-3 bg-background rounded-xl border border-border/50">
-                          <span className="block text-[10px] text-text-light">
-                            Response Code
-                          </span>
-                          {selectedLog.metadata.responseCode || "Unknown"}
+                          <span className="block text-[10px] text-text-light">Response Code</span>
+                          {selectedLog.metadata.responseCode || 'Unknown'}
                         </div>
                       </div>
                     </div>
@@ -774,9 +739,7 @@ export default function AuditLogsForensicPage() {
                 <div className="p-6 border-t border-border bg-background flex items-center justify-between">
                   <button
                     onClick={() => {
-                      alert(
-                        `Forwarding event ${selectedLog.eventId} to SIEM Splunk endpoint...`,
-                      );
+                      alert(`Forwarding event ${selectedLog.eventId} to SIEM Splunk endpoint...`);
                     }}
                     className="inline-flex items-center gap-1.5 text-xs font-semibold text-text hover:underline"
                   >
@@ -797,16 +760,14 @@ export default function AuditLogsForensicPage() {
       )}
 
       {/* Active Tab: Security Operations */}
-      {activeTab === "security" && (
+      {activeTab === 'security' && (
         <div className="space-y-6">
           {/* Security alerts triggers panel */}
           <div className="p-5 rounded-2xl border border-red-500/20 bg-red-500/5 space-y-4">
             <div className="flex items-center gap-3">
               <ShieldAlert className="h-6 w-6 text-red-500 animate-pulse" />
               <div>
-                <h3 className="font-bold text-red-500">
-                  Critical Threat Warnings
-                </h3>
+                <h3 className="font-bold text-red-500">Critical Threat Warnings</h3>
                 <p className="text-xs text-text-light mt-0.5">
                   Suspicious activities flagged within the last 24 hours.
                 </p>
@@ -816,12 +777,8 @@ export default function AuditLogsForensicPage() {
             <div className="divide-y divide-red-500/10">
               <div className="py-3 flex items-center justify-between text-sm">
                 <div>
-                  <span className="font-semibold text-text">
-                    Brute Force Attempt
-                  </span>
-                  <span className="ml-2 text-xs text-text-light">
-                    IP: 103.22.45.109 (China)
-                  </span>
+                  <span className="font-semibold text-text">Brute Force Attempt</span>
+                  <span className="ml-2 text-xs text-text-light">IP: 103.22.45.109 (China)</span>
                 </div>
                 <span className="text-xs font-mono font-bold text-red-500">
                   5 FAILURES IN 10 MINS
@@ -829,16 +786,12 @@ export default function AuditLogsForensicPage() {
               </div>
               <div className="py-3 flex items-center justify-between text-sm">
                 <div>
-                  <span className="font-semibold text-text">
-                    Administrative Impersonation
-                  </span>
+                  <span className="font-semibold text-text">Administrative Impersonation</span>
                   <span className="ml-2 text-xs text-text-light">
                     User: admin_john impersonated vendor_alice
                   </span>
                 </div>
-                <span className="text-xs font-mono font-bold text-orange-500">
-                  ACTIVE
-                </span>
+                <span className="text-xs font-mono font-bold text-orange-500">ACTIVE</span>
               </div>
             </div>
           </div>
@@ -852,15 +805,15 @@ export default function AuditLogsForensicPage() {
               </h3>
             </div>
             <div className="p-4 text-sm text-text-light">
-              No failed authentication events recorded today outside brute force
-              triggers. Everything is operational.
+              No failed authentication events recorded today outside brute force triggers.
+              Everything is operational.
             </div>
           </div>
         </div>
       )}
 
       {/* Active Tab: Retention & Archival */}
-      {activeTab === "retention" && (
+      {activeTab === 'retention' && (
         <div className="grid gap-6 md:grid-cols-3">
           {retentionPolicies.map((policy) => (
             <div
@@ -871,9 +824,7 @@ export default function AuditLogsForensicPage() {
                 <h3 className="font-bold text-base">{policy.label}</h3>
                 <Settings className="h-5 w-5 text-primary" />
               </div>
-              <p className="text-xs text-text-light leading-relaxed">
-                {policy.description}
-              </p>
+              <p className="text-xs text-text-light leading-relaxed">{policy.description}</p>
 
               <div className="space-y-2">
                 <label className="block text-xs font-semibold text-text-light">
@@ -883,11 +834,9 @@ export default function AuditLogsForensicPage() {
                   type="number"
                   value={policy.days}
                   onChange={(e) => {
-                    const days = parseInt(e.target.value || "0", 10);
+                    const days = parseInt(e.target.value || '0', 10);
                     setRetentionPolicies((prev) =>
-                      prev.map((p) =>
-                        p.category === policy.category ? { ...p, days } : p,
-                      ),
+                      prev.map((p) => (p.category === policy.category ? { ...p, days } : p)),
                     );
                   }}
                   className="w-full rounded-xl border border-border bg-surface py-2 px-3 text-sm font-semibold"
@@ -895,9 +844,7 @@ export default function AuditLogsForensicPage() {
               </div>
 
               <button
-                onClick={() =>
-                  handleSaveRetention(policy.category, policy.days)
-                }
+                onClick={() => handleSaveRetention(policy.category, policy.days)}
                 className="w-full py-2 text-xs font-semibold rounded-xl bg-primary text-white hover:bg-primary-dark transition"
               >
                 Apply Retention rule

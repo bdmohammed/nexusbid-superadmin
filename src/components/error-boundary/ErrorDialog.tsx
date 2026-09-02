@@ -1,10 +1,9 @@
-// src/components/error-boundary/ErrorDialog.tsx
-"use client";
+'use client';
 
-import React, { useState } from "react";
-import { AlertCircle, Check, Copy, RefreshCw,X } from "lucide-react";
+import React, { useState } from 'react';
+import { AlertCircle, Check, Copy, RefreshCw, X } from 'lucide-react';
 
-import { serializeError } from "@/lib/errors/serialize-error";
+import { serializeError } from '@/lib/errors/serializeError';
 
 export interface ErrorDialogProps {
   error: Error;
@@ -12,13 +11,9 @@ export interface ErrorDialogProps {
   onClose?: () => void;
 }
 
-export const ErrorDialog: React.FC<ErrorDialogProps> = ({
-  error,
-  reset,
-  onClose,
-}) => {
+export const ErrorDialog: React.FC<ErrorDialogProps> = ({ error, reset, onClose }) => {
   const [copied, setCopied] = useState(false);
-  const isDevelopment = process.env.NODE_ENV === "development";
+  const isDevelopment = process.env.NODE_ENV === 'development';
   const serialized = serializeError(error);
 
   const handleCopy = async () => {
@@ -38,7 +33,7 @@ export const ErrorDialog: React.FC<ErrorDialogProps> = ({
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
-      console.error("Failed to copy diagnostics:", err);
+      console.error('Failed to copy diagnostics:', err);
     }
   };
 
@@ -71,9 +66,7 @@ export const ErrorDialog: React.FC<ErrorDialogProps> = ({
 
         {/* Content body */}
         <div className="space-y-4">
-          <p className="text-sm leading-relaxed text-neutral-300">
-            {serialized.message}
-          </p>
+          <p className="text-sm leading-relaxed text-neutral-300">{serialized.message}</p>
 
           <div className="text-[10px] text-neutral-500 font-mono">
             Error ID: {serialized.errorId}
@@ -90,16 +83,12 @@ export const ErrorDialog: React.FC<ErrorDialogProps> = ({
                   onClick={handleCopy}
                   className="inline-flex items-center gap-1 px-1.5 py-0.5 text-[9px] bg-white/5 hover:bg-white/10 rounded-md transition-colors cursor-pointer"
                 >
-                  {copied ? (
-                    <Check className="w-3 text-green-500" />
-                  ) : (
-                    <Copy className="w-3" />
-                  )}
-                  {copied ? "Copied" : "Copy"}
+                  {copied ? <Check className="w-3 text-green-500" /> : <Copy className="w-3" />}
+                  {copied ? 'Copied' : 'Copy'}
                 </button>
               </div>
               <div className="max-h-24 overflow-y-auto font-mono text-[10px] text-neutral-400 whitespace-pre-wrap">
-                {error.stack || error.message}
+                {error.stack ?? error.message}
               </div>
             </div>
           )}

@@ -1,7 +1,7 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { countriesApi } from "./api";
-import { lookupQueryKeys } from "./keys";
+import { countriesApi } from './api';
+import { lookupQueryKeys } from './keys';
 
 import type {
   AddCommentInput,
@@ -13,9 +13,9 @@ import type {
   StateQuery,
   UpdateCountryBodyDto,
   UpdateStateBodyDto,
-} from "../types";
-import type { ErrorCode } from "@/lib/errors";
-import { AppError, ERROR_CODES } from "@/lib/errors";
+} from '../types';
+import type { ErrorCode } from '@/lib/errors';
+import { AppError, ERROR_CODES } from '@/lib/errors';
 
 // ─── Query Hooks ─────────────────────────────────────────────────────────────
 
@@ -42,7 +42,7 @@ export function useCountries() {
 
       if (data.success === false) {
         throw new AppError(
-          data.message || "Failed to fetch countries",
+          data.message || 'Failed to fetch countries',
           statusCode,
           ERROR_CODES.SERVER,
         );
@@ -61,7 +61,7 @@ export function useCountriesHierarchy() {
 
       if (!data.success) {
         throw new AppError(
-          data.message || "Failed to fetch hierarchy",
+          data.message || 'Failed to fetch hierarchy',
           status,
           data.error as ErrorCode,
         );
@@ -80,7 +80,7 @@ export function useOperationalStats() {
 
       if (!data.success) {
         throw new AppError(
-          data.message || "Failed to fetch stats",
+          data.message || 'Failed to fetch stats',
           status,
           data.error as ErrorCode,
         );
@@ -99,7 +99,7 @@ export function useEligibleReviewers() {
 
       if (!data.success) {
         throw new AppError(
-          data.message || "Failed to fetch eligible reviewers",
+          data.message || 'Failed to fetch eligible reviewers',
           status,
           data.error as ErrorCode,
         );
@@ -118,7 +118,7 @@ export function useDependencyMatrix(query: DependencyMatrixQueryInput) {
 
       if (!data.success) {
         throw new AppError(
-          data.message || "Failed to fetch dependency matrix",
+          data.message || 'Failed to fetch dependency matrix',
           status,
           data.error as ErrorCode,
         );
@@ -138,7 +138,7 @@ export function useReviewsQueue(query?: ChangeRequestQueryInput) {
 
       if (!data.success) {
         throw new AppError(
-          data.message || "Failed to fetch reviews queue",
+          data.message || 'Failed to fetch reviews queue',
           status,
           data.error as ErrorCode,
         );
@@ -153,12 +153,11 @@ export function useChangeRequestDetails(requestId: string) {
   return useQuery({
     queryKey: lookupQueryKeys.changeRequestDetails(requestId),
     queryFn: async () => {
-      const { data, status } =
-        await countriesApi.getChangeRequestDetails(requestId);
+      const { data, status } = await countriesApi.getChangeRequestDetails(requestId);
 
       if (!data.success) {
         throw new AppError(
-          data.message || "Failed to fetch change request details",
+          data.message || 'Failed to fetch change request details',
           status,
           data.error as ErrorCode,
         );
@@ -178,7 +177,7 @@ export function useRequestTimeline(requestId: string) {
 
       if (!data.success) {
         throw new AppError(
-          data.message || "Failed to fetch request timeline",
+          data.message || 'Failed to fetch request timeline',
           status,
           data.error as ErrorCode,
         );
@@ -194,14 +193,11 @@ export function useLocationTimeline(countryId: string, stateId?: string) {
   return useQuery({
     queryKey: lookupQueryKeys.timeline(countryId, stateId),
     queryFn: async () => {
-      const { data, status } = await countriesApi.getTimeline(
-        countryId,
-        stateId,
-      );
+      const { data, status } = await countriesApi.getTimeline(countryId, stateId);
 
       if (!data.success) {
         throw new AppError(
-          data.message || "Failed to fetch location timeline",
+          data.message || 'Failed to fetch location timeline',
           status,
           data.error as ErrorCode,
         );
@@ -242,13 +238,7 @@ export function useAssignReviewer() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({
-      requestId,
-      input,
-    }: {
-      requestId: string;
-      input: AssignReviewerInput;
-    }) => {
+    mutationFn: async ({ requestId, input }: { requestId: string; input: AssignReviewerInput }) => {
       const { data } = await countriesApi.assignReviewer(requestId, input);
 
       if (!data.success) {
@@ -272,13 +262,7 @@ export function useAddComment() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({
-      requestId,
-      input,
-    }: {
-      requestId: string;
-      input: AddCommentInput;
-    }) => {
+    mutationFn: async ({ requestId, input }: { requestId: string; input: AddCommentInput }) => {
       const { data } = await countriesApi.addComment(requestId, input);
 
       if (!data.success) {
@@ -331,13 +315,7 @@ export function useUpdateState() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({
-      stateId,
-      input,
-    }: {
-      stateId: string;
-      input: UpdateStateBodyDto;
-    }) => {
+    mutationFn: async ({ stateId, input }: { stateId: string; input: UpdateStateBodyDto }) => {
       const { data } = await countriesApi.updateState(stateId, input);
 
       if (!data.success) {

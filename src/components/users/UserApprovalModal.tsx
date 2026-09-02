@@ -1,7 +1,7 @@
 //@ts-nocheck
-"use client";
+'use client';
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 import {
   AlertTriangle,
   Briefcase,
@@ -15,19 +15,19 @@ import {
   UserCheck,
   X,
   XCircle,
-} from "lucide-react";
-import Select from "react-select";
-import { toast } from "sonner";
+} from 'lucide-react';
+import Select from 'react-select';
+import { toast } from 'sonner';
 
-import { authApi } from "@/features/auth/api/api";
+import { authApi } from '@/features/auth/api/api';
 import {
   useActivateUser,
   useReviewApproval,
   useSubmitApproval,
   useSuspendUser,
-} from "@/features/auth/api/mutations";
-import { useCurrentUser } from "@/features/auth/api/queries";
-import { rbacApi } from "@/features/rbac/api/api";
+} from '@/features/auth/api/mutations';
+import { useCurrentUser } from '@/features/auth/api/queries';
+import { rbacApi } from '@/features/rbac/api/api';
 
 interface RoleOption {
   id: string;
@@ -85,10 +85,10 @@ export const UserApprovalModal: React.FC<UserApprovalModalProps> = ({
 
   const [roles, setRoles] = useState<RoleOption[]>([]);
   const [reviewers, setReviewers] = useState<AdminUserOption[]>([]);
-  const [selectedRoleId, setSelectedRoleId] = useState<string>("");
-  const [description, setDescription] = useState<string>("");
-  const [selectedReviewerId, setSelectedReviewerId] = useState<string>("");
-  const [comment, setComment] = useState<string>("");
+  const [selectedRoleId, setSelectedRoleId] = useState<string>('');
+  const [description, setDescription] = useState<string>('');
+  const [selectedReviewerId, setSelectedReviewerId] = useState<string>('');
+  const [comment, setComment] = useState<string>('');
   const [submitting, setSubmitting] = useState<boolean>(false);
   const [auditLogs, setAuditLogs] = useState<AuditLogItem[]>([]);
   const [loadingOptions, setLoadingOptions] = useState<boolean>(false);
@@ -104,10 +104,10 @@ export const UserApprovalModal: React.FC<UserApprovalModalProps> = ({
     if (!isOpen || !user) return;
 
     // Reset state
-    setSelectedRoleId(user.requestedRoleId || "");
-    setDescription(user.requestedDescription || "");
-    setSelectedReviewerId(user.reviewerId || "");
-    setComment("");
+    setSelectedRoleId(user.requestedRoleId || '');
+    setDescription(user.requestedDescription || '');
+    setSelectedReviewerId(user.reviewerId || '');
+    setComment('');
     setApprovalReq(null);
 
     // Load roles, admin reviewers, and approval request entity
@@ -117,9 +117,9 @@ export const UserApprovalModal: React.FC<UserApprovalModalProps> = ({
         const [rolesRes, usersRes, reqRes] = await Promise.all([
           rbacApi.getRoles(),
           rbacApi.getAssignableUsers({
-            accountType: "admin",
-            status: "active",
-            permission: "user.manage",
+            accountType: 'admin',
+            status: 'active',
+            permission: 'user.manage',
             limit: 50,
           }),
           authApi.getApprovalRequest(user.id).catch(() => null),
@@ -139,20 +139,15 @@ export const UserApprovalModal: React.FC<UserApprovalModalProps> = ({
         const requestData = reqRes?.data?.data || reqRes?.data || null;
         if (requestData) {
           setApprovalReq(requestData);
-          if (requestData.requestedRoleId)
-            setSelectedRoleId(requestData.requestedRoleId);
-          if (requestData.requestedDescription)
-            setDescription(requestData.requestedDescription);
-          if (requestData.reviewerId)
-            setSelectedReviewerId(requestData.reviewerId);
+          if (requestData.requestedRoleId) setSelectedRoleId(requestData.requestedRoleId);
+          if (requestData.requestedDescription) setDescription(requestData.requestedDescription);
+          if (requestData.reviewerId) setSelectedReviewerId(requestData.reviewerId);
         } else {
-          if (roleList.length > 0 && !selectedRoleId)
-            setSelectedRoleId(roleList[0].id);
-          if (adminList.length > 0 && !selectedReviewerId)
-            setSelectedReviewerId(adminList[0].id);
+          if (roleList.length > 0 && !selectedRoleId) setSelectedRoleId(roleList[0].id);
+          if (adminList.length > 0 && !selectedReviewerId) setSelectedReviewerId(adminList[0].id);
         }
       } catch (err) {
-        console.error("Failed to load options:", err);
+        console.error('Failed to load options:', err);
       } finally {
         setLoadingOptions(false);
       }
@@ -165,7 +160,7 @@ export const UserApprovalModal: React.FC<UserApprovalModalProps> = ({
         const logs = res.data || [];
         setAuditLogs(logs);
       } catch (err) {
-        console.error("Failed to fetch audit history:", err);
+        console.error('Failed to fetch audit history:', err);
       }
     };
 
@@ -175,25 +170,21 @@ export const UserApprovalModal: React.FC<UserApprovalModalProps> = ({
 
   if (!isOpen || !user) return null;
 
-  const isCustomerAccount = user.accountType && user.accountType !== "admin";
+  const isCustomerAccount = user.accountType && user.accountType !== 'admin';
 
   // Determine stage based on user status or approval request entity
   const isPendingReviewStage =
-    user?.status?.toLowerCase() === "pending_review" ||
-    (approvalReq?.status && approvalReq.status.toUpperCase() === "PENDING");
+    user?.status?.toLowerCase() === 'pending_review' ||
+    (approvalReq?.status && approvalReq.status.toUpperCase() === 'PENDING');
 
   const submittedByUserId =
-    approvalReq?.submittedBy?.id ||
-    approvalReq?.submittedById ||
-    user?.submittedById;
+    approvalReq?.submittedBy?.id || approvalReq?.submittedById || user?.submittedById;
 
   const assignedReviewerId =
     approvalReq?.reviewer?.id || approvalReq?.reviewerId || user?.reviewerId;
 
   // Maker check
-  const isMaker = Boolean(
-    activeUserId && submittedByUserId && activeUserId === submittedByUserId,
-  );
+  const isMaker = Boolean(activeUserId && submittedByUserId && activeUserId === submittedByUserId);
   // Assigned Reviewer check
   const isAssignedReviewer = Boolean(
     activeUserId && assignedReviewerId && activeUserId === assignedReviewerId,
@@ -208,17 +199,11 @@ export const UserApprovalModal: React.FC<UserApprovalModalProps> = ({
     setSubmitting(true);
     try {
       await activateUserMutation.mutateAsync(user.id);
-      toast.success(
-        `User ${user.name} account approved & activated successfully!`,
-      );
+      toast.success(`User ${user.name} account approved & activated successfully!`);
       onSuccess();
       onClose();
     } catch (err: any) {
-      toast.error(
-        err.message ||
-          err.response?.data?.message ||
-          "Failed to approve user account",
-      );
+      toast.error(err.message || err.response?.data?.message || 'Failed to approve user account');
     } finally {
       setSubmitting(false);
     }
@@ -233,11 +218,7 @@ export const UserApprovalModal: React.FC<UserApprovalModalProps> = ({
       onSuccess();
       onClose();
     } catch (err: any) {
-      toast.error(
-        err.message ||
-          err.response?.data?.message ||
-          "Failed to reject user account",
-      );
+      toast.error(err.message || err.response?.data?.message || 'Failed to reject user account');
     } finally {
       setSubmitting(false);
     }
@@ -246,17 +227,15 @@ export const UserApprovalModal: React.FC<UserApprovalModalProps> = ({
   // Stage 1: Maker submits approval request to reviewer
   const handleSubmitApprovalRequest = async () => {
     if (!selectedRoleId) {
-      toast.error("Please select a role to assign to the user");
+      toast.error('Please select a role to assign to the user');
       return;
     }
     if (!description.trim()) {
-      toast.error(
-        "Please enter a description/justification for granting this role",
-      );
+      toast.error('Please enter a description/justification for granting this role');
       return;
     }
     if (!selectedReviewerId) {
-      toast.error("Please assign a reviewer to evaluate this request");
+      toast.error('Please assign a reviewer to evaluate this request');
       return;
     }
 
@@ -270,16 +249,12 @@ export const UserApprovalModal: React.FC<UserApprovalModalProps> = ({
           reviewerId: selectedReviewerId,
         },
       });
-      toast.success(
-        `Approval request for ${user.name} submitted to reviewer successfully`,
-      );
+      toast.success(`Approval request for ${user.name} submitted to reviewer successfully`);
       onSuccess();
       onClose();
     } catch (err: any) {
       toast.error(
-        err.message ||
-          err.response?.data?.message ||
-          "Failed to submit approval request",
+        err.message || err.response?.data?.message || 'Failed to submit approval request',
       );
     } finally {
       setSubmitting(false);
@@ -287,16 +262,14 @@ export const UserApprovalModal: React.FC<UserApprovalModalProps> = ({
   };
 
   // Stage 2: Checker approves or rejects request
-  const handleCheckerDecision = async (action: "APPROVE" | "REJECT") => {
+  const handleCheckerDecision = async (action: 'APPROVE' | 'REJECT') => {
     if (!canReviewerDecide) {
-      toast.error(
-        "Only the assigned independent reviewer can evaluate or approve this request.",
-      );
+      toast.error('Only the assigned independent reviewer can evaluate or approve this request.');
       return;
     }
 
-    if (action === "REJECT" && !comment.trim()) {
-      toast.error("Please state a reason/comment for rejecting this request");
+    if (action === 'REJECT' && !comment.trim()) {
+      toast.error('Please state a reason/comment for rejecting this request');
       return;
     }
 
@@ -310,7 +283,7 @@ export const UserApprovalModal: React.FC<UserApprovalModalProps> = ({
         },
       });
       toast.success(
-        action === "APPROVE"
+        action === 'APPROVE'
           ? `User ${user.name} account request approved and activated`
           : `User ${user.name} account request rejected`,
       );
@@ -318,9 +291,7 @@ export const UserApprovalModal: React.FC<UserApprovalModalProps> = ({
       onClose();
     } catch (err: any) {
       toast.error(
-        err.message ||
-          err.response?.data?.message ||
-          "Failed to process review decision",
+        err.message || err.response?.data?.message || 'Failed to process review decision',
       );
     } finally {
       setSubmitting(false);
@@ -330,31 +301,25 @@ export const UserApprovalModal: React.FC<UserApprovalModalProps> = ({
   const assignedRoleName =
     approvalReq?.requestedRole?.name ||
     roles.find(
-      (r) =>
-        r.id ===
-        (approvalReq?.requestedRoleId ||
-          user.requestedRoleId ||
-          selectedRoleId),
+      (r) => r.id === (approvalReq?.requestedRoleId || user.requestedRoleId || selectedRoleId),
     )?.name ||
-    "Pending Selection";
+    'Pending Selection';
 
   const assignedReviewerName =
     approvalReq?.reviewer?.name ||
     reviewers.find(
-      (u) =>
-        u.id ===
-        (approvalReq?.reviewerId || user.reviewerId || selectedReviewerId),
+      (u) => u.id === (approvalReq?.reviewerId || user.reviewerId || selectedReviewerId),
     )?.name ||
-    "Assigned Reviewer";
+    'Assigned Reviewer';
 
   const submittedByName =
     approvalReq?.submittedBy?.name ||
     reviewers.find((u) => u.id === submittedByUserId)?.name ||
-    "Maker Admin";
+    'Maker Admin';
 
   const roleSelectOptions = roles.map((r) => ({
     value: r.id,
-    label: `${r.name}${r.description ? ` — ${r.description}` : ""}`,
+    label: `${r.name}${r.description ? ` — ${r.description}` : ''}`,
   }));
 
   const reviewerSelectOptions = reviewers.map((rev) => ({
@@ -373,15 +338,13 @@ export const UserApprovalModal: React.FC<UserApprovalModalProps> = ({
               <ShieldCheck size={20} />
             </div>
             <div>
-              <h2 className="font-bold text-lg text-text">
-                User Account Approval
-              </h2>
+              <h2 className="font-bold text-lg text-text">User Account Approval</h2>
               <p className="text-xs text-text-light">
                 {isCustomerAccount
-                  ? "Evaluate customer account registration and manage activation status."
+                  ? 'Evaluate customer account registration and manage activation status.'
                   : isPendingReviewStage
-                    ? "Stage 2 (Checker): Evaluate submitted request, review justification, and approve/reject."
-                    : "Stage 1 (Maker): Select role, enter description, and assign an independent reviewer."}
+                    ? 'Stage 2 (Checker): Evaluate submitted request, review justification, and approve/reject.'
+                    : 'Stage 1 (Maker): Select role, enter description, and assign an independent reviewer.'}
               </p>
             </div>
           </div>
@@ -406,9 +369,8 @@ export const UserApprovalModal: React.FC<UserApprovalModalProps> = ({
                       Action Required: Reviewer Evaluation
                     </span>
                     <span>
-                      You are the designated reviewer for this request. Please
-                      evaluate the justification and select Approve or Reject
-                      below.
+                      You are the designated reviewer for this request. Please evaluate the
+                      justification and select Approve or Reject below.
                     </span>
                   </div>
                 </div>
@@ -420,9 +382,8 @@ export const UserApprovalModal: React.FC<UserApprovalModalProps> = ({
                       Request Submitted to Reviewer (Read-Only Mode)
                     </span>
                     <span>
-                      You submitted this approval request as Maker. It is
-                      currently in read-only mode awaiting evaluation by{" "}
-                      <strong>{assignedReviewerName}</strong>.
+                      You submitted this approval request as Maker. It is currently in read-only
+                      mode awaiting evaluation by <strong>{assignedReviewerName}</strong>.
                     </span>
                   </div>
                 </div>
@@ -434,9 +395,8 @@ export const UserApprovalModal: React.FC<UserApprovalModalProps> = ({
                       Pending Reviewer Evaluation (Read-Only Mode)
                     </span>
                     <span>
-                      This approval request is assigned to{" "}
-                      <strong>{assignedReviewerName}</strong>. Only the assigned
-                      reviewer can evaluate or approve this request.
+                      This approval request is assigned to <strong>{assignedReviewerName}</strong>.
+                      Only the assigned reviewer can evaluate or approve this request.
                     </span>
                   </div>
                 </div>
@@ -456,19 +416,19 @@ export const UserApprovalModal: React.FC<UserApprovalModalProps> = ({
               </div>
               <span
                 className={`text-xs font-semibold px-2.5 py-1 rounded-lg border uppercase tracking-wide ${
-                  user.status?.toLowerCase() === "active"
-                    ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20"
-                    : user.status?.toLowerCase() === "pending_review"
-                      ? "bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/20"
-                      : user.status?.toLowerCase()?.includes("pending")
-                        ? "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20"
-                        : user.status?.toLowerCase()?.includes("reject") ||
-                            user.status?.toLowerCase() === "blocked"
-                          ? "bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/20"
-                          : "bg-surface text-text-light border-border"
+                  user.status?.toLowerCase() === 'active'
+                    ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20'
+                    : user.status?.toLowerCase() === 'pending_review'
+                      ? 'bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/20'
+                      : user.status?.toLowerCase()?.includes('pending')
+                        ? 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20'
+                        : user.status?.toLowerCase()?.includes('reject') ||
+                            user.status?.toLowerCase() === 'blocked'
+                          ? 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/20'
+                          : 'bg-surface text-text-light border-border'
                 }`}
               >
-                {user.status ? user.status.replace(/_/g, " ") : "N/A"}
+                {user.status ? user.status.replace(/_/g, ' ') : 'N/A'}
               </span>
             </div>
 
@@ -476,25 +436,19 @@ export const UserApprovalModal: React.FC<UserApprovalModalProps> = ({
               <div className="flex items-center gap-2 text-text-light">
                 <Briefcase size={13} className="text-primary" />
                 <div>
-                  <span className="block text-[10px] uppercase text-text-light/70">
-                    Company
-                  </span>
-                  <span className="font-medium text-text">
-                    {user.companyName || "N/A"}
-                  </span>
+                  <span className="block text-[10px] uppercase text-text-light/70">Company</span>
+                  <span className="font-medium text-text">{user.companyName || 'N/A'}</span>
                 </div>
               </div>
 
               <div className="flex items-center gap-2 text-text-light">
                 <Globe size={13} className="text-primary" />
                 <div>
-                  <span className="block text-[10px] uppercase text-text-light/70">
-                    Country
-                  </span>
+                  <span className="block text-[10px] uppercase text-text-light/70">Country</span>
                   <span className="font-medium text-text">
-                    {typeof user.country === "object"
+                    {typeof user.country === 'object'
                       ? user.country?.name
-                      : user.country || "Global"}
+                      : user.country || 'Global'}
                   </span>
                 </div>
               </div>
@@ -506,7 +460,7 @@ export const UserApprovalModal: React.FC<UserApprovalModalProps> = ({
                     Account Type
                   </span>
                   <span className="font-medium text-text capitalize">
-                    {user.accountType || "customer"}
+                    {user.accountType || 'customer'}
                   </span>
                 </div>
               </div>
@@ -532,50 +486,39 @@ export const UserApprovalModal: React.FC<UserApprovalModalProps> = ({
             <div className="space-y-4">
               <div className="space-y-1.5">
                 <label className="block text-xs font-semibold text-text">
-                  1. Select Role to Assign{" "}
-                  <span className="text-rose-500">*</span>
+                  1. Select Role to Assign <span className="text-rose-500">*</span>
                 </label>
                 {loadingOptions ? (
-                  <div className="p-3 text-xs text-text-light animate-pulse">
-                    Loading roles...
-                  </div>
+                  <div className="p-3 text-xs text-text-light animate-pulse">Loading roles...</div>
                 ) : (
                   <Select
                     options={roleSelectOptions}
-                    value={
-                      roleSelectOptions.find(
-                        (opt) => opt.value === selectedRoleId,
-                      ) || null
-                    }
-                    onChange={(selected) =>
-                      setSelectedRoleId(selected?.value || "")
-                    }
+                    value={roleSelectOptions.find((opt) => opt.value === selectedRoleId) || null}
+                    onChange={(selected) => setSelectedRoleId(selected?.value || '')}
                     placeholder="Search and select a Role..."
                     className="text-xs"
                     styles={{
                       control: (base) => ({
                         ...base,
-                        backgroundColor: "var(--surface)",
-                        borderColor: "var(--border)",
-                        borderRadius: "0.75rem",
+                        backgroundColor: 'var(--surface)',
+                        borderColor: 'var(--border)',
+                        borderRadius: '0.75rem',
                       }),
                       menu: (base) => ({
                         ...base,
-                        backgroundColor: "var(--surface)",
-                        borderRadius: "0.75rem",
+                        backgroundColor: 'var(--surface)',
+                        borderRadius: '0.75rem',
                         zIndex: 9999,
                       }),
                       option: (base, state) => ({
                         ...base,
-                        backgroundColor: state.isFocused
-                          ? "var(--background)"
-                          : "var(--surface)",
-                        color: "var(--text)",
-                        cursor: state.isDisabled ? "not-allowed" : "pointer",
+                        backgroundColor: state.isFocused ? 'var(--background)' : 'var(--surface)',
+                        color: 'var(--text)',
+                        cursor: state.isDisabled ? 'not-allowed' : 'pointer',
                       }),
                       singleValue: (base) => ({
                         ...base,
-                        color: "var(--text)",
+                        color: 'var(--text)',
                       }),
                     }}
                   />
@@ -584,7 +527,7 @@ export const UserApprovalModal: React.FC<UserApprovalModalProps> = ({
 
               <div className="space-y-1.5">
                 <label className="block text-xs font-semibold text-text">
-                  2. Role Description / Access Justification{" "}
+                  2. Role Description / Access Justification{' '}
                   <span className="text-rose-500">*</span>
                 </label>
                 <textarea
@@ -598,45 +541,38 @@ export const UserApprovalModal: React.FC<UserApprovalModalProps> = ({
 
               <div className="space-y-1.5">
                 <label className="block text-xs font-semibold text-text">
-                  3. Assign Independent Reviewer (Checker){" "}
-                  <span className="text-rose-500">*</span>
+                  3. Assign Independent Reviewer (Checker) <span className="text-rose-500">*</span>
                 </label>
                 <Select
                   options={reviewerSelectOptions}
                   value={
-                    reviewerSelectOptions.find(
-                      (opt) => opt.value === selectedReviewerId,
-                    ) || null
+                    reviewerSelectOptions.find((opt) => opt.value === selectedReviewerId) || null
                   }
-                  onChange={(selected) =>
-                    setSelectedReviewerId(selected?.value || "")
-                  }
+                  onChange={(selected) => setSelectedReviewerId(selected?.value || '')}
                   placeholder="Search and select Reviewer Admin..."
                   className="text-xs"
                   styles={{
                     control: (base) => ({
                       ...base,
-                      backgroundColor: "var(--surface)",
-                      borderColor: "var(--border)",
-                      borderRadius: "0.75rem",
+                      backgroundColor: 'var(--surface)',
+                      borderColor: 'var(--border)',
+                      borderRadius: '0.75rem',
                     }),
                     menu: (base) => ({
                       ...base,
-                      backgroundColor: "var(--surface)",
-                      borderRadius: "0.75rem",
+                      backgroundColor: 'var(--surface)',
+                      borderRadius: '0.75rem',
                       zIndex: 9999,
                     }),
                     option: (base, state) => ({
                       ...base,
-                      backgroundColor: state.isFocused
-                        ? "var(--background)"
-                        : "var(--surface)",
-                      color: "var(--text)",
-                      cursor: state.isDisabled ? "not-allowed" : "pointer",
+                      backgroundColor: state.isFocused ? 'var(--background)' : 'var(--surface)',
+                      color: 'var(--text)',
+                      cursor: state.isDisabled ? 'not-allowed' : 'pointer',
                     }),
                     singleValue: (base) => ({
                       ...base,
-                      color: "var(--text)",
+                      color: 'var(--text)',
                     }),
                   }}
                 />
@@ -651,9 +587,7 @@ export const UserApprovalModal: React.FC<UserApprovalModalProps> = ({
                     <span className="block text-[10px] uppercase font-bold text-text-light/70">
                       Proposed Role
                     </span>
-                    <strong className="text-primary text-sm">
-                      {assignedRoleName}
-                    </strong>
+                    <strong className="text-primary text-sm">{assignedRoleName}</strong>
                   </div>
                   <div>
                     <span className="block text-[10px] uppercase font-bold text-text-light/70">
@@ -677,7 +611,7 @@ export const UserApprovalModal: React.FC<UserApprovalModalProps> = ({
                     {approvalReq?.requestedDescription ||
                       user.requestedDescription ||
                       description ||
-                      "No justification provided."}
+                      'No justification provided.'}
                     "
                   </p>
                 </div>
@@ -687,10 +621,8 @@ export const UserApprovalModal: React.FC<UserApprovalModalProps> = ({
               {canReviewerDecide && (
                 <div className="space-y-1.5">
                   <label className="block text-xs font-semibold text-text">
-                    Checker Reviewer Comment{" "}
-                    <span className="text-text-light font-normal">
-                      (Required for rejection)
-                    </span>
+                    Checker Reviewer Comment{' '}
+                    <span className="text-text-light font-normal">(Required for rejection)</span>
                   </label>
                   <textarea
                     value={comment}
@@ -717,9 +649,7 @@ export const UserApprovalModal: React.FC<UserApprovalModalProps> = ({
                     key={log.id}
                     className="p-2 rounded-lg bg-background/50 border border-border/50 text-[11px] flex justify-between items-center"
                   >
-                    <span className="font-mono text-text-light">
-                      {log.action}
-                    </span>
+                    <span className="font-mono text-text-light">{log.action}</span>
                     <span className="text-text-light/70">
                       {new Date(log.createdAt).toLocaleString()}
                     </span>
@@ -736,7 +666,7 @@ export const UserApprovalModal: React.FC<UserApprovalModalProps> = ({
             onClick={onClose}
             className="px-4 py-2 rounded-xl border border-border bg-background text-xs font-semibold hover:bg-surface transition cursor-pointer"
           >
-            {isPendingReviewStage && !canReviewerDecide ? "Close" : "Cancel"}
+            {isPendingReviewStage && !canReviewerDecide ? 'Close' : 'Cancel'}
           </button>
 
           <div className="flex items-center gap-2">
@@ -758,7 +688,7 @@ export const UserApprovalModal: React.FC<UserApprovalModalProps> = ({
                   className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold transition cursor-pointer shadow-xs disabled:opacity-50"
                 >
                   <CheckCircle size={14} />
-                  {submitting ? "Processing..." : "Approve & Activate"}
+                  {submitting ? 'Processing...' : 'Approve & Activate'}
                 </button>
               </>
             ) : !isPendingReviewStage ? (
@@ -766,21 +696,18 @@ export const UserApprovalModal: React.FC<UserApprovalModalProps> = ({
               <button
                 onClick={handleSubmitApprovalRequest}
                 disabled={
-                  submitting ||
-                  !selectedRoleId ||
-                  !description.trim() ||
-                  !selectedReviewerId
+                  submitting || !selectedRoleId || !description.trim() || !selectedReviewerId
                 }
                 className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-primary hover:bg-primary/90 text-white text-xs font-semibold transition cursor-pointer shadow-xs disabled:opacity-50"
               >
                 <Send size={14} />
-                {submitting ? "Submitting..." : "Submit to Reviewer"}
+                {submitting ? 'Submitting...' : 'Submit to Reviewer'}
               </button>
             ) : canReviewerDecide ? (
               /* Admin Stage 2 Actions (Assigned Reviewer Only) */
               <>
                 <button
-                  onClick={() => handleCheckerDecision("REJECT")}
+                  onClick={() => handleCheckerDecision('REJECT')}
                   disabled={submitting}
                   className="flex items-center gap-1.5 px-4 py-2 rounded-xl border border-rose-500/30 text-rose-600 dark:text-rose-400 hover:bg-rose-500/10 text-xs font-semibold transition cursor-pointer disabled:opacity-50"
                 >
@@ -789,12 +716,12 @@ export const UserApprovalModal: React.FC<UserApprovalModalProps> = ({
                 </button>
 
                 <button
-                  onClick={() => handleCheckerDecision("APPROVE")}
+                  onClick={() => handleCheckerDecision('APPROVE')}
                   disabled={submitting}
                   className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold transition cursor-pointer shadow-xs disabled:opacity-50"
                 >
                   <CheckCircle size={14} />
-                  {submitting ? "Processing..." : "Approve & Activate"}
+                  {submitting ? 'Processing...' : 'Approve & Activate'}
                 </button>
               </>
             ) : (

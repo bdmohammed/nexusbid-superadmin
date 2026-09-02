@@ -1,5 +1,5 @@
 import { logger } from "../logger";
-import { serializeError } from "./serialize-error";
+import { serializeError } from "./serializeError";
 import { ErrorContext, SerializedError } from "./types";
 
 /**

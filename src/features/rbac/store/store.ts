@@ -1,6 +1,6 @@
-import { create } from "zustand";
+import { create } from 'zustand';
 
-export type SortDirection = "asc" | "desc";
+export type SortDirection = 'asc' | 'desc';
 
 interface RbacStore {
   // ---------------------------------------------------------------------------
@@ -72,12 +72,12 @@ const initialState = {
 
   drawerOpen: false,
 
-  search: "",
+  search: '',
 
   activeOnly: true,
 
-  sortBy: "name",
-  sortDirection: "asc" as const,
+  sortBy: 'name',
+  sortDirection: 'asc' as const,
 
   page: 1,
   pageSize: 10,

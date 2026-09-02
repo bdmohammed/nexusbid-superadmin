@@ -1,24 +1,21 @@
-import { useDeferredValue, useEffect, useState } from "react";
+import { useDeferredValue, useEffect, useState } from 'react';
 
-import type { GridApi } from "ag-grid-community";
-import type { ChangeEvent, RefObject } from "react";
+import type { GridApi } from 'ag-grid-community';
+import type { ChangeEvent, RefObject } from 'react';
 
 interface ToolbarProps {
   gridRef: RefObject<{ api: GridApi }>;
 }
 
 export const Toolbar = ({ gridRef }: ToolbarProps) => {
-  const [quickFilterText, setQuickFilterText] = useState("");
+  const [quickFilterText, setQuickFilterText] = useState('');
   const deferredQuickFilterText = useDeferredValue(quickFilterText);
 
   useEffect(() => {
     if (!gridRef.current?.api) {
       return;
     }
-    gridRef.current.api.setGridOption(
-      "quickFilterText",
-      deferredQuickFilterText,
-    );
+    gridRef.current.api.setGridOption('quickFilterText', deferredQuickFilterText);
   }, [deferredQuickFilterText, gridRef]);
 
   const onFilterChanged = (event: ChangeEvent<HTMLInputElement>) => {

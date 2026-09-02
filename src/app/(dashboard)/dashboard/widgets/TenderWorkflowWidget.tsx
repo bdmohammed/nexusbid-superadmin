@@ -1,15 +1,8 @@
-"use client";
+'use client';
 
-import {
-  AlertTriangle,
-  Archive,
-  CheckCircle2,
-  FileText,
-  FolderKanban,
-  Send,
-} from "lucide-react";
+import { AlertTriangle, Archive, CheckCircle2, FileText, FolderKanban, Send } from 'lucide-react';
 
-import { useDashboardTenders } from "@/features/dashboard/api/queries";
+import { useDashboardTenders } from '@/features/dashboard/api/queries';
 
 export default function TenderWorkflowWidget() {
   const { data, isLoading } = useDashboardTenders();
@@ -24,46 +17,46 @@ export default function TenderWorkflowWidget() {
 
   const stages = [
     {
-      label: "Draft",
+      label: 'Draft',
       value: data?.DRAFT ?? 0,
       icon: FileText,
-      color: "text-blue-500",
-      bg: "bg-blue-500/10",
+      color: 'text-blue-500',
+      bg: 'bg-blue-500/10',
     },
     {
-      label: "Under Review",
+      label: 'Under Review',
       value: data?.UNDER_REVIEW ?? 0,
       icon: AlertTriangle,
-      color: "text-amber-500",
-      bg: "bg-amber-500/10",
+      color: 'text-amber-500',
+      bg: 'bg-amber-500/10',
     },
     {
-      label: "Published",
+      label: 'Published',
       value: data?.PUBLISHED ?? 0,
       icon: Send,
-      color: "text-emerald-500",
-      bg: "bg-emerald-500/10",
+      color: 'text-emerald-500',
+      bg: 'bg-emerald-500/10',
     },
     {
-      label: "Closing Today",
+      label: 'Closing Today',
       value: data?.CLOSING_TODAY ?? 0,
       icon: AlertTriangle,
-      color: "text-red-500 animate-pulse",
-      bg: "bg-red-500/10",
+      color: 'text-red-500 animate-pulse',
+      bg: 'bg-red-500/10',
     },
     {
-      label: "Awarded",
+      label: 'Awarded',
       value: data?.AWARDED ?? 0,
       icon: CheckCircle2,
-      color: "text-purple-500",
-      bg: "bg-purple-500/10",
+      color: 'text-purple-500',
+      bg: 'bg-purple-500/10',
     },
     {
-      label: "Archived",
+      label: 'Archived',
       value: data?.ARCHIVED ?? 0,
       icon: Archive,
-      color: "text-text-light",
-      bg: "bg-border/30",
+      color: 'text-text-light',
+      bg: 'bg-border/30',
     },
   ];
 
@@ -85,16 +78,12 @@ export default function TenderWorkflowWidget() {
               className="bg-background rounded-xl p-3 border border-border/50 hover:shadow transition flex flex-col justify-between"
             >
               <div className="flex items-center justify-between">
-                <span className="text-[11px] font-bold text-text-light">
-                  {stage.label}
-                </span>
+                <span className="text-[11px] font-bold text-text-light">{stage.label}</span>
                 <span className={`p-1 rounded-md ${stage.bg}`}>
                   <Icon className={`h-3.5 w-3.5 ${stage.color}`} />
                 </span>
               </div>
-              <div className="text-xl font-black mt-2 text-text">
-                {stage.value}
-              </div>
+              <div className="text-xl font-black mt-2 text-text">{stage.value}</div>
             </div>
           );
         })}

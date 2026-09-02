@@ -1,14 +1,14 @@
-import { ChevronDown } from "lucide-react";
+import { ChevronDown } from 'lucide-react';
 
 interface DropdownButtonProps {
-  value: string;
+  displayText: string;
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
-  error?: string;
+  error?: string | undefined;
 }
 
 export default function DropdownButton({
-  value,
+  displayText,
   isOpen,
   setIsOpen,
   error,
@@ -17,18 +17,22 @@ export default function DropdownButton({
     <button
       type="button"
       onClick={() => setIsOpen(!isOpen)}
+      aria-expanded={isOpen}
+      aria-haspopup="listbox"
       className={`w-full px-4 py-3 rounded-lg bg-[var(--surface-secondary)] border flex items-center justify-between text-sm transition-all focus:outline-hidden focus:ring-2 focus:ring-[#003EC7] focus:border-transparent ${
-        error ? "border-red-500" : "border-[var(--border)]"
+        error ? 'border-red-500' : 'border-[var(--border)]'
       }`}
     >
       <span
-        className={value ? "text-[var(--foreground)]" : "text-[var(--muted)]"}
+        className={
+          displayText !== 'Select Country' ? 'text-[var(--foreground)]' : 'text-[var(--muted)]'
+        }
       >
-        {value || "Select Country"}
+        {displayText}
       </span>
       <ChevronDown
         className={`w-4 h-4 text-[var(--muted)] transition-transform duration-200 ${
-          isOpen ? "rotate-180" : ""
+          isOpen ? 'rotate-180' : ''
         }`}
       />
     </button>

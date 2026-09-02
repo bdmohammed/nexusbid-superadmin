@@ -1,48 +1,57 @@
-import React from "react";
-import { Check } from "lucide-react";
+'use client';
+
+import React from 'react';
+import { Check } from 'lucide-react';
+import { useFormContext, useWatch } from 'react-hook-form';
 
 interface PasswordChecklistProps {
   password?: string;
-  isTouched?: boolean;
-  isDirty?: boolean;
-  isSubmitted?: boolean;
 }
 
 const requirements = [
   {
-    id: "length",
-    label: "At least 8 characters",
+    id: 'length',
+    label: 'At least 8 characters',
     check: (val: string) => val.length >= 8,
   },
   {
-    id: "uppercase",
-    label: "At least one uppercase letter",
+    id: 'uppercase',
+    label: 'At least one uppercase letter',
     check: (val: string) => /[A-Z]/.test(val),
   },
   {
-    id: "lowercase",
-    label: "At least one lowercase letter",
+    id: 'lowercase',
+    label: 'At least one lowercase letter',
     check: (val: string) => /[a-z]/.test(val),
   },
   {
-    id: "number",
-    label: "At least one number",
+    id: 'number',
+    label: 'At least one number',
     check: (val: string) => /[0-9]/.test(val),
   },
   {
-    id: "special",
-    label: "At least one special character",
+    id: 'special',
+    label: 'At least one special character',
     check: (val: string) => /[^A-Za-z0-9]/.test(val),
   },
 ];
 
 export const PasswordChecklist = React.memo(
-  ({
-    password = "",
-    isTouched = false,
-    isDirty = false,
-    isSubmitted = false,
-  }: PasswordChecklistProps) => {
+  ({ password: propPassword }: PasswordChecklistProps) => {
+    const formContext = useFormContext<Required<PasswordChecklistProps>>();
+
+    // Consume FormContext state if available, else fallback to direct props
+    const watchedPassword = useWatch({
+      control: formContext.control,
+      name: 'password',
+      defaultValue: propPassword ?? '',
+    });
+
+    const password = watchedPassword;
+    const isTouched = formContext.formState.touchedFields.password;
+    const isDirty = formContext.formState.dirtyFields.password;
+    const { isSubmitted } = formContext.formState;
+
     if (!isDirty && !isTouched && !isSubmitted) return null;
 
     return (
@@ -61,17 +70,15 @@ export const PasswordChecklist = React.memo(
                 <div
                   className={`flex items-center justify-center w-4 h-4 rounded-full border transition-all ${
                     isSatisfied
-                      ? "bg-green-500/20 border-green-500 text-green-500"
-                      : "bg-transparent border-[var(--border)] text-transparent"
+                      ? 'bg-green-500/20 border-green-500 text-green-500'
+                      : 'bg-transparent border-[var(--border)] text-transparent'
                   }`}
                 >
                   <Check className="w-3.5 h-3.5" />
                 </div>
                 <span
                   className={
-                    isSatisfied
-                      ? "text-[var(--foreground)] font-medium"
-                      : "text-[var(--muted)]"
+                    isSatisfied ? 'text-[var(--foreground)] font-medium' : 'text-[var(--muted)]'
                   }
                 >
                   {req.label}
@@ -85,4 +92,4 @@ export const PasswordChecklist = React.memo(
   },
 );
 
-PasswordChecklist.displayName = "PasswordChecklist";
+PasswordChecklist.displayName = 'PasswordChecklist';

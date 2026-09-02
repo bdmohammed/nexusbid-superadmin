@@ -1,16 +1,16 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { auditApi } from "./api";
-import { auditQueryKeys } from "./keys";
+import { auditApi } from './api';
+import { auditQueryKeys } from './keys';
 
 import type {
   AuditQuery,
   RequestAuditExportInput,
   SecurityEventsQuery,
   UpdateRetentionInput,
-} from "../types";
-import type { ErrorCode } from "@/lib/errors";
-import { AppError } from "@/lib/errors";
+} from '../types';
+import type { ErrorCode } from '@/lib/errors';
+import { AppError } from '@/lib/errors';
 
 // ─── Query Hooks ─────────────────────────────────────────────────────────────
 
@@ -22,7 +22,7 @@ export function useAuditLogs(query?: AuditQuery) {
 
       if (!data.success) {
         throw new AppError(
-          data.message || "Failed to fetch audit logs",
+          data.message || 'Failed to fetch audit logs',
           status,
           data.error as ErrorCode,
         );
@@ -41,7 +41,7 @@ export function useAuditStatistics() {
 
       if (!data.success) {
         throw new AppError(
-          data.message || "Failed to fetch audit statistics",
+          data.message || 'Failed to fetch audit statistics',
           status,
           data.error as ErrorCode,
         );
@@ -60,7 +60,7 @@ export function useSecurityEvents(query?: SecurityEventsQuery) {
 
       if (!data.success) {
         throw new AppError(
-          data.message || "Failed to fetch security events",
+          data.message || 'Failed to fetch security events',
           status,
           data.error as ErrorCode,
         );
@@ -79,7 +79,7 @@ export function useRetentionPolicies() {
 
       if (!data.success) {
         throw new AppError(
-          data.message || "Failed to fetch retention policies",
+          data.message || 'Failed to fetch retention policies',
           status,
           data.error as ErrorCode,
         );
@@ -94,12 +94,11 @@ export function useCorrelationTimeline(correlationId: string) {
   return useQuery({
     queryKey: auditQueryKeys.correlation(correlationId),
     queryFn: async () => {
-      const { data, status } =
-        await auditApi.getCorrelationTimeline(correlationId);
+      const { data, status } = await auditApi.getCorrelationTimeline(correlationId);
 
       if (!data.success) {
         throw new AppError(
-          data.message || "Failed to fetch correlation timeline",
+          data.message || 'Failed to fetch correlation timeline',
           status,
           data.error as ErrorCode,
         );
@@ -119,7 +118,7 @@ export function useRequestTimeline(requestId: string) {
 
       if (!data.success) {
         throw new AppError(
-          data.message || "Failed to fetch request timeline",
+          data.message || 'Failed to fetch request timeline',
           status,
           data.error as ErrorCode,
         );
@@ -139,7 +138,7 @@ export function useAuditLogDetails(id: string) {
 
       if (!data.success) {
         throw new AppError(
-          data.message || "Failed to fetch log details",
+          data.message || 'Failed to fetch log details',
           status,
           data.error as ErrorCode,
         );

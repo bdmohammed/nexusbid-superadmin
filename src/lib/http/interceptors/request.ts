@@ -1,7 +1,7 @@
 import { InternalAxiosRequestConfig } from "axios";
 
 import { fetchCsrfToken, getCsrfToken } from "../csrf";
-import { CONTENT_TYPES, HTTP_HEADERS, MUTATING_METHODS } from "../constants";
+import { CONTENT_TYPES, HTTP_HEADERS, HttpMethod, MUTATING_METHODS } from "../constants";
 import { HttpRequestConfig } from "../types";
 
 /**
@@ -27,7 +27,7 @@ export async function requestInterceptor(
   /**
    * Attach CSRF Token for mutating requests.
    */
-  const method = config.method?.toLowerCase();
+  const method = (config.method?.toLowerCase() ?? '') as HttpMethod;
 
   if (method && MUTATING_METHODS.has(method)) {
     let csrfToken = getCsrfToken();

@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo } from 'react';
 
 import {
   useForgotPassword,
@@ -8,9 +8,9 @@ import {
   useResendVerification,
   useResetPassword,
   useVerifyEmail,
-} from "../api/mutations";
-import { useCurrentUser } from "../api/queries";
-import { useAuthStore } from "../store/store";
+} from '../api/mutations';
+import { useCurrentUser } from '../api/queries';
+import { useAuthStore } from '../store/store';
 
 export function useAuth() {
   const me = useCurrentUser();

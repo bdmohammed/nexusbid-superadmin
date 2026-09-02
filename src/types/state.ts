@@ -3,7 +3,7 @@ export interface State {
   code: string;
   name: string;
   slug: string;
-  type: "state" | "territory" | "federal";
+  type: 'state' | 'territory' | 'federal';
   country?: string;
   isActive: boolean;
   createdAt: string;

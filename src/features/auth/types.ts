@@ -1,3 +1,5 @@
+import type { User } from '@/types/user';
+
 export interface LoginDto {
   email: string;
   password: string;
@@ -18,19 +20,6 @@ export interface ForgotPasswordDto {
 export interface ResetPasswordDto {
   token: string;
   password?: string; // backend dto has password or newPassword?
-}
-
-export interface User {
-  id: string;
-  name: string;
-  email: string;
-  accountType: "user" | "admin";
-  companyName: string | null;
-  country: string | null;
-  emailVerified: boolean;
-  isBlocked: boolean;
-  createdAt: string;
-  updatedAt: string;
 }
 
 export interface AuthResponse {
@@ -111,7 +100,7 @@ export interface SubmitApprovalInput {
 }
 
 export interface ReviewApprovalInput {
-  action: "APPROVE" | "REJECT";
+  action: 'APPROVE' | 'REJECT';
   reason?: string;
 }
 
@@ -156,7 +145,7 @@ export interface UserNote {
 export interface ApprovalRequest {
   id: string;
   userId: string;
-  status: "PENDING" | "APPROVED" | "REJECTED";
+  status: 'PENDING' | 'APPROVED' | 'REJECTED';
   reviewerId: string;
   notes?: string | null;
   reason?: string | null;

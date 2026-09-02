@@ -1,17 +1,16 @@
-"use client";
+'use client';
 
-import { useRouter } from "next/navigation";
-import { Loader2,LogOut } from "lucide-react";
+import { Loader2, LogOut } from 'lucide-react';
 
-import Logo from "../common/Logo";
+import Logo from '../common/Logo';
 
-import SidebarItem from "./SidebarItem";
+import SidebarItem from './SidebarItem';
 
-import { navigation, systemNavigation } from "@/constants/navigation";
-import { useAuth } from "@/features/auth/hooks/useAuth";
-import { usePermissions } from "@/hooks/usePermissions";
-import { cn } from "@/lib/tailwind/utils";
-import { useSidebarStore } from "@/store";
+import { navigation, systemNavigation } from '@/constants/navigation';
+import { useAuth } from '@/features/auth/hooks/useAuth';
+import { usePermissions } from '@/hooks/usePermissions';
+import { cn } from '@/lib/tailwind/utils';
+import { useSidebarStore } from '@/store';
 
 export interface SidebarContentProps {
   onNavigate?: () => void;
@@ -20,16 +19,15 @@ export interface SidebarContentProps {
 export default function SidebarContent({ onNavigate }: SidebarContentProps) {
   const { isInitializing, hasPermission } = usePermissions();
   const { logout, isLoggingOut } = useAuth();
-  const router = useRouter();
   const isCollapsed = useSidebarStore((state) => state.isCollapsed);
 
   const handleLogout = async () => {
     try {
       await logout();
-      window.location.replace("/login");
+      window.location.replace('/login');
       if (onNavigate) onNavigate();
     } catch (error) {
-      console.error("Failed to logout:", error);
+      console.error('Failed to logout:', error);
     }
   };
 
@@ -38,8 +36,8 @@ export default function SidebarContent({ onNavigate }: SidebarContentProps) {
       <div className="flex h-full flex-col">
         <div
           className={cn(
-            "flex h-14 shrink-0 items-center transition-all duration-300",
-            isCollapsed ? "justify-center px-2" : "px-4 py-1 sm:h-16 sm:px-5",
+            'flex h-14 shrink-0 items-center transition-all duration-300',
+            isCollapsed ? 'justify-center px-2' : 'px-4 py-1 sm:h-16 sm:px-5',
           )}
         >
           <Logo showText={!isCollapsed} />
@@ -62,9 +60,7 @@ export default function SidebarContent({ onNavigate }: SidebarContentProps) {
         return {
           ...item,
           children: item.children.filter(
-            (child) =>
-              !child.requiredPermission ||
-              hasPermission(child.requiredPermission),
+            (child) => !child.requiredPermission || hasPermission(child.requiredPermission),
           ),
         };
       }
@@ -83,9 +79,7 @@ export default function SidebarContent({ onNavigate }: SidebarContentProps) {
         return {
           ...item,
           children: item.children.filter(
-            (child) =>
-              !child.requiredPermission ||
-              hasPermission(child.requiredPermission),
+            (child) => !child.requiredPermission || hasPermission(child.requiredPermission),
           ),
         };
       }
@@ -102,8 +96,8 @@ export default function SidebarContent({ onNavigate }: SidebarContentProps) {
     <div className="flex h-full flex-col">
       <div
         className={cn(
-          "flex h-14 shrink-0 items-center transition-all duration-300",
-          isCollapsed ? "justify-center px-2" : "px-4 py-1 sm:h-16 sm:px-5",
+          'flex h-14 shrink-0 items-center transition-all duration-300',
+          isCollapsed ? 'justify-center px-2' : 'px-4 py-1 sm:h-16 sm:px-5',
         )}
       >
         <Logo showText={!isCollapsed} />
@@ -111,8 +105,8 @@ export default function SidebarContent({ onNavigate }: SidebarContentProps) {
 
       <div
         className={cn(
-          "flex-1 overflow-y-auto py-3 transition-all duration-300",
-          isCollapsed ? "px-2" : "px-3 sm:px-5",
+          'flex-1 overflow-y-auto py-3 transition-all duration-300',
+          isCollapsed ? 'px-2' : 'px-3 sm:px-5',
         )}
       >
         {filteredNavigation.length > 0 && (
@@ -160,31 +154,25 @@ export default function SidebarContent({ onNavigate }: SidebarContentProps) {
 
       <div
         className={cn(
-          "border-t border-border bg-sidebar transition-all duration-300",
-          isCollapsed ? "p-2 flex justify-center" : "p-4",
+          'border-t border-border bg-sidebar transition-all duration-300',
+          isCollapsed ? 'p-2 flex justify-center' : 'p-4',
         )}
       >
         <button
           type="button"
           onClick={handleLogout}
           disabled={isLoggingOut}
-          title={isCollapsed ? "Logout" : undefined}
+          title={isCollapsed ? 'Logout' : undefined}
           className={cn(
-            "group relative flex items-center gap-3 rounded-xl px-4 py-2 text-sm font-medium transition-all duration-200 text-red-500 hover:bg-red-500/10 hover:text-red-600 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer",
-            isCollapsed ? "w-10 h-10 p-0 justify-center" : "w-full",
+            'group relative flex items-center gap-3 rounded-xl px-4 py-2 text-sm font-medium transition-all duration-200 text-red-500 hover:bg-red-500/10 hover:text-red-600 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer',
+            isCollapsed ? 'w-10 h-10 p-0 justify-center' : 'w-full',
           )}
         >
           <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-background text-red-500 transition-colors group-hover:bg-white group-hover:text-red-600">
-            {isLoggingOut ? (
-              <Loader2 className="animate-spin" size={18} />
-            ) : (
-              <LogOut size={18} />
-            )}
+            {isLoggingOut ? <Loader2 className="animate-spin" size={18} /> : <LogOut size={18} />}
           </span>
           {!isCollapsed && (
-            <span className="px-1 font-semibold">
-              {isLoggingOut ? "Logging out..." : "Logout"}
-            </span>
+            <span className="px-1 font-semibold">{isLoggingOut ? 'Logging out...' : 'Logout'}</span>
           )}
         </button>
       </div>

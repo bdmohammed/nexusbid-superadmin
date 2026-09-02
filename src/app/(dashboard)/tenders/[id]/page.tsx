@@ -1,8 +1,8 @@
 //@ts-nocheck
-"use client";
+'use client';
 
-import { useCallback,useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useCallback, useEffect, useState } from 'react';
+import { useParams, useRouter } from 'next/navigation';
 import {
   ArrowLeft,
   Download,
@@ -14,8 +14,8 @@ import {
   ShieldCheck,
   Star,
   Users,
-} from "lucide-react";
-import { toast } from "sonner";
+} from 'lucide-react';
+import { toast } from 'sonner';
 
 import type {
   Tender,
@@ -26,11 +26,11 @@ import type {
   TenderParticipant,
   TenderQuestion,
   TenderReview,
-} from "@/types";
-import StatusBadge from "@/components/common/StatusBadge";
-import Button from "@/components/ui/Button";
-import { useAuthStore } from "@/features/auth/store/store";
-import { tenderApi } from "@/features/tenders";
+} from '@/types';
+import StatusBadge from '@/components/common/StatusBadge';
+import Button from '@/components/ui/Button';
+import { useAuthStore } from '@/features/auth/store/store';
+import { tenderApi } from '@/features/tenders';
 
 export default function TenderDetailsPage() {
   const params = useParams();
@@ -39,13 +39,11 @@ export default function TenderDetailsPage() {
   const currentUser = useAuthStore((state) => state.user);
 
   const [tender, setTender] = useState<Tender | null>(null);
-  const [activeTab, setActiveTab] = useState<string>("overview");
+  const [activeTab, setActiveTab] = useState<string>('overview');
 
   // Tab specific data states (synced with workspace actions)
   const [questions, setQuestions] = useState<TenderQuestion[]>([]);
-  const [clarifications, setClarifications] = useState<TenderClarification[]>(
-    [],
-  );
+  const [clarifications, setClarifications] = useState<TenderClarification[]>([]);
   const [documents, setDocuments] = useState([]);
   const [amendments, setAmendments] = useState<TenderAmendment[]>([]);
   const [committee, setCommittee] = useState<TenderCommittee[]>([]);
@@ -54,30 +52,28 @@ export default function TenderDetailsPage() {
   const [reviews, setReviews] = useState<TenderReview[]>([]);
 
   // Input states
-  const [newQuestion, setNewQuestion] = useState("");
+  const [newQuestion, setNewQuestion] = useState('');
   const [answerText, setAnswerText] = useState<{ [qId: string]: string }>({});
-  const [clarTitle, setClarTitle] = useState("");
-  const [clarDesc, setClarDesc] = useState("");
+  const [clarTitle, setClarTitle] = useState('');
+  const [clarDesc, setClarDesc] = useState('');
   const [amendNum, setAmendNum] = useState(1);
-  const [amendField, setAmendField] = useState("");
-  const [amendVal, setAmendVal] = useState("");
-  const [commUser, setCommUser] = useState("");
-  const [commRole, setCommRole] = useState<
-    "Chairperson" | "Evaluator" | "Observer"
-  >("Evaluator");
+  const [amendField, setAmendField] = useState('');
+  const [amendVal, setAmendVal] = useState('');
+  const [commUser, setCommUser] = useState('');
+  const [commRole, setCommRole] = useState<'Chairperson' | 'Evaluator' | 'Observer'>('Evaluator');
 
   // Evaluation inputs
-  const [evalPartId, setEvalPartId] = useState("");
-  const [evalCriteria, setEvalCriteria] = useState("");
-  const [evalWeight, setEvalWeight] = useState("0.2");
-  const [evalScore, setEvalScore] = useState("80");
-  const [evalRemarks, setEvalRemarks] = useState("");
+  const [evalPartId, setEvalPartId] = useState('');
+  const [evalCriteria, setEvalCriteria] = useState('');
+  const [evalWeight, setEvalWeight] = useState('0.2');
+  const [evalScore, setEvalScore] = useState('80');
+  const [evalRemarks, setEvalRemarks] = useState('');
 
   // Review input states
   const [reviewDecision, setReviewDecision] = useState<
-    "APPROVED" | "REJECTED" | "CHANGES_REQUESTED"
-  >("APPROVED");
-  const [reviewComment, setReviewComment] = useState("");
+    'APPROVED' | 'REJECTED' | 'CHANGES_REQUESTED'
+  >('APPROVED');
+  const [reviewComment, setReviewComment] = useState('');
 
   const loadReviews = useCallback(async () => {
     try {
@@ -86,7 +82,7 @@ export default function TenderDetailsPage() {
         setReviews(res.data.data);
       }
     } catch (err) {
-      console.warn("Failed to load reviews from API");
+      console.warn('Failed to load reviews from API');
     }
   }, [tenderId]);
 
@@ -98,8 +94,7 @@ export default function TenderDetailsPage() {
         const tenderData = res.data.data.tender || res.data.data;
         setTender(tenderData);
 
-        const docs =
-          tenderData.documents || tenderData.activeVersion?.documents;
+        const docs = tenderData.documents || tenderData.activeVersion?.documents;
         if (docs) {
           setDocuments(docs);
         }
@@ -117,7 +112,7 @@ export default function TenderDetailsPage() {
         }
       }
     } catch (err) {
-      console.warn("Failed to load tender details from API:", err);
+      console.warn('Failed to load tender details from API:', err);
     }
   }, [tenderId]);
 
@@ -129,71 +124,69 @@ export default function TenderDetailsPage() {
   // Fallback structure when tender state isn't fetched yet
   const activeTender = tender || {
     id: tenderId,
-    referenceNo: "TDR-2026-000101",
-    status: "ACTIVE",
-    publicationStatus: "PUBLISHED",
+    referenceNo: 'TDR-2026-000101',
+    status: 'ACTIVE',
+    publicationStatus: 'PUBLISHED',
     activeVersion: {
       version: 1,
-      status: "APPROVED",
-      title: "Design & Construction of New City Administrative Complex",
+      status: 'APPROVED',
+      title: 'Design & Construction of New City Administrative Complex',
       description:
-        "Comprehensive tender invitation for the architectural design, structural layouts, and civil construction of the upcoming modern administrative complex.",
-      procurementType: "Works",
-      priority: "High",
+        'Comprehensive tender invitation for the architectural design, structural layouts, and civil construction of the upcoming modern administrative complex.',
+      procurementType: 'Works',
+      priority: 'High',
       estimatedBudget: 4500000,
-      currency: "USD",
-      department: "Public Infrastructure Board",
-      placeId: "chicago_id_101",
-      formattedAddress: "Loop District, Chicago, IL, USA",
+      currency: 'USD',
+      department: 'Public Infrastructure Board',
+      placeId: 'chicago_id_101',
+      formattedAddress: 'Loop District, Chicago, IL, USA',
       siteVisitRequired: true,
-      siteVisitDate: "2026-02-15T10:00:00Z",
-      siteVisitInstructions: "Report to Main Gate with security clearances.",
-      contactPerson: "Sarah Jenkins",
-      contactEmail: "sjenkins@cityinfra.gov",
-      contactPhone: "+1-312-555-0199",
-      openingDate: "2026-02-01T09:00:00Z",
-      closingDate: "2026-03-31T17:00:00Z",
+      siteVisitDate: '2026-02-15T10:00:00Z',
+      siteVisitInstructions: 'Report to Main Gate with security clearances.',
+      contactPerson: 'Sarah Jenkins',
+      contactEmail: 'sjenkins@cityinfra.gov',
+      contactPhone: '+1-312-555-0199',
+      openingDate: '2026-02-01T09:00:00Z',
+      closingDate: '2026-03-31T17:00:00Z',
       bidValidity: 90,
-      projectDuration: "24 Months",
+      projectDuration: '24 Months',
       emdAmount: 50000,
       securityDeposit: 150000,
-      paymentTerms: "Milestone-based progress payments",
-      visibility: "public",
-      evaluationMethod: "Quality & Cost Based Selection (QCBS)",
-      submissionMethod: "Online portal submission only",
-      contractType: "Lump Sum",
-      procurementMethod: "Open Competitive Bidding",
-      eligibilityCriteria:
-        "Min 10 years experience in tier-1 commercial developments.",
-      specialConditions: "Performance guarantees required prior to award.",
+      paymentTerms: 'Milestone-based progress payments',
+      visibility: 'public',
+      evaluationMethod: 'Quality & Cost Based Selection (QCBS)',
+      submissionMethod: 'Online portal submission only',
+      contractType: 'Lump Sum',
+      procurementMethod: 'Open Competitive Bidding',
+      eligibilityCriteria: 'Min 10 years experience in tier-1 commercial developments.',
+      specialConditions: 'Performance guarantees required prior to award.',
       documents: [
         {
-          id: "d-1",
-          documentType: "Notice",
-          originalName: "NIT_Notice_Invitation_101.pdf",
+          id: 'd-1',
+          documentType: 'Notice',
+          originalName: 'NIT_Notice_Invitation_101.pdf',
           fileSize: 1048576,
-          virusScanStatus: "Clean",
+          virusScanStatus: 'Clean',
           downloadCount: 14,
           isPublic: true,
-          uploadedAt: "2026-01-10T08:00:00Z",
+          uploadedAt: '2026-01-10T08:00:00Z',
         },
         {
-          id: "d-2",
-          documentType: "BOQ",
-          originalName: "BOQ_Bill_Of_Quantities_Complex.xlsx",
+          id: 'd-2',
+          documentType: 'BOQ',
+          originalName: 'BOQ_Bill_Of_Quantities_Complex.xlsx',
           fileSize: 2097152,
-          virusScanStatus: "Clean",
+          virusScanStatus: 'Clean',
           downloadCount: 8,
           isPublic: false,
-          uploadedAt: "2026-01-10T08:30:00Z",
+          uploadedAt: '2026-01-10T08:30:00Z',
         },
       ],
     },
   };
 
   const version = activeTender.activeVersion || activeTender;
-  const refNo =
-    activeTender.referenceNo || activeTender.referenceNumber || "TDR-DRAFT";
+  const refNo = activeTender.referenceNo || activeTender.referenceNumber || 'TDR-DRAFT';
 
   // Actions handlers
   async function transitionStatus(pubStatus: string, verStatus?: string) {
@@ -203,13 +196,13 @@ export default function TenderDetailsPage() {
         status: verStatus as any,
       });
       if (res.data && res.data.success) {
-        toast.success("Workflow status updated successfully!");
+        toast.success('Workflow status updated successfully!');
         await loadDetails();
       } else {
-        toast.error(res.data?.message || "Failed to update workflow status");
+        toast.error(res.data?.message || 'Failed to update workflow status');
       }
     } catch (err: any) {
-      toast.error(err.message || "Failed to update workflow status");
+      toast.error(err.message || 'Failed to update workflow status');
     }
   }
 
@@ -219,8 +212,8 @@ export default function TenderDetailsPage() {
     const item: TenderQuestion = {
       id: `q-${Date.now()}`,
       tenderId,
-      vendorId: "v-self",
-      vendorName: "Workspace Admin",
+      vendorId: 'v-self',
+      vendorName: 'Workspace Admin',
       questionText: newQuestion,
       answerText: null,
       isPublic: false,
@@ -228,7 +221,7 @@ export default function TenderDetailsPage() {
       createdAt: new Date().toISOString(),
     };
     setQuestions([item, ...questions]);
-    setNewQuestion("");
+    setNewQuestion('');
   }
 
   function answerQuestionSubmit(qId: string) {
@@ -246,7 +239,7 @@ export default function TenderDetailsPage() {
           : q,
       ),
     );
-    setAnswerText({ ...answerText, [qId]: "" });
+    setAnswerText({ ...answerText, [qId]: '' });
   }
 
   function addClarificationSubmit() {
@@ -259,8 +252,8 @@ export default function TenderDetailsPage() {
       createdAt: new Date().toISOString(),
     };
     setClarifications([item, ...clarifications]);
-    setClarTitle("");
-    setClarDesc("");
+    setClarTitle('');
+    setClarDesc('');
   }
 
   function addAmendmentSubmit() {
@@ -269,13 +262,13 @@ export default function TenderDetailsPage() {
       id: `a-${Date.now()}`,
       tenderId,
       amendmentNumber: amendNum,
-      changedFields: { [amendField]: { old: "N/A", new: amendVal } },
+      changedFields: { [amendField]: { old: 'N/A', new: amendVal } },
       createdAt: new Date().toISOString(),
     };
     setAmendments([item, ...amendments]);
     setAmendNum(amendNum + 1);
-    setAmendField("");
-    setAmendVal("");
+    setAmendField('');
+    setAmendVal('');
   }
 
   function addCommitteeSubmit() {
@@ -285,11 +278,11 @@ export default function TenderDetailsPage() {
       tenderId,
       userId: `u-${Date.now()}`,
       userName: commUser,
-      userEmail: `${commUser.toLowerCase().replace(" ", "")}@rfpnexa.gov`,
+      userEmail: `${commUser.toLowerCase().replace(' ', '')}@rfpnexa.gov`,
       role: commRole,
     };
     setCommittee([...committee, item]);
-    setCommUser("");
+    setCommUser('');
   }
 
   function addEvaluationSubmit() {
@@ -297,7 +290,7 @@ export default function TenderDetailsPage() {
     const item: TenderEvaluation = {
       id: `ev-${Date.now()}`,
       participantId: evalPartId,
-      evaluationType: "technical",
+      evaluationType: 'technical',
       criteriaName: evalCriteria,
       weight: parseFloat(evalWeight),
       score: parseFloat(evalScore),
@@ -306,28 +299,28 @@ export default function TenderDetailsPage() {
       remarks: evalRemarks || null,
     };
     setEvaluations([...evaluations, item]);
-    setEvalCriteria("");
-    setEvalRemarks("");
+    setEvalCriteria('');
+    setEvalRemarks('');
   }
 
   const tabs = [
-    { id: "overview", label: "Overview", icon: Info },
-    { id: "details", label: "Parameters Details", icon: FileText },
-    { id: "documents", label: "Documents & Files", icon: ShieldCheck },
-    { id: "participants", label: "Bidders & Invites", icon: Users },
-    { id: "evaluations", label: "Scorecard Criteria", icon: Star },
-    { id: "committee", label: "Committee Members", icon: Users },
-    { id: "qa", label: "Q&A Board", icon: MessageSquare },
-    { id: "clarifications", label: "Clarifications Notice", icon: Info },
-    { id: "amendments", label: "Amendments Audit", icon: History },
-    { id: "reviews", label: "Auditor Reviews", icon: ShieldAlert },
+    { id: 'overview', label: 'Overview', icon: Info },
+    { id: 'details', label: 'Parameters Details', icon: FileText },
+    { id: 'documents', label: 'Documents & Files', icon: ShieldCheck },
+    { id: 'participants', label: 'Bidders & Invites', icon: Users },
+    { id: 'evaluations', label: 'Scorecard Criteria', icon: Star },
+    { id: 'committee', label: 'Committee Members', icon: Users },
+    { id: 'qa', label: 'Q&A Board', icon: MessageSquare },
+    { id: 'clarifications', label: 'Clarifications Notice', icon: Info },
+    { id: 'amendments', label: 'Amendments Audit', icon: History },
+    { id: 'reviews', label: 'Auditor Reviews', icon: ShieldAlert },
   ];
 
   return (
     <div className="space-y-6">
       {/* Back to Tenders */}
       <button
-        onClick={() => router.push("/tenders")}
+        onClick={() => router.push('/tenders')}
         className="inline-flex items-center gap-2 text-sm text-text-light hover:text-text transition"
       >
         <ArrowLeft size={16} />
@@ -338,59 +331,40 @@ export default function TenderDetailsPage() {
       <div className="rounded-2xl border border-border bg-surface p-6 shadow-sm flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
           <div className="flex items-center gap-3">
-            <span className="font-mono text-xl font-extrabold text-primary">
-              {refNo}{" "}
-            </span>
+            <span className="font-mono text-xl font-extrabold text-primary">{refNo} </span>
             <div className="flex flex-wrap items-center gap-2">
               <span className="text-xs text-text-light font-medium">
-                Publication:{" "}
-                <StatusBadge
-                  status={activeTender.publicationStatus || "UNPUBLISHED"}
-                />
+                Publication:{' '}
+                <StatusBadge status={activeTender.publicationStatus || 'UNPUBLISHED'} />
               </span>
               <span className="text-xs text-text-light font-medium">
-                Bidding:{" "}
-                <StatusBadge
-                  status={activeTender.biddingStatus || "NOT_OPEN"}
-                />
+                Bidding: <StatusBadge status={activeTender.biddingStatus || 'NOT_OPEN'} />
               </span>
               <span className="text-xs text-text-light font-medium">
-                Stage:{" "}
-                <StatusBadge
-                  status={activeTender.processStatus || "PRE_BIDDING"}
-                />
+                Stage: <StatusBadge status={activeTender.processStatus || 'PRE_BIDDING'} />
               </span>
             </div>
           </div>
           <h2 className="text-2xl font-bold mt-1">{version?.title}</h2>
           <p className="text-sm text-text-light mt-0.5">
-            Active version:{" "}
-            <span className="font-bold text-text">v{version?.version}</span>{" "}
+            Active version: <span className="font-bold text-text">v{version?.version}</span>{' '}
             (Approved & live)
           </p>
         </div>
 
         {/* Workflow actions */}
         <div className="flex flex-wrap items-center gap-2">
-          {activeTender.publicationStatus !== "OPEN" && (
-            <Button size="sm" onClick={() => transitionStatus("PUBLISHED")}>
+          {activeTender.publicationStatus !== 'OPEN' && (
+            <Button size="sm" onClick={() => transitionStatus('PUBLISHED')}>
               Publish Live
             </Button>
           )}
-          {activeTender.publicationStatus !== "CLOSED" && (
-            <Button
-              size="sm"
-              variant="danger"
-              onClick={() => transitionStatus("CLOSED")}
-            >
+          {activeTender.publicationStatus !== 'CLOSED' && (
+            <Button size="sm" variant="danger" onClick={() => transitionStatus('CLOSED')}>
               Close Bidding
             </Button>
           )}
-          <Button
-            size="sm"
-            variant="secondary"
-            onClick={() => router.push("/tenders/create")}
-          >
+          <Button size="sm" variant="secondary" onClick={() => router.push('/tenders/create')}>
             New Version Draft
           </Button>
         </div>
@@ -408,8 +382,8 @@ export default function TenderDetailsPage() {
                 onClick={() => setActiveTab(tab.id)}
                 className={`flex items-center gap-3 w-full px-4 py-3 text-sm font-semibold rounded-xl transition ${
                   activeTab === tab.id
-                    ? "bg-primary text-white"
-                    : "text-text-light hover:bg-background hover:text-text"
+                    ? 'bg-primary text-white'
+                    : 'text-text-light hover:bg-background hover:text-text'
                 }`}
               >
                 <Icon size={18} />
@@ -422,34 +396,21 @@ export default function TenderDetailsPage() {
         {/* Right Side Tab Workspace Panel */}
         <div className="lg:col-span-3 rounded-2xl border border-border bg-surface p-6 shadow-sm min-h-[500px]">
           {/* TAB 1: OVERVIEW */}
-          {activeTab === "overview" && (
+          {activeTab === 'overview' && (
             <div className="space-y-6">
-              <h3 className="text-lg font-bold border-b pb-2">
-                Workspace Overview
-              </h3>
+              <h3 className="text-lg font-bold border-b pb-2">Workspace Overview</h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="bg-background p-4 rounded-xl">
-                  <span className="text-xs text-text-light font-medium">
-                    Estimated Budget
-                  </span>
+                  <span className="text-xs text-text-light font-medium">Estimated Budget</span>
                   <p className="text-lg font-extrabold text-text mt-1">
-                    $
-                    {(
-                      version?.estimatedBudget ??
-                      version?.budgetMax ??
-                      0
-                    ).toLocaleString()}{" "}
-                    {version?.currency || "USD"}
+                    ${(version?.estimatedBudget ?? version?.budgetMax ?? 0).toLocaleString()}{' '}
+                    {version?.currency || 'USD'}
                   </p>
                 </div>
                 <div className="bg-background p-4 rounded-xl">
-                  <span className="text-xs text-text-light font-medium">
-                    Procurement Category
-                  </span>
+                  <span className="text-xs text-text-light font-medium">Procurement Category</span>
                   <p className="text-lg font-extrabold text-text mt-1">
-                    {version?.category?.name ||
-                      version?.department ||
-                      "General"}
+                    {version?.category?.name || version?.department || 'General'}
                   </p>
                 </div>
                 <div className="bg-background p-4 rounded-xl">
@@ -459,50 +420,36 @@ export default function TenderDetailsPage() {
                   <p className="text-lg font-extrabold text-orange-600 mt-1">
                     {version?.closingDate
                       ? new Date(version.closingDate).toLocaleDateString()
-                      : "N/A"}
+                      : 'N/A'}
                   </p>
                 </div>
               </div>
 
               <div className="space-y-2">
                 <h4 className="font-bold text-sm">Brief Description</h4>
-                <p className="text-sm text-text-light leading-relaxed">
-                  {version?.description}
-                </p>
+                <p className="text-sm text-text-light leading-relaxed">{version?.description}</p>
               </div>
 
               <div className="grid grid-cols-2 gap-4 border-t pt-4">
                 <div>
-                  <span className="text-xs text-text-light">
-                    Department Agency
-                  </span>
-                  <p className="text-sm font-semibold">
-                    {version?.department || "N/A"}
-                  </p>
+                  <span className="text-xs text-text-light">Department Agency</span>
+                  <p className="text-sm font-semibold">{version?.department || 'N/A'}</p>
                 </div>
                 <div>
-                  <span className="text-xs text-text-light">
-                    Google Geodata Address
-                  </span>
-                  <p className="text-sm font-semibold">
-                    {version?.formattedAddress || "N/A"}
-                  </p>
+                  <span className="text-xs text-text-light">Google Geodata Address</span>
+                  <p className="text-sm font-semibold">{version?.formattedAddress || 'N/A'}</p>
                 </div>
               </div>
             </div>
           )}
 
           {/* TAB 2: PARAMETERS DETAILS */}
-          {activeTab === "details" && (
+          {activeTab === 'details' && (
             <div className="space-y-6">
-              <h3 className="text-lg font-bold border-b pb-2">
-                Detailed Procurement Parameters
-              </h3>
+              <h3 className="text-lg font-bold border-b pb-2">Detailed Procurement Parameters</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <h4 className="font-bold text-sm mb-3">
-                    Timelines & Milestones
-                  </h4>
+                  <h4 className="font-bold text-sm mb-3">Timelines & Milestones</h4>
                   <table className="min-w-full divide-y divide-border text-sm">
                     <tbody>
                       <tr>
@@ -510,56 +457,40 @@ export default function TenderDetailsPage() {
                         <td className="py-2 font-medium">
                           {version?.openingDate
                             ? new Date(version.openingDate).toLocaleString()
-                            : "N/A"}
+                            : 'N/A'}
                         </td>
                       </tr>
                       <tr>
-                        <td className="py-2 text-text-light">
-                          Project Duration
-                        </td>
-                        <td className="py-2 font-medium">
-                          {version?.projectDuration || "N/A"}
-                        </td>
+                        <td className="py-2 text-text-light">Project Duration</td>
+                        <td className="py-2 font-medium">{version?.projectDuration || 'N/A'}</td>
                       </tr>
                       <tr>
-                        <td className="py-2 text-text-light">
-                          Bid Validity (Days)
-                        </td>
-                        <td className="py-2 font-medium">
-                          {version?.bidValidity || "N/A"}
-                        </td>
+                        <td className="py-2 text-text-light">Bid Validity (Days)</td>
+                        <td className="py-2 font-medium">{version?.bidValidity || 'N/A'}</td>
                       </tr>
                     </tbody>
                   </table>
                 </div>
 
                 <div>
-                  <h4 className="font-bold text-sm mb-3">
-                    Financial Securities & Rules
-                  </h4>
+                  <h4 className="font-bold text-sm mb-3">Financial Securities & Rules</h4>
                   <table className="min-w-full divide-y divide-border text-sm">
                     <tbody>
                       <tr>
-                        <td className="py-2 text-text-light">
-                          EMD Deposit Amount
-                        </td>
+                        <td className="py-2 text-text-light">EMD Deposit Amount</td>
                         <td className="py-2 font-medium">
                           ${(version?.emdAmount ?? 0).toLocaleString()}
                         </td>
                       </tr>
                       <tr>
-                        <td className="py-2 text-text-light">
-                          Security Deposit Performance
-                        </td>
+                        <td className="py-2 text-text-light">Security Deposit Performance</td>
                         <td className="py-2 font-medium">
                           ${(version?.securityDeposit ?? 0).toLocaleString()}
                         </td>
                       </tr>
                       <tr>
                         <td className="py-2 text-text-light">Payment Terms</td>
-                        <td className="py-2 font-medium">
-                          {version?.paymentTerms || "N/A"}
-                        </td>
+                        <td className="py-2 font-medium">{version?.paymentTerms || 'N/A'}</td>
                       </tr>
                     </tbody>
                   </table>
@@ -570,15 +501,13 @@ export default function TenderDetailsPage() {
                 <div>
                   <h4 className="font-bold text-sm">Eligibility Criteria</h4>
                   <p className="text-sm text-text-light mt-1">
-                    {version?.eligibilityCriteria ||
-                      version?.eligibility ||
-                      "N/A"}
+                    {version?.eligibilityCriteria || version?.eligibility || 'N/A'}
                   </p>
                 </div>
                 <div>
                   <h4 className="font-bold text-sm">Special Conditions</h4>
                   <p className="text-sm text-text-light mt-1">
-                    {version?.specialConditions || "N/A"}
+                    {version?.specialConditions || 'N/A'}
                   </p>
                 </div>
               </div>
@@ -586,33 +515,22 @@ export default function TenderDetailsPage() {
           )}
 
           {/* TAB 3: DOCUMENTS */}
-          {activeTab === "documents" && (
+          {activeTab === 'documents' && (
             <div className="space-y-6">
-              <h3 className="text-lg font-bold border-b pb-2">
-                Pre-bid S3 Documents
-              </h3>
+              <h3 className="text-lg font-bold border-b pb-2">Pre-bid S3 Documents</h3>
               <div className="divide-y divide-border">
-                {(documents.length > 0
-                  ? documents
-                  : version?.documents || []
-                ).map((doc: any) => (
-                  <div
-                    key={doc.id}
-                    className="py-3 flex items-center justify-between"
-                  >
+                {(documents.length > 0 ? documents : version?.documents || []).map((doc: any) => (
+                  <div key={doc.id} className="py-3 flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <div className="bg-primary/10 p-2 text-primary rounded-lg">
                         <FileText size={18} />
                       </div>
                       <div>
-                        <p className="font-semibold text-sm">
-                          {doc.originalName}
-                        </p>
+                        <p className="font-semibold text-sm">{doc.originalName}</p>
                         <p className="text-xs text-text-light">
-                          Type:{" "}
-                          <span className="font-bold">{doc.documentType}</span>{" "}
-                          • Size: {(doc.fileSize / 1024 / 1024).toFixed(2)}MB •
-                          Downloads: {doc.downloadCount || 0}
+                          Type: <span className="font-bold">{doc.documentType}</span> • Size:{' '}
+                          {(doc.fileSize / 1024 / 1024).toFixed(2)}MB • Downloads:{' '}
+                          {doc.downloadCount || 0}
                         </p>
                       </div>
                     </div>
@@ -633,11 +551,9 @@ export default function TenderDetailsPage() {
           )}
 
           {/* TAB 4: PARTICIPANTS / BIDDERS */}
-          {activeTab === "participants" && (
+          {activeTab === 'participants' && (
             <div className="space-y-6">
-              <h3 className="text-lg font-bold border-b pb-2">
-                Registered Bidders List
-              </h3>
+              <h3 className="text-lg font-bold border-b pb-2">Registered Bidders List</h3>
               <div className="overflow-x-auto">
                 <table className="min-w-full divide-y divide-border text-sm">
                   <thead>
@@ -660,14 +576,12 @@ export default function TenderDetailsPage() {
                     {participants.map((p) => (
                       <tr key={p.id}>
                         <td className="py-3 font-semibold">{p.vendorName}</td>
-                        <td className="py-3 text-text-light">
-                          {p.vendorEmail}
-                        </td>
+                        <td className="py-3 text-text-light">{p.vendorEmail}</td>
                         <td className="py-3">
                           <StatusBadge status={p.status} />
                         </td>
                         <td className="py-3 font-mono font-bold text-center">
-                          {p.submissionVersion || "-"}
+                          {p.submissionVersion || '-'}
                         </td>
                       </tr>
                     ))}
@@ -678,11 +592,9 @@ export default function TenderDetailsPage() {
           )}
 
           {/* TAB 5: SCORECARD CRITERIA */}
-          {activeTab === "evaluations" && (
+          {activeTab === 'evaluations' && (
             <div className="space-y-6">
-              <h3 className="text-lg font-bold border-b pb-2">
-                Evaluations Scorecard Matrix
-              </h3>
+              <h3 className="text-lg font-bold border-b pb-2">Evaluations Scorecard Matrix</h3>
               <div className="overflow-x-auto">
                 <table className="min-w-full divide-y divide-border text-sm">
                   <thead>
@@ -707,9 +619,7 @@ export default function TenderDetailsPage() {
                   <tbody className="divide-y divide-border">
                     {evaluations.map((ev) => (
                       <tr key={ev.id}>
-                        <td className="py-3 font-semibold">
-                          {ev.criteriaName}
-                        </td>
+                        <td className="py-3 font-semibold">{ev.criteriaName}</td>
                         <td className="py-3">{ev.weight * 100}%</td>
                         <td className="py-3 font-bold">
                           {ev.score} / {ev.maxScore}
@@ -734,9 +644,7 @@ export default function TenderDetailsPage() {
 
               {/* Add evaluation row */}
               <div className="bg-background p-4 rounded-xl space-y-4">
-                <h4 className="font-bold text-sm">
-                  Submit New Bid Scorecard Entry
-                </h4>
+                <h4 className="font-bold text-sm">Submit New Bid Scorecard Entry</h4>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                   <select
                     value={evalPartId}
@@ -787,22 +695,15 @@ export default function TenderDetailsPage() {
           )}
 
           {/* TAB 6: COMMITTEE MEMBERS */}
-          {activeTab === "committee" && (
+          {activeTab === 'committee' && (
             <div className="space-y-6">
-              <h3 className="text-lg font-bold border-b pb-2">
-                Tender Committee Members
-              </h3>
+              <h3 className="text-lg font-bold border-b pb-2">Tender Committee Members</h3>
               <div className="divide-y divide-border">
                 {committee.map((member) => (
-                  <div
-                    key={member.id}
-                    className="py-3 flex items-center justify-between"
-                  >
+                  <div key={member.id} className="py-3 flex items-center justify-between">
                     <div>
                       <p className="font-semibold text-sm">{member.userName}</p>
-                      <p className="text-xs text-text-light">
-                        {member.userEmail}
-                      </p>
+                      <p className="text-xs text-text-light">{member.userEmail}</p>
                     </div>
                     <span className="inline-flex rounded-full bg-purple-100 px-3 py-1 text-xs font-semibold text-purple-700">
                       {member.role}
@@ -835,45 +736,32 @@ export default function TenderDetailsPage() {
           )}
 
           {/* TAB 7: Q&A BOARD */}
-          {activeTab === "qa" && (
+          {activeTab === 'qa' && (
             <div className="space-y-6">
-              <h3 className="text-lg font-bold border-b pb-2">
-                Interactive Q&A Board
-              </h3>
+              <h3 className="text-lg font-bold border-b pb-2">Interactive Q&A Board</h3>
 
               <div className="space-y-4">
                 {questions.map((q) => (
-                  <div
-                    key={q.id}
-                    className="bg-background p-4 rounded-xl space-y-2 border"
-                  >
+                  <div key={q.id} className="bg-background p-4 rounded-xl space-y-2 border">
                     <div className="flex justify-between items-start">
-                      <span className="text-xs font-bold text-primary">
-                        {q.vendorName} asked:
-                      </span>
+                      <span className="text-xs font-bold text-primary">{q.vendorName} asked:</span>
                       <span className="text-xs text-text-light">
                         {new Date(q.createdAt).toLocaleDateString()}
                       </span>
                     </div>
-                    <p className="text-sm font-semibold text-text">
-                      {q.questionText}
-                    </p>
+                    <p className="text-sm font-semibold text-text">{q.questionText}</p>
 
                     {q.answerText ? (
                       <div className="mt-2 bg-surface p-3 rounded-lg border-l-4 border-green-500">
-                        <span className="text-xs font-bold text-green-600">
-                          Official Answer:
-                        </span>
-                        <p className="text-sm mt-0.5 text-text">
-                          {q.answerText}
-                        </p>
+                        <span className="text-xs font-bold text-green-600">Official Answer:</span>
+                        <p className="text-sm mt-0.5 text-text">{q.answerText}</p>
                       </div>
                     ) : (
                       <div className="mt-2 flex gap-2">
                         <input
                           type="text"
                           placeholder="Type answer reply..."
-                          value={answerText[q.id] || ""}
+                          value={answerText[q.id] || ''}
                           onChange={(e) =>
                             setAnswerText({
                               ...answerText,
@@ -882,10 +770,7 @@ export default function TenderDetailsPage() {
                           }
                           className="h-9 flex-1 rounded-lg border bg-surface px-3 text-sm outline-none"
                         />
-                        <Button
-                          size="sm"
-                          onClick={() => answerQuestionSubmit(q.id)}
-                        >
+                        <Button size="sm" onClick={() => answerQuestionSubmit(q.id)}>
                           Reply
                         </Button>
                       </div>
@@ -896,9 +781,7 @@ export default function TenderDetailsPage() {
 
               {/* Submit Question */}
               <div className="border-t pt-4">
-                <label className="block text-sm font-semibold mb-2">
-                  Ask a Question
-                </label>
+                <label className="block text-sm font-semibold mb-2">Ask a Question</label>
                 <div className="flex gap-2">
                   <input
                     type="text"
@@ -914,33 +797,24 @@ export default function TenderDetailsPage() {
           )}
 
           {/* TAB 8: CLARIFICATIONS NOTICE */}
-          {activeTab === "clarifications" && (
+          {activeTab === 'clarifications' && (
             <div className="space-y-6">
-              <h3 className="text-lg font-bold border-b pb-2">
-                Pre-Bid Meeting Clarifications
-              </h3>
+              <h3 className="text-lg font-bold border-b pb-2">Pre-Bid Meeting Clarifications</h3>
               <div className="space-y-4">
                 {clarifications.map((c) => (
-                  <div
-                    key={c.id}
-                    className="bg-background p-4 rounded-xl border"
-                  >
+                  <div key={c.id} className="bg-background p-4 rounded-xl border">
                     <h4 className="font-bold text-sm">{c.title}</h4>
                     <p className="text-xs text-text-light mt-1">
                       Published: {new Date(c.createdAt).toLocaleDateString()}
                     </p>
-                    <p className="text-sm mt-2 text-text-light leading-relaxed">
-                      {c.description}
-                    </p>
+                    <p className="text-sm mt-2 text-text-light leading-relaxed">{c.description}</p>
                   </div>
                 ))}
               </div>
 
               {/* Create Clarification */}
               <div className="bg-background p-4 rounded-xl space-y-3">
-                <h4 className="font-bold text-sm">
-                  Post New Clarification Bulletin
-                </h4>
+                <h4 className="font-bold text-sm">Post New Clarification Bulletin</h4>
                 <input
                   type="text"
                   placeholder="Clarification Title"
@@ -955,25 +829,18 @@ export default function TenderDetailsPage() {
                   onChange={(e) => setClarDesc(e.target.value)}
                   className="w-full rounded-lg border bg-surface px-3 py-2 text-sm outline-none"
                 />
-                <Button onClick={addClarificationSubmit}>
-                  Publish Bulletin
-                </Button>
+                <Button onClick={addClarificationSubmit}>Publish Bulletin</Button>
               </div>
             </div>
           )}
 
           {/* TAB 9: AMENDMENTS AUDIT */}
-          {activeTab === "amendments" && (
+          {activeTab === 'amendments' && (
             <div className="space-y-6">
-              <h3 className="text-lg font-bold border-b pb-2">
-                Tender Amendments Log
-              </h3>
+              <h3 className="text-lg font-bold border-b pb-2">Tender Amendments Log</h3>
               <div className="space-y-4">
                 {amendments.map((a) => (
-                  <div
-                    key={a.id}
-                    className="bg-background p-4 rounded-xl border border-dashed"
-                  >
+                  <div key={a.id} className="bg-background p-4 rounded-xl border border-dashed">
                     <h4 className="font-bold text-sm text-primary">
                       Amendment #{a.amendmentNumber}
                     </h4>
@@ -982,19 +849,13 @@ export default function TenderDetailsPage() {
                     </p>
 
                     <div className="mt-3 bg-surface p-3 rounded-lg text-xs space-y-1">
-                      <span className="font-bold text-text">
-                        Changed Parameters Diff:
-                      </span>
+                      <span className="font-bold text-text">Changed Parameters Diff:</span>
                       {Object.keys(a.changedFields).map((field) => (
                         <div key={field} className="font-mono mt-1">
-                          •{" "}
-                          <span className="font-semibold text-text">
-                            {field}
-                          </span>
-                          :{" "}
+                          • <span className="font-semibold text-text">{field}</span>:{' '}
                           <span className="text-red-600 bg-red-50 px-1 rounded">
                             -{a.changedFields[field].old}
-                          </span>{" "}
+                          </span>{' '}
                           <span className="text-green-600 bg-green-50 px-1 rounded">
                             +{a.changedFields[field].new}
                           </span>
@@ -1030,12 +891,12 @@ export default function TenderDetailsPage() {
           )}
 
           {/* TAB 10: AUDITOR REVIEWS */}
-          {activeTab === "reviews" && (
+          {activeTab === 'reviews' && (
             <div className="space-y-6">
               {reviews.length === 0 ? (
                 <div className="bg-background p-6 rounded-xl text-center border text-text-light text-sm">
-                  No governance review sessions logged yet. Click "Submit Draft
-                  for Review" to initialize audit sign-off.
+                  No governance review sessions logged yet. Click "Submit Draft for Review" to
+                  initialize audit sign-off.
                 </div>
               ) : (
                 <div className="space-y-4">
@@ -1069,23 +930,19 @@ export default function TenderDetailsPage() {
                             className="flex justify-between items-center text-xs bg-surface p-3 rounded-lg border"
                           >
                             <span className="font-semibold text-text">
-                              Auditor:{" "}
-                              {ass.reviewer?.fullName ||
-                                ass.reviewer?.email ||
-                                "Assigned Auditor"}
+                              Auditor:{' '}
+                              {ass.reviewer?.fullName || ass.reviewer?.email || 'Assigned Auditor'}
                             </span>
-                            <StatusBadge status={ass.decision || "PENDING"} />
+                            <StatusBadge status={ass.decision || 'PENDING'} />
                           </div>
                         ))}
                         {/* Submit Decision Form */}
                         {(() => {
-                          const hasAssignments =
-                            rev.assignments && rev.assignments.length > 0;
+                          const hasAssignments = rev.assignments && rev.assignments.length > 0;
                           const isAssigned = hasAssignments
                             ? rev.assignments.some(
                                 (ass: any) =>
-                                  (ass.reviewerId || ass.reviewer?.id) ===
-                                  currentUser?.id,
+                                  (ass.reviewerId || ass.reviewer?.id) === currentUser?.id,
                               )
                             : true;
 
@@ -1094,9 +951,8 @@ export default function TenderDetailsPage() {
                               <div className="p-4 rounded-xl bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 text-xs text-amber-800 dark:text-amber-300 flex items-center gap-2 font-medium">
                                 <ShieldAlert className="h-4 w-4 shrink-0 text-amber-600" />
                                 <span>
-                                  Action Blocked: You are not an assigned
-                                  compliance auditor for this review session.
-                                  Only assigned reviewers can record governance
+                                  Action Blocked: You are not an assigned compliance auditor for
+                                  this review session. Only assigned reviewers can record governance
                                   decisions.
                                 </span>
                               </div>
@@ -1111,35 +967,33 @@ export default function TenderDetailsPage() {
                               <div className="grid grid-cols-3 gap-2">
                                 <button
                                   type="button"
-                                  onClick={() => setReviewDecision("APPROVED")}
+                                  onClick={() => setReviewDecision('APPROVED')}
                                   className={`p-2 text-xs font-bold rounded-lg border transition ${
-                                    reviewDecision === "APPROVED"
-                                      ? "bg-green-500 text-white border-green-600"
-                                      : "bg-background text-text hover:bg-surface"
+                                    reviewDecision === 'APPROVED'
+                                      ? 'bg-green-500 text-white border-green-600'
+                                      : 'bg-background text-text hover:bg-surface'
                                   }`}
                                 >
                                   APPROVED
                                 </button>
                                 <button
                                   type="button"
-                                  onClick={() =>
-                                    setReviewDecision("CHANGES_REQUESTED")
-                                  }
+                                  onClick={() => setReviewDecision('CHANGES_REQUESTED')}
                                   className={`p-2 text-xs font-bold rounded-lg border transition ${
-                                    reviewDecision === "CHANGES_REQUESTED"
-                                      ? "bg-amber-500 text-white border-amber-600"
-                                      : "bg-background text-text hover:bg-surface"
+                                    reviewDecision === 'CHANGES_REQUESTED'
+                                      ? 'bg-amber-500 text-white border-amber-600'
+                                      : 'bg-background text-text hover:bg-surface'
                                   }`}
                                 >
                                   REQUEST CHANGES
                                 </button>
                                 <button
                                   type="button"
-                                  onClick={() => setReviewDecision("REJECTED")}
+                                  onClick={() => setReviewDecision('REJECTED')}
                                   className={`p-2 text-xs font-bold rounded-lg border transition ${
-                                    reviewDecision === "REJECTED"
-                                      ? "bg-red-500 text-white border-red-600"
-                                      : "bg-background text-text hover:bg-surface"
+                                    reviewDecision === 'REJECTED'
+                                      ? 'bg-red-500 text-white border-red-600'
+                                      : 'bg-background text-text hover:bg-surface'
                                   }`}
                                 >
                                   REJECT
@@ -1149,9 +1003,7 @@ export default function TenderDetailsPage() {
                                 rows={2}
                                 placeholder="Audit rationale / compliance remarks..."
                                 value={reviewComment}
-                                onChange={(e) =>
-                                  setReviewComment(e.target.value)
-                                }
+                                onChange={(e) => setReviewComment(e.target.value)}
                                 className="w-full rounded-lg border bg-background px-3 py-2 text-xs outline-none"
                               />
                               <Button
@@ -1163,15 +1015,12 @@ export default function TenderDetailsPage() {
                                       reviewDecision,
                                       reviewComment,
                                     );
-                                    toast.success(
-                                      `Review decision (${reviewDecision}) recorded!`,
-                                    );
-                                    setReviewComment("");
+                                    toast.success(`Review decision (${reviewDecision}) recorded!`);
+                                    setReviewComment('');
                                     loadReviews();
                                   } catch (err: any) {
                                     toast.error(
-                                      err?.response?.data?.message ||
-                                        "Failed to submit decision",
+                                      err?.response?.data?.message || 'Failed to submit decision',
                                     );
                                   }
                                 }}
@@ -1194,9 +1043,7 @@ export default function TenderDetailsPage() {
                             className="text-xs bg-surface p-3 rounded-lg leading-relaxed border-l-2 border-primary"
                           >
                             <span className="font-bold text-primary">
-                              {com.author?.fullName ||
-                                com.author?.email ||
-                                "Auditor"}
+                              {com.author?.fullName || com.author?.email || 'Auditor'}
                             </span>
                             : {com.commentText}
                             <p className="text-[10px] text-text-light mt-1">

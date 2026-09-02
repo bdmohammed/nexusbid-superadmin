@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { AlertTriangle } from "lucide-react";
+import { AlertTriangle } from 'lucide-react';
 
-import Button from "@/components/ui/Button";
-import Modal from "@/components/ui/Modal";
+import Button from '@/components/ui/Button';
+import Modal from '@/components/ui/Modal';
 
 export interface ConfirmModalProps {
   open: boolean;
@@ -20,10 +20,10 @@ export default function ConfirmModal({
   open,
   onClose,
   onConfirm,
-  title = "Delete",
-  message = "Are you sure?",
-  confirmText = "Delete",
-  cancelText = "Cancel",
+  title = 'Delete',
+  message = 'Are you sure?',
+  confirmText = 'Delete',
+  cancelText = 'Cancel',
   loading = false,
 }: ConfirmModalProps) {
   return (
@@ -39,7 +39,7 @@ export default function ConfirmModal({
           </Button>
 
           <Button variant="danger" onClick={onConfirm} disabled={loading}>
-            {loading ? "Deleting..." : confirmText}
+            {loading ? 'Deleting...' : confirmText}
           </Button>
         </>
       }

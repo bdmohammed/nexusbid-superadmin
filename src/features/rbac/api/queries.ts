@@ -1,10 +1,10 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery } from '@tanstack/react-query';
 
-import { rbacApi } from "./api";
-import { rbacKeys } from "./keys";
+import { rbacApi } from './api';
+import { rbacKeys } from './keys';
 
-import type { ErrorCode } from "@/lib/errors";
-import { AppError } from "@/lib/errors";
+import type { ErrorCode } from '@/lib/errors';
+import { AppError } from '@/lib/errors';
 
 /**
  * Get all roles.

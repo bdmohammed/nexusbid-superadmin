@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { CheckCircle, Shield,ShieldAlert, Users } from "lucide-react";
+import { CheckCircle, Shield, ShieldAlert, Users } from 'lucide-react';
 
-import { useDashboardUsers } from "@/features/dashboard/api/queries";
+import { useDashboardUsers } from '@/features/dashboard/api/queries';
 
 export default function UsersWidget() {
   const { data, isLoading } = useDashboardUsers();
@@ -17,32 +17,32 @@ export default function UsersWidget() {
 
   const items = [
     {
-      label: "Customers",
+      label: 'Customers',
       value: data?.totalUsers ?? 0,
       icon: Users,
-      color: "text-blue-500",
-      bg: "bg-blue-500/10",
+      color: 'text-blue-500',
+      bg: 'bg-blue-500/10',
     },
     {
-      label: "Admins",
+      label: 'Admins',
       value: data?.admins ?? 0,
       icon: Shield,
-      color: "text-purple-500",
-      bg: "bg-purple-500/10",
+      color: 'text-purple-500',
+      bg: 'bg-purple-500/10',
     },
     {
-      label: "Pending Approvals",
+      label: 'Pending Approvals',
       value: data?.pendingApprovals ?? 0,
       icon: CheckCircle,
-      color: "text-amber-500",
-      bg: "bg-amber-500/10",
+      color: 'text-amber-500',
+      bg: 'bg-amber-500/10',
     },
     {
-      label: "Blocked Users",
+      label: 'Blocked Users',
       value: data?.blockedUsers ?? 0,
       icon: ShieldAlert,
-      color: "text-red-500",
-      bg: "bg-red-500/10",
+      color: 'text-red-500',
+      bg: 'bg-red-500/10',
     },
   ];
 
@@ -67,12 +67,8 @@ export default function UsersWidget() {
                 <Icon className={`h-4.5 w-4.5 ${item.color}`} />
               </span>
               <div>
-                <span className="block text-[10px] font-bold text-text-light">
-                  {item.label}
-                </span>
-                <span className="text-lg font-black text-text">
-                  {item.value}
-                </span>
+                <span className="block text-[10px] font-bold text-text-light">{item.label}</span>
+                <span className="text-lg font-black text-text">{item.value}</span>
               </div>
             </div>
           );

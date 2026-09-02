@@ -8,9 +8,9 @@ import type {
   SecurityEventsQuery,
   SecurityLog,
   UpdateRetentionInput,
-} from "../types";
-import type { ApiResponse } from "@/types";
-import { apiClient } from "@/lib/http";
+} from '../types';
+import type { ApiResponse } from '@/types';
+import { apiClient } from '@/lib/http';
 
 export const auditApi = {
   searchLogs(query?: AuditQuery) {
@@ -21,15 +21,13 @@ export const auditApi = {
         page: number;
         limit: number;
       }>
-    >("/audit-logs", {
+    >('/audit-logs', {
       params: query,
     });
   },
 
   getStatistics() {
-    return apiClient.get<ApiResponse<AuditStatistics>>(
-      "/audit-logs/statistics",
-    );
+    return apiClient.get<ApiResponse<AuditStatistics>>('/audit-logs/statistics');
   },
 
   getSecurityEvents(query?: SecurityEventsQuery) {
@@ -40,41 +38,29 @@ export const auditApi = {
         page: number;
         limit: number;
       }>
-    >("/audit-logs/security", {
+    >('/audit-logs/security', {
       params: query,
     });
   },
 
   getRetentionPolicies() {
-    return apiClient.get<ApiResponse<RetentionPolicy[]>>(
-      "/audit-logs/retention",
-    );
+    return apiClient.get<ApiResponse<RetentionPolicy[]>>('/audit-logs/retention');
   },
 
   updateRetentionPolicy(input: UpdateRetentionInput) {
-    return apiClient.patch<ApiResponse<RetentionPolicy>>(
-      "/audit-logs/retention",
-      input,
-    );
+    return apiClient.patch<ApiResponse<RetentionPolicy>>('/audit-logs/retention', input);
   },
 
   requestAuditExport(input: RequestAuditExportInput) {
-    return apiClient.post<ApiResponse<AuditExportJob>>(
-      "/audit-logs/export",
-      input,
-    );
+    return apiClient.post<ApiResponse<AuditExportJob>>('/audit-logs/export', input);
   },
 
   getCorrelationTimeline(correlationId: string) {
-    return apiClient.get<ApiResponse<AuditLog[]>>(
-      `/audit-logs/correlation/${correlationId}`,
-    );
+    return apiClient.get<ApiResponse<AuditLog[]>>(`/audit-logs/correlation/${correlationId}`);
   },
 
   getRequestTimeline(requestId: string) {
-    return apiClient.get<ApiResponse<AuditLog[]>>(
-      `/audit-logs/request/${requestId}`,
-    );
+    return apiClient.get<ApiResponse<AuditLog[]>>(`/audit-logs/request/${requestId}`);
   },
 
   getLogDetails(id: string) {

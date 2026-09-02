@@ -1,11 +1,11 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { rbacApi } from "./api";
-import { rbacKeys } from "./keys";
+import { rbacApi } from './api';
+import { rbacKeys } from './keys';
 
-import type { CreateAssignmentDto,CreateRoleDto, UpdateRoleDto } from "../types";
-import type { ErrorCode } from "@/lib/errors";
-import { AppError } from "@/lib/errors";
+import type { CreateAssignmentDto, CreateRoleDto, UpdateRoleDto } from '../types';
+import type { ErrorCode } from '@/lib/errors';
+import { AppError } from '@/lib/errors';
 
 export function useCreateRole() {
   const queryClient = useQueryClient();
@@ -31,13 +31,7 @@ export function useUpdateRole() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({
-      id,
-      data: dto,
-    }: {
-      id: string;
-      data: UpdateRoleDto;
-    }) => {
+    mutationFn: async ({ id, data: dto }: { id: string; data: UpdateRoleDto }) => {
       const { data } = await rbacApi.updateRole(id, dto);
       if (!data.success) {
         throw new AppError(data.message, 400, data.error as ErrorCode);

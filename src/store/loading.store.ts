@@ -1,4 +1,4 @@
-import { create } from "zustand";
+import { create } from 'zustand';
 
 interface LoadingStore {
   /**
@@ -40,7 +40,7 @@ const initialState = {
 export const useLoadingStore = create<LoadingStore>((set) => ({
   ...initialState,
 
-  show: (message = "") =>
+  show: (message = '') =>
     set({
       isLoading: true,
       message,

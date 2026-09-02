@@ -1,22 +1,19 @@
 //@ts-nocheck
-"use client";
+'use client';
 
-import { Suspense,useState } from "react";
-import { useRouter,useSearchParams } from "next/navigation";
-import { RefreshCw,ShieldAlert } from "lucide-react";
+import { Suspense, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { RefreshCw, ShieldAlert } from 'lucide-react';
 
-import type {
-  ActivityItem} from "@/components/countries/CountryActivityTimeline";
-import { CountriesListView } from "@/components/countries/CountriesListView";
-import { CountriesReviewsView } from "@/components/countries/CountriesReviewsView";
-import { CountriesStatsView } from "@/components/countries/CountriesStatsView";
-import {
-  CountryActivityTimeline,
-} from "@/components/countries/CountryActivityTimeline";
-import { CreateChangeRequestModal } from "@/components/countries/CreateChangeRequestModal";
-import { ReviewRequestModal } from "@/components/countries/ReviewRequestModal";
-import { countriesApi } from "@/features/country";
-import { usePermissions } from "@/hooks/usePermissions";
+import type { ActivityItem } from '@/components/countries/CountryActivityTimeline';
+import { CountriesListView } from '@/components/countries/CountriesListView';
+import { CountriesReviewsView } from '@/components/countries/CountriesReviewsView';
+import { CountriesStatsView } from '@/components/countries/CountriesStatsView';
+import { CountryActivityTimeline } from '@/components/countries/CountryActivityTimeline';
+import { CreateChangeRequestModal } from '@/components/countries/CreateChangeRequestModal';
+import { ReviewRequestModal } from '@/components/countries/ReviewRequestModal';
+import { countriesApi } from '@/features/country';
+import { usePermissions } from '@/hooks/usePermissions';
 
 function CountriesPageContent() {
   const { hasPermission, isInitializing } = usePermissions();
@@ -24,27 +21,26 @@ function CountriesPageContent() {
   const router = useRouter();
 
   const canViewCountries =
-    hasPermission("country.view") ||
-    hasPermission("state.view") ||
-    hasPermission("state.manage") ||
-    hasPermission("rbac.manage");
+    hasPermission('country.view') ||
+    hasPermission('state.view') ||
+    hasPermission('state.manage') ||
+    hasPermission('rbac.manage');
 
-  const currentTab =
-    (searchParams.get("tab") as "stats" | "list" | "reviews") || "stats";
+  const currentTab = (searchParams.get('tab') as 'stats' | 'list' | 'reviews') || 'stats';
 
   // Modals & Drawers state
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [createModalConfig, setCreateModalConfig] = useState<{
-    targetType: "COUNTRY" | "STATE";
+    targetType: 'COUNTRY' | 'STATE';
     countryId: string;
     stateId?: string;
-    action: "ACTIVATE" | "DEACTIVATE";
+    action: 'ACTIVATE' | 'DEACTIVATE';
     countryName?: string;
     stateName?: string;
   }>({
-    targetType: "COUNTRY",
-    countryId: "",
-    action: "DEACTIVATE",
+    targetType: 'COUNTRY',
+    countryId: '',
+    action: 'DEACTIVATE',
   });
 
   const [activeReviewId, setActiveReviewId] = useState<string | null>(null);
@@ -53,25 +49,23 @@ function CountriesPageContent() {
   // Timeline Drawer state
   const [isTimelineOpen, setIsTimelineOpen] = useState(false);
   const [timelineTitle, setTimelineTitle] = useState({
-    countryName: "",
-    stateName: "",
+    countryName: '',
+    stateName: '',
   });
-  const [timelineActivities, setTimelineActivities] = useState<ActivityItem[]>(
-    [],
-  );
+  const [timelineActivities, setTimelineActivities] = useState<ActivityItem[]>([]);
   const [loadingTimeline, setLoadingTimeline] = useState(false);
 
-  const handleTabChange = (tab: "stats" | "list" | "reviews") => {
+  const handleTabChange = (tab: 'stats' | 'list' | 'reviews') => {
     router.push(`/countries?tab=${tab}`);
   };
 
   const handleOpenCreateModal = (
-    targetType: "COUNTRY" | "STATE" = "COUNTRY",
-    countryId = "",
-    stateId = "",
-    action: "ACTIVATE" | "DEACTIVATE" = "DEACTIVATE",
-    countryName = "",
-    stateName = "",
+    targetType: 'COUNTRY' | 'STATE' = 'COUNTRY',
+    countryId = '',
+    stateId = '',
+    action: 'ACTIVATE' | 'DEACTIVATE' = 'DEACTIVATE',
+    countryName = '',
+    stateName = '',
   ) => {
     setCreateModalConfig({
       targetType,
@@ -92,8 +86,8 @@ function CountriesPageContent() {
   const handleOpenTimeline = async (
     countryId: string,
     stateId?: string,
-    countryName = "",
-    stateName = "",
+    countryName = '',
+    stateName = '',
   ) => {
     setTimelineTitle({ countryName, stateName });
     setIsTimelineOpen(true);
@@ -105,7 +99,7 @@ function CountriesPageContent() {
         setTimelineActivities(data.data);
       }
     } catch (err) {
-      console.error("Failed to load timeline", err);
+      console.error('Failed to load timeline', err);
     } finally {
       setLoadingTimeline(false);
     }
@@ -115,9 +109,7 @@ function CountriesPageContent() {
     return (
       <div className="flex flex-col items-center justify-center min-h-[50vh] gap-3">
         <RefreshCw className="h-8 w-8 text-primary animate-spin" />
-        <p className="text-sm font-semibold text-text-light">
-          Loading geography governance...
-        </p>
+        <p className="text-sm font-semibold text-text-light">Loading geography governance...</p>
       </div>
     );
   }
@@ -126,16 +118,13 @@ function CountriesPageContent() {
     return (
       <div className="p-8 rounded-3xl border border-rose-500/30 bg-rose-500/5 text-center space-y-3 animate-fade-in my-6 max-w-7xl mx-auto">
         <ShieldAlert className="h-10 w-10 text-rose-500 mx-auto" />
-        <h2 className="text-xl font-bold text-text">
-          Country & Geography Access Restricted
-        </h2>
+        <h2 className="text-xl font-bold text-text">Country & Geography Access Restricted</h2>
         <p className="text-xs text-text-light max-w-md mx-auto">
           Your account does not have permission (
           <code className="bg-background px-1.5 py-0.5 rounded border border-border text-rose-600 dark:text-rose-400 font-mono">
             country.view
           </code>
-          ) to access the country master governance dashboard. Please contact an
-          administrator.
+          ) to access the country master governance dashboard. Please contact an administrator.
         </p>
       </div>
     );
@@ -144,14 +133,14 @@ function CountriesPageContent() {
   return (
     <div className="p-6 space-y-6 max-w-7xl mx-auto">
       {/* Tab Views */}
-      {currentTab === "stats" && (
+      {currentTab === 'stats' && (
         <CountriesStatsView
           onOpenCreateModal={() => handleOpenCreateModal()}
           onSelectTab={handleTabChange}
         />
       )}
 
-      {currentTab === "list" && (
+      {currentTab === 'list' && (
         <CountriesListView
           onOpenTimeline={handleOpenTimeline}
           onProposeAction={handleOpenCreateModal}
@@ -160,7 +149,7 @@ function CountriesPageContent() {
         />
       )}
 
-      {currentTab === "reviews" && (
+      {currentTab === 'reviews' && (
         <CountriesReviewsView onOpenReviewModal={handleOpenReviewModal} />
       )}
 
@@ -170,7 +159,7 @@ function CountriesPageContent() {
         onClose={() => setIsCreateModalOpen(false)}
         onSuccess={() => {
           setIsCreateModalOpen(false);
-          handleTabChange("reviews");
+          handleTabChange('reviews');
         }}
         initialTargetType={createModalConfig.targetType}
         initialCountryId={createModalConfig.countryId}
@@ -191,7 +180,7 @@ function CountriesPageContent() {
         onSuccess={() => {
           setIsReviewModalOpen(false);
           setActiveReviewId(null);
-          handleTabChange("reviews");
+          handleTabChange('reviews');
         }}
       />
 
@@ -214,11 +203,7 @@ function CountriesPageContent() {
 
 export default function CountriesPage() {
   return (
-    <Suspense
-      fallback={
-        <div className="p-6 text-sm text-text-light">Loading Countries...</div>
-      }
-    >
+    <Suspense fallback={<div className="p-6 text-sm text-text-light">Loading Countries...</div>}>
       <CountriesPageContent />
     </Suspense>
   );

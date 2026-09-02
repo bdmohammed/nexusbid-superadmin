@@ -1,11 +1,11 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery } from '@tanstack/react-query';
 
-import { tenderApi } from "./api";
-import { tenderQueryKeys } from "./keys";
+import { tenderApi } from './api';
+import { tenderQueryKeys } from './keys';
 
-import type { TenderQueryDto, TenderSearchQueryDto } from "../types";
-import type { ErrorCode } from "@/lib/errors";
-import { AppError } from "@/lib/errors";
+import type { TenderQueryDto, TenderSearchQueryDto } from '../types';
+import type { ErrorCode } from '@/lib/errors';
+import { AppError } from '@/lib/errors';
 
 export function useTenders(query?: TenderQueryDto) {
   return useQuery({
@@ -118,7 +118,7 @@ export function useTenderDiff(id: string) {
 
 export function useTenderReportBudget() {
   return useQuery({
-    queryKey: tenderQueryKeys.reports("budget"),
+    queryKey: tenderQueryKeys.reports('budget'),
     queryFn: async () => {
       const { data } = await tenderApi.getReportBudget();
       if (!data.success) {
@@ -131,7 +131,7 @@ export function useTenderReportBudget() {
 
 export function useTenderReportStatus() {
   return useQuery({
-    queryKey: tenderQueryKeys.reports("status"),
+    queryKey: tenderQueryKeys.reports('status'),
     queryFn: async () => {
       const { data } = await tenderApi.getReportStatus();
       if (!data.success) {
@@ -144,7 +144,7 @@ export function useTenderReportStatus() {
 
 export function useTenderReportVendors() {
   return useQuery({
-    queryKey: tenderQueryKeys.reports("vendors"),
+    queryKey: tenderQueryKeys.reports('vendors'),
     queryFn: async () => {
       const { data } = await tenderApi.getReportVendors();
       if (!data.success) {
@@ -157,7 +157,7 @@ export function useTenderReportVendors() {
 
 export function useTenderReportPerformance() {
   return useQuery({
-    queryKey: tenderQueryKeys.reports("performance"),
+    queryKey: tenderQueryKeys.reports('performance'),
     queryFn: async () => {
       const { data } = await tenderApi.getReportPerformance();
       if (!data.success) {

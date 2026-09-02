@@ -1,14 +1,10 @@
 //@ts-nocheck
-"use client";
+'use client';
 
-import React, { memo,useCallback, useMemo, useRef } from "react";
-import { useRouter } from "next/navigation";
-import { AgChartsEnterpriseModule } from "ag-charts-enterprise";
-import {
-  type ColDef,
-  type GetContextMenuItemsParams,
-  themeQuartz,
-} from "ag-grid-community";
+import React, { memo, useCallback, useMemo, useRef } from 'react';
+import { useRouter } from 'next/navigation';
+import { AgChartsEnterpriseModule } from 'ag-charts-enterprise';
+import { type ColDef, type GetContextMenuItemsParams, themeQuartz } from 'ag-grid-community';
 import {
   AllCommunityModule,
   CellSelectionModule,
@@ -31,16 +27,16 @@ import {
   SparklinesModule,
   StatusBarModule,
   TreeDataModule,
-} from "ag-grid-enterprise";
-import { AgGridReact } from "ag-grid-react";
-import dayjs from "dayjs";
-import { Plus, RefreshCw } from "lucide-react";
+} from 'ag-grid-enterprise';
+import { AgGridReact } from 'ag-grid-react';
+import dayjs from 'dayjs';
+import { Plus, RefreshCw } from 'lucide-react';
 
-import type { Tender } from "@/types";
-import StatusBadge from "@/components/common/StatusBadge";
-import Button from "@/components/ui/Button";
-import { Toolbar } from "@/components/ui/Toolbar";
-import { useThemeStore } from "@/store";
+import type { Tender } from '@/types';
+import StatusBadge from '@/components/common/StatusBadge';
+import Button from '@/components/ui/Button';
+import { Toolbar } from '@/components/ui/Toolbar';
+import { useThemeStore } from '@/store';
 
 const CommunityModule = [
   AllCommunityModule,
@@ -78,29 +74,24 @@ function resolveTenderRow(data: any) {
     return {
       id: parentTender.id || data.tenderId || data.id,
       versionId: data.id,
-      referenceNo: parentTender.referenceNo || data.referenceNo || "TDR-DRAFT",
-      publicationStatus:
-        parentTender.publicationStatus ||
-        data.publicationStatus ||
-        "UNPUBLISHED",
-      biddingStatus:
-        parentTender.biddingStatus || data.biddingStatus || "NOT_OPEN",
-      processStatus:
-        parentTender.processStatus || data.processStatus || "PRE_BIDDING",
-      lifecycleStatus: parentTender.status || "ACTIVE",
+      referenceNo: parentTender.referenceNo || data.referenceNo || 'TDR-DRAFT',
+      publicationStatus: parentTender.publicationStatus || data.publicationStatus || 'UNPUBLISHED',
+      biddingStatus: parentTender.biddingStatus || data.biddingStatus || 'NOT_OPEN',
+      processStatus: parentTender.processStatus || data.processStatus || 'PRE_BIDDING',
+      lifecycleStatus: parentTender.status || 'ACTIVE',
       versionNumber: data.version ?? 1,
-      versionStatus: data.status || "DRAFT",
-      title: data.title || "Untitled Tender",
-      description: data.description || "",
-      department: data.department || data.category?.name || "General",
-      categoryName: data.category?.name || data.department || "General",
-      stateName: data.state?.name || "All States",
-      stateCode: data.state?.code || "National",
+      versionStatus: data.status || 'DRAFT',
+      title: data.title || 'Untitled Tender',
+      description: data.description || '',
+      department: data.department || data.category?.name || 'General',
+      categoryName: data.category?.name || data.department || 'General',
+      stateName: data.state?.name || 'All States',
+      stateCode: data.state?.code || 'National',
       estimatedBudget: data.estimatedBudget ?? 0,
-      currency: data.currency || "USD",
+      currency: data.currency || 'USD',
       closingDate: data.closingDate || null,
       openingDate: data.openingDate || null,
-      priority: data.priority || "Medium",
+      priority: data.priority || 'Medium',
     };
   }
 
@@ -109,24 +100,24 @@ function resolveTenderRow(data: any) {
   return {
     id: data.id,
     versionId: ver.id || data.activeVersionId,
-    referenceNo: data.referenceNo || "TDR-DRAFT",
-    publicationStatus: data.publicationStatus || "UNPUBLISHED",
-    biddingStatus: data.biddingStatus || "NOT_OPEN",
-    processStatus: data.processStatus || "PRE_BIDDING",
-    lifecycleStatus: data.status || "ACTIVE",
+    referenceNo: data.referenceNo || 'TDR-DRAFT',
+    publicationStatus: data.publicationStatus || 'UNPUBLISHED',
+    biddingStatus: data.biddingStatus || 'NOT_OPEN',
+    processStatus: data.processStatus || 'PRE_BIDDING',
+    lifecycleStatus: data.status || 'ACTIVE',
     versionNumber: ver.version ?? 1,
-    versionStatus: ver.status || "DRAFT",
-    title: ver.title || data.title || "Untitled Tender",
-    description: ver.description || "",
-    department: ver.department || ver.category?.name || "General",
-    categoryName: ver.category?.name || ver.department || "General",
-    stateName: ver.state?.name || "All States",
-    stateCode: ver.state?.code || "National",
+    versionStatus: ver.status || 'DRAFT',
+    title: ver.title || data.title || 'Untitled Tender',
+    description: ver.description || '',
+    department: ver.department || ver.category?.name || 'General',
+    categoryName: ver.category?.name || ver.department || 'General',
+    stateName: ver.state?.name || 'All States',
+    stateCode: ver.state?.code || 'National',
     estimatedBudget: ver.estimatedBudget ?? 0,
-    currency: ver.currency || "USD",
+    currency: ver.currency || 'USD',
     closingDate: ver.closingDate || null,
     openingDate: ver.openingDate || null,
-    priority: ver.priority || "Medium",
+    priority: ver.priority || 'Medium',
   };
 }
 
@@ -145,27 +136,26 @@ export const TendersListView: React.FC<TendersListViewProps> = ({
 }) => {
   const router = useRouter();
   const { theme } = useThemeStore();
-  const themeClass =
-    theme === "dark" ? "ag-theme-alpine-dark" : "ag-theme-alpine";
+  const themeClass = theme === 'dark' ? 'ag-theme-alpine-dark' : 'ag-theme-alpine';
   const gridRef = useRef<AgGridReact>(null as any);
 
   // Context menu for AG Grid
   const getContextMenuItems = useCallback(
     (params: GetContextMenuItemsParams) => {
       const row = resolveTenderRow(params.node?.data);
-      if (!row) return ["copy", "copyWithHeaders", "separator", "export"];
+      if (!row) return ['copy', 'copyWithHeaders', 'separator', 'export'];
 
       return [
         {
-          name: "Inspect Tender Details",
+          name: 'Inspect Tender Details',
           icon: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>',
           action: () => router.push(`/tenders/${row.id}`),
         },
-        "separator",
-        "copy",
-        "copyWithHeaders",
-        "separator",
-        "export",
+        'separator',
+        'copy',
+        'copyWithHeaders',
+        'separator',
+        'export',
       ];
     },
     [router],
@@ -175,7 +165,7 @@ export const TendersListView: React.FC<TendersListViewProps> = ({
   const columnDefs = useMemo<ColDef[]>(
     () => [
       {
-        headerName: "Reference & Version",
+        headerName: 'Reference & Version',
         valueGetter: (params) => resolveTenderRow(params.data)?.referenceNo,
         width: 180,
         cellRenderer: (params: any) => {
@@ -183,9 +173,7 @@ export const TendersListView: React.FC<TendersListViewProps> = ({
           if (!row) return null;
           return (
             <div>
-              <span className="font-mono text-sm font-bold text-primary">
-                {row.referenceNo}
-              </span>
+              <span className="font-mono text-sm font-bold text-primary">{row.referenceNo}</span>
               <div className="text-xs text-text-light">
                 v{row.versionNumber} ({row.versionStatus.toLowerCase()})
               </div>
@@ -194,7 +182,7 @@ export const TendersListView: React.FC<TendersListViewProps> = ({
         },
       },
       {
-        headerName: "Title & Department",
+        headerName: 'Title & Department',
         valueGetter: (params) => resolveTenderRow(params.data)?.title,
         width: 300,
         cellRenderer: (params: any) => {
@@ -202,18 +190,14 @@ export const TendersListView: React.FC<TendersListViewProps> = ({
           if (!row) return null;
           return (
             <div className="max-w-md py-1">
-              <h4 className="font-semibold text-text text-sm line-clamp-1">
-                {row.title}
-              </h4>
-              <p className="text-xs text-text-light line-clamp-1">
-                {row.department}
-              </p>
+              <h4 className="font-semibold text-text text-sm line-clamp-1">{row.title}</h4>
+              <p className="text-xs text-text-light line-clamp-1">{row.department}</p>
             </div>
           );
         },
       },
       {
-        headerName: "Category & State",
+        headerName: 'Category & State',
         valueGetter: (params) => resolveTenderRow(params.data)?.categoryName,
         width: 200,
         cellRenderer: (params: any) => {
@@ -232,7 +216,7 @@ export const TendersListView: React.FC<TendersListViewProps> = ({
         },
       },
       {
-        headerName: "Timelines",
+        headerName: 'Timelines',
         valueGetter: (params) => resolveTenderRow(params.data)?.closingDate,
         width: 180,
         cellRenderer: (params: any) => {
@@ -242,63 +226,54 @@ export const TendersListView: React.FC<TendersListViewProps> = ({
             ? Math.max(
                 0,
                 Math.ceil(
-                  (new Date(row.closingDate).getTime() - new Date().getTime()) /
-                    (1000 * 3600 * 24),
+                  (new Date(row.closingDate).getTime() - new Date().getTime()) / (1000 * 3600 * 24),
                 ),
               )
             : 0;
           return (
             <div>
               <div className="text-xs text-text-light">
-                Closing:{" "}
+                Closing:{' '}
                 <span className="font-medium text-text">
-                  {row.closingDate
-                    ? dayjs(row.closingDate).format("DD MMM YYYY")
-                    : "N/A"}
+                  {row.closingDate ? dayjs(row.closingDate).format('DD MMM YYYY') : 'N/A'}
                 </span>
               </div>
               <div className="text-xs text-text-light mt-0.5">
-                Remaining:{" "}
-                <span className="font-semibold text-primary">
-                  {daysRemaining} days
-                </span>
+                Remaining: <span className="font-semibold text-primary">{daysRemaining} days</span>
               </div>
             </div>
           );
         },
       },
       {
-        headerName: "Publication",
-        valueGetter: (params) =>
-          resolveTenderRow(params.data)?.publicationStatus,
+        headerName: 'Publication',
+        valueGetter: (params) => resolveTenderRow(params.data)?.publicationStatus,
         width: 150,
         cellRenderer: (params: any) => {
           const row = resolveTenderRow(params.data);
-          return (
-            <StatusBadge status={row?.publicationStatus || "UNPUBLISHED"} />
-          );
+          return <StatusBadge status={row?.publicationStatus || 'UNPUBLISHED'} />;
         },
       },
       {
-        headerName: "Bidding Gate",
+        headerName: 'Bidding Gate',
         valueGetter: (params) => resolveTenderRow(params.data)?.biddingStatus,
         width: 140,
         cellRenderer: (params: any) => {
           const row = resolveTenderRow(params.data);
-          return <StatusBadge status={row?.biddingStatus || "NOT_OPEN"} />;
+          return <StatusBadge status={row?.biddingStatus || 'NOT_OPEN'} />;
         },
       },
       {
-        headerName: "Process Stage",
+        headerName: 'Process Stage',
         valueGetter: (params) => resolveTenderRow(params.data)?.processStatus,
         width: 160,
         cellRenderer: (params: any) => {
           const row = resolveTenderRow(params.data);
-          return <StatusBadge status={row?.processStatus || "PRE_BIDDING"} />;
+          return <StatusBadge status={row?.processStatus || 'PRE_BIDDING'} />;
         },
       },
       {
-        headerName: "Estimated Budget",
+        headerName: 'Estimated Budget',
         valueGetter: (params) => resolveTenderRow(params.data)?.estimatedBudget,
         width: 170,
         cellRenderer: (params: any) => {
@@ -316,7 +291,7 @@ export const TendersListView: React.FC<TendersListViewProps> = ({
         },
       },
       {
-        headerName: "Actions",
+        headerName: 'Actions',
         width: 120,
         cellRenderer: (params: any) => {
           const row = resolveTenderRow(params.data);
@@ -352,14 +327,14 @@ export const TendersListView: React.FC<TendersListViewProps> = ({
               leftIcon={RefreshCw}
               onClick={onRefresh}
               disabled={refreshing || loading}
-              className={`shrink-0 text-xs ${refreshing ? "opacity-75" : ""}`}
+              className={`shrink-0 text-xs ${refreshing ? 'opacity-75' : ''}`}
             >
-              {refreshing ? "Refreshing..." : "Refresh"}
+              {refreshing ? 'Refreshing...' : 'Refresh'}
             </Button>
           )}
           <Button
             leftIcon={Plus}
-            onClick={() => router.push("/tenders/create")}
+            onClick={() => router.push('/tenders/create')}
             className="shrink-0 text-xs"
           >
             Create Tender Wizard
@@ -385,8 +360,8 @@ export const TendersListView: React.FC<TendersListViewProps> = ({
           }}
           loading={loading}
           sideBar={{
-            toolPanels: ["columns", "filters"],
-            defaultToolPanel: "",
+            toolPanels: ['columns', 'filters'],
+            defaultToolPanel: '',
           }}
           getContextMenuItems={getContextMenuItems}
           onRowClicked={(params) => {

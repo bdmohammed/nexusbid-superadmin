@@ -12,90 +12,69 @@ import type {
   SubscriptionDashboardStats,
   SubscriptionMigrationInput,
   UpdatePlanLegacyInput,
-} from "../types";
+} from '../types';
 import type {
   AdminUserStats,
   ApiResponse,
   BackendSubscription,
   PaginatedMeta,
   SubscriptionPlan,
-} from "@/types";
-import { apiClient } from "@/lib/http";
+} from '@/types';
+import { apiClient } from '@/lib/http';
 
 export const subscriptionApi = {
   getPlans() {
-    return apiClient.get<ApiResponse<Plan[]>>("/subscriptions/plans");
+    return apiClient.get<ApiResponse<Plan[]>>('/subscriptions/plans');
   },
 
   getMySubscription() {
-    return apiClient.get<ApiResponse<MySubscriptionResponse>>(
-      "/subscriptions/me",
-    );
+    return apiClient.get<ApiResponse<MySubscriptionResponse>>('/subscriptions/me');
   },
 
   create(dto: CreateSubscriptionDto) {
-    return apiClient.post<ApiResponse<CreateSubscriptionResponse>>(
-      "/subscriptions",
-      dto,
-    );
+    return apiClient.post<ApiResponse<CreateSubscriptionResponse>>('/subscriptions', dto);
   },
 
   cancel() {
-    return apiClient.delete<ApiResponse<null>>("/subscriptions/me");
+    return apiClient.delete<ApiResponse<null>>('/subscriptions/me');
   },
 
   getAdminPlans() {
-    return apiClient.get<ApiResponse<SubscriptionPlan[]>>("/plans/plans");
+    return apiClient.get<ApiResponse<SubscriptionPlan[]>>('/plans/plans');
   },
 
   getAdminSubscriptions(page: number, limit: number) {
-    return apiClient.get<ApiResponse<BackendSubscription[], PaginatedMeta>>(
-      "/subscriptions",
-      { params: { page, limit } },
-    );
+    return apiClient.get<ApiResponse<BackendSubscription[], PaginatedMeta>>('/subscriptions', {
+      params: { page, limit },
+    });
   },
 
   getAdminUserStats() {
-    return apiClient.get<ApiResponse<AdminUserStats>>("/admin/users/stats");
+    return apiClient.get<ApiResponse<AdminUserStats>>('/admin/users/stats');
   },
 
   getAdminRevenueStats() {
-    return apiClient.get<ApiResponse<any[]>>("/analytics/revenue");
+    return apiClient.get<ApiResponse<any[]>>('/analytics/revenue');
   },
 
   getSubscriptionsDashboardStats() {
-    return apiClient.get<ApiResponse<SubscriptionDashboardStats>>(
-      "/plans/dashboard",
-    );
+    return apiClient.get<ApiResponse<SubscriptionDashboardStats>>('/plans/dashboard');
   },
 
   getFeatureCatalog() {
-    return apiClient.get<ApiResponse<PlanFeatureCatalogItem[]>>(
-      "/plans/features",
-    );
+    return apiClient.get<ApiResponse<PlanFeatureCatalogItem[]>>('/plans/features');
   },
 
-  createFeatureCatalogItem(input: {
-    key: string;
-    name: string;
-    description?: string;
-  }) {
-    return apiClient.post<ApiResponse<PlanFeatureCatalogItem>>(
-      "/plans/features",
-      input,
-    );
+  createFeatureCatalogItem(input: { key: string; name: string; description?: string }) {
+    return apiClient.post<ApiResponse<PlanFeatureCatalogItem>>('/plans/features', input);
   },
 
   listCoupons() {
-    return apiClient.get<ApiResponse<Coupon[]>>("/plans/coupons");
+    return apiClient.get<ApiResponse<Coupon[]>>('/plans/coupons');
   },
 
-  createCoupon(input: {
-    code: string;
-    type: "percentage" | "fixed";
-    value: number;
-  }) {
-    return apiClient.post<ApiResponse<Coupon>>("/plans/coupons", input);
+  createCoupon(input: { code: string; type: 'percentage' | 'fixed'; value: number }) {
+    return apiClient.post<ApiResponse<Coupon>>('/plans/coupons', input);
   },
 
   toggleCouponStatus(id: string) {
@@ -103,11 +82,11 @@ export const subscriptionApi = {
   },
 
   initiateSubscriptionMigration(input: SubscriptionMigrationInput) {
-    return apiClient.post<ApiResponse<any>>("/plans/migrations", input);
+    return apiClient.post<ApiResponse<any>>('/plans/migrations', input);
   },
 
   listAllPlans() {
-    return apiClient.get<ApiResponse<Plan[]>>("/plans");
+    return apiClient.get<ApiResponse<Plan[]>>('/plans');
   },
 
   getPlanById(id: string) {
@@ -115,7 +94,7 @@ export const subscriptionApi = {
   },
 
   createPlan(input: CreatePlanInput) {
-    return apiClient.post<ApiResponse<Plan>>("/plans", input);
+    return apiClient.post<ApiResponse<Plan>>('/plans', input);
   },
 
   createPlanVersionDraft(id: string, input: CreatePlanVersionDraftInput) {
@@ -123,33 +102,23 @@ export const subscriptionApi = {
   },
 
   submitPlanForReview(versionId: string) {
-    return apiClient.post<ApiResponse<any>>(
-      `/plans/versions/${versionId}/submit`,
-    );
+    return apiClient.post<ApiResponse<any>>(`/plans/versions/${versionId}/submit`);
   },
 
   assignPlanReviewer(reviewId: string, input: AssignReviewerInput) {
-    return apiClient.post<ApiResponse<any>>(
-      `/plans/reviews/${reviewId}/assign`,
-      input,
-    );
+    return apiClient.post<ApiResponse<any>>(`/plans/reviews/${reviewId}/assign`, input);
   },
 
   submitPlanReviewAction(reviewId: string, input: SubmitReviewActionInput) {
-    return apiClient.post<ApiResponse<any>>(
-      `/plans/reviews/${reviewId}/action`,
-      input,
-    );
+    return apiClient.post<ApiResponse<any>>(`/plans/reviews/${reviewId}/action`, input);
   },
 
   publishPlanVersion(versionId: string) {
-    return apiClient.post<ApiResponse<any>>(
-      `/plans/versions/${versionId}/publish`,
-    );
+    return apiClient.post<ApiResponse<any>>(`/plans/versions/${versionId}/publish`);
   },
 
   createPlanLegacy(input: CreatePlanInput) {
-    return apiClient.post<ApiResponse<Plan>>("/plans/plans", input);
+    return apiClient.post<ApiResponse<Plan>>('/plans/plans', input);
   },
 
   updatePlanLegacy(id: string, input: UpdatePlanLegacyInput) {
