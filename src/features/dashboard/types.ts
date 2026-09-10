@@ -1,32 +1,30 @@
+import type { ThemeMode } from '@/store';
+
 export interface WidgetPosition {
-  widgetId?: string;
-  id?: string;
   x: number;
   y: number;
   w: number;
   h: number;
-  hidden?: boolean;
-  collapsed?: boolean;
+  hidden: boolean;
+  collapsed: boolean;
 }
 
 export interface WidgetDefinition {
   id: string;
   title: string;
-  requiredPermission: string;
-  defaultSize: { w: number; h: number };
-  component: string;
+  description: string;
+  defaultLayout: WidgetPosition;
   enabled: boolean;
 }
 
 export interface DashboardConfig {
   widgets: WidgetDefinition[];
-  layout: WidgetPosition[];
-  theme: string;
+  layoutVersion: number;
+  theme: ThemeMode;
 }
 
 export interface PatchLayoutInput {
   widgets: WidgetPosition[];
-  theme?: string;
 }
 
 export interface TenderStats {
@@ -62,11 +60,9 @@ export interface ReviewQueueStats {
 }
 
 export interface CriticalAlerts {
-  securityAlerts: number;
-  failedPayments: number;
-  expiredSubscriptions: number;
-  closingTenders: number;
-  systemErrors: number;
+  type: string;
+  value: number;
+  label: string;
 }
 
 export interface RecentActivityItem {
@@ -76,15 +72,37 @@ export interface RecentActivityItem {
 }
 
 export interface SystemHealth {
-  apiLatencyMs: number;
-  queueSize: number;
-  redisStatus: string;
-  storageUsagePercent: number;
-  databaseStatus: string;
-  memoryUsagePercent: number;
-  loadAverage1m: number;
-  cpuUsagePercent: number;
-  memoryUsageMb: number;
+  generatedAt: string;
+  metrics: DashboardMetric[];
+}
+
+export interface DashboardMetric {
+  type: DashboardMetricType;
+  label: string;
+  value?: number | string;
+  unit?: 'ms' | '%' | 'jobs' | 'MB';
+  status?: DashboardStatus;
+}
+
+export enum DashboardStatus {
+  HEALTHY = 'healthy',
+  OPERATIONAL = 'operational',
+  AVAILABLE = 'available',
+  CONNECTED = 'connected',
+  WARNING = 'warning',
+  CRITICAL = 'critical',
+}
+
+export enum DashboardMetricType {
+  API_LATENCY = 'apiLatency',
+  QUEUE_SIZE = 'queueSize',
+  REDIS = 'redis',
+  STORAGE_USAGE = 'storageUsage',
+  DATABASE = 'database',
+  MEMORY_USAGE_PERCENT = 'memoryUsagePercent',
+  CPU_USAGE_PERCENT = 'cpuUsagePercent',
+  MEMORY_USAGE_MB = 'memoryUsageMb',
+  LOAD_AVERAGE_1M = 'loadAverage1m',
 }
 
 export interface QuickActionItem {

@@ -129,9 +129,9 @@ export interface SetupInput {
 
 export interface UserStats {
   totalUsers: number;
-  activeUsers: number;
+  admins: number;
+  pendingApprovals: number;
   blockedUsers: number;
-  adminUsers: number;
 }
 
 export interface UserNote {

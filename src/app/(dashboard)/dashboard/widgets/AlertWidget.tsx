@@ -2,91 +2,80 @@
 
 import { AlertCircle, AlertTriangle, ShieldAlert } from 'lucide-react';
 
-import { useDashboardAlerts } from '@/features/dashboard/api/queries';
+import { useDashboardStore } from '@/store/useDashboardStore';
 
-interface AlertWidgetProps {
-  liveData?: any;
-}
+export default function AlertWidget() {
+  const snapshot = useDashboardStore((state) => state.snapshot);
 
-export default function AlertWidget({ liveData }: AlertWidgetProps) {
-  const { data: queryData, isLoading } = useDashboardAlerts();
-
-  const data = liveData ?? queryData;
-  const loading = !liveData && isLoading;
-
-  if (loading) {
+  /**
+   * Snapshot has not arrived yet.
+   */
+  if (!snapshot) {
     return (
-      <div className="flex h-full items-center justify-center text-sm text-text-light italic animate-pulse">
+      <div className="flex h-full items-center justify-center animate-pulse text-sm italic text-text-light">
         Checking warning status...
       </div>
     );
   }
 
-  const alerts = [
-    {
-      label: 'Security Threats',
-      value: data?.securityAlerts ?? 0,
-      type: 'security',
-    },
-    {
-      label: 'Failed Payments',
-      value: data?.failedPayments ?? 0,
-      type: 'billing',
-    },
-    {
-      label: 'Expired Subscriptions',
-      value: data?.expiredSubscriptions ?? 0,
-      type: 'billing',
-    },
-    {
-      label: 'Closing Tenders Today',
-      value: data?.closingTenders ?? 0,
-      type: 'tender',
-    },
-    {
-      label: 'Database System Errors',
-      value: data?.systemErrors ?? 0,
-      type: 'system',
-    },
-  ];
+  if (snapshot.alerts === undefined) {
+    return (
+      <div className="flex h-full items-center justify-center text-sm text-text-light">
+        Alerts are unavailable for your account.
+      </div>
+    );
+  }
 
-  const totalWarnings = alerts.reduce((acc, curr) => acc + curr.value, 0);
+  /**
+   * Backend permission filtering.
+   *
+   * If the current user does not have permission,
+   * the alerts property will be omitted.
+   */
+  const alerts = snapshot.alerts ?? [];
+
+  const totalWarnings = alerts.reduce((total, alert) => total + alert.value, 0);
 
   return (
-    <div className="space-y-4 p-5 h-full flex flex-col justify-between">
+    <div className="flex h-full flex-col justify-between space-y-4 p-5">
       <div>
         <div className="flex items-center justify-between border-b border-border/60 pb-3">
-          <h3 className="text-sm font-bold uppercase tracking-wider text-text-light flex items-center gap-1.5">
+          <h3 className="flex items-center gap-1.5 text-sm font-bold uppercase tracking-wider text-text-light">
             <ShieldAlert className="h-4.5 w-4.5 text-red-500" />
             Critical System Warnings
           </h3>
+
           {totalWarnings > 0 && (
-            <span className="text-[10px] text-red-500 font-bold bg-red-500/10 px-2 py-0.5 rounded animate-pulse">
+            <span className="animate-pulse rounded bg-red-500/10 px-2 py-0.5 text-[10px] font-bold text-red-500">
               {totalWarnings} Alerts
             </span>
           )}
         </div>
 
-        <div className="space-y-2.5 mt-4">
+        <div className="mt-4 space-y-2.5">
           {alerts.map((alert) => (
             <div
               key={alert.label}
-              className={`flex items-center justify-between p-2.5 rounded-xl border text-xs ${
+              className={`flex items-center justify-between rounded-xl border p-2.5 text-xs ${
                 alert.value > 0
-                  ? 'bg-red-500/5 border-red-500/20 text-red-600 font-semibold'
-                  : 'bg-background border-border/50 text-text-light'
+                  ? 'border-red-500/20 bg-red-500/5 font-semibold text-red-600'
+                  : 'border-border/50 bg-background text-text-light'
               }`}
             >
               <div className="flex items-center gap-2">
                 {alert.value > 0 ? (
-                  <AlertTriangle className="h-4 w-4 text-red-500 animate-bounce" />
+                  <AlertTriangle className="h-4 w-4 animate-bounce text-red-500" />
                 ) : (
                   <AlertCircle className="h-4 w-4 text-text-light" />
                 )}
+
                 <span>{alert.label}</span>
               </div>
+
               <span
-                className={`px-2 py-0.5 rounded text-[10px] font-bold ${alert.value > 0 ? 'bg-red-500/10' : 'bg-border/30'}`}
+                className={`rounded px-2 py-0.5 text-[10px] font-bold ${
+                  alert.value > 0 ? 'bg-red-500/10' : 'bg-border/30'
+                }`}
               >
                 {alert.value}
               </span>

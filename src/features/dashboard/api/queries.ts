@@ -14,7 +14,6 @@ export function useDashboardConfig() {
     queryKey: dashboardQueryKeys.config(),
     queryFn: async () => {
       const { data, status } = await dashboardApi.getConfig();
-      console.log(data);
       if (!data.success) {
         throw new AppError(
           data.message || 'Failed to fetch dashboard config',
@@ -137,7 +136,7 @@ export function useDashboardRecentActivity() {
         );
       }
 
-      return data.data ?? [];
+      return data.data;
     },
   });
 }
@@ -175,7 +174,7 @@ export function useDashboardQuickActions() {
         );
       }
 
-      return data.data ?? [];
+      return data.data;
     },
   });
 }
@@ -195,8 +194,8 @@ export function useUpdateDashboardLayout() {
 
       return data.data;
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: dashboardQueryKeys.config() });
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: dashboardQueryKeys.config() });
     },
   });
 }
@@ -214,8 +213,8 @@ export function useResetDashboardLayout() {
 
       return data.data;
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: dashboardQueryKeys.config() });
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: dashboardQueryKeys.config() });
     },
   });
 }

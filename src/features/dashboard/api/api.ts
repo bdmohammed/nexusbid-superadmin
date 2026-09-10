@@ -35,7 +35,7 @@ export const dashboardApi = {
   },
 
   getCriticalAlerts() {
-    return apiClient.get<ApiResponse<CriticalAlerts>>('/dashboard/alerts');
+    return apiClient.get<ApiResponse<CriticalAlerts[]>>('/dashboard/alerts');
   },
 
   getRecentActivity() {
@@ -51,10 +51,10 @@ export const dashboardApi = {
   },
 
   updateLayout(input: PatchLayoutInput) {
-    return apiClient.patch<ApiResponse<any>>('/dashboard/layout', input);
+    return apiClient.patch<ApiResponse<PatchLayoutInput>>('/dashboard/layout', input);
   },
 
   resetLayout() {
-    return apiClient.post<ApiResponse<any>>('/dashboard/layout/reset');
+    return apiClient.post<ApiResponse<DashboardConfig>>('/dashboard/layout/reset');
   },
 };

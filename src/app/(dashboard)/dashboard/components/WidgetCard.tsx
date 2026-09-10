@@ -2,26 +2,12 @@
 
 import React from 'react';
 
-interface LayoutItem {
-  id?: string;
-  widgetId?: string;
-  w: number;
-  x?: number;
-  y?: number;
-  hidden?: boolean;
-  collapsed?: boolean;
-}
-
-interface RegistryItem {
-  id: string;
-  title: string;
-}
+import type { WidgetDefinition } from '@/features/dashboard/types';
 
 interface WidgetCardProps {
-  item: LayoutItem;
+  item: WidgetDefinition;
   index: number;
   totalItems: number;
-  registryItem: RegistryItem;
   isEditMode: boolean;
   onMoveWidget: (index: number, direction: 'up' | 'down') => void;
   onChangeWidgetWidth: (index: number, width: number) => void;
@@ -34,7 +20,6 @@ export const WidgetCard: React.FC<WidgetCardProps> = ({
   item,
   index,
   totalItems,
-  registryItem,
   isEditMode,
   onMoveWidget,
   onChangeWidgetWidth,
@@ -42,23 +27,26 @@ export const WidgetCard: React.FC<WidgetCardProps> = ({
   onToggleWidgetCollapse,
   children,
 }) => {
-  const widgetId = item.widgetId || item.id;
-  if (item.hidden && !isEditMode) return null;
+  if (item.defaultLayout.hidden && !isEditMode) return null;
 
   // Determine Tailwind grid-column width classes based on customization parameters
   const gridColSpan =
-    item.w === 1 ? 'md:col-span-2' : item.w === 2 ? 'md:col-span-3' : 'md:col-span-6';
+    item.defaultLayout.w === 1
+      ? 'md:col-span-2'
+      : item.defaultLayout.w === 2
+        ? 'md:col-span-3'
+        : 'md:col-span-6';
 
   return (
     <div
       className={`rounded-2xl border bg-surface shadow-xs overflow-hidden flex flex-col justify-between transition-all duration-300 ${gridColSpan} ${
-        item.hidden ? 'opacity-45 border-dashed border-red-500/50' : 'border-border'
+        item.defaultLayout.hidden ? 'opacity-45 border-dashed border-red-500/50' : 'border-border'
       }`}
     >
       {/* Header with edit tools overlay */}
       {isEditMode && (
         <div className="p-2 border-b border-border bg-background flex items-center justify-between gap-2">
-          <span className="text-[10px] font-bold text-text-light">{registryItem.title}</span>
+          <span className="text-[10px] font-bold text-text-light">{item.title}</span>
           <div className="flex items-center gap-1.5">
             {/* Position shift */}
             <button
@@ -78,7 +66,7 @@ export const WidgetCard: React.FC<WidgetCardProps> = ({
 
             {/* Width adjustment */}
             <select
-              value={item.w}
+              value={item.defaultLayout.w}
               onChange={(e) => onChangeWidgetWidth(index, parseInt(e.target.value, 10))}
               className="text-[10px] bg-surface border border-border rounded px-1 py-0.5 outline-none cursor-pointer"
             >
@@ -91,10 +79,12 @@ export const WidgetCard: React.FC<WidgetCardProps> = ({
             <button
               onClick={() => onToggleWidgetHide(index)}
               className={`text-[10px] px-1.5 py-0.5 rounded border cursor-pointer ${
-                item.hidden ? 'bg-red-500/10 text-red-500 border-red-500/20' : 'bg-border text-text'
+                item.defaultLayout.hidden
+                  ? 'bg-red-500/10 text-red-500 border-red-500/20'
+                  : 'bg-border text-text'
               }`}
             >
-              {item.hidden ? 'Show' : 'Hide'}
+              {item.defaultLayout.hidden ? 'Show' : 'Hide'}
             </button>
 
             {/* Collapse toggle */}
@@ -102,14 +92,14 @@ export const WidgetCard: React.FC<WidgetCardProps> = ({
               onClick={() => onToggleWidgetCollapse(index)}
               className="text-[10px] px-1.5 py-0.5 rounded bg-border text-text cursor-pointer"
             >
-              {item.collapsed ? 'Expand' : 'Collapse'}
+              {item.defaultLayout.collapsed ? 'Expand' : 'Collapse'}
             </button>
           </div>
         </div>
       )}
 
       {/* Widget Body */}
-      {!item.collapsed && <div className="flex-1">{children}</div>}
+      {!item.defaultLayout.collapsed && <div className="flex-1">{children}</div>}
     </div>
   );
 };

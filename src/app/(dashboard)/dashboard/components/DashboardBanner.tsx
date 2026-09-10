@@ -1,76 +1,86 @@
 'use client';
 
-import React from 'react';
-import { AlertCircle, Settings2, Sparkles } from 'lucide-react';
+import { Settings2, Sparkles } from 'lucide-react';
+
+import { useDashboardStore } from '@/store/useDashboardStore';
 
 interface DashboardBannerProps {
   greetingText: string;
-  liveQueue: any;
-  liveAlerts: any;
-  sseConnected: boolean;
-  onConnectSSE: () => void;
   isEditMode: boolean;
   onToggleEditMode: () => void;
   canCustomize?: boolean;
 }
 
-export const DashboardBanner: React.FC<DashboardBannerProps> = ({
+const connections = {
+  connected: {
+    label: 'Live Feed Connected',
+    className: 'bg-emerald-500/10 text-emerald-600',
+    dot: 'bg-emerald-500',
+    animate: 'animate-ping',
+  },
+
+  connecting: {
+    label: 'Connecting...',
+    className: 'bg-blue-500/10 text-blue-600',
+    dot: 'bg-blue-500',
+    animate: 'animate-pulse',
+  },
+
+  reconnecting: {
+    label: 'Reconnecting...',
+    className: 'bg-amber-500/10 text-amber-600',
+    dot: 'bg-amber-500',
+    animate: 'animate-pulse',
+  },
+
+  disconnected: {
+    label: 'Disconnected',
+    className: 'bg-red-500/10 text-red-600',
+    dot: 'bg-red-500',
+    animate: '',
+  },
+};
+export function DashboardBanner({
   greetingText,
-  liveQueue,
-  liveAlerts,
-  sseConnected,
-  onConnectSSE,
   isEditMode,
   onToggleEditMode,
   canCustomize = true,
-}) => {
+}: DashboardBannerProps) {
+  const connectionStatus = useDashboardStore((state) => state.connectionStatus);
+  const connection = connections[connectionStatus];
   return (
-    <div className="p-6 rounded-3xl border border-primary/20 bg-primary/5 flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div className="flex flex-col justify-between gap-4 rounded-3xl border border-primary/20 bg-primary/5 p-6 md:flex-row md:items-center">
       <div className="space-y-1.5">
-        <h1 className="text-2xl font-black tracking-tight text-text flex items-center gap-2">
-          <Sparkles className="text-primary h-6 w-6 animate-pulse" />
+        <h1 className="flex items-center gap-2 text-2xl font-black tracking-tight text-text">
+          <Sparkles className="h-6 w-6 animate-pulse text-primary" />
           {greetingText}!
         </h1>
-        <p className="text-xs text-text-light font-medium max-w-xl">
-          {liveQueue?.pendingTenderReviews > 0
-            ? `${liveQueue.pendingTenderReviews} Tenders require compliance reviews.`
-            : 'All tender review queues are clear.'}{' '}
-          {liveAlerts?.securityAlerts > 0
-            ? `${liveAlerts.securityAlerts} Security threats flagged today.`
-            : 'No active security threats logged.'}
-        </p>
       </div>
 
       <div className="flex items-center gap-2">
-        {sseConnected ? (
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-bold text-emerald-600 bg-emerald-500/10 rounded-full">
-            <span className="h-2 w-2 rounded-full bg-emerald-500 animate-ping"></span>
-            Live Feed Connected
-          </span>
-        ) : (
-          <button
-            onClick={onConnectSSE}
-            className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-bold text-amber-600 bg-amber-500/10 rounded-full hover:bg-amber-500/20 transition cursor-pointer"
-          >
-            <AlertCircle className="h-3.5 w-3.5" />
-            Reconnect stream
-          </button>
-        )}
+        <span
+          className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-bold ${connection.className}`}
+        >
+          <span className={`h-2 w-2 rounded-full ${connection.dot} ${connection.animate}`} />
+
+          {connection.label}
+        </span>
 
         {canCustomize && (
           <button
             onClick={onToggleEditMode}
-            className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-xl border transition cursor-pointer ${
+            className={`inline-flex cursor-pointer items-center gap-1.5 rounded-xl border px-3 py-1.5 text-xs font-bold transition ${
               isEditMode
-                ? 'bg-primary border-primary text-white'
+                ? 'border-primary bg-primary text-white'
                 : 'border-border bg-surface text-text hover:bg-border/30'
             }`}
           >
             <Settings2 className="h-4 w-4" />
+
             {isEditMode ? 'Exit Customizer' : 'Customize Grid'}
           </button>
         )}
       </div>
     </div>
   );
-};
+}

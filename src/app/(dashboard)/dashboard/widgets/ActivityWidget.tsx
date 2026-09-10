@@ -4,6 +4,10 @@ import { Clock, History } from 'lucide-react';
 
 import { useDashboardRecentActivity } from '@/features/dashboard/api/queries';
 
+/**
+ *
+ * @deprecated
+ */
 export default function ActivityWidget() {
   const { data: activities = [], isLoading } = useDashboardRecentActivity();
 
